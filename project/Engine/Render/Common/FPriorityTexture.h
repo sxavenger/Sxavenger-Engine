@@ -4,12 +4,18 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxObjectCommon.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FPriorityTexture class
@@ -44,3 +50,5 @@ private:
 	DxObject::Descriptor descriptorDSV_;
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

@@ -1,9 +1,11 @@
 #include "FBaseRenderPass.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-
+//* engine
+#include <Engine/System/Utility/RuntimeLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Config structure methods
@@ -15,17 +17,17 @@ void FBaseRenderPass::Config::AttachStatus() {
 
 	if (buffer == nullptr) {
 		status |= Status::Error_GBuffer;
-		Logger::WarningRuntime("[FBaseRenderPass]", "buffer is not set.");
+		RuntimeLogger::LogWarning("[FBaseRenderPass]", "buffer is not set.");
 	}
 
 	if (scene == nullptr) {
 		status |= Status::Warning_Scene;
-		Logger::WarningRuntime("[FBaseRenderPass]", "scene is not set.");
+		RuntimeLogger::LogWarning("[FBaseRenderPass]", "scene is not set.");
 	}
 
-	if (camera == nullptr) {
+	if (camera == nullptr || cullCamera == nullptr) {
 		status |= Status::Warning_Camera;
-		Logger::WarningRuntime("[FBaseRenderPass]", "camera is not set.");
+		RuntimeLogger::LogWarning("[FBaseRenderPass]", "camera is not set.");
 	}
 
 }

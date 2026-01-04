@@ -1,5 +1,6 @@
 #include "FProcessTexture.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -8,7 +9,8 @@ _DXOBJECT_USING
 #include <Engine/Render/FRenderCore.h>
 
 //* engine
-#include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/System.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FProcessTexture class methods
@@ -17,7 +19,7 @@ _DXOBJECT_USING
 void FProcessTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 
 	// deviceの取り出し
-	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
+	auto device = System::GetDxDevice()->GetDevice();
 
 	{ //!< resourceの生成
 
@@ -52,7 +54,7 @@ void FProcessTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 	{ //!< SRVの生成
 
 		// handleの取得
-		descriptorSRV_ = SxavengerSystem::GetDescriptor(kDescriptor_SRV);
+		descriptorSRV_ = System::GetDescriptor(kDescriptor_SRV);
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
@@ -72,7 +74,7 @@ void FProcessTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 	for (uint32_t i = 0; i < kMipLevels; ++i) { //!< UAVの生成
 
 		// handleの取得
-		descriptorsUAV_[i] = SxavengerSystem::GetDescriptor(kDescriptor_UAV);
+		descriptorsUAV_[i] = System::GetDescriptor(kDescriptor_UAV);
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
@@ -262,7 +264,7 @@ void FProcessTexture::CopyDest(const DirectXQueueContext* context, FBaseTexture*
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& FProcessTexture::GetGPUHandleUAV(uint32_t mipLevel) const {
-	Exception::Assert(mipLevel < kMipLevels, "FProcessTexture::GetGPUHandleUAV: mipLevel is out of range.");
+	StreamLogger::AssertA(mipLevel < kMipLevels, "FProcessTexture::GetGPUHandleUAV: mipLevel is out of range.");
 	return descriptorsUAV_.at(mipLevel).GetGPUHandle();
 }
 
@@ -316,7 +318,7 @@ void FProcessTextureCollection::BeginProcess(const DirectXQueueContext* context,
 }
 
 void FProcessTextureCollection::BeginProcess(const DirectXQueueContext* context, const std::vector<FBaseTexture*>& textures) {
-	Exception::Assert(textures.size() <= textures_.size(), "FProcessTextureCollection::BeginProcess: textures is empty.");
+	StreamLogger::AssertA(textures.size() <= textures_.size(), "FProcessTextureCollection::BeginProcess: textures is empty.");
 
 	// commandListの取得
 	auto commandList = context->GetCommandList();
@@ -394,7 +396,7 @@ void FProcessTextureCollection::BarrierUAV(const DirectXQueueContext* context) c
 }
 
 FProcessTexture* FProcessTextureCollection::GetPrevTexture(uint32_t prev) const {
-	Exception::Assert(prev <= textures_.size(), "process texture array size is not exist prev.");
+	StreamLogger::AssertA(prev <= textures_.size(), "process texture array size is not exist prev.");
 	return textures_[(currentIndex_ + textures_.size() - prev) % textures_.size()].get();
 }
 
@@ -403,5 +405,5 @@ FProcessTexture* FProcessTextureCollection::GetCurrentTexture() const {
 }
 
 void FProcessTextureCollection::ReqiureCount(uint32_t count) {
-	Exception::Assert(count <= textures_.size(), "process texture array size is not exist.");
+	StreamLogger::AssertA(count <= textures_.size(), "process texture array size is not exist.");
 }

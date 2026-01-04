@@ -1,12 +1,14 @@
 #include "FRenderPassPostProcess.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Component/Components/ComponentStorage.h>
-#include <Engine/Component/Components/PostProcessLayer/PostProcessLayerComponent.h>
-#include <Engine/Component/Entity/MonoBehaviour.h>
+#include <Engine/System/Utility/RuntimeLogger.h>
+#include <Engine/Components/Component/PostProcessLayer/PostProcessLayerComponent.h>
+#include <Engine/Components/Component/ComponentStorage.h>
+#include <Engine/Components/Entity/EntityBehaviour.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassPostProcess class methods
@@ -21,6 +23,8 @@ void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const Co
 	if (config.CheckStatus(FBaseRenderPass::Config::Status::Geometry_Warning)) {
 		return;
 	}
+
+	context->BeginEvent(L"RenderPass - PostProcess");
 
 	config.buffer->BeginPostProcess(context);
 
@@ -46,7 +50,7 @@ void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const Co
 		auto transform = component->GetTransform();
 
 		if (transform == nullptr) {
-			Logger::WarningRuntime("[FRenderPassPostProcess]", "PostProcessLayerComponent [Volume] has no transform.");
+			RuntimeLogger::LogWarning("[FRenderPassPostProcess]", "PostProcessLayerComponent [Volume] has no transform.");
 			return; //!< Transformがない場合は処理しない
 		}
 
@@ -69,5 +73,7 @@ void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const Co
 
 
 	config.buffer->EndPostProcess(context);
+
+	context->EndEvent();
 
 }

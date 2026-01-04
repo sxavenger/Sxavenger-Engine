@@ -1,4 +1,11 @@
 #include "FRenderCoreProcess.h"
+SXAVENGER_ENGINE_USING
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/System.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreProcess class
@@ -7,9 +14,6 @@
 void FRenderCoreProcess::Init() {
 
 	//* process *//
-
-	//!< volumetric fog
-	//CreatePipeline(ProcessType::VolumetricFog, "PostProcess/volumetricFog.cs.hlsl");
 
 	//!< grayscale
 	CreatePipeline(ProcessType::GrayScale, "PostProcess/GrayScale.cs.hlsl");
@@ -105,36 +109,36 @@ void FRenderCoreProcess::Dispatch(const DirectXQueueContext* context, const Vect
 
 void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem::path& filepath) {
 	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	process->CreateContent(kDirectory_ / filepath);
+	process->CreateContent(kDirectory / filepath);
 	process->RegisterBlob();
-	process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+	process->ReflectionPipeline(System::GetDxDevice());
 
 	processes_[static_cast<uint32_t>(type)] = std::move(process);
 }
 
 void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc) {
 	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	process->CreateContent(kDirectory_ / filepath);
+	process->CreateContent(kDirectory / filepath);
 	process->RegisterBlob();
-	process->ReflectionPipeline(SxavengerSystem::GetDxDevice(), desc);
+	process->ReflectionPipeline(System::GetDxDevice(), desc);
 
 	processes_[static_cast<uint32_t>(type)] = std::move(process);
 }
 
 void FRenderCoreProcess::CreatePipeline(CompositeType type, const std::filesystem::path& filepath) {
 	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	process->CreateContent(kDirectory_ / filepath);
+	process->CreateContent(kDirectory / filepath);
 	process->RegisterBlob();
-	process->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+	process->ReflectionPipeline(System::GetDxDevice());
 
 	composites_[static_cast<uint32_t>(type)] = std::move(process);
 }
 
 void FRenderCoreProcess::CreatePipeline(CompositeType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc) {
 	auto process = std::make_unique<CustomReflectionComputePipeline>();
-	process->CreateContent(kDirectory_ / filepath);
+	process->CreateContent(kDirectory / filepath);
 	process->RegisterBlob();
-	process->ReflectionPipeline(SxavengerSystem::GetDxDevice(), desc);
+	process->ReflectionPipeline(System::GetDxDevice(), desc);
 
 	composites_[static_cast<uint32_t>(type)] = std::move(process);
 }

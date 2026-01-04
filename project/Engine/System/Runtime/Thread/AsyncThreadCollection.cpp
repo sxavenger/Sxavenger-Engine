@@ -1,4 +1,5 @@
 #include "AsyncThreadCollection.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -38,7 +39,7 @@ void AsyncThreadCollection::PushTask(AsyncExecution execution, const std::shared
 
 void AsyncThreadCollection::SystemDebugGui() {
 	// thread pool ごとの情報表示
-	for (uint8_t i = 0; i < kAsyncExecutionCount; ++i) {
+	for (uint8_t i = 0; i < magic_enum::enum_count<AsyncExecution>(); ++i) {
 		ImGui::SeparatorText(std::format("Async Thread Pool [{}]", magic_enum::enum_name(static_cast<AsyncExecution>(i))).c_str());
 		pools_[i].SystemDebugGui();
 	}

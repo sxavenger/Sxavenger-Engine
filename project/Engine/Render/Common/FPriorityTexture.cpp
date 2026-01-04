@@ -1,11 +1,12 @@
 #include "FPriorityTexture.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/System.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FPriorityTexture class methods
@@ -13,7 +14,7 @@ _DXOBJECT_USING
 
 void FPriorityTexture::Create(const Vector2ui& size) {
 
-	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
+	auto device = System::GetDxDevice()->GetDevice();
 
 	{ //!< resourceの生成
 
@@ -53,7 +54,7 @@ void FPriorityTexture::Create(const Vector2ui& size) {
 
 	{ //!< DSVの生成
 		// handleの取得
-		descriptorDSV_ = SxavengerSystem::GetDescriptor(kDescriptor_DSV);
+		descriptorDSV_ = System::GetDescriptor(kDescriptor_DSV);
 
 		// descの設定
 		D3D12_DEPTH_STENCIL_VIEW_DESC desc = {};

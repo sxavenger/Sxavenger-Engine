@@ -11,15 +11,19 @@
 //* engine
 #include <Engine/System/UI/ISystemDebugGui.h>
 
+//* lib
+#include <Lib/CXXAttributeConfig.h>
+
 // c++
 #include <queue>
 #include <memory>
 #include <array>
+#include <mutex>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
 ////////////////////////////////////////////////////////////////////////////////////////////
-_DXOBJECT_NAMESPACE_BEGIN
+DXOBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DescriptorPool class
@@ -45,7 +49,7 @@ public:
 
 	//* descriptor option *//
 
-	_NODISCARD Descriptor GetDescriptor();
+	NODISCARD Descriptor GetDescriptor();
 
 	void DeleteDescriptor(Descriptor& descriptor);
 
@@ -86,6 +90,10 @@ private:
 
 	bool shaderVisible_ = false;
 
+	//* thread *//
+
+	std::mutex mutex_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -104,7 +112,7 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief すべてのDescriptorPoolを管理するクラス.
 class DescriptorHeaps
-	: public ISystemDebugGui {
+	: public SXAVENGER_ENGINE ISystemDebugGui {
 public:
 
 	//=========================================================================================
@@ -120,23 +128,17 @@ public:
 
 	//* descriptor option *//
 
-	_NODISCARD Descriptor GetDescriptor(DescriptorType type);
+	NODISCARD Descriptor GetDescriptor(DescriptorType type);
 
 	void DeleteDescriptor(Descriptor& descriptor);
 
 	//* getter *//
 
-	const uint32_t GetDescriptorMaxCount(DescriptorType type) const {
-		return pools_.at(type)->GetDescriptorMaxCount();
-	}
+	const uint32_t GetDescriptorMaxCount(DescriptorType type) const { return pools_.at(type)->GetDescriptorMaxCount(); }
 
-	ID3D12DescriptorHeap* const GetDescriptorHeap(DescriptorType type) const {
-		return pools_.at(type)->GetDescriptorHeap();
-	}
+	ID3D12DescriptorHeap* const GetDescriptorHeap(DescriptorType type) const { return pools_.at(type)->GetDescriptorHeap(); }
 
-	DescriptorPool* const GetDescriptorPool(DescriptorType type) const {
-		return pools_.at(type).get();
-	}
+	DescriptorPool* const GetDescriptorPool(DescriptorType type) const { return pools_.at(type).get(); }
 
 	//* imgui option *//
 
@@ -152,4 +154,4 @@ private:
 
 };
 
-_DXOBJECT_NAMESPACE_END
+DXOBJECT_NAMESPACE_END

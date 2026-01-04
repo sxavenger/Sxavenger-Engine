@@ -1,20 +1,14 @@
 #include "FRenderCoreRestir.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/System.h>
+
 //* lib
 #include <Lib/Adapter/Random/Random.h>
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Seed structure methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void FRenderCoreRestir::Seed::Set() {
-	std::generate(seed.begin(), seed.end(), []() {
-		return Random::UniformDistribution<uint32_t>(std::numeric_limits<uint32_t>::min(), std::numeric_limits<uint32_t>::max());
-	});
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreRestir class methods
@@ -42,7 +36,7 @@ const DxrObject::ExportGroup* FRenderCoreRestir::GetExportGroup(HitgroupExportTy
 }
 
 void FRenderCoreRestir::UpdateShaderTable(const DxrObject::TopLevelAS* topLevelAS) {
-	context_->UpdateShaderTable(SxavengerSystem::GetDxDevice(), topLevelAS);
+	context_->UpdateShaderTable(System::GetDxDevice(), topLevelAS);
 }
 
 void FRenderCoreRestir::SetPipeline(Process process, const DirectXQueueContext* context) const {
@@ -54,7 +48,7 @@ void FRenderCoreRestir::BindComputeBuffer(Process process, const DirectXQueueCon
 }
 
 void FRenderCoreRestir::Dispatch(const DirectXQueueContext* context, const Vector2ui& size) const {
-	Vector3ui dispatch = DxObject::RoundUp(Vector3ui{ size.x, size.y, 1 }, kThreadGroupSize_);
+	Vector3ui dispatch = DxObject::RoundUp(Vector3ui{ size.x, size.y, 1 }, kThreadGroupSize);
 	context->GetCommandList()->Dispatch(dispatch.x, dispatch.y, dispatch.z);
 }
 
@@ -62,7 +56,7 @@ void FRenderCoreRestir::CreateRaygeneration() {
 
 	{ //!< Default
 		auto& [blob, expt] = raygenerationExportGroups_[static_cast<uint32_t>(RaygenerationExportType::Default)];
-		blob.Create(kDirectory_ / "Default.raygeneration.hlsl");
+		blob.Create(kDirectory / "Default.raygeneration.hlsl");
 
 		expt.ExportRaygeneration(L"mainRaygeneration");
 		expt.SetBlob(&blob);
@@ -75,7 +69,7 @@ void FRenderCoreRestir::CreateMiss() {
 
 	{ //!< Default
 		auto& [blob, expt] = missExportGroups_[static_cast<uint32_t>(MissExportType::Default)];
-		blob.Create(kDirectory_ / "Default.miss.hlsl");
+		blob.Create(kDirectory / "Default.miss.hlsl");
 
 		expt.ExportMiss(L"mainMiss");
 		expt.SetBlob(&blob);
@@ -86,7 +80,7 @@ void FRenderCoreRestir::CreateHitgroup() {
 
 	{  //!< Mesh
 		auto& [blob, expt] = hitgroupExportGroups_[static_cast<uint32_t>(HitgroupExportType::Mesh)];
-		blob.Create(kDirectory_ / "hitgroup" / "Mesh.hitgroup.hlsl");
+		blob.Create(kDirectory / "hitgroup" / "Mesh.hitgroup.hlsl");
 
 		//* hitgroup
 		DxrObject::ExportGroup::Hitgroup hitgroup = {};
@@ -104,12 +98,12 @@ void FRenderCoreRestir::CreateHitgroup() {
 		desc.SetVirtualSRV(1, 11); //!< gIndices
 		desc.SetVirtualSRV(2, 0);  //!< gMaterial
 
-		expt.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
+		expt.CreateRootSignature(System::GetDxDevice(), desc);
 	}
 
 	{ //!< Emissive
 		auto& [blob, expt] = hitgroupExportGroups_[static_cast<uint32_t>(HitgroupExportType::Emissive)];
-		blob.Create(kDirectory_ / "hitgroup" / "Emissive.hitgroup.hlsl");
+		blob.Create(kDirectory / "hitgroup" / "Emissive.hitgroup.hlsl");
 		//* hitgroup
 		DxrObject::ExportGroup::Hitgroup hitgroup = {};
 		hitgroup.type       = D3D12_HIT_GROUP_TYPE_TRIANGLES;
@@ -126,7 +120,7 @@ void FRenderCoreRestir::CreateHitgroup() {
 		desc.SetVirtualSRV(1, 11); //!< gIndices
 		desc.SetVirtualSRV(2, 0);  //!< gMaterial
 
-		expt.CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
+		expt.CreateRootSignature(System::GetDxDevice(), desc);
 
 	}
 
@@ -164,7 +158,7 @@ void FRenderCoreRestir::CreateContext() {
 		desc.SetVirtualSRV(9, 1, 2); //!< gDirectionalLights
 
 		// Point Light
-		desc.SetVirtualCBV(10, 1, 2);  //!< gPointLightCount
+		desc.SetVirtualCBV(10, 1, 2); //!< gPointLightCount
 		desc.SetVirtualSRV(11, 2, 2); //!< gPointLightTransforms
 		desc.SetVirtualSRV(12, 3, 2); //!< gPointLights
 
@@ -178,7 +172,7 @@ void FRenderCoreRestir::CreateContext() {
 
 		desc.SetSamplerLinear(DxObject::MODE_WRAP, DxObject::ShaderVisibility::VISIBILITY_ALL, 0, 2); //!< gSampler
 
-		context_->CreateRootSignature(SxavengerSystem::GetDxDevice(), desc);
+		context_->CreateRootSignature(System::GetDxDevice(), desc);
 
 	}
 
@@ -194,22 +188,22 @@ void FRenderCoreRestir::CreateContext() {
 		desc.SetPayloadStride(4 * 11);
 		desc.SetMaxRecursionDepth(3);
 
-		context_->CreateStateObject(SxavengerSystem::GetDxDevice(), std::move(desc));
+		context_->CreateStateObject(System::GetDxDevice(), std::move(desc));
 	}
 
 }
 
 void FRenderCoreRestir::CreatePipeline() {
-	CreateComputePipeline(Process::Reset,        kDirectory_ / "RestirReset.cs.hlsl");
-	CreateComputePipeline(Process::Temporal,     kDirectory_ / "RestirTemporal.cs.hlsl");
-	CreateComputePipeline(Process::Spatial,      kDirectory_ / "RestirSpatial.cs.hlsl");
-	CreateComputePipeline(Process::Texture,      kDirectory_ / "RestirTexture.cs.hlsl");
-	CreateComputePipeline(Process::EdgeStopping, kDirectory_ / "EdgeStopping.cs.hlsl");
+	CreateComputePipeline(Process::Reset,        kDirectory / "RestirReset.cs.hlsl");
+	CreateComputePipeline(Process::Temporal,     kDirectory / "RestirTemporal.cs.hlsl");
+	CreateComputePipeline(Process::Spatial,      kDirectory / "RestirSpatial.cs.hlsl");
+	CreateComputePipeline(Process::Texture,     kDirectory / "RestirTexture.cs.hlsl");
+	CreateComputePipeline(Process::EdgeStopping, kDirectory / "EdgeStopping.cs.hlsl");
 }
 
 void FRenderCoreRestir::CreateComputePipeline(Process process, const std::filesystem::path& filepath) {
 	pipelines_[static_cast<uint8_t>(process)] = std::make_unique<CustomReflectionComputePipeline>();
 	pipelines_[static_cast<uint8_t>(process)]->CreateBlob(filepath);
-	pipelines_[static_cast<uint8_t>(process)]->ReflectionPipeline(SxavengerSystem::GetDxDevice());
+	pipelines_[static_cast<uint8_t>(process)]->ReflectionPipeline(System::GetDxDevice());
 
 }

@@ -1,11 +1,13 @@
 #include "FBaseTexture.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/System.h>
 
 //* lib
 #include <Lib/Geometry/Color4.h>
@@ -17,7 +19,7 @@ _DXOBJECT_USING
 void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<Flag> flag) {
 
 	// deviceの取り出し
-	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
+	auto device = System::GetDxDevice()->GetDevice();
 
 	// 引数の保存
 	format_ = format;
@@ -59,7 +61,7 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<F
 	if (flag_.Test(Flag::RenderTarget)) { //!< RTVの生成
 
 		// handleの取得
-		descriptorRTV_ = SxavengerSystem::GetDescriptor(kDescriptor_RTV);
+		descriptorRTV_ = System::GetDescriptor(kDescriptor_RTV);
 
 		// descの設定
 		D3D12_RENDER_TARGET_VIEW_DESC desc = {};
@@ -77,7 +79,7 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<F
 	if (flag_.Test(Flag::UnorderedAccess)) { //!< UAVの生成
 
 		// handleの取得
-		descriptorUAV_ = SxavengerSystem::GetDescriptor(kDescriptor_UAV);
+		descriptorUAV_ = System::GetDescriptor(kDescriptor_UAV);
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
@@ -96,7 +98,7 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<F
 	{ //!< SRVの生成
 
 		// handleの取得
-		descriptorSRV_ = SxavengerSystem::GetDescriptor(kDescriptor_SRV);
+		descriptorSRV_ = System::GetDescriptor(kDescriptor_SRV);
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
@@ -116,14 +118,14 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<F
 }
 
 void FBaseTexture::Term() {
-	resource_.Reset();
 	descriptorSRV_.Delete();
 	descriptorRTV_.Delete();
 	descriptorUAV_.Delete();
+	resource_.Reset();
 }
 
 D3D12_RESOURCE_BARRIER FBaseTexture::TransitionBeginRenderTarget() const {
-	Exception::Assert(flag_.Test(Flag::RenderTarget), "texture is not render target.");
+	StreamLogger::AssertA(flag_.Test(Flag::RenderTarget), "texture is not render target.");
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -166,7 +168,7 @@ void FBaseTexture::ClearRenderTarget(const DirectXQueueContext* context) const {
 }
 
 D3D12_RESOURCE_BARRIER FBaseTexture::TransitionBeginUnordered() const {
-	Exception::Assert(flag_.Test(Flag::UnorderedAccess), "texture is not unordered access.");
+	StreamLogger::AssertA(flag_.Test(Flag::UnorderedAccess), "texture is not unordered access.");
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;

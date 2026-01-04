@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* DXOBJECT
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxObjectCommon.h>
 
 //* c++
@@ -13,15 +14,15 @@
 // DXROBJECT define
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-#define _DXROBJECT_NAMESPACE_BEGIN namespace DxrObject {
-#define _DXROBJECT_NAMESPACE_END   }
-#define _DXROBJECT                 DxrObject::
-#define _DXROBJECT_USING           using namespace DxrObject;
+#define DXROBJECT_NAMESPACE_BEGIN namespace DxrObject {
+#define DXROBJECT_NAMESPACE_END   }
+#define DXROBJECT                 DxrObject::
+#define DXROBJECT_USING           using namespace DxrObject;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXROBJECT commons
 ////////////////////////////////////////////////////////////////////////////////////////////
-_DXROBJECT_NAMESPACE_BEGIN
+DXROBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common methods
@@ -41,4 +42,4 @@ constexpr const UINT kShaderRecordSize      = D3D12_SHADER_IDENTIFIER_SIZE_IN_BY
 constexpr const UINT kShaderRecordAlignment = D3D12_RAYTRACING_SHADER_RECORD_BYTE_ALIGNMENT;
 constexpr const UINT kShaderTableAlignment  = D3D12_RAYTRACING_SHADER_TABLE_BYTE_ALIGNMENT;
 
-_DXROBJECT_NAMESPACE_END
+DXROBJECT_NAMESPACE_END

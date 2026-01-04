@@ -4,11 +4,17 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
 #include <Lib/Sxl/Flag.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FBaseTexture class
@@ -117,3 +123,5 @@ private:
 	std::optional<D3D12_CLEAR_VALUE> GetClearValue() const;
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

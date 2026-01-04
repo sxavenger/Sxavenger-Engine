@@ -1,4 +1,5 @@
 #include "FRenderPassTonemap.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -15,6 +16,8 @@ void FRenderPassTonemap::Render(const DirectXQueueContext* context, const Config
 	if (!config.option.Test(FBaseRenderPass::Config::Option::Tonemap)) {
 		return;
 	}
+
+	context->BeginEvent(L"RenderPass - Tonemap");
 
 	FRenderCore::GetInstance()->GetProcess()->SetPipeline(
 		FRenderCoreProcess::CompositeType::Tonemap, context
@@ -38,5 +41,7 @@ void FRenderPassTonemap::Render(const DirectXQueueContext* context, const Config
 	config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->TransitionEndUnordered(context);
 
 	// TODO: slope, toe, shoulder... をparameterで調整可能に
+
+	context->EndEvent();
 
 }

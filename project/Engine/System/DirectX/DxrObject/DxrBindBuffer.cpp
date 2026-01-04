@@ -1,5 +1,12 @@
 #include "DxrBindBuffer.h"
-_DXROBJECT_USING
+SXAVENGER_ENGINE_USING
+DXROBJECT_USING
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // WriteBindBufferDesc structure methods
@@ -19,19 +26,20 @@ void WriteBindBufferDesc::SetHandle(uint32_t index, const D3D12_GPU_DESCRIPTOR_H
 }
 
 DxObject::GPUBuffer WriteBindBufferDesc::GetBuffer(uint32_t index) const {
-	Exception::Assert(container_[index].has_value(), "buffer is not set.");
+	StreamLogger::AssertA(container_[index].has_value(), "buffer is not set.");
 	return container_[index].value();
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS WriteBindBufferDesc::GetAddress(uint32_t index) const {
 	auto buffer = GetBuffer(index);
-	Exception::Assert(std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(buffer), "buffer type different.");
+
+	StreamLogger::AssertA(std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(buffer), "buffer type different.");
 	return std::get<D3D12_GPU_VIRTUAL_ADDRESS>(buffer);
 }
 
 D3D12_GPU_DESCRIPTOR_HANDLE WriteBindBufferDesc::GetHandle(uint32_t index) const {
 	auto buffer = GetBuffer(index);
-	Exception::Assert(std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer), "buffer type different.");
+	StreamLogger::AssertA(std::holds_alternative<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer), "buffer type different.");
 	return std::get<D3D12_GPU_DESCRIPTOR_HANDLE>(buffer);
 }
 

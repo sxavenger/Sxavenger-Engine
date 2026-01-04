@@ -1,5 +1,12 @@
 #include "DxrRootSignature.h"
-_DXROBJECT_USING
+SXAVENGER_ENGINE_USING
+DXROBJECT_USING
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // LocalRootSignature class methods
@@ -31,7 +38,7 @@ void LocalRootSignature::CreateTable(const LocalRootSignatureDesc& desc) {
 				break;
 
 			default:
-				Exception::Assert(false, "invalid parameter type."); //!< 32bit
+				StreamLogger::Exception("invalid parameter type."); //!< 32bit
 				break;
 		}
 	}

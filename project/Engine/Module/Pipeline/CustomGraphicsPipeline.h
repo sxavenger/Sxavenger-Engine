@@ -4,15 +4,20 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/Foundation.h>
+#include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/DirectX/DxObject/DxGraphicsPipelineState.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
-
-//* engine
-#include <Engine/Preview/Content/ContentBlob.h>
-#include <Engine/Preview/Content/ContentObserver.h>
+#include <Engine/Assets/Content/ContentBlob.h>
+#include <Engine/Assets/Content/ContentObserver.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Base CustomGraphicsPipeline class
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// BaseCustomGraphicsPipeline class
 ////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief カスタムGraphicsPipeline基底クラス
 class BaseCustomGraphicsPipeline {
@@ -37,7 +42,7 @@ public:
 	virtual void RegisterBlob() = 0;
 
 	virtual void ReloadAndSetPipeline(const DirectXQueueContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) = 0;
-	virtual void ReloadAndSetPipeline(const DirectXQueueContext* context, const Vector2ui& windowSize = kMainWindowSize) = 0;
+	virtual void ReloadAndSetPipeline(const DirectXQueueContext* context, const Vector2ui& windowSize = Configuration::GetConfig().resolution) = 0;
 
 protected:
 
@@ -75,7 +80,7 @@ public:
 	void RegisterBlob() override;
 
 	void ReloadAndSetPipeline(const DirectXQueueContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) override;
-	void ReloadAndSetPipeline(const DirectXQueueContext* context, const Vector2ui& windowSize = kMainWindowSize) override;
+	void ReloadAndSetPipeline(const DirectXQueueContext* context, const Vector2ui& windowSize = Configuration::GetConfig().resolution) override;
 
 private:
 
@@ -105,7 +110,7 @@ public:
 	void RegisterBlob() override;
 
 	void ReloadAndSetPipeline(const DirectXQueueContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) override;
-	void ReloadAndSetPipeline(const DirectXQueueContext* context, const Vector2ui& windowSize = kMainWindowSize) override;
+	void ReloadAndSetPipeline(const DirectXQueueContext* context, const Vector2ui& windowSize = Configuration::GetConfig().resolution) override;
 
 private:
 
@@ -116,3 +121,5 @@ private:
 	void CheckAndReload() override;
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

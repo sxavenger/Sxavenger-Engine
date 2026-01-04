@@ -4,16 +4,22 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
-#include <Engine/Preview/Asset/AssetTexture.h>
+#include <Engine/Assets/Asset/AssetTexture.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
 
 //* c++
 #include <memory>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FLUTTexture class
@@ -67,3 +73,5 @@ private:
 	void CreateResource(const Vector2ui& size, const Vector2ui& tile);
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

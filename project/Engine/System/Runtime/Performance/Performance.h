@@ -3,30 +3,22 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* performance
-#include "TimePoint.h"
-#include "RunTimeTracker.h"
-
 //* engine
-#include <Engine/System/UI/ISystemDebugGui.h>
+#include <Engine/Foundation.h>
 
-//* c++
-#include <optional>
-#include <array>
-#include <deque>
+//* lib
+#include <Lib/Adapter/Time/TimePoint.h>
+#include <Lib/Adapter/Time/RunTimeTracker.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Performance class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class Performance {
-public:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// using
-	////////////////////////////////////////////////////////////////////////////////////////////
-
-	using LapContainer = std::deque<std::pair<std::string, TimePointd<TimeUnit::millisecond>>>;
-
 public:
 
 	//=========================================================================================
@@ -37,12 +29,11 @@ public:
 
 	void End();
 
-	void RecordLap(const std::string& name);
+	template <TimeUnit T = TimeUnit::second>
+	TimePointd<T> GetDeltaTimed() const { return runtime_.GetDeltaTime<T>(); }
 
 	template <TimeUnit T = TimeUnit::second>
-	TimePointd<T> GetDeltaTime() const { return runtime_.GetDeltaTime<T>(); }
-
-	const LapContainer& GetLap() const { return laps_[(lapIndex_ + 1) % lapCount_]; }
+	TimePointf<T> GetDeltaTimef() const { return runtime_.GetDeltaTime<T>(); }
 
 private:
 
@@ -54,17 +45,6 @@ private:
 
 	RunTimeTracker runtime_;
 
-	//* lap *//
-
-	static const uint8_t lapCount_ = 2;
-	std::array<LapContainer, lapCount_> laps_;
-
-	uint8_t lapIndex_ = 0;
-
-	TimePointd<TimeUnit::second> recordInterval_ = 1.0f;
-	TimePointd<TimeUnit::second> recordedTime_   = {};
-	bool isRecord_ = true;
-
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -72,3 +52,5 @@ private:
 	void WaitFrame() const;
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

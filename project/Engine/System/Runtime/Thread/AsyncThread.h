@@ -7,6 +7,7 @@
 #include "AsyncTask.h"
 
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/System/UI/ISystemDebugGui.h>
 
@@ -17,6 +18,11 @@
 #include <queue>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncExecution enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class AsyncExecution : uint8_t {
@@ -24,7 +30,6 @@ enum class AsyncExecution : uint8_t {
 	Copy,
 	Compute,
 };
-static inline constexpr uint8_t kAsyncExecutionCount = static_cast<uint8_t>(AsyncExecution::Compute) + 1;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncThread class
@@ -154,3 +159,5 @@ private:
 	std::queue<std::shared_ptr<AsyncTask>> queue_;
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

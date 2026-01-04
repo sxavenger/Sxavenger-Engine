@@ -7,10 +7,16 @@
 #include "../Common/FBaseTexture.h"
 
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* external
 #include <magic_enum.hpp>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FMainGBuffer class
@@ -23,7 +29,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Layout : uint8_t {
 		Scene,
-		UI,
+		Canvas,
 	};
 
 public:
@@ -31,9 +37,6 @@ public:
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-
-	FMainGBuffer()  = default;
-	~FMainGBuffer() = default;
 
 	void Init(const Vector2ui& size);
 
@@ -79,10 +82,12 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static inline const size_t kLayoutCount_ = magic_enum::enum_count<Layout>();
+	static inline const size_t kLayoutCount = magic_enum::enum_count<Layout>();
 
-	static const std::array<DXGI_FORMAT, kLayoutCount_> kFormats_;
+	static const std::array<DXGI_FORMAT, kLayoutCount> kFormats;
 
-	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> buffers_ = {};
+	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount> buffers_ = {};
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

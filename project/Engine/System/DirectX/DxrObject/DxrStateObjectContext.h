@@ -29,7 +29,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXROBJECT namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-_DXROBJECT_NAMESPACE_BEGIN
+DXROBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // StateObjectDesc structure
@@ -124,6 +124,7 @@ public:
 	void SetStateObject(DxObject::CommandContext* context) const;
 
 	void DispatchRays(DxObject::CommandContext* context, const Vector2ui& size) const;
+	void DispatchRays(DxObject::CommandContext* context, const Vector3ui& size) const;
 
 private:
 
@@ -173,4 +174,4 @@ private:
 
 };
 
-_DXROBJECT_NAMESPACE_END
+DXROBJECT_NAMESPACE_END

@@ -1,0 +1,18 @@
+{
+	"materials": [
+		"8b85fae8-1f75-425c-837bbf81b61ab102",
+		"a2ce6e2d-7dbf-4256-a80dfbe697577cb5",
+		"b91904fc-4931-4900-8adf7aba74157f56",
+		"53e32305-56de-4f93-93c93aa3eda78397",
+		"50856d28-20ae-4ad1-beac703032efb354",
+		"846089f3-7fb7-4a3c-8710140845ab395b"
+	],
+	"meshes": [
+		"f2f0a8ea-2511-47df-bb1f4f852fbe5f03",
+		"6f851328-eb96-4479-a0812c05e490c9e5",
+		"2e9018c9-fd82-4c69-a5559d3cef87574e",
+		"b814a749-eb17-44a6-a40968a3fc8471d4",
+		"ccb0ddd6-3288-47b9-a1d6a73bd1f269d0"
+	],
+	"skeleton": "4100baa5-2b3f-4985-ad1b704f7f186ffd"
+}

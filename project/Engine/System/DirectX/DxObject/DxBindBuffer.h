@@ -21,12 +21,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
 ////////////////////////////////////////////////////////////////////////////////////////////
-_DXOBJECT_NAMESPACE_BEGIN
+DXOBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BindBufferType enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class BindBufferType : uint8_t {
+	None,
 	k32bitConstants,
 	kVirtual_CBV,
 	kVirtual_SRV,
@@ -131,8 +132,11 @@ public:
 	~SamplerBindDesc() = default;
 
 	void SetSamplerLinear(const std::string& name, SamplerMode mode);
+
 	void SetSamplerAnisotropic(const std::string& name, SamplerMode mode, uint32_t anisotropic);
+
 	void SetSamplerPoint(const std::string& name, SamplerMode mode);
+
 	void SetSamplerDesc(const std::string& name, const D3D12_STATIC_SAMPLER_DESC& desc);
 
 	bool Contains(const std::string& name) const;
@@ -228,4 +232,4 @@ private:
 
 };
 
-_DXOBJECT_NAMESPACE_END
+DXOBJECT_NAMESPACE_END

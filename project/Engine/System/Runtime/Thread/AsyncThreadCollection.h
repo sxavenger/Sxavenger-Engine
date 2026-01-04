@@ -8,10 +8,19 @@
 #include "AsyncThread.h"
 
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/UI/ISystemDebugGui.h>
+
+//* external
+#include <magic_enum.hpp>
 
 //* c++
 #include <array>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncThreadCollection class
@@ -52,6 +61,8 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::array<AsyncThreadPool, kAsyncExecutionCount> pools_;
+	std::array<AsyncThreadPool, magic_enum::enum_count<AsyncExecution>()> pools_;
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

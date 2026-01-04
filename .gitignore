@@ -329,17 +329,14 @@ FodyWeavers.xsd
 # profile
 /profiles
 
-# engine log.
-/project/SxavengerEngineLog.md
-
 # externals build results.
 /project/externals/DirectXTex/Shaders/Compiled
 
-# engine before methods
-/project/Engine/!dest
+# Sxavenger Engine 内部出力関係
+/project/Logs
 /project/imgui.ini
 
-# assets before
+# 負荷の高いAssets関係
 /project/assets/models/sponza
-/project/assets/models/sponza_curtains
 /project/assets/models/Bistro
+/project/assets/models/tree

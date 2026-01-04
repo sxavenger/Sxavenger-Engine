@@ -1,10 +1,14 @@
 #include "FRenderPassContext.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../FMainRender.h"
+
+//* engine
+#include <Engine/Components/Component/ComponentHelper.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassContext class methods
@@ -32,13 +36,12 @@ FBaseRenderPass::Config FRenderPassContext::ApplyConfig(const FBaseRenderPass::C
 
 	if (config.camera == nullptr) { //!< cameraが設定されていない場合, Tagのcameraを取得
 		if (config.tag != CameraComponent::Tag::None) {
-			// component storage から tag に一致する camera component を取得.
-			sComponentStorage->ForEachActive<CameraComponent>([&](CameraComponent* component) {
-				if (component->GetTag() == config.tag) {
-					config.camera = component;
-				}
-			});
+			config.camera = ComponentHelper::GetCameraComponent(config.tag);
 		}
+	}
+
+	if (config.cullCamera == nullptr) { //!< culling用cameraが設定されていない場合, cameraと同じものを使用する
+		config.cullCamera = config.camera;
 	}
 
 	if (config.scene == nullptr) { //!< sceneが設定されていない場合, main renderから取得

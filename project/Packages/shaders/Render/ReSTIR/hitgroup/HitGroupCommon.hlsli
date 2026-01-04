@@ -6,8 +6,8 @@
 //* common
 #include "../PathtracingCommon.hlsli"
 
-//* geometry
-#include "../../Geometry/GeometryVertex.hlsli"
+//* content
+#include "../../../Content/Mesh.hlsli"
 
 //* lib
 #include "../../../Library/BRDF.hlsli"

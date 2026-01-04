@@ -8,10 +8,13 @@
 #include "DxDevice.h"
 #include "DxDimensionBuffer.h"
 
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
 ////////////////////////////////////////////////////////////////////////////////////////////
-_DXOBJECT_NAMESPACE_BEGIN
+DXOBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ConstantBuffer class
@@ -80,26 +83,26 @@ inline void ConstantBuffer<T>::Unmap() {
 
 template <typename T>
 inline T& ConstantBuffer<T>::At() {
-	Exception::Assert(data_ != nullptr, "Constant Buffer is not mapped.");
+	SXAVENGER_ENGINE StreamLogger::AssertA(data_ != nullptr, "Constant Buffer is not mapped.");
 	return *data_;
 }
 
 template <typename T>
 inline const T& ConstantBuffer<T>::At() const {
-	Exception::Assert(data_ != nullptr, "Constant Buffer is not mapped.");
+	SXAVENGER_ENGINE StreamLogger::AssertA(data_ != nullptr, "Constant Buffer is not mapped.");
 	return *data_;
 }
 
 template <typename T>
 inline const T* ConstantBuffer<T>::GetData() {
-	Exception::Assert(data_ != nullptr, "Constant Buffer is not mapped.");
+	SXAVENGER_ENGINE StreamLogger::Assert(data_ != nullptr, "Constant Buffer is not mapped.");
 	return data_;
 }
 
 template <typename T>
 inline void ConstantBuffer<T>::Fill(const T& value) {
-	Exception::Assert(data_ != nullptr, "Constant Buffer is not mapped.");
+	SXAVENGER_ENGINE StreamLogger::Assert(data_ != nullptr, "Constant Buffer is not mapped.");
 	std::memcpy(data_, &value, stride_ * size_);
 }
 
-_DXOBJECT_NAMESPACE_END
+DXOBJECT_NAMESPACE_END

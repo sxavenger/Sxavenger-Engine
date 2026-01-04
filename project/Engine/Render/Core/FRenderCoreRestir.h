@@ -4,10 +4,11 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/Foundation.h>
+#include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/DirectX/DxrObject/DxrExportGroup.h>
 #include <Engine/System/DirectX/DxrObject/DxrRaytracingBlob.h>
 #include <Engine/System/DirectX/DxrObject/DxrStateObjectContext.h>
-#include <Engine/System/Config/SxavengerConfig.h>
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
 
 //* externals
@@ -16,6 +17,11 @@
 //* c++
 #include <array>
 #include <type_traits>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreRestir class
@@ -57,28 +63,6 @@ public:
 
 		uint32_t maxSampleCount  = 1024; //!< 合計sample数
 		uint32_t samplesPerFrame = 1;    //!< frameごとのsample数
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Seed structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Seed {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		Seed() { Set(); }
-
-		void Set();
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		std::array<uint32_t, 3> seed; //!< シード値
-
 	};
 
 
@@ -151,7 +135,7 @@ private:
 	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, magic_enum::enum_count<MissExportType>()>          missExportGroups_;
 	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, magic_enum::enum_count<HitgroupExportType>()>      hitgroupExportGroups_;
 
-	static inline const std::filesystem::path kDirectory_ = kPackagesShaderDirectory / "render/ReSTIR";
+	static inline const std::filesystem::path kDirectory = kPackagesDirectory / "shaders" / "render" / "ReSTIR";
 
 	//* context *//
 
@@ -159,7 +143,7 @@ private:
 
 	//* pipelines *//
 
-	static inline const Vector3ui kThreadGroupSize_ = Vector3ui(16, 16, 1);
+	static inline const Vector3ui kThreadGroupSize = Vector3ui(16, 16, 1);
 
 	std::array<std::unique_ptr<CustomReflectionComputePipeline>, magic_enum::enum_count<Process>()> pipelines_;
 
@@ -176,3 +160,5 @@ private:
 	void CreateComputePipeline(Process process, const std::filesystem::path& filepath);
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

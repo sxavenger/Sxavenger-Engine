@@ -1,9 +1,11 @@
 #pragma once
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Config/SxavengerConfig.h>
+#include <Engine/Foundation.h>
+#include <Engine/System/Configuration/Configuration.h>
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
 
 //* external
@@ -11,6 +13,11 @@
 
 //* c++
 #include <array>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreProcess class
@@ -86,7 +93,7 @@ private:
 
 	static inline const Vector2ui kNumThreadSize_ = { 16, 16 };
 
-	static inline const std::filesystem::path kDirectory_ = kPackagesShaderDirectory / "Render" / "Process";
+	static inline const std::filesystem::path kDirectory = kPackagesDirectory / "shaders" / "Render" / "Process";
 
 
 
@@ -101,3 +108,5 @@ private:
 	void CreatePipeline(CompositeType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc);
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

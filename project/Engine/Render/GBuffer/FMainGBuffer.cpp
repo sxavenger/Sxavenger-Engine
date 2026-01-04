@@ -1,10 +1,18 @@
 #include "FMainGBuffer.h"
+SXAVENGER_ENGINE_USING
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/Convert.h>
+#include <Engine/System/System.h>
 
 //=========================================================================================
 // static const variables
 //=========================================================================================
 
-const std::array<DXGI_FORMAT, FMainGBuffer::kLayoutCount_> FMainGBuffer::kFormats_ = {
+const std::array<DXGI_FORMAT, FMainGBuffer::kLayoutCount> FMainGBuffer::kFormats = {
 	FMainGBuffer::kColorFormat, //!< Scene
 	FMainGBuffer::kColorFormat, //!< UI
 };
@@ -14,8 +22,8 @@ const std::array<DXGI_FORMAT, FMainGBuffer::kLayoutCount_> FMainGBuffer::kFormat
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FMainGBuffer::Init(const Vector2ui& size) {
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
-		buffers_[i] = std::make_unique<FBaseTexture>(size, kFormats_[i], FBaseTexture::Flag::All);
+	for (size_t i = 0; i < kLayoutCount; ++i) {
+		buffers_[i] = std::make_unique<FBaseTexture>(size, kFormats[i], FBaseTexture::Flag::All);
 
 		// nameの設定
 		std::string name = "FMainGBuffer | ";
@@ -72,12 +80,12 @@ void FMainGBuffer::TransitionBeginRenderTargetUI(const DirectXQueueContext* cont
 	auto commandList = context->GetCommandList();
 
 	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::UI)]->TransitionBeginRenderTarget();
+	barriers[0] = buffers_[static_cast<size_t>(Layout::Canvas)]->TransitionBeginRenderTarget();
 
 	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 
 	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, 1> handles = {};
-	handles[0] = buffers_[static_cast<size_t>(Layout::UI)]->GetCPUHandleRTV();
+	handles[0] = buffers_[static_cast<size_t>(Layout::Canvas)]->GetCPUHandleRTV();
 
 	commandList->OMSetRenderTargets(
 		static_cast<UINT>(handles.size()), handles.data(), false,
@@ -88,25 +96,25 @@ void FMainGBuffer::TransitionBeginRenderTargetUI(const DirectXQueueContext* cont
 
 void FMainGBuffer::TransitionEndRenderTargetUI(const DirectXQueueContext* context) {
 	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::UI)]->TransitionEndRenderTarget();
+	barriers[0] = buffers_[static_cast<size_t>(Layout::Canvas)]->TransitionEndRenderTarget();
 
 	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 }
 
 void FMainGBuffer::ClearRenderTargetUI(const DirectXQueueContext* context) {
-	buffers_[static_cast<size_t>(Layout::UI)]->ClearRenderTarget(context);
+	buffers_[static_cast<size_t>(Layout::Canvas)]->ClearRenderTarget(context);
 }
 
 void FMainGBuffer::TransitionBeginUnorderedUI(const DirectXQueueContext* context) {
 	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::UI)]->TransitionBeginUnordered();
+	barriers[0] = buffers_[static_cast<size_t>(Layout::Canvas)]->TransitionBeginUnordered();
 
 	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 }
 
 void FMainGBuffer::TransitionEndUnorderedUI(const DirectXQueueContext* context) {
 	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::UI)]->TransitionEndUnordered();
+	barriers[0] = buffers_[static_cast<size_t>(Layout::Canvas)]->TransitionEndUnordered();
 
 	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 }
@@ -116,5 +124,5 @@ FBaseTexture* FMainGBuffer::GetGBuffer(Layout layout) const {
 }
 
 DXGI_FORMAT FMainGBuffer::GetFormat(Layout layout) {
-	return kFormats_[static_cast<size_t>(layout)];
+	return kFormats[static_cast<size_t>(layout)];
 }

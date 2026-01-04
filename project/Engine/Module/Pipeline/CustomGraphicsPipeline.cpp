@@ -1,15 +1,16 @@
 #include "CustomGraphicsPipeline.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/SxavengerSystem.h>
-#include <Engine/Preview/Content/ContentStorage.h>
+#include <Engine/System/System.h>
+#include <Engine/Assets/Content/ContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Base CustomGraphicsPipeline class methods
+// BaseCustomGraphicsPipeline class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -68,7 +69,7 @@ void CustomGraphicsPipeline::ReloadAndSetPipeline(const DirectXQueueContext* con
 void CustomGraphicsPipeline::CheckAndReload() {
 	if (CheckAsset()) {
 		RegisterBlob();
-		GraphicsPipelineState::CreateDirectXPipeline(SxavengerSystem::GetDxDevice());
+		GraphicsPipelineState::CreateDirectXPipeline(System::GetDxDevice());
 	}
 }
 
@@ -100,8 +101,8 @@ void CustomReflectionGraphicsPipeline::ReloadAndSetPipeline(const DirectXQueueCo
 void CustomReflectionGraphicsPipeline::CheckAndReload() {
 	if (CheckAsset()) {
 		RegisterBlob();
-		ReflectionGraphicsPipelineState::ReflectionRootSignature(SxavengerSystem::GetDxDevice());
-		ReflectionGraphicsPipelineState::CreateDirectXPipeline(SxavengerSystem::GetDxDevice());
+		ReflectionGraphicsPipelineState::ReflectionRootSignature(System::GetDxDevice());
+		ReflectionGraphicsPipelineState::CreateDirectXPipeline(System::GetDxDevice());
 	}
 }
 

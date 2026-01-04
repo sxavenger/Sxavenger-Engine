@@ -1,5 +1,12 @@
 #include "DxCommandContext.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
+DXOBJECT_USING
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CommandContext class methods
@@ -52,6 +59,18 @@ void CommandContext::ExecuteAllAllocators() {
 	Signal();
 
 	Reset(currentIndex_);
+}
+
+void CommandContext::TransitionResourceState(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after) {
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource   = resource;
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier.Transition.StateBefore = before;
+	barrier.Transition.StateAfter  = after;
+
+	commandList_->ResourceBarrier(1, &barrier);
 }
 
 void CommandContext::CreateCommandAllocator(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type) {
@@ -107,7 +126,7 @@ void CommandContext::CreateFence(ID3D12Device* device) {
 	fenceEvent_ = CreateEvent(
 		NULL, FALSE, FALSE, NULL
 	);
-	Exception::Assert(fenceEvent_ != nullptr, "fence event is nullptr.");
+	StreamLogger::AssertA(fenceEvent_ != nullptr, "fence event is nullptr.");
 }
 
 void CommandContext::Close() {

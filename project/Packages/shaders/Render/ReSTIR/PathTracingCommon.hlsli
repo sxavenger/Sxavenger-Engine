@@ -7,6 +7,7 @@
 
 //* library
 #include "../../Library/ImportanceSample.hlsli"
+#include "../../Library/RaytracingLib.hlsli"
 
 //* content
 #include "../../Content/Random.hlsli"
@@ -23,16 +24,6 @@
 
 //* common
 #include "../DeferredBufferIndex.hlsli"
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// define
-////////////////////////////////////////////////////////////////////////////////////////////
-
-//* shaders
-#define _RAYGENERATION [shader("raygeneration")]
-#define _ANYHIT        [shader("anyhit")]
-#define _CLOSESTHIT    [shader("closesthit")]
-#define _MISS          [shader("miss")]
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Config variables
@@ -158,31 +149,6 @@ struct Payload {
 		TraceRay(gScene, flag, kRayMask, 0, 1, 0, desc, recursion);
 
 		return true;
-	}
-	
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Attribtue structure
-////////////////////////////////////////////////////////////////////////////////////////////
-struct Attribute {
-
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-	
-	float2 barys;
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	float3 GetBarycentrics() {
-		return float3(
-			1.0f - barys.x - barys.y,
-			barys.x,
-			barys.y
-		);
 	}
 	
 };

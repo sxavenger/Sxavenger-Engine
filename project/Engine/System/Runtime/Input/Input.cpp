@@ -1,11 +1,12 @@
 #include "Input.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Utility/Logger.h>
-#include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/System.h>
 
 //* externals
 #include <imgui.h>
@@ -42,7 +43,7 @@ void KeyboardInput::AsyncUpdate() {
 
 	InputData& input = inputs_[static_cast<uint8_t>(InputType::Async_Stack)];
 
-	input.isEnableAcquire = SetCooperativeLevel(SxavengerSystem::GetForcusWindow());
+	input.isEnableAcquire = SetCooperativeLevel(System::GetForcusWindow());
 
 	if (!input.isEnableAcquire) {
 		input.Clear();
@@ -110,6 +111,32 @@ bool KeyboardInput::IsPressAny() const {
 		inputs_[static_cast<uint8_t>(InputType::Main_Current)].keys.end(),
 		[](BYTE key) { return key; }
 	);
+}
+
+Vector2i KeyboardInput::GetDirection(const std::array<KeyId, 4>& keys) const {
+	if (!IsEnableAcquire(InputType::Main_Current)) {
+		return {};
+	}
+
+	Vector2i direction = {};
+
+	if (IsPress(keys[0])) { // Up
+		direction.y += 1;
+	}
+
+	if (IsPress(keys[1])) { // Down
+		direction.y -= 1;
+	}
+
+	if (IsPress(keys[2])) { // Left
+		direction.x -= 1;
+	}
+
+	if (IsPress(keys[3])) { // Right
+		direction.x += 1;
+	}
+
+	return direction;
 }
 
 void KeyboardInput::SystemDebugGui() {
@@ -205,13 +232,13 @@ void MouseInput::Init(IDirectInput8* dInput) {
 	auto hr = dInput->CreateDevice(
 		GUID_SysMouse, &mouseDevice_, NULL
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	StreamLogger::AssertA(SUCCEEDED(hr));
 
 	// 入力データ形式のセット
 	hr = mouseDevice_->SetDataFormat(
 		&c_dfDIMouse2 // 標準形式
 	);
-	Exception::Assert(SUCCEEDED(hr));
+	StreamLogger::AssertA(SUCCEEDED(hr));
 
 	flags_ |= DISCL_FOREGROUND;
 	flags_ |= DISCL_NONEXCLUSIVE;
@@ -225,7 +252,7 @@ void MouseInput::AsyncUpdate() {
 
 	InputData& input = inputs_[static_cast<uint8_t>(InputType::Async_Stack)];
 
-	input.isEnableAcquire = SetCooperativeLevel(SxavengerSystem::GetForcusWindow());
+	input.isEnableAcquire = SetCooperativeLevel(System::GetForcusWindow());
 
 	if (!input.isEnableAcquire) {
 		input.Clear();
@@ -495,7 +522,7 @@ Vector2i GamepadInput::InputData::GetStick(GamepadStickId id) const {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void GamepadInput::Init(uint8_t number) {
-	Exception::Assert(number < XUSER_MAX_COUNT, "Gamepad number is out of range.");
+	StreamLogger::AssertA(number < XUSER_MAX_COUNT, "Gamepad number is out of range.");
 
 	// numberの設定
 	number_ = number;
@@ -519,8 +546,7 @@ void GamepadInput::AsyncUpdate() {
 	}
 
 	if (current.dwPacketNumber == input.xinput.dwPacketNumber) {
-		//!< 前回と同じ状態
-		return;
+		return; //!< 前回と同じ状態
 	}
 
 	// 現在の状態にスタックさせる
@@ -552,7 +578,7 @@ bool GamepadInput::IsConnect() const {
 }
 
 bool GamepadInput::IsPress(GamepadButtonId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return false;
 	}
 
@@ -560,7 +586,7 @@ bool GamepadInput::IsPress(GamepadButtonId id) const {
 }
 
 bool GamepadInput::IsPress(GamepadTriggerId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return false;
 	}
 
@@ -568,7 +594,7 @@ bool GamepadInput::IsPress(GamepadTriggerId id) const {
 }
 
 bool GamepadInput::IsTrigger(GamepadButtonId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return false;
 	}
 
@@ -577,7 +603,7 @@ bool GamepadInput::IsTrigger(GamepadButtonId id) const {
 }
 
 bool GamepadInput::IsTrigger(GamepadTriggerId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return false;
 	}
 
@@ -586,7 +612,7 @@ bool GamepadInput::IsTrigger(GamepadTriggerId id) const {
 }
 
 bool GamepadInput::IsRelease(GamepadButtonId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return false;
 	}
 
@@ -595,7 +621,7 @@ bool GamepadInput::IsRelease(GamepadButtonId id) const {
 }
 
 bool GamepadInput::IsRelease(GamepadTriggerId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return false;
 	}
 
@@ -604,7 +630,7 @@ bool GamepadInput::IsRelease(GamepadTriggerId id) const {
 }
 
 Vector2i GamepadInput::GetStick(GamepadStickId id) const {
-	if (!inputs_[static_cast<uint8_t>(InputType::Main_Current)].IsConnect()) {
+	if (!IsConnect()) {
 		return {};
 	}
 
@@ -612,7 +638,7 @@ Vector2i GamepadInput::GetStick(GamepadStickId id) const {
 }
 
 Vector2f GamepadInput::GetStickNormalized(GamepadStickId id) const {
-	return (static_cast<Vector2f>(GetStick(id)) / static_cast<float>(SHRT_MAX)).Normalize();
+	return static_cast<Vector2f>(GetStick(id)) / static_cast<float>(SHRT_MAX);
 }
 
 void GamepadInput::SystemDebugGui() {
@@ -739,7 +765,7 @@ void Input::Init(const DirectXWindowContext* mainWindow) {
 	//* thread *//
 
 	thread_ = std::thread([this]() {
-		Logger::EngineThreadLog("[Input] begin input thread.");
+		StreamLogger::EngineThreadLog("[Input] begin input thread.");
 
 		while (!isTerminate_) {
 			{
@@ -756,7 +782,7 @@ void Input::Init(const DirectXWindowContext* mainWindow) {
 			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 
-		Logger::EngineThreadLog("[Input] end input thread.");
+		StreamLogger::EngineThreadLog("[Input] end input thread.");
 	});
 }
 

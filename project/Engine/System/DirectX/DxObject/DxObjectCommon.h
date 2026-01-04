@@ -3,6 +3,14 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/Foundation.h>
+#include <Engine/System/Utility/ComPtr.h>
+
+//* lib
+#include <Lib/CXXAttributeConfig.h>
+#include <Lib/Geometry/Vector3.h>
+
 //* DirectX12
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -10,13 +18,7 @@
 //* c++
 #include <cstdint>
 #include <variant>
-
-//* engine
-#include <Engine/System/Utility/ComPtr.h>
-#include <Engine/System/Utility/Logger.h>
-
-//* lib
-#include <Lib/Geometry/Vector3.h>
+#include <source_location>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -28,15 +30,15 @@
 // DXOBJECT DEFINE
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-#define _DXOBJECT_NAMESPACE_BEGIN namespace DxObject {
-#define _DXOBJECT_NAMESPACE_END   }
-#define _DXOBJECT                 DxObject::
-#define _DXOBJECT_USING           using namespace DxObject;
+#define DXOBJECT_NAMESPACE_BEGIN namespace DxObject {
+#define DXOBJECT_NAMESPACE_END   }
+#define DXOBJECT                 DxObject::
+#define DXOBJECT_USING           using namespace DxObject;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT Common
 ////////////////////////////////////////////////////////////////////////////////////////////
-_DXOBJECT_NAMESPACE_BEGIN
+DXOBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // using
@@ -137,14 +139,14 @@ constexpr DXGI_FORMAT ConvertToSRGB(DXGI_FORMAT format) {
 	}
 }
 
-_NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
+NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
 	ID3D12Device* device,
 	D3D12_HEAP_TYPE heapType,
 	size_t sizeInBytes,
 	D3D12_RESOURCE_FLAGS flags, D3D12_RESOURCE_STATES state
 );
 
-_NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
+NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
 	ID3D12Device* device,
 	size_t sizeInBytes
 );
@@ -170,4 +172,4 @@ constexpr const DXGI_FORMAT kDefaultOffscreenFormat  = kDefaultScreenFormat;    
 constexpr const DXGI_FORMAT kDefaultDepthFormat     = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 constexpr const DXGI_FORMAT kDefaultDepthViewFormat = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
 
-_DXOBJECT_NAMESPACE_END
+DXOBJECT_NAMESPACE_END

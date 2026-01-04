@@ -1,4 +1,5 @@
 #include "FRenderPassCanvas.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -7,10 +8,10 @@
 #include "../FRenderCore.h"
 
 //* engine
-#include <Engine/Content/SxavengerContent.h>
-#include <Engine/Component/Components/ComponentStorage.h>
-#include <Engine/Component/Components/SpriteRenderer/SpriteRendererComponent.h>
-#include <Engine/Component/Components/TextRenderer/TextRendererComponent.h>
+#include <Engine/Graphics/Graphics.h>
+#include <Engine/Components/Component/CanvasRenderer/SpriteRendererComponent.h>
+#include <Engine/Components/Component/CanvasRenderer/TextRendererComponent.h>
+#include <Engine/Components/Component/ComponentStorage.h>
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,6 +19,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FRenderPassCanvas::Render(const DirectXQueueContext* context, const Config& config) {
+
+	context->BeginEvent(L"RenderPass - Canvas");
+
 	config.buffer->BeginRenderTargetMainUI(context);
 
 	PassSprite(context, config);
@@ -25,13 +29,15 @@ void FRenderPassCanvas::Render(const DirectXQueueContext* context, const Config&
 	PassText(context, config);
 
 	config.buffer->EndRenderTargetMainUI(context);
+
+	context->EndEvent();
 }
 
 void FRenderPassCanvas::PassSprite(const DirectXQueueContext* context, const Config& config) {
 
-	FRenderCore::GetInstance()->GetLayer()->SetPipeline(
-		FRenderCoreLayer::Type::Sprite, context, config.buffer->GetSize()
-	);
+	auto core = FRenderCore::GetInstance()->GetCanvas();
+
+	core->SetPipeline(FRenderCoreCanvas::Type::Sprite, context, config.buffer->GetSize());
 
 	sComponentStorage->ForEachActive<SpriteRendererComponent>([&](SpriteRendererComponent* component) {
 		if (!component->IsEnable()) {
@@ -41,7 +47,7 @@ void FRenderPassCanvas::PassSprite(const DirectXQueueContext* context, const Con
 		component->BindAIBuffer(context);
 
 		D3D12_GPU_DESCRIPTOR_HANDLE handle = component->GetTextureParameter().Empty()
-			? SxavengerContent::GetGPUHandleSRV("white1x1")
+			? Graphics::GetGPUHandleSRV("white1x1")
 			: component->GetTextureParameter().WaitRequire()->GetGPUHandleSRV();
 
 		DxObject::BindBufferDesc parameter = {};
@@ -50,9 +56,7 @@ void FRenderPassCanvas::PassSprite(const DirectXQueueContext* context, const Con
 		parameter.SetAddress("gTransformationUV", component->GetGPUVirtualAddressUV());
 		parameter.SetHandle("gTexture",           handle);
 
-		FRenderCore::GetInstance()->GetLayer()->BindGraphicsBuffer(
-			FRenderCoreLayer::Type::Sprite, context, parameter
-		);
+		core->BindGraphicsBuffer(FRenderCoreCanvas::Type::Sprite, context, parameter);
 
 		component->DrawCall(context);
 	});
@@ -61,9 +65,9 @@ void FRenderPassCanvas::PassSprite(const DirectXQueueContext* context, const Con
 
 void FRenderPassCanvas::PassText(const DirectXQueueContext* context, const Config& config) {
 
-	FRenderCore::GetInstance()->GetLayer()->SetPipeline(
-		FRenderCoreLayer::Type::Text, context, config.buffer->GetSize()
-	);
+	auto core = FRenderCore::GetInstance()->GetCanvas();
+
+	core->SetPipeline(FRenderCoreCanvas::Type::Text, context, config.buffer->GetSize());
 
 	sComponentStorage->ForEachActive<TextRendererComponent>([&](TextRendererComponent* component) {
 		if (!component->IsEnable()) {
@@ -80,9 +84,7 @@ void FRenderPassCanvas::PassText(const DirectXQueueContext* context, const Confi
 		desc.SetAddress("gTransform", component->GetRectTransform()->GetGPUVirtualAddress());
 		desc.SetHandle("gFont",       component->GetFont()->GetGPUHandleSRV());
 
-		FRenderCore::GetInstance()->GetLayer()->BindGraphicsBuffer(
-			FRenderCoreLayer::Type::Text, context, desc
-		);
+		core->BindGraphicsBuffer(FRenderCoreCanvas::Type::Text, context, desc);
 
 		component->DrawCall(context);
 	});

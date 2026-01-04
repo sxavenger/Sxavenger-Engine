@@ -4,11 +4,18 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/Content/InputAssembler/TriangleInputAssembler.h>
+#include <Engine/Foundation.h>
+#include <Engine/System/Configuration/Configuration.h>
+#include <Engine/Graphics/InputAssembler/TriangleInputAssembler.h>
 #include <Engine/Module/Pipeline/CustomGraphicsPipeline.h>
 
 //* external
 #include <magic_enum.hpp>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreLight class
@@ -29,7 +36,6 @@ public:
 
 		//!< Sky light
 		SkyLight,
-		VisibilitySkyLight,
 		SkyLightEnvironment,
 		SkyAtmosphereEnvironment,
 	};
@@ -39,9 +45,6 @@ public:
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-
-	FRenderCoreLight()  = default;
-	~FRenderCoreLight() = default;
 
 	void Init();
 
@@ -69,7 +72,7 @@ private:
 
 	std::array<std::unique_ptr<CustomReflectionGraphicsPipeline>, magic_enum::enum_count<LightType>()> pipelines_;
 
-	static const std::filesystem::path kDirectory_;
+	static inline const std::filesystem::path kDirectory = kPackagesDirectory / "shaders" / "render" / "light";
 
 	//=========================================================================================
 	// private methods
@@ -78,3 +81,5 @@ private:
 	void CreatePipeline();
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

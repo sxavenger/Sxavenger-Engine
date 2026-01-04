@@ -1,5 +1,12 @@
 #include "DxRootSignatureDesc.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
+DXOBJECT_USING
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseRootSignatureDesc base structure methods
@@ -135,7 +142,7 @@ ComPtr<ID3D12RootSignature> BaseRootSignatureDesc::CreateRootSignature(ID3D12Dev
 	);
 
 	if (FAILED(hr)) {
-		Exception::Assert(false, "Root Signature create error.", reinterpret_cast<char*>(signatureErrorBlob->GetBufferPointer()));
+		StreamLogger::Exception("Root Signature create error.", reinterpret_cast<char*>(signatureErrorBlob->GetBufferPointer()));
 	}
 
 	ComPtr<ID3D12RootSignature> result;
@@ -152,7 +159,7 @@ ComPtr<ID3D12RootSignature> BaseRootSignatureDesc::CreateRootSignature(ID3D12Dev
 }
 
 void BaseRootSignatureDesc::AutoResizeParam(uint32_t index) {
-	Exception::Assert(index < params.capacity()); //!< reserve分を超えてないか確認
+	StreamLogger::AssertA(index < params.capacity(), "capacity over."); //!< reserve分を超えてないか確認
 
 	if (index < params.size()) { //!< indexがsize以下ならresizeしない
 		return;
@@ -163,7 +170,7 @@ void BaseRootSignatureDesc::AutoResizeParam(uint32_t index) {
 }
 
 void BaseRootSignatureDesc::AutoResizeSampler(uint32_t index) {
-	Exception::Assert(index < samplers.capacity());
+	StreamLogger::AssertA(index < samplers.capacity(), "capacity over.");
 
 	if (index < samplers.size()) { //!< indexがsize以下ならresizeしない
 		return;

@@ -4,6 +4,8 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/Foundation.h>
+#include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/Module/Pipeline/CustomGraphicsPipeline.h>
 
@@ -12,6 +14,11 @@
 
 //* external
 #include <magic_enum.hpp>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreGeometry class
@@ -36,9 +43,6 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FRenderCoreGeometry() = default;
-	~FRenderCoreGeometry() = default;
-
 	void Init();
 
 	//* pipeline option *//
@@ -57,12 +61,12 @@ private:
 
 	std::array<std::unique_ptr<CustomReflectionGraphicsPipeline>, magic_enum::enum_count<Type>()> pipelines_;
 
-	DxObject::GraphicsPipelineDesc defferedDesc_ = {};
+	DxObject::GraphicsPipelineDesc deferredDesc_ = {};
 	DxObject::GraphicsPipelineDesc forwardDesc_  = {};
 
 	//* directory *//
 
-	static inline const std::filesystem::path kDirectory_ = kPackagesShaderDirectory / "render";
+	static inline const std::filesystem::path kDirectory = kPackagesDirectory / "shaders" / "render";
 
 	//=========================================================================================
 	// private methods
@@ -73,3 +77,5 @@ private:
 	void CreatePipeline();
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

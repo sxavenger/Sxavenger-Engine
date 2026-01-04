@@ -4,6 +4,6 @@
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-UINT _DXROBJECT Alignment(size_t size, UINT align) {
+UINT DXROBJECT Alignment(size_t size, UINT align) {
 	return UINT(size + align - 1) & ~(align - 1);
 }

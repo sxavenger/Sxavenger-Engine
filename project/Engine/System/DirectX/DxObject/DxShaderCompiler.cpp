@@ -1,11 +1,13 @@
 #include "DxShaderCompiler.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Config/SxavengerConfig.h>
+#include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/Configuration/Configuration.h>
 
 //* external
 #include <magic_enum.hpp>
@@ -49,14 +51,14 @@ void ShaderCompiler::Init() {
 	hr = utils_->CreateDefaultIncludeHandler(&includeHandler_);
 	DxObject::Assert(hr, L"dxc include handler create failed.");
 
-	Logger::EngineLog("[_DXOBJECT ShaderCompiler] complete initialize.");
+	StreamLogger::EngineLog("[DXOBJECT ShaderCompiler] complete initialize.");
 }
 
 void ShaderCompiler::Term() {
 	utils_.Reset();
 	compiler_.Reset();
 	includeHandler_.Reset();
-	Logger::EngineLog("[_DXOBJECT ShaderCompiler] term.");
+	StreamLogger::EngineLog("[DXOBJECT ShaderCompiler] term.");
 }
 
 ComPtr<IDxcBlob> ShaderCompiler::Compile(
@@ -69,7 +71,7 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	// hlslファイルを読み込む
 	ComPtr<IDxcBlobEncoding> shaderSource;
 	auto hr = utils_->LoadFile(filepathW.c_str(), nullptr, &shaderSource);
-	Exception::Assert(SUCCEEDED(hr), "hlsl not found.", "filepath: " + filepath.generic_string());
+	StreamLogger::AssertA(SUCCEEDED(hr), "hlsl not found.", "filepath: " + filepath.generic_string());
 
 	// 読み込んだファイルの内容を設定する
 	DxcBuffer shaderSourceBuffer = {};
@@ -87,7 +89,7 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 
 #ifdef _DEVELOPMENT
 	arguments.emplace_back(
-		SxavengerConfig::GetConfig().isEnableShaderOptimization ? L"-O3" : L"-Od"
+		Configuration::GetConfig().enableShaderOptimization ? L"-O3" : L"-Od"
 	);
 #else
 	// releaseではoption関わらず最適化
@@ -104,7 +106,7 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 		arguments.emplace_back(L"_COMPUTE");
 	}
 
-	if (SxavengerConfig::GetSupport().isSupportInlineRaytracing) {
+	if (Configuration::GetSupport().isSupportInlineRaytracing) {
 		arguments.emplace_back(L"-D");
 		arguments.emplace_back(L"_INLINE_RAYTRACING");
 	}
@@ -125,14 +127,14 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	hr = shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
-		Exception::Assert(false, "hlsl is compile error. filepath: " + filepath.generic_string(), shaderError->GetStringPointer());
+		StreamLogger::Exception("hlsl is compile error. filepath: " + filepath.generic_string(), shaderError->GetStringPointer());
 	}
 
 	ComPtr<IDxcBlob> blob;
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&blob), nullptr);
 	DxObject::Assert(hr, L"shader compile failed.");
 
-	Logger::EngineThreadLog(std::format("[_DXOBJECT ShaderCompiler] shader compiled. filepath: {}, profile: {}", filepath.generic_string(), magic_enum::enum_name(profile)));
+	StreamLogger::EngineThreadLog(std::format("[DXOBJECT ShaderCompiler] shader compiled. filepath: {}, profile: {}", filepath.generic_string(), magic_enum::enum_name(profile)));
 	return blob;
 }
 

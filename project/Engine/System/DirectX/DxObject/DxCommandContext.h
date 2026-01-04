@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
 ////////////////////////////////////////////////////////////////////////////////////////////
-_DXOBJECT_NAMESPACE_BEGIN
+DXOBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CommandContext class
@@ -47,6 +47,10 @@ public:
 
 	ID3D12CommandQueue* GetCommandQueue() const { return commandQueue_.Get(); }
 
+	//* helper methods *//
+
+	void TransitionResourceState(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after);
+
 private:
 
 	//=========================================================================================
@@ -72,6 +76,8 @@ private:
 	uint32_t allocatorCount_;
 	uint32_t currentIndex_;
 
+	//* event *//
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -89,4 +95,4 @@ private:
 
 };
 
-_DXOBJECT_NAMESPACE_END
+DXOBJECT_NAMESPACE_END

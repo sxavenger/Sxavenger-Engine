@@ -1,4 +1,5 @@
 #include "FRenderPassForwardTransparent.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -7,10 +8,10 @@
 #include "../FRenderCore.h"
 
 //* engine
-#include <Engine/Component/Components/ComponentStorage.h>
-#include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
-#include <Engine/Component/Components/MeshRenderer/SkinnedMeshRendererComponent.h>
-#include <Engine/Component/Components/Particle/ParticleComponent.h>
+#include <Engine/Components/Component/MeshRenderer/MeshRendererComponent.h>
+#include <Engine/Components/Component/MeshRenderer/SkinnedMeshRendererComponent.h>
+//#include <Engine/Components/Component/Particle/ParticleComponent.h>
+#include <Engine/Components/Component/ComponentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassDeferredBase class methods
@@ -24,6 +25,8 @@ void FRenderPassForwardTransparent::Render(const DirectXQueueContext* context, c
 		return;
 	}
 
+	context->BeginEvent(L"RenderPass - ForwardTransparent");
+
 	BeginPassRenderTarget(context, config.buffer);
 
 	PassStaticMesh(context, config);
@@ -33,6 +36,8 @@ void FRenderPassForwardTransparent::Render(const DirectXQueueContext* context, c
 	PassParticles(context, config);
 
 	EndPassRenderTarget(context, config.buffer);
+
+	context->EndEvent();
 
 }
 
@@ -194,9 +199,10 @@ void FRenderPassForwardTransparent::PassSkinnedMesh(const DirectXQueueContext* c
 }
 
 void FRenderPassForwardTransparent::PassParticles(const DirectXQueueContext* context, const Config& config) {
+	context, config;
 
-	sComponentStorage->ForEachActive<ParticleComponent>([&](ParticleComponent* component) {
+	/*sComponentStorage->ForEachActive<ParticleComponent>([&](ParticleComponent* component) {
 		component->DrawParticle(context, config.camera);
-	});
+	});*/
 
 }

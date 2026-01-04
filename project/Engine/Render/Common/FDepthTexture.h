@@ -4,6 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/Utility/ComPtr.h>
 #include <Engine/System/DirectX/DxObject/DxObjectCommon.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
@@ -11,6 +12,11 @@
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FDepthTexture class
@@ -155,3 +161,5 @@ private:
 	static const D3D12_RESOURCE_STATES kDefaultResourceState_ = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

@@ -4,15 +4,23 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "GBuffer/FDeferredGBuffer.h"
-#include "GBuffer/FLightingGBuffer.h"
-#include "GBuffer/FMainGBuffer.h"
 #include "Common/FDepthTexture.h"
 #include "Common/FProcessTexture.h"
 #include "Common/FPriorityTexture.h"
+#include "GBuffer/FDeferredGBuffer.h"
+#include "GBuffer/FLightingGBuffer.h"
+#include "GBuffer/FProbeGBuffer.h"
+#include "GBuffer/FMainGBuffer.h"
 
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderTargetBuffer class
@@ -67,6 +75,8 @@ public:
 
 	FLightingGBuffer& GetLightingGBuffer() { return lighting_; }
 
+	FProbeGBuffer& GetProbeGBuffer() { return probe_; }
+
 	FMainGBuffer& GetMainGBuffer() { return main_; }
 
 	const D3D12_GPU_VIRTUAL_ADDRESS& GetIndexBufferAddress() const;
@@ -95,6 +105,7 @@ private:
 
 	FDeferredGBuffer deferred_;
 	FLightingGBuffer lighting_;
+	FProbeGBuffer    probe_;
 	FMainGBuffer     main_;
 
 	//* depth stencil parameter *//
@@ -111,7 +122,7 @@ private:
 	Vector2ui size_;
 	//!< "Dimension" 32bitConstants で使用
 
-	std::unique_ptr<DxObject::DimensionBuffer<DeferredBufferIndex>> index_;
+	std::unique_ptr<DxObject::ConstantBuffer<DeferredBufferIndex>> index_;
 
 	//=========================================================================================
 	// private methods
@@ -120,3 +131,5 @@ private:
 	void AttachIndex();
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

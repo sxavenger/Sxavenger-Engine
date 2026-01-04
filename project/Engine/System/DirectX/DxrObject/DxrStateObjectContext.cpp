@@ -1,5 +1,12 @@
 #include "DxrStateObjectContext.h"
-_DXROBJECT_USING
+SXAVENGER_ENGINE_USING
+DXROBJECT_USING
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // StateObjectDesc structure
@@ -20,7 +27,7 @@ void StateObjectDesc::SetAttributeStride(size_t stride) {
 }
 
 void StateObjectDesc::SetMaxRecursionDepth(uint8_t depth) {
-	Exception::Assert(depth > 0 && depth < D3D12_RAYTRACING_MAX_DECLARABLE_TRACE_RECURSION_DEPTH, "recursion depth is out of range.");
+	StreamLogger::AssertA(depth > 0 && depth < D3D12_RAYTRACING_MAX_DECLARABLE_TRACE_RECURSION_DEPTH, "recursion depth is out of range.");
 	maxRecursionDepth = depth;
 }
 
@@ -206,6 +213,17 @@ void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const V
 	context->GetCommandList()->DispatchRays(&desc);
 }
 
+void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const Vector3ui& size) const {
+
+	D3D12_DISPATCH_RAYS_DESC desc = dispatchDesc_;
+	desc.Width  = size.x;
+	desc.Height = size.y;
+	desc.Depth  = size.z;
+
+	context->GetCommandList()->DispatchRays(&desc);
+
+}
+
 void StateObjectContext::BindDXGILibrarySubobject(CD3DX12_STATE_OBJECT_DESC& desc) {
 
 	//!< blobごとにexportを仕分け
@@ -366,7 +384,7 @@ uint8_t* StateObjectContext::WriteExport(uint8_t* dst, UINT size, const ExportGr
 
 	// exportのid書き込み
 	auto id = properties_->GetShaderIdentifier(expt->GetName().c_str());
-	Exception::AssertW(id != nullptr, L"export identifier not found. export name: " + expt->GetName());
+	StreamLogger::AssertW(id != nullptr, L"export identifier not found. export name: " + expt->GetName());
 
 	dst += WriteIdentifier(dst, id);
 
@@ -376,7 +394,7 @@ uint8_t* StateObjectContext::WriteExport(uint8_t* dst, UINT size, const ExportGr
 	}
 
 	for (const auto& buffer : expt->GetTable().GetWriteBuffers(*desc)) {
-		Exception::Assert(buffer.has_value(), "buffer not has value.", "// maybe system error.");
+		StreamLogger::AssertA(buffer.has_value(), "buffer not has value.", "// maybe system error.");
 		const auto& value = buffer.value();
 		
 		if (std::holds_alternative<D3D12_GPU_VIRTUAL_ADDRESS>(value)) {

@@ -1,10 +1,11 @@
 #include "Performance.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Config/SxavengerConfig.h>
+#include <Engine/System/Configuration/Configuration.h>
 
 //* c++
 #include <thread>
@@ -21,32 +22,18 @@ void Performance::End() {
 	WaitFrame();
 	runtime_.End();
 
-	// lapの更新かどうかの判定
-	recordedTime_ -= runtime_.GetDeltaTime<TimeUnit::second>();
-	isRecord_ = (recordedTime_ <= 0.0f);
-
-	if (isRecord_) {
-		// lapの更新
-		recordedTime_ = recordInterval_;
-		++lapIndex_ %= lapCount_;
-		laps_[lapIndex_].clear();
-	}
-}
-
-void Performance::RecordLap(const std::string& name) {
-	if (isRecord_) {
-		laps_[lapIndex_].emplace_back(name, runtime_.GetElapsedTime<TimeUnit::millisecond>());
-	}
+	// TODO: deltaTimeの修正処理
+	// configから値を取得してdeltaTimeを修正する
 }
 
 void Performance::WaitFrame() const {
-	if (!SxavengerConfig::GetConfig().isLockFrameRate) {
+	if (!Configuration::GetConfig().isLockFrameRate) {
 		return;
 	}
 
 	const auto& reference = runtime_.GetReference();
 
-	float targetFrameRate = SxavengerConfig::GetConfig().targetFrameRate;
+	float targetFrameRate = Configuration::GetConfig().targetFrameRate;
 
 	const std::chrono::microseconds kWaitTime(static_cast<uint64_t>(1000000.0f / targetFrameRate));
 	const std::chrono::microseconds kCheckWaitTime(static_cast<uint64_t>(1000000.0f / (targetFrameRate + 5))); //!< 60Hz倍数以外のモニター対策

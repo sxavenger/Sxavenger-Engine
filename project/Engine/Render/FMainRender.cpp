@@ -1,4 +1,5 @@
 #include "FMainRender.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -12,13 +13,16 @@
 #include "Pass/FRenderPassTonemap.h"
 #include "Pass/FRenderPassCanvas.h"
 
+//* engine
+#include <Engine/System/Configuration/Configuration.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FMainRender class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FMainRender::Init() {
 	buffer_ = std::make_unique<FRenderTargetBuffer>();
-	buffer_->Create(kMainWindowSize);
+	buffer_->Create(Configuration::GetConfig().resolution);
 
 	scene_ = std::make_unique<FScene>();
 	scene_->Init();
@@ -53,15 +57,19 @@ void FMainRender::Render(const DirectXQueueContext* context, DirectXWindowContex
 }
 
 void FMainRender::PresentMain(const DirectXQueueContext* context) {
+	context->BeginEvent(L"Present Main");
+
 	FPresenter::Present(
-		context, kMainWindowSize,
+		context, Configuration::GetConfig().resolution,
 		buffer_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV()
 	);
 
 	FPresenter::Present(
-		context, kMainWindowSize,
-		buffer_->GetGBuffer(FMainGBuffer::Layout::UI)->GetGPUHandleSRV()
+		context, Configuration::GetConfig().resolution,
+		buffer_->GetGBuffer(FMainGBuffer::Layout::Canvas)->GetGPUHandleSRV()
 	);
+
+	context->EndEvent();
 }
 
 FMainRender* FMainRender::GetInstance() {

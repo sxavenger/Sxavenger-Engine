@@ -74,34 +74,14 @@ float3 CalculateDirectionalLight(uint index, Surface surface) {
 	//* Viewの情報を取得
 	float3 v = normalize(-WorldRayDirection()); //!< viewからの方向ベクトルを取得
 
-	//* 計算
-	float3 h = normalize(l + v);
+	BxDFAlbedo albedo = BxDFAlbedo::Create(surface.albedo, surface.metallic);
+	BxDFContext context = BxDFContext::Create(surface.normal, v, l);
 
-	float NdotV = saturate(dot(surface.normal, v));
-	float NdotL = saturate(dot(surface.normal, l));
-	float NdotH = saturate(dot(surface.normal, h));
-	float VdotH = saturate(dot(v, h));
+	if (!context.IsValid()) {
+		return float3(0.0f, 0.0f, 0.0f);
+	}
 
-	static const float3 kMinFrenel = float3(0.04f, 0.04f, 0.04f); //!< 非金属の最小Frenel値
-
-	// diffuse Albedo
-	//!< 金属(metallic = 1.0f) -> 0.0f
-	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - kMinFrenel)
-	float3 diffuseAlbedo = surface.albedo * (1.0f - kMinFrenel) * (1.0f - surface.metallic);
-
-	// specular Albedo
-	//!< 金属(metallic = 1.0f) -> kMinFrenel
-	//!< 非金属(metallic = 0.0f) -> albedo
-	float3 specularAlbedo = lerp(kMinFrenel, surface.albedo, surface.metallic);
-
-	float3 f = F_SphericalGaussian(VdotH, specularAlbedo);
-	float vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
-	float d  = D_GGX(NdotH, surface.roughness);
-
-	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
-	float3 specularBRDF = SpecularBRDF(f, vh, d);
-
-	return (diffuseBRDF + specularBRDF) * NdotL * color_mask * light_mask;
+	return EvaluateBRDF(albedo, context, surface.roughness) * context.NdotL * color_mask * light_mask;
 }
 
 float3 CalculatePointLight(uint index, Surface surface) {
@@ -114,34 +94,14 @@ float3 CalculatePointLight(uint index, Surface surface) {
 	//* Viewの情報を取得
 	float3 v = normalize(-WorldRayDirection()); //!< viewからの方向ベクトルを取得
 
-	//* 計算
-	float3 h = normalize(l + v);
+	BxDFAlbedo albedo = BxDFAlbedo::Create(surface.albedo, surface.metallic);
+	BxDFContext context = BxDFContext::Create(surface.normal, v, l);
 
-	float NdotV = saturate(dot(surface.normal, v));
-	float NdotL = saturate(dot(surface.normal, l));
-	float NdotH = saturate(dot(surface.normal, h));
-	float VdotH = saturate(dot(v, h));
+	if (!context.IsValid()) {
+		return float3(0.0f, 0.0f, 0.0f);
+	}
 
-	static const float3 kMinFrenel = float3(0.04f, 0.04f, 0.04f); //!< 非金属の最小Frenel値
-
-	// diffuse Albedo
-	//!< 金属(metallic = 1.0f) -> 0.0f
-	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - kMinFrenel)
-	float3 diffuseAlbedo = surface.albedo * (1.0f - kMinFrenel) * (1.0f - surface.metallic);
-
-	// specular Albedo
-	//!< 金属(metallic = 1.0f) -> kMinFrenel
-	//!< 非金属(metallic = 0.0f) -> albedo
-	float3 specularAlbedo = lerp(kMinFrenel, surface.albedo, surface.metallic);
-
-	float3 f  = F_SphericalGaussian(VdotH, specularAlbedo);
-	float  vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
-	float  d  = D_GGX(NdotH, surface.roughness);
-
-	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
-	float3 specularBRDF = SpecularBRDF(f, vh, d);
-
-	return (diffuseBRDF + specularBRDF) * NdotL * color_mask * light_mask;
+	return EvaluateBRDF(albedo, context, surface.roughness) * context.NdotL * color_mask * light_mask;
 	
 }
 
@@ -155,41 +115,21 @@ float3 CalculateSpotLight(uint index, Surface surface) {
 	//* Viewの情報を取得
 	float3 v = normalize(-WorldRayDirection()); //!< viewからの方向ベクトルを取得
 
-	//* 計算
-	float3 h = normalize(l + v);
+	BxDFAlbedo albedo = BxDFAlbedo::Create(surface.albedo, surface.metallic);
+	BxDFContext context = BxDFContext::Create(surface.normal, v, l);
 
-	float NdotV = saturate(dot(surface.normal, v));
-	float NdotL = saturate(dot(surface.normal, l));
-	float NdotH = saturate(dot(surface.normal, h));
-	float VdotH = saturate(dot(v, h));
+	if (!context.IsValid()) {
+		return float3(0.0f, 0.0f, 0.0f);
+	}
 
-	static const float3 kMinFrenel = float3(0.04f, 0.04f, 0.04f); //!< 非金属の最小Frenel値
-
-	// diffuse Albedo
-	//!< 金属(metallic = 1.0f) -> 0.0f
-	//!< 非金属(metallic = 0.0f) -> albedo * (1.0f - kMinFrenel)
-	float3 diffuseAlbedo = surface.albedo * (1.0f - kMinFrenel) * (1.0f - surface.metallic);
-
-	// specular Albedo
-	//!< 金属(metallic = 1.0f) -> kMinFrenel
-	//!< 非金属(metallic = 0.0f) -> albedo
-	float3 specularAlbedo = lerp(kMinFrenel, surface.albedo, surface.metallic);
-
-	float3 f  = F_SphericalGaussian(VdotH, specularAlbedo);
-	float  vh = V_HeightCorrelated(NdotV, NdotL, surface.roughness);
-	float  d  = D_GGX(NdotH, surface.roughness);
-
-	float3 diffuseBRDF  = DiffuseBRDF(diffuseAlbedo);
-	float3 specularBRDF = SpecularBRDF(f, vh, d);
-
-	return (diffuseBRDF + specularBRDF) * NdotL * color_mask * light_mask;
+	return EvaluateBRDF(albedo, context, surface.roughness) * context.NdotL * color_mask * light_mask;
 	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // anyhit main entry point
 ////////////////////////////////////////////////////////////////////////////////////////////
-_ANYHIT void mainAnyhit(inout Payload payload, in Attribute attribute) {
+ANYHIT void mainAnyhit(inout Payload payload, in Attribute attribute) {
 
 	MeshVertex vertex = GetWorldVertex(attribute);
 
@@ -205,7 +145,7 @@ _ANYHIT void mainAnyhit(inout Payload payload, in Attribute attribute) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // closesthit main entry point
 ////////////////////////////////////////////////////////////////////////////////////////////
-_CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
+CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
 
 	Surface surface;
 	surface.GetSurface(attribute);

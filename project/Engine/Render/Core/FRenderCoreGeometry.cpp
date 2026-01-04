@@ -1,5 +1,6 @@
 #include "FRenderCoreGeometry.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -9,7 +10,7 @@ _DXOBJECT_USING
 #include "../GBuffer/FMainGBuffer.h"
 
 //* engine
-#include <Engine/System/Config/SxavengerConfig.h>
+#include <Engine/System/Configuration/Configuration.h>
 
 //* external
 #include <magic_enum.hpp>
@@ -33,17 +34,17 @@ void FRenderCoreGeometry::BindGraphicsBuffer(Type type, const DirectXQueueContex
 
 void FRenderCoreGeometry::CreateDesc() {
 
-	//* deffered 
-	defferedDesc_ = {};
-	defferedDesc_.CreateDefaultDesc();
+	//* deferred
+	deferredDesc_ = {};
+	deferredDesc_.CreateDefaultDesc();
 
-	defferedDesc_.rtvFormats.clear();
+	deferredDesc_.rtvFormats.clear();
 
 	//!< Deferred Buffer
-	defferedDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Albedo));
-	defferedDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Normal));
-	defferedDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::MaterialARM));
-	defferedDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Position));
+	deferredDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Albedo));
+	deferredDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Normal));
+	deferredDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::MaterialARM));
+	deferredDesc_.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Position));
 
 	D3D12_RENDER_TARGET_BLEND_DESC blend = {};
 	blend.BlendEnable           = true;
@@ -56,8 +57,8 @@ void FRenderCoreGeometry::CreateDesc() {
 	blend.BlendOpAlpha          = D3D12_BLEND_OP_ADD;
 	blend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
-	defferedDesc_.SetBlendDesc(0, blend);
-	defferedDesc_.SetIndependentBlendEnable(false);
+	deferredDesc_.SetBlendDesc(0, blend);
+	deferredDesc_.SetIndependentBlendEnable(false);
 
 	//* forward
 	forwardDesc_ = {};
@@ -71,15 +72,15 @@ void FRenderCoreGeometry::CreatePipeline() {
 	{
 		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
 		//* blob
-		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Default.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Forward.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Default.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Forward.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		//* root signature
-		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
 		//* pipeline
-		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), forwardDesc_);
+		pipeline->CreatePipeline(System::GetDxDevice(), forwardDesc_);
 
 		pipelines_[static_cast<uint32_t>(Type::Forward_MeshVS)] = std::move(pipeline);
 	}
@@ -87,15 +88,15 @@ void FRenderCoreGeometry::CreatePipeline() {
 	{
 		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
 		//* blob
-		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Default.vs.hlsl",  GraphicsShaderType::vs);
-		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Deferred.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Default.vs.hlsl",  GraphicsShaderType::vs);
+		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Deferred.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		//* root signature
-		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
 		//* pipeline
-		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), defferedDesc_);
+		pipeline->CreatePipeline(System::GetDxDevice(), deferredDesc_);
 
 		pipelines_[static_cast<uint32_t>(Type::Deferred_MeshVS)] = std::move(pipeline);
 	}
@@ -103,28 +104,28 @@ void FRenderCoreGeometry::CreatePipeline() {
 	{
 		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
 		//* blob
-		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Default.as.hlsl",  GraphicsShaderType::as);
-		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Default.ms.hlsl",  GraphicsShaderType::ms);
-		pipeline->CreateContent(kDirectory_ / "Geometry" / "Mesh" / "Deferred.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Default.as.hlsl",  GraphicsShaderType::as);
+		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Default.ms.hlsl",  GraphicsShaderType::ms);
+		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Deferred.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		//* root signature
-		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
 		//* pipeline
-		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), defferedDesc_);
+		pipeline->CreatePipeline(System::GetDxDevice(), deferredDesc_);
 
 		pipelines_[static_cast<uint32_t>(Type::Deferred_MeshMS)] = std::move(pipeline);
 	}
 
 	{
 		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
-		pipeline->CreateContent(kDirectory_ / "Particle" / "GPUParticle" / "GPUParticle.vs.hlsl", GraphicsShaderType::vs);
-		pipeline->CreateContent(kDirectory_ / "Particle" / "GPUParticle" / "GPUParticle.ps.hlsl", GraphicsShaderType::ps);
+		pipeline->CreateContent(kDirectory / "Particle" / "GPUParticle" / "GPUParticle.vs.hlsl", GraphicsShaderType::vs);
+		pipeline->CreateContent(kDirectory / "Particle" / "GPUParticle" / "GPUParticle.ps.hlsl", GraphicsShaderType::ps);
 		pipeline->RegisterBlob();
 
 		//* root signature
-		pipeline->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
+		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
 		//* pipeline
 		GraphicsPipelineDesc desc = forwardDesc_;
@@ -139,7 +140,7 @@ void FRenderCoreGeometry::CreatePipeline() {
 		
 		desc.SetRTVFormat(FMainGBuffer::kColorFormat);
 
-		pipeline->CreatePipeline(SxavengerSystem::GetDxDevice(), desc);
+		pipeline->CreatePipeline(System::GetDxDevice(), desc);
 
 		pipelines_[static_cast<uint32_t>(Type::Forward_GPUParticleVS)] = std::move(pipeline);
 

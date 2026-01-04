@@ -1,4 +1,5 @@
 #include "FRenderPassDeferredLighting.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -7,27 +8,34 @@
 #include "../FRenderCore.h"
 
 //* engine
-#include <Engine/Component/Components/ComponentStorage.h>
-#include <Engine/Component/Components/Light/Punctual/DirectionalLightComponent.h>
-#include <Engine/Component/Components/Light/Punctual/PointLightComponent.h>
-#include <Engine/Component/Components/Light/Punctual/SpotLightComponent.h>
-#include <Engine/Component/Components/Light/Environment/SkyLightComponent.h>
-#include <Engine/Component/Components/Light/Environment/SkyAtmosphereComponent.h>
+#include <Engine/Components/Component/Light/Punctual/DirectionalLightComponent.h>
+#include <Engine/Components/Component/Light/Punctual/PointLightComponent.h>
+#include <Engine/Components/Component/Light/Punctual/SpotLightComponent.h>
+#include <Engine/Components/Component/Light/Environment/SkyLightComponent.h>
+#include <Engine/Components/Component/Light/Environment/SkyAtmosphereComponent.h>
+#include <Engine/Components/Component/ComponentStorage.h>
+
+//* lib
+#include <Lib/Adapter/Random/Random.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassDeferredLighting class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, const Config& config) {
-	
+
 	if (config.CheckStatus(Config::Status::Geometry_Warning)) {
 		ClearPassDirect(context, config.buffer);
 		ClearPassIndirect(context, config.buffer);
 		return;
 	}
 
+	context->BeginEvent(L"RenderPass - DeferredLighting");
+
 	{ //* Direct Lighting
 		BeginPassDirectLighting(context, config.buffer);
+
+		context->BeginEvent(L"Direct Lighting Passes");
 
 		PassEmpty(context, config);
 
@@ -40,11 +48,15 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 		PassSkyLight(context, config);
 		PassSkyAtmosphere(context, config);
 
+		context->EndEvent();
+
 		EndPassDirectLighting(context, config.buffer);
 	}
 
 
 	if (config.option.Test(FBaseRenderPass::Config::Option::IndirectLighting)) { //* Indirect Lighting
+
+		context->BeginEvent(L"Indirect Lighting Passes");
 
 		{
 			BeginPassIndirectLighting(context, config.buffer);
@@ -58,14 +70,29 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 
 			EndPassIndirectLighting(context, config.buffer);
 		}
-		
+
+		context->EndEvent();
+
 
 	} else {
 
 		ClearPassIndirect(context, config.buffer);
 	}
 
+	if (config.option.Test(FBaseRenderPass::Config::Option::Preview)) {
+
+		context->BeginEvent(L"Probe Lighting Passes");
+
+		PassProbeReservoir(context, config);
+		PassProbeUpdate(context, config);
+		PassProbeEvaluation(context, config);
+
+		context->EndEvent();
+	}
+
 	TransitionLightingPass(context, config);
+
+	context->EndEvent();
 
 }
 
@@ -426,7 +453,7 @@ void FRenderPassDeferredLighting::PassIndirectReservoirInitialize(const DirectXQ
 
 	//* config
 	commandList->SetComputeRoot32BitConstants(5, 2, &config.buffer->GetLightingGBuffer().GetConfig(), 0);
-	FRenderCoreRestir::Seed seed = {};
+	Seed<uint32_t, 3> seed = {};
 	commandList->SetComputeRoot32BitConstants(6, 3, &seed, 0);
 
 	//* light
@@ -462,7 +489,7 @@ void FRenderPassDeferredLighting::PassIndirectReservoirTemporal(const DirectXQue
 
 	DxObject::BindBufferDesc desc = {};
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
-	FRenderCoreRestir::Seed seed = {};
+	Seed<uint32_t, 3> seed = {};
 	desc.Set32bitConstants("Seed", 3, &seed);
 	desc.SetAddress("gInitalizeReservoir", config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Initialize)->GetGPUVirtualAddress());
 	desc.SetAddress("gTemporalReservoir",  config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->GetGPUVirtualAddress());
@@ -481,7 +508,7 @@ void FRenderPassDeferredLighting::PassIndirectReservoirSpatial(const DirectXQueu
 
 	DxObject::BindBufferDesc desc = {};
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
-	FRenderCoreRestir::Seed seed = {};
+	Seed<uint32_t, 3> seed = {};
 	desc.Set32bitConstants("Seed", 3, &seed);
 	desc.SetAddress("gTemporalReservoir",   config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->GetGPUVirtualAddress());
 	desc.SetAddress("gSpatialReservoir",    config.buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->GetGPUVirtualAddress());
@@ -514,6 +541,112 @@ void FRenderPassDeferredLighting::PassIndirectReservoirTexture(const DirectXQueu
 
 	config.buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->TransitionEndUnordered(context);
 
+}
+
+void FRenderPassDeferredLighting::PassProbeReservoir(const DirectXQueueContext* context, const Config& config) {
+
+	auto core = FRenderCore::GetInstance()->GetProbe();
+	core->GetContext()->SetStateObject(context->GetDxCommand());
+
+	config.buffer->GetProbeGBuffer().TransitionBeginUnordered(context);
+
+	auto commandList = context->GetCommandList();
+
+	//* GBuffer
+	commandList->SetComputeRootDescriptorTable(0, config.buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Sample)->GetGPUHandleUAV()); //!< gProbeSample
+	commandList->SetComputeRootDescriptorTable(1, config.buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Reservoir)->GetGPUHandleUAV()); //!< gProbeReservoir
+	commandList->SetComputeRootDescriptorTable(2, config.buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Moment)->GetGPUHandleUAV()); //!< gProbeMoment
+
+	//* scene
+	commandList->SetComputeRootShaderResourceView(3, config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+
+	FRenderCoreProbe::Config conf = {};
+	commandList->SetComputeRoot32BitConstants(4, 8, &conf, 0);
+
+	Seed<uint32_t, 3> seed = {};
+	commandList->SetComputeRoot32BitConstants(5, 3, &seed, 0);
+
+	commandList->SetComputeRootConstantBufferView(6, config.camera->GetGPUVirtualAddress());
+
+	//* light
+	// Directional Light
+	commandList->SetComputeRootConstantBufferView(7, config.scene->directionalLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(8, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(9, config.scene->directionalLightParams_->GetGPUVirtualAddress());
+
+	// Point Light
+	commandList->SetComputeRootConstantBufferView(10, config.scene->pointLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(11, config.scene->pointLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(12, config.scene->pointLightParams_->GetGPUVirtualAddress());
+
+	// Spot Light
+	commandList->SetComputeRootConstantBufferView(13, config.scene->spotLightCount_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(14, config.scene->spotLightTransforms_->GetGPUVirtualAddress());
+	commandList->SetComputeRootShaderResourceView(15, config.scene->spotLightParams_->GetGPUVirtualAddress());
+
+	// Sky Light
+	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
+		commandList->SetComputeRootConstantBufferView(16, component->GetGPUVirtualAddress());
+	});
+
+	core->GetContext()->DispatchRays(context->GetDxCommand(), config.buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Sample)->GetSize());
+
+	config.buffer->GetProbeGBuffer().TransitionEndUnordered(context);
+
+}
+
+void FRenderPassDeferredLighting::PassProbeUpdate(const DirectXQueueContext* context, const Config& config) {
+
+	auto buffer = config.buffer;
+
+	auto core = FRenderCore::GetInstance()->GetProbe();
+	core->SetPipeline(FRenderCoreProbe::Process::Update, context);
+
+	buffer->GetProbeGBuffer().TransitionBeginUnordered(context);
+
+	DxObject::BindBufferDesc desc = {};
+	desc.SetHandle("gProbeSample", buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Sample)->GetGPUHandleUAV());
+	desc.SetHandle("gProbeReservoir", buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Reservoir)->GetGPUHandleUAV());
+	desc.SetHandle("gProbeMoment", buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Moment)->GetGPUHandleUAV());
+	desc.SetHandle("gProbeIrradiance", buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Irradiance)->GetGPUHandleUAV());
+
+	FRenderCoreProbe::Config conf = {};
+	desc.Set32bitConstants("Config", 8, &conf);
+
+	core->BindComputeBuffer(FRenderCoreProbe::Process::Update, context, desc);
+	core->Dispatch(context, buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Sample)->GetSize());
+
+	buffer->GetProbeGBuffer().TransitionEndUnordered(context);
+}
+
+void FRenderPassDeferredLighting::PassProbeEvaluation(const DirectXQueueContext* context, const Config& config) {
+
+	auto buffer = config.buffer;
+
+	auto core = FRenderCore::GetInstance()->GetProbe();
+	core->SetPipeline(FRenderCoreProbe::Process::Evaluate, context);
+
+	buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->TransitionBeginUnordered(context);
+
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, &buffer->GetSize());
+
+	desc.SetHandle("gIndirect",buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleUAV());
+
+	desc.SetAddress("gDeferredBufferIndex", buffer->GetIndexBufferAddress());
+
+	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+
+	FRenderCoreProbe::Config conf = {};
+	desc.Set32bitConstants("Config", 8, &conf);
+	desc.SetHandle("gProbeSample",    buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Sample)->GetGPUHandleSRV());
+	desc.SetHandle("gProbeReservoir", buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Reservoir)->GetGPUHandleSRV());
+	desc.SetHandle("gProbeIrradiance", buffer->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Irradiance)->GetGPUHandleSRV());
+
+	core->BindComputeBuffer(FRenderCoreProbe::Process::Evaluate, context, desc);
+	core->Dispatch(context, buffer->GetSize());
+
+	buffer->GetGBuffer(FLightingGBuffer::Layout::Indirect)->TransitionEndUnordered(context);
 }
 
 void FRenderPassDeferredLighting::TransitionLightingPass(const DirectXQueueContext* context, const Config& config) {

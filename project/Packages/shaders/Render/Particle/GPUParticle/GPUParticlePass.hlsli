@@ -8,7 +8,9 @@
 
 //* gometry
 #include "../../Geometry/GeometryRenderTarget.hlsli"
-#include "../../Geometry/GeometryVertex.hlsli"
+
+//* content
+#include "../../../Content/Mesh.hlsli"
 
 //* component
 #include "../../../Component/CameraComponent.hlsli"

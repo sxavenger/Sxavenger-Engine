@@ -8,11 +8,17 @@
 #include "../Core/FRenderCoreRestir.h"
 
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxUnorderedDimensionBuffer.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* external
 #include <magic_enum.hpp>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FLightingGBuffer class
@@ -45,9 +51,6 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FLightingGBuffer()  = default;
-	~FLightingGBuffer() = default;
-
 	void Init(const Vector2ui& size);
 
 	//* getter *//
@@ -68,15 +71,15 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static inline const size_t kLayoutCount_ = magic_enum::enum_count<Layout>();
+	static inline const size_t kLayoutCount = magic_enum::enum_count<Layout>();
 
 	//* format *//
 
-	static const std::array<DXGI_FORMAT, kLayoutCount_> kFormats_;
+	static const std::array<DXGI_FORMAT, kLayoutCount> kFormats;
 
 	//* buffer *//
 
-	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount_> buffers_ = {};
+	std::array<std::unique_ptr<FBaseTexture>, kLayoutCount> buffers_ = {};
 
 
 	std::array<std::unique_ptr<DxObject::UnorderedDimensionBuffer<FRenderCoreRestir::Reservoir<16>>>, magic_enum::enum_count<Reservoir>()> reservoirs_ = {};
@@ -91,3 +94,5 @@ private:
 	FRenderCoreRestir::Config config_ = {};
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

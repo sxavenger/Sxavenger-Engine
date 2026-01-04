@@ -1,4 +1,5 @@
 #include "FLightingGBuffer.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -6,16 +7,19 @@
 //* GBuffer
 #include "FMainGBuffer.h"
 
+//* engine
+#include <Engine/System/Utility/Convert.h>
+#include <Engine/System/System.h>
+
 //=========================================================================================
 // static const variables
 //=========================================================================================
 
-const std::array<DXGI_FORMAT, FLightingGBuffer::kLayoutCount_> FLightingGBuffer::kFormats_ = {
+const std::array<DXGI_FORMAT, FLightingGBuffer::kLayoutCount> FLightingGBuffer::kFormats = {
 	FMainGBuffer::kColorFormat, //!< Direct
 	FMainGBuffer::kColorFormat, //!< Indirect_Reservoir
 	FMainGBuffer::kColorFormat, //!< Indirect_Denoiser
 	FMainGBuffer::kColorFormat, //!< Indirect
-	
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -30,7 +34,7 @@ void FLightingGBuffer::Init(const Vector2ui& size) {
 	buffers_[static_cast<uint8_t>(Layout::Indirect_Reservoir)] = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Reservoir), FBaseTexture::Flag::All);
 	buffers_[static_cast<uint8_t>(Layout::Indirect_Denoise)]   = std::make_unique<FBaseTexture>(size, GetFormat(Layout::Indirect_Denoise),   FBaseTexture::Flag::All);
 
-	for (size_t i = 0; i < kLayoutCount_; ++i) {
+	for (size_t i = 0; i < kLayoutCount; ++i) {
 		// nameの設定
 		std::string name = "FLightingGBuffer | ";
 		name += magic_enum::enum_name(static_cast<FLightingGBuffer::Layout>(i));
@@ -39,7 +43,7 @@ void FLightingGBuffer::Init(const Vector2ui& size) {
 
 	for (size_t i = 0; i < magic_enum::enum_count<Reservoir>(); ++i) {
 		reservoirs_[i] = std::make_unique<DxObject::UnorderedDimensionBuffer<FRenderCoreRestir::Reservoir<16>>>();
-		reservoirs_[i]->Create(SxavengerSystem::GetDxDevice(), size.x * size.y);
+		reservoirs_[i]->Create(System::GetDxDevice(), size.x * size.y);
 
 		std::string name = "FLightingGBuffer | Reservoir | ";
 		name += magic_enum::enum_name(static_cast<FLightingGBuffer::Reservoir>(i));
@@ -47,7 +51,7 @@ void FLightingGBuffer::Init(const Vector2ui& size) {
 	}
 
 	moment_ = std::make_unique<DxObject::UnorderedDimensionBuffer<Vector2ui>>();
-	moment_->Create(SxavengerSystem::GetDxDevice(), size.x * size.y);
+	moment_->Create(System::GetDxDevice(), size.x * size.y);
 	moment_->GetResource()->SetName(L"FLightingGBuffer | Moment");
 }
 
@@ -60,5 +64,5 @@ DxObject::UnorderedDimensionBuffer<FRenderCoreRestir::Reservoir<16>>* FLightingG
 }
 
 DXGI_FORMAT FLightingGBuffer::GetFormat(Layout layout) {
-	return kFormats_[static_cast<size_t>(layout)];
+	return kFormats[static_cast<size_t>(layout)];
 }

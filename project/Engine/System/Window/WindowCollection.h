@@ -4,16 +4,23 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
+#include <Engine/System/UI/ISystemDebugGui.h>
 
 //* c++
 #include <memory>
 #include <unordered_map>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // WindowCollection class
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief Windowを管理するクラス.
+//! @brief windowを管理するクラス.
 class WindowCollection
 	: public ISystemDebugGui {
 public:
@@ -38,10 +45,16 @@ public:
 	//! @brief 全てのwindowのPresent実行.
 	void PresentWindows();
 
+	//! @brief 閉じられたウィンドウの削除
+	void RemoveClosedWindow();
+
 	//! @brief メインウィンドウの取得
+	//! @return windowのptr
 	DirectXWindowContext* GetMainWindow() const { return main_.get(); }
 
 	//! @brief フォーカスされているウィンドウの取得
+	//! @retval ptr フォーカスされているwindowのptr
+	//! @retval nullptr windowが存在しない
 	DirectXWindowContext* GetForcusWindow() const;
 
 	//* debug option *//
@@ -59,13 +72,14 @@ private:
 	std::shared_ptr<DirectXWindowContext> main_;
 
 	std::unordered_map<std::wstring, std::shared_ptr<DirectXWindowContext>> windows_;
-
 	std::unordered_map<HWND, DirectXWindowContext*> hwnds_;
+
+	std::queue<std::shared_ptr<DirectXWindowContext>> removeQueue_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void RemoveClosedWindow();
-
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

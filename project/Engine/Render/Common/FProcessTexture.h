@@ -7,12 +7,18 @@
 #include "FBaseTexture.h"
 
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* c++
 #include <array>
 #include <vector>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FProcessTexture class
@@ -131,3 +137,5 @@ private:
 	//* 現在のresultとなるtextureのindex
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

@@ -1,11 +1,13 @@
 #include "FLUTTexture.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/System.h>
 #include <Engine/Render/FRenderCore.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,7 +20,7 @@ void FLUTTexture::Create(const std::shared_ptr<AssetTexture>& texture, const Vec
 	texture_ = texture;
 
 	if (texture_->GetMetadata().IsLightness()) {
-		Logger::EngineLog("[FLUTTexture] warning | lut texture is lightness(sRGB) format.");
+		StreamLogger::EngineLog("[FLUTTexture] warning | lut texture is lightness(sRGB) format.");
 	}
 
 	parameter_.size = texture_->GetMetadata().size;
@@ -56,7 +58,7 @@ void FLUTTexture::Dispatch(const DirectXQueueContext* context) {
 
 void FLUTTexture::CreateResource(const Vector2ui& size, const Vector2ui& tile) {
 
-	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
+	auto device = System::GetDxDevice()->GetDevice();
 	
 	{ //!< resourceの生成
 
@@ -91,7 +93,7 @@ void FLUTTexture::CreateResource(const Vector2ui& size, const Vector2ui& tile) {
 	{ //!< SRVの生成
 
 		// descriptorの取得
-		descriptorSRV_ = SxavengerSystem::GetDescriptor(kDescriptor_SRV);
+		descriptorSRV_ = System::GetDescriptor(kDescriptor_SRV);
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
@@ -110,7 +112,7 @@ void FLUTTexture::CreateResource(const Vector2ui& size, const Vector2ui& tile) {
 	{ //!< UAVの生成
 
 		// descriptorの取得
-		descriptorUAV_ = SxavengerSystem::GetDescriptor(kDescriptor_UAV);
+		descriptorUAV_ = System::GetDescriptor(kDescriptor_UAV);
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};

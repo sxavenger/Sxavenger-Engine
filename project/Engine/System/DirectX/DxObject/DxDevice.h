@@ -17,7 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
 ////////////////////////////////////////////////////////////////////////////////////////////
-_DXOBJECT_NAMESPACE_BEGIN
+DXOBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Device class
@@ -50,8 +50,6 @@ public:
 	IDXGIFactory7* GetFactory() const { return dxgiFactory_.Get(); }
 
 	IDXGIAdapter4* GetAdapter() const { return useAdapter_.Get(); }
-
-	
 
 public:
 
@@ -107,8 +105,6 @@ private:
 	bool CheckRaytracingEnable();
 	bool CheckMeshShaderEnable();
 
-	bool CheckLaunchFromPIX();
-
 };
 
-_DXOBJECT_NAMESPACE_END
+DXOBJECT_NAMESPACE_END

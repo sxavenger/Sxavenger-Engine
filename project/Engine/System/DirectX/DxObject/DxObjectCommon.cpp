@@ -1,9 +1,12 @@
 #include "DxObjectCommon.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
+
 //* windows
 #include <comdef.h>
 
@@ -11,13 +14,13 @@ _DXOBJECT_USING
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
+ComPtr<ID3D12Resource> DXOBJECT CreateBufferResource(
 	ID3D12Device* device,
 	D3D12_HEAP_TYPE heapType,
 	size_t sizeInBytes,
 	D3D12_RESOURCE_FLAGS flags, D3D12_RESOURCE_STATES state) {
 
-	Exception::Assert(sizeInBytes != 0);
+	StreamLogger::AssertA(sizeInBytes != 0);
 
 	ComPtr<ID3D12Resource> result;
 
@@ -47,10 +50,10 @@ ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
 	return result;
 }
 
-ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
+ComPtr<ID3D12Resource> DXOBJECT CreateBufferResource(
 	ID3D12Device* device, size_t sizeInBytes) {
 
-	Exception::Assert(sizeInBytes != 0);
+	StreamLogger::AssertA(sizeInBytes != 0);
 
 	ComPtr<ID3D12Resource> result;
 
@@ -82,41 +85,36 @@ ComPtr<ID3D12Resource> _DXOBJECT CreateBufferResource(
 
 }
 
-UINT _DXOBJECT RoundUp(UINT round, UINT thread) {
-	Exception::Assert(thread > 0);
+UINT DXOBJECT RoundUp(UINT round, UINT thread) {
+	StreamLogger::AssertA(thread > 0, "round up thread is zero.");
 	return (round + thread - 1) / thread;
 }
 
-Vector3ui _DXOBJECT RoundUp(const Vector3ui& round, const Vector3ui& thread) {
+Vector3ui DXOBJECT RoundUp(const Vector3ui& round, const Vector3ui& thread) {
 	return { RoundUp(round.x, thread.x), RoundUp(round.y, thread.y), RoundUp(round.z, thread.z) };
 }
 
-CompileProfile _DXOBJECT ToProfile(GraphicsShaderType type) {
+DXOBJECT CompileProfile DXOBJECT ToProfile(GraphicsShaderType type) {
 	switch (type) {
 		case GraphicsShaderType::vs:
 			return CompileProfile::vs;
-			break;
 
 		case GraphicsShaderType::gs:
 			return CompileProfile::gs;
-			break;
 
 		case GraphicsShaderType::ms:
 			return CompileProfile::ms;
-			break;
+			
 		case GraphicsShaderType::as:
 			return CompileProfile::as;
-			break;
 
 		case GraphicsShaderType::ps:
 			return CompileProfile::ps;
-			break;
 	}
 
-	Exception::Assert(false, "Graphics Shader Type is undefine.");
-	return {};
+	StreamLogger::Exception("Graphics Shader Type is undefine.");
 }
 
-void _DXOBJECT Assert(HRESULT hr, const std::wstring& label, const std::source_location& location) {
-	Exception::AssertW(SUCCEEDED(hr), label, std::format(L"_com_error: {}", _com_error(hr).ErrorMessage()), location);
+void DXOBJECT Assert(HRESULT hr, const std::wstring& label, const std::source_location& location) {
+	StreamLogger::AssertW(SUCCEEDED(hr), label, std::format(L"_com_error: {}", _com_error(hr).ErrorMessage()), location);
 }

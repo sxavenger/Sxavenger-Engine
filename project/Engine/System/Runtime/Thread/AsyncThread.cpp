@@ -1,11 +1,15 @@
 #include "AsyncThread.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
+
 //* external
-#include <magic_enum.hpp>
 #include <imgui.h>
+#include <magic_enum.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AsyncThread class methods
@@ -19,14 +23,14 @@ void AsyncThread::Create(AsyncExecution execution, const MainFunction& main, con
 	condition_ = condition;
 
 	thread_ = std::thread([this]() {
-		Logger::EngineThreadLog(std::string("[AsyncThread] begin thread. execution: ") + magic_enum::enum_name(execution_).data());
+		StreamLogger::EngineThreadLog(std::string("[AsyncThread] begin thread. execution: ") + magic_enum::enum_name(execution_).data());
 
 		// main loop
 		while (!isTerminated_ && condition_()) {
 			main_(this);
 		}
 
-		Logger::EngineThreadLog("[AsyncThread] end thread.");
+		StreamLogger::EngineThreadLog("[AsyncThread] end thread.");
 	});
 
 	if (execution_ == AsyncExecution::None) {
@@ -61,7 +65,7 @@ const DirectXQueueContext* AsyncThread::GetContext() const {
 }
 
 const DirectXQueueContext* AsyncThread::RequireContext() const {
-	Exception::Assert(context_ != nullptr, "thread type does not create context.");
+	StreamLogger::AssertA(context_ != nullptr, "thread type does not create context.");
 	return context_.get();
 }
 
@@ -74,8 +78,7 @@ DirectXQueueContext::RenderQueue AsyncThread::GetRenderQueueType(AsyncExecution 
 			return DirectXQueueContext::RenderQueue::Compute;
 	}
 
-	Exception::Assert(false, "command list thread type error.");
-	return DirectXQueueContext::RenderQueue::None; //!< error case.
+	StreamLogger::Exception("command list thread type error.");
 }
 
 uint32_t AsyncThread::GetAllocatorCount(AsyncExecution execution) {
@@ -87,8 +90,7 @@ uint32_t AsyncThread::GetAllocatorCount(AsyncExecution execution) {
 			return 2;
 	}
 
-	Exception::Assert(false, "command list thread type error.");
-	return 0;
+	StreamLogger::Exception("command list thread type error.");
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -116,7 +118,7 @@ void AsyncThreadPool::Create(AsyncExecution execution, size_t size) {
 					}
 
 					task = queue_.front();
-					Logger::EngineThreadLog("[AsyncThreadPool] task poped. tag: " + queue_.front()->GetTag());
+					StreamLogger::EngineThreadLog("[AsyncThreadPool] task poped. tag: " + queue_.front()->GetTag());
 					queue_.pop();
 
 					if (!queue_.empty()) {
@@ -139,7 +141,7 @@ void AsyncThreadPool::Create(AsyncExecution execution, size_t size) {
 					}
 
 					task->SetStatus(AsyncTask::Status::Completed);
-					Logger::EngineThreadLog("[AsyncThread] task completed. tag: " + task->GetTag());
+					StreamLogger::EngineThreadLog("[AsyncThread] task completed. tag: " + task->GetTag());
 
 					th->SetStatus(AsyncThread::Status::Wait);
 				}
@@ -178,7 +180,7 @@ void AsyncThreadPool::PushTask(const std::shared_ptr<AsyncTask>& task) {
 
 	task->SetStatus(AsyncTask::Status::Pending);
 	queue_.emplace(task);
-	Logger::EngineThreadLog("[AsyncThreadPool] task pushed. tag: " + task->GetTag());
+	StreamLogger::EngineThreadLog("[AsyncThreadPool] task pushed. tag: " + task->GetTag());
 
 	condition_.notify_one();
 }

@@ -1,9 +1,12 @@
 #include "WindowCollection.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/System/Utility/Convert.h>
+#include <Engine/System/Utility/StreamLogger.h>
 #include <Engine/System/UI/SxImGui.h>
 
 //* external
@@ -28,7 +31,7 @@ std::weak_ptr<DirectXWindowContext> WindowCollection::CreateMainWindow(const Vec
 
 std::weak_ptr<DirectXWindowContext> WindowCollection::CreateSubWindow(const Vector2ui& size, const std::wstring& name, DirectXWindowContext::ProcessCategory category, const Color4f& color) {
 	if (windows_.contains(name)) {
-		Logger::EngineLog(L"warninig | window with name '" + name + L"' already exists.");
+		StreamLogger::EngineLog(L"warninig | window with name '" + name + L"' already exists.");
 		return windows_.at(name);
 	}
 
@@ -67,8 +70,6 @@ bool WindowCollection::ProcessMessage() {
 		return false;
 	}
 
-	RemoveClosedWindow();
-
 	return true;
 }
 
@@ -81,6 +82,24 @@ void WindowCollection::PresentWindows() {
 		window->Present();
 	}
 }
+
+void WindowCollection::RemoveClosedWindow() {
+
+	while (!removeQueue_.empty()) {
+		removeQueue_.pop();
+	}
+
+	std::erase_if(windows_, [&](const auto& pair) {
+		if (!pair.second->IsOpenWindow()) {
+			hwnds_.erase(pair.second->GetHwnd());
+			removeQueue_.push(pair.second);
+			return true; // remove this window
+		}
+
+		return false;
+	});
+}
+
 
 DirectXWindowContext* WindowCollection::GetForcusWindow() const {
 
@@ -131,16 +150,4 @@ void WindowCollection::SystemDebugGui() {
 			SetForegroundWindow(window->GetHwnd());
 		}
 	}
-}
-
-void WindowCollection::RemoveClosedWindow() {
-	std::erase_if(windows_, [&](const auto& pair) {
-		if (!pair.second->IsOpenWindow()) {
-			hwnds_.erase(pair.second->GetHwnd());
-			return true; // remove this window
-		}
-
-		return false;
-	});
-
 }

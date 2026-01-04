@@ -1,5 +1,6 @@
 #include "FRenderCoreLight.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -8,13 +9,7 @@ _DXOBJECT_USING
 #include "../GBuffer/FLightingGBuffer.h"
 
 //* engine
-#include <Engine/System/Config/SxavengerConfig.h>
-
-//=========================================================================================
-// public methods
-//=========================================================================================
-
-const std::filesystem::path FRenderCoreLight::kDirectory_ = kPackagesShaderDirectory / "render/light";
+#include <Engine/System/System.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreLight class methods
@@ -67,65 +62,58 @@ void FRenderCoreLight::CreatePipeline() {
 	desc_back.SetBlendDesc(0, blend);
 
 	pipelines_[LightType::Empty] = std::make_unique<CustomReflectionGraphicsPipeline>();
-	pipelines_[LightType::Empty]->CreateContent(kDirectory_ / "LightRender2d.vs.hlsl", GraphicsShaderType::vs);
-	pipelines_[LightType::Empty]->CreateContent(kDirectory_ / "Empty.ps.hlsl",         GraphicsShaderType::ps);
+	pipelines_[LightType::Empty]->CreateContent(kDirectory / "LightRender2d.vs.hlsl", GraphicsShaderType::vs);
+	pipelines_[LightType::Empty]->CreateContent(kDirectory / "Empty.ps.hlsl",         GraphicsShaderType::ps);
 	pipelines_[LightType::Empty]->RegisterBlob();
-	pipelines_[LightType::Empty]->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
-	pipelines_[LightType::Empty]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc_front);
+	pipelines_[LightType::Empty]->ReflectionRootSignature(System::GetDxDevice());
+	pipelines_[LightType::Empty]->CreatePipeline(System::GetDxDevice(), desc_front);
 
 	pipelines_[LightType::Directional] = std::make_unique<CustomReflectionGraphicsPipeline>();
-	pipelines_[LightType::Directional]->CreateContent(kDirectory_ / "LightRender2d.vs.hlsl",    GraphicsShaderType::vs);
-	pipelines_[LightType::Directional]->CreateContent(kDirectory_ / "DirectionalLight.ps.hlsl", GraphicsShaderType::ps);
+	pipelines_[LightType::Directional]->CreateContent(kDirectory / "LightRender2d.vs.hlsl",    GraphicsShaderType::vs);
+	pipelines_[LightType::Directional]->CreateContent(kDirectory / "DirectionalLight.ps.hlsl", GraphicsShaderType::ps);
 	pipelines_[LightType::Directional]->RegisterBlob();
-	pipelines_[LightType::Directional]->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
-	pipelines_[LightType::Directional]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc_front);
+	pipelines_[LightType::Directional]->ReflectionRootSignature(System::GetDxDevice());
+	pipelines_[LightType::Directional]->CreatePipeline(System::GetDxDevice(), desc_front);
 
 	pipelines_[LightType::Point] = std::make_unique<CustomReflectionGraphicsPipeline>();
-	pipelines_[LightType::Point]->CreateContent(kDirectory_ / "LightRender2d.vs.hlsl", GraphicsShaderType::vs);
-	pipelines_[LightType::Point]->CreateContent(kDirectory_ / "PointLight.ps.hlsl",    GraphicsShaderType::ps);
+	pipelines_[LightType::Point]->CreateContent(kDirectory / "LightRender2d.vs.hlsl", GraphicsShaderType::vs);
+	pipelines_[LightType::Point]->CreateContent(kDirectory / "PointLight.ps.hlsl",    GraphicsShaderType::ps);
 	pipelines_[LightType::Point]->RegisterBlob();
-	pipelines_[LightType::Point]->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
-	pipelines_[LightType::Point]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc_front);
+	pipelines_[LightType::Point]->ReflectionRootSignature(System::GetDxDevice());
+	pipelines_[LightType::Point]->CreatePipeline(System::GetDxDevice(), desc_front);
 
 	pipelines_[LightType::Spot] = std::make_unique<CustomReflectionGraphicsPipeline>();
-	pipelines_[LightType::Spot]->CreateContent(kDirectory_ / "lightRender2d.vs.hlsl", GraphicsShaderType::vs);
-	pipelines_[LightType::Spot]->CreateContent(kDirectory_ / "SpotLight.ps.hlsl",     GraphicsShaderType::ps);
+	pipelines_[LightType::Spot]->CreateContent(kDirectory / "lightRender2d.vs.hlsl", GraphicsShaderType::vs);
+	pipelines_[LightType::Spot]->CreateContent(kDirectory / "SpotLight.ps.hlsl",     GraphicsShaderType::ps);
 	pipelines_[LightType::Spot]->RegisterBlob();
-	pipelines_[LightType::Spot]->ReflectionRootSignature(SxavengerSystem::GetDxDevice());
-	pipelines_[LightType::Spot]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc_front);
+	pipelines_[LightType::Spot]->ReflectionRootSignature(System::GetDxDevice());
+	pipelines_[LightType::Spot]->CreatePipeline(System::GetDxDevice(), desc_front);
 
 	{
 		SamplerBindDesc desc = {};
 		desc.SetSamplerLinear("gBRDFSampler", SamplerMode::MODE_CLAMP);
 
 		pipelines_[LightType::SkyLight] = std::make_unique<CustomReflectionGraphicsPipeline>();
-		pipelines_[LightType::SkyLight]->CreateContent(kDirectory_ / "LightRender2d.vs.hlsl", GraphicsShaderType::vs);
-		pipelines_[LightType::SkyLight]->CreateContent(kDirectory_ / "SkyLight.ps.hlsl",      GraphicsShaderType::ps);
+		pipelines_[LightType::SkyLight]->CreateContent(kDirectory / "LightRender2d.vs.hlsl", GraphicsShaderType::vs);
+		pipelines_[LightType::SkyLight]->CreateContent(kDirectory / "SkyLight.ps.hlsl",      GraphicsShaderType::ps);
 		pipelines_[LightType::SkyLight]->RegisterBlob();
-		pipelines_[LightType::SkyLight]->ReflectionRootSignature(SxavengerSystem::GetDxDevice(), desc);
-		pipelines_[LightType::SkyLight]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc_front);
-
-		pipelines_[LightType::VisibilitySkyLight] = std::make_unique<CustomReflectionGraphicsPipeline>();
-		pipelines_[LightType::VisibilitySkyLight]->CreateContent(kDirectory_ / "LightRender2d.vs.hlsl",     GraphicsShaderType::vs);
-		pipelines_[LightType::VisibilitySkyLight]->CreateContent(kDirectory_ / "VisibilitySkyLight.ps.hlsl", GraphicsShaderType::ps);
-		pipelines_[LightType::VisibilitySkyLight]->RegisterBlob();
-		pipelines_[LightType::VisibilitySkyLight]->ReflectionRootSignature(SxavengerSystem::GetDxDevice(), desc);
-		pipelines_[LightType::VisibilitySkyLight]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc_back);
+		pipelines_[LightType::SkyLight]->ReflectionRootSignature(System::GetDxDevice(), desc);
+		pipelines_[LightType::SkyLight]->CreatePipeline(System::GetDxDevice(), desc_front);
 
 
 		pipelines_[LightType::SkyLightEnvironment] = std::make_unique<CustomReflectionGraphicsPipeline>();
-		pipelines_[LightType::SkyLightEnvironment]->CreateContent(kDirectory_ / "LightRender2d.vs.hlsl",       GraphicsShaderType::vs);
-		pipelines_[LightType::SkyLightEnvironment]->CreateContent(kDirectory_ / "SkyLightEnvironment.ps.hlsl", GraphicsShaderType::ps);
+		pipelines_[LightType::SkyLightEnvironment]->CreateContent(kDirectory / "LightRender2d.vs.hlsl",       GraphicsShaderType::vs);
+		pipelines_[LightType::SkyLightEnvironment]->CreateContent(kDirectory / "SkyLightEnvironment.ps.hlsl", GraphicsShaderType::ps);
 		pipelines_[LightType::SkyLightEnvironment]->RegisterBlob();
-		pipelines_[LightType::SkyLightEnvironment]->ReflectionRootSignature(SxavengerSystem::GetDxDevice(), desc);
-		pipelines_[LightType::SkyLightEnvironment]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc_back);
+		pipelines_[LightType::SkyLightEnvironment]->ReflectionRootSignature(System::GetDxDevice(), desc);
+		pipelines_[LightType::SkyLightEnvironment]->CreatePipeline(System::GetDxDevice(), desc_back);
 
 		pipelines_[LightType::SkyAtmosphereEnvironment] = std::make_unique<CustomReflectionGraphicsPipeline>();
-		pipelines_[LightType::SkyAtmosphereEnvironment]->CreateContent(kDirectory_ / "LightRender2d.vs.hlsl",            GraphicsShaderType::vs);
-		pipelines_[LightType::SkyAtmosphereEnvironment]->CreateContent(kDirectory_ / "SkyAtmosphereEnvironment.ps.hlsl", GraphicsShaderType::ps);
+		pipelines_[LightType::SkyAtmosphereEnvironment]->CreateContent(kDirectory / "LightRender2d.vs.hlsl",            GraphicsShaderType::vs);
+		pipelines_[LightType::SkyAtmosphereEnvironment]->CreateContent(kDirectory / "SkyAtmosphereEnvironment.ps.hlsl", GraphicsShaderType::ps);
 		pipelines_[LightType::SkyAtmosphereEnvironment]->RegisterBlob();
-		pipelines_[LightType::SkyAtmosphereEnvironment]->ReflectionRootSignature(SxavengerSystem::GetDxDevice(), desc);
-		pipelines_[LightType::SkyAtmosphereEnvironment]->CreatePipeline(SxavengerSystem::GetDxDevice(), desc_back);
+		pipelines_[LightType::SkyAtmosphereEnvironment]->ReflectionRootSignature(System::GetDxDevice(), desc);
+		pipelines_[LightType::SkyAtmosphereEnvironment]->CreatePipeline(System::GetDxDevice(), desc_back);
 
 
 	}

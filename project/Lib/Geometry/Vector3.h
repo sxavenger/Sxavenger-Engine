@@ -148,6 +148,10 @@ public:
 		return Length() != 0 ? *this / Length() : Vector3();
 	}
 
+	Vector3 constexpr Floor() const {
+		return { std::floor(x), std::floor(y), std::floor(z) };
+	}
+
 	//* static member methods
 
 	static constexpr _Ty Dot(const Vector3& lhs, const Vector3& rhs) {
@@ -195,6 +199,14 @@ public:
 			std::max(lhs.x, rhs.x),
 			std::max(lhs.y, rhs.y),
 			std::max(lhs.z, rhs.z)
+		};
+	}
+
+	static constexpr Vector3 Floor(const Vector3& v) {
+		return {
+			std::floor(v.x),
+			std::floor(v.y),
+			std::floor(v.z)
 		};
 	}
 
@@ -263,6 +275,9 @@ constexpr Vector3<_Ty> kUnitY3 = { 0, 1, 0 };
 
 template <class _Ty = float>
 constexpr Vector3<_Ty> kUnitZ3 = { 0, 0, 1 };
+
+template <class _Ty = float>
+constexpr Vector3<_Ty> kInfinity3 = { std::numeric_limits<_Ty>::infinity(), std::numeric_limits<_Ty>::infinity(), std::numeric_limits<_Ty>::infinity() };
 
 //* directions
 template <class _Ty = float>

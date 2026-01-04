@@ -7,13 +7,20 @@
 #include "Core/FRenderCoreGeometry.h"
 #include "Core/FRenderCoreLight.h"
 #include "Core/FRenderCoreRestir.h"
-#include "Core/FRenderCoreLayer.h"
+#include "Core/FRenderCoreProbe.h"
+#include "Core/FRenderCoreCanvas.h"
 #include "Core/FRenderCoreProcess.h"
 #include "Core/FRenderCoreTransition.h"
 
 //* engine
-#include <Engine/Preview/Asset/AssetTexture.h>
-#include <Engine/Preview/Asset/AssetParameter.h>
+#include <Engine/Foundation.h>
+#include <Engine/Assets/Asset/AssetTexture.h>
+#include <Engine/Assets/Asset/AssetParameter.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCore class
@@ -40,7 +47,9 @@ public:
 
 	FRenderCoreRestir* GetRestir() { return restir_.get(); }
 
-	FRenderCoreLayer* GetLayer() { return layer_.get(); }
+	FRenderCoreProbe* GetProbe() { return probe_.get(); }
+
+	FRenderCoreCanvas* GetCanvas() { return canvas_.get(); }
 
 	FRenderCoreProcess* GetProcess() { return process_.get(); }
 
@@ -65,7 +74,8 @@ private:
 	std::unique_ptr<FRenderCoreGeometry>    geometry_;
 	std::unique_ptr<FRenderCoreLight>       light_;
 	std::unique_ptr<FRenderCoreRestir>      restir_;
-	std::unique_ptr<FRenderCoreLayer>       layer_;
+	std::unique_ptr<FRenderCoreProbe>       probe_;
+	std::unique_ptr<FRenderCoreCanvas>      canvas_;
 	std::unique_ptr<FRenderCoreProcess>     process_;
 	std::unique_ptr<FRenderCoreTransition>  transition_;
 
@@ -77,3 +87,5 @@ private:
 	AssetParameter<AssetTexture> smaaSearch_;
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

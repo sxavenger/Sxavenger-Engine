@@ -8,11 +8,16 @@
 #include "../Scene/FScene.h"
 
 //* engine
-//* component
-#include <Engine/Component/Components/Camera/CameraComponent.h>
+#include <Engine/Foundation.h>
+#include <Engine/Components/Component/Camera/CameraComponent.h>
 
 //* c++
 #include <concepts>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FBaseRenderPass class
@@ -55,7 +60,7 @@ public:
 			PostProcess      = 1 << 1,
 			Tonemap          = 1 << 2,
 
-			Debug_WhiteAlbedo = 1 << 10,
+			Preview = 1 << 3,
 
 			Default = PostProcess | Tonemap,
 		};
@@ -92,6 +97,9 @@ public:
 		CameraComponent::Tag tag      = CameraComponent::Tag::Game;
 		//!< cameraが直接指定されていない場合, tagのcameraを使用する
 
+		const CameraComponent* cullCamera = nullptr; //!< culling用camera
+		//!< culling用cameraが直接指定されていない場合, cameraと同じものを使用する
+
 		//* option *//
 
 		AntiAliasing antiAliasing = AntiAliasing::FXAA;
@@ -125,3 +133,5 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <class T>
 concept FRenderPass = std::derived_from<T, FBaseRenderPass> || !std::is_same_v<T, FBaseRenderPass>;
+
+SXAVENGER_ENGINE_NAMESPACE_END

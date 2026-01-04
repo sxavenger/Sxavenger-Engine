@@ -1,4 +1,5 @@
 #include "DirectXWindowContext.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -11,8 +12,9 @@
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 //* engine
-#include <Engine/System/Utility/Logger.h>
-#include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/Utility/RuntimeLogger.h>
+#include <Engine/System/System.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXWindowContext class methods
@@ -29,7 +31,7 @@ void DirectXWindowContext::Init(const Vector2ui size, const std::wstring& name, 
 	InitWindow();
 	InitDirectXWindow();
 
-	Logger::EngineLog(std::format(L"[DirectXWindowContext]: show window. name: {}, hwnd: {:p}", name_, static_cast<const void*>(hwnd_)));
+	StreamLogger::EngineLog(std::format(L"[DirectXWindowContext]: show window. name: {}, hwnd: {:p}", name_, static_cast<const void*>(hwnd_)));
 }
 
 void DirectXWindowContext::Close() {
@@ -39,7 +41,7 @@ void DirectXWindowContext::Close() {
 
 	DestroyWindow(hwnd_);
 	CloseWindow(hwnd_);
-	Logger::EngineLog(std::format(L"[DirectXWindowContext]: close window. name: {}, hwnd: {:p}", name_, static_cast<const void*>(hwnd_)));
+	StreamLogger::EngineLog(std::format(L"[DirectXWindowContext]: close window. name: {}, hwnd: {:p}", name_, static_cast<const void*>(hwnd_)));
 
 	if (hinst_ != nullptr) {
 		UnregisterClass(className_.c_str(), hinst_);
@@ -183,7 +185,7 @@ void DirectXWindowContext::Present() {
 }
 
 const DxObject::SwapChain::ColorSpace DirectXWindowContext::GetColorSpace() const {
-	Exception::Assert(swapChain_ != nullptr, "window is not created.");
+	StreamLogger::AssertA(swapChain_ != nullptr, "window is not created.");
 	return swapChain_->GetColorSpace();
 }
 
@@ -278,7 +280,7 @@ ComPtr<IDXGIOutput6> DirectXWindowContext::GetOutput6() {
 	ComPtr<IDXGIOutput> current;
 
 	for (UINT i = 0;
-		SxavengerSystem::GetDxDevice()->GetAdapter()->EnumOutputs(i, &current) != DXGI_ERROR_NOT_FOUND;
+		System::GetDxDevice()->GetAdapter()->EnumOutputs(i, &current) != DXGI_ERROR_NOT_FOUND;
 		++i) {
 
 		// displayの情報を取得
@@ -305,7 +307,7 @@ ComPtr<IDXGIOutput6> DirectXWindowContext::GetOutput6() {
 void DirectXWindowContext::CheckSupportHDR() {
 
 	if (swapChain_ == nullptr) {
-		Logger::WarningRuntime("[DirectXWindowContext]", "window is not create.");
+		RuntimeLogger::LogWarning("[DirectXWindowContext]", "window is not create.");
 		return; //!< windowが生成されていない.
 	}
 
@@ -326,7 +328,7 @@ void DirectXWindowContext::InitWindow() {
 
 	// インスタンスハンドルを取得
 	hinst_ = GetModuleHandle(nullptr);
-	Exception::Assert(hinst_ != nullptr);
+	StreamLogger::AssertA(hinst_ != nullptr);
 
 	// 引数の保存
 	className_ = L"Sxavenger Engine Window: " + name_;
@@ -336,7 +338,7 @@ void DirectXWindowContext::InitWindow() {
 	wc.lpszClassName = className_.c_str();
 	wc.hInstance     = hinst_;
 	wc.lpfnWndProc   = GetWindowProc();
-	Exception::Assert(RegisterClass(&wc));
+	StreamLogger::AssertA(RegisterClass(&wc));
 
 	rect_ = {};
 	rect_.right  = size_.x;
@@ -359,7 +361,7 @@ void DirectXWindowContext::InitWindow() {
 		hinst_,
 		this
 	);
-	Exception::Assert(hwnd_ != nullptr);
+	StreamLogger::AssertA(hwnd_ != nullptr);
 
 	// ウィンドウを表示
 	ShowWindow(hwnd_, SW_SHOW);
@@ -373,12 +375,12 @@ void DirectXWindowContext::InitDirectXWindow() {
 	// swapchainの生成
 	swapChain_ = std::make_unique<DxObject::SwapChain>();
 	swapChain_->Init(
-		SxavengerSystem::GetDxDevice(), SxavengerSystem::GetDxDescriptorHeaps(), SxavengerSystem::GetDirectQueueContext()->GetDxCommand(),
+		System::GetDxDevice(), System::GetDxDescriptorHeaps(), System::GetDirectQueueContext()->GetDxCommand(),
 		DxObject::kDefaultScreenFormat, size_, hwnd_
 	);
 
 	// depth stencilの生成
 	depthStencil_ = std::make_unique<DxObject::DepthStencil>();
-	depthStencil_->Init(SxavengerSystem::GetDxDevice(), SxavengerSystem::GetDxDescriptorHeaps(), size_);
+	depthStencil_->Init(System::GetDxDevice(), System::GetDxDescriptorHeaps(), size_);
 
 }

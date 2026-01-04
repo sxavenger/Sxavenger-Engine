@@ -1,12 +1,13 @@
 #include "CustomComputePipeline.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/SxavengerSystem.h>
-#include <Engine/Preview/Content/ContentStorage.h>
+#include <Engine/System/System.h>
+#include <Engine/Assets/Content/ContentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Base CustomComputePipeline class methods
@@ -56,7 +57,7 @@ void CustomComputePipeline::ReloadAndSetPipeline(const DirectXQueueContext* cont
 void CustomComputePipeline::CheckAndReload() {
 	if (CheckAsset()) {
 		RegisterBlob();
-		ComputePipelineState::CreateDirectXPipeline(SxavengerSystem::GetDxDevice());
+		ComputePipelineState::CreateDirectXPipeline(System::GetDxDevice());
 	}
 }
 
@@ -81,6 +82,6 @@ void CustomReflectionComputePipeline::ReloadAndSetPipeline(const DirectXQueueCon
 void CustomReflectionComputePipeline::CheckAndReload() {
 	if (CheckAsset()) {
 		RegisterBlob();
-		ReflectionComputePipelineState::ReflectionPipeline(SxavengerSystem::GetDxDevice());
+		ReflectionComputePipelineState::ReflectionPipeline(System::GetDxDevice());
 	}
 }

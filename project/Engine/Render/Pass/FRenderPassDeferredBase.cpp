@@ -1,4 +1,5 @@
 #include "FRenderPassDeferredBase.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -7,9 +8,9 @@
 #include "../FRenderCore.h"
 
 //* engine
-#include <Engine/Component/Components/ComponentStorage.h>
-#include <Engine/Component/Components/MeshRenderer/MeshRendererComponent.h>
-#include <Engine/Component/Components/MeshRenderer/SkinnedMeshRendererComponent.h>
+#include <Engine/Components/Component/MeshRenderer/MeshRendererComponent.h>
+#include <Engine/Components/Component/MeshRenderer/SkinnedMeshRendererComponent.h>
+#include <Engine/Components/Component/ComponentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassDeferredBase class methods
@@ -22,6 +23,8 @@ void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const C
 		ClearPass(context, config.buffer);
 		return;
 	}
+
+	context->BeginEvent(L"RenderPass - DeferredBase");
 
 	{ //!< Render Target Pass
 		BeginPassRenderTarget(context, config.buffer);
@@ -40,6 +43,8 @@ void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const C
 
 		EndPassVelocity(context, config.buffer);
 	}
+
+	context->EndEvent();
 }
 
 void FRenderPassDeferredBase::BeginPassRenderTarget(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
@@ -149,7 +154,8 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 
 	// common parameterの設定
 	DxObject::BindBufferDesc parameter = {};
-	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gCullCamera", config.cullCamera->GetGPUVirtualAddress());
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
 		if (!component->IsEnable()) {
@@ -176,6 +182,7 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 		parameter.SetAddress("gIndices",    meshlet.uniqueVertexIndices->GetGPUVirtualAddress());
 		parameter.SetAddress("gMeshlets",   meshlet.meshlets->GetGPUVirtualAddress());
 		parameter.SetAddress("gPrimitives", meshlet.primitiveIndices->GetGPUVirtualAddress());
+		parameter.SetAddress("gBounds",     meshlet.meshletBounds->GetGPUVirtualAddress());
 		 
 		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Deferred_MeshMS, context, parameter);
 		meshlet.Dispatch(context, 1);
@@ -219,7 +226,6 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 	
 
 	});
-
 }
 
 void FRenderPassDeferredBase::BeginPassVelocity(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {

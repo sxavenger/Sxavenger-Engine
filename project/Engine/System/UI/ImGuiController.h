@@ -3,23 +3,25 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* external
-#include <imgui.h>
-#include <imgui_impl_dx12.h>
-#include <imgui_impl_win32.h>
-#include <ImGuizmo.h>
-
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
-//* lib
-#include <Lib/Geometry/Vector4.h>
+//* external
+#include <imgui.h>
+#include <imgui_impl_dx12.h>
+#include <imgui_impl_win32.h>
 
 //* c++
 #include <filesystem>
 #include <list>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ImGuiController class
@@ -75,3 +77,5 @@ private:
 
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

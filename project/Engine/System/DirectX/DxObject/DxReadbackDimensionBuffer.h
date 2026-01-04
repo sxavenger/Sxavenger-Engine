@@ -9,6 +9,9 @@
 #include "DxCommandContext.h"
 #include "DxUnorderedDimensionBuffer.h"
 
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
+
 //* c++
 #include <optional>
 #include <span>
@@ -16,7 +19,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
 ////////////////////////////////////////////////////////////////////////////////////////////
-_DXOBJECT_NAMESPACE_BEGIN
+DXOBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ReadbackDimensionBuffer class
@@ -41,7 +44,7 @@ public:
 	//* accessor option *//
 
 	const T& At(size_t index) const {
-		Exception::Assert(index < size_, "Readback Dimension Buffer out of range.");
+		SXAVENGER_ENGINE StreamLogger::AssertA(index < size_, "Readback Dimension Buffer out of range.");
 		return mappedDatas_[index];
 	}
 
@@ -111,7 +114,7 @@ inline void ReadbackDimensionBuffer<T>::Capacity(Device* device, uint32_t capaci
 
 template <class T>
 inline void ReadbackDimensionBuffer<T>::Resize(uint32_t size) {
-	Exception::Assert(size <= capacity_, "Readback Dimension Buffer size exceeds capacity.");
+	SXAVENGER_ENGINE StreamLogger::AssertA(size <= capacity_, "Readback Dimension Buffer size exceeds capacity.");
 
 	// sizeの保存
 	size_ = size;
@@ -162,4 +165,4 @@ inline void ReadbackDimensionBuffer<T>::Readback(Device* device, CommandContext*
 	commandList->ResourceBarrier(1, &barrier);
 }
 
-_DXOBJECT_NAMESPACE_END
+DXOBJECT_NAMESPACE_END

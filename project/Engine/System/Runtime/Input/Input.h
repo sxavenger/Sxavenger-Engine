@@ -12,6 +12,7 @@
 #include "InputId.h"
 
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/Utility/ComPtr.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/System/UI/ISystemDebugGui.h>
@@ -30,6 +31,8 @@
 #include <cstdint>
 #include <array>
 #include <memory>
+#include <thread>
+#include <mutex>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -40,6 +43,11 @@
 
 //!< xinput
 #pragma comment(lib, "Xinput.lib")
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InputType enum class
@@ -118,6 +126,13 @@ public:
 	bool IsRelease(KeyId id) const;
 
 	bool IsPressAny() const;
+
+	//* keyboard input helper *//
+
+	//! @brief 入力状態から方向ベクトルを取得する
+	//! @param keys 方向キーのKeyId配列 { 上, 下, 左, 右 }
+	//! @return 
+	Vector2i GetDirection(const std::array<KeyId, 4>& keys) const;
 
 	//* debug gui *//
 
@@ -442,7 +457,6 @@ private:
 
 	std::array<std::unique_ptr<GamepadInput>, XUSER_MAX_COUNT> gamepads_;
 
-
-	// todo: stringからinput取得する仕組みを作る
-
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

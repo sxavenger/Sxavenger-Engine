@@ -2,37 +2,33 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/SxavengerSystem.h>
-#include <Engine/System/Runtime/GameLoop/GameLoop.h>
+#include <Engine/System/Runtime/Execution/ExecutionPipeline.h>
 
-//* gameloop
-#include <Engine/GameLoop/FeatureLevelGameLoop.h>
-#include <Engine/GameLoop/SxavengerEngineGameLoop.h>
-#include <Engine/GameLoop/EditorEngineGameLoop.h>
-#include <Engine/GameLoop/BetaSystemGameLoop.h>
-#include <Demo/GameLoop/DemoGameLoop.h>
-#include <Demo/GameLoop/PreviewGameLoop.h>
+//* execution
+#include <Engine/Execution/FeatureLevelExecution.h>
+#include <Engine/Execution/EngineExecution.h>
+#include <Engine/Execution/EditorExecution.h>
+#include <Engine/Execution/ExampleGameLoop.h>
+#include <Demo/Execution/DemoGameLoop.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
-	std::unique_ptr<GameLoop::Collection> collection = std::make_unique<GameLoop::Collection>();
-	collection->Push<FeatureLevelGameLoop>(); //!< FeatureLevelの確認
-	
-	collection->Push<SxavengerEngineGameLoop>();
+	std::unique_ptr<SxxEngine::Execution::Pipeline> pipeline = std::make_unique<SxxEngine::Execution::Pipeline>();
+	pipeline->Push<SxxEngine::FeatureLevelExecution>(); //!< FeatureLevelの確認
+
+	pipeline->Push<SxxEngine::EngineExecution>();
 
 #ifdef _DEVELOPMENT
-	collection->Push<EditorEngineGameLoop>();
+	pipeline->Push<SxxEngine::EditorExecution>();
 #endif
-	
-	//collection->Push<BetaSystemGameLoop>();
-	//collection->Push<PreviewGameLoop>();
 
-	collection->Push<DemoGameLoop>();
+	pipeline->Push<SxxEngine::ExampleGameLoop>();
+	//pipeline->Push<DemoGameLoop>();
 
-	collection->Run();
+	pipeline->Run();
 
 	return 0;
 }

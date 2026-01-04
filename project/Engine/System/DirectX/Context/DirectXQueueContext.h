@@ -6,6 +6,14 @@
 //* DXOBJECT
 #include "../DxObject/DxCommandContext.h"
 
+//* engine
+#include <Engine/Foundation.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXQueueContext class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,6 +51,13 @@ public:
 
 	//! @brief 全てのAllocatorを実行する
 	void ExecuteAllAllocators() const;
+
+	//! @brief CommandList上でイベントを開始する
+	//! @param[in] name イベント名
+	void BeginEvent(const std::wstring& name) const;
+
+	//! @brief CommandList上でイベントを終了する
+	void EndEvent() const;
 
 	//! @brief 指定したRenderQueueが対応されているか確認する
 	//! @retval true  実行可能
@@ -84,3 +99,5 @@ private:
 	void SetDescriptorHeap() const;
 
 };
+
+SXAVENGER_ENGINE_NAMESPACE_END

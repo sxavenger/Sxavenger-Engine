@@ -4,15 +4,19 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
-
-//* engine
-#include <Engine/Preview/Content/ContentBlob.h>
-#include <Engine/Preview/Content/ContentObserver.h>
+#include <Engine/Assets/Content/ContentBlob.h>
+#include <Engine/Assets/Content/ContentObserver.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Base CustomComputePipeline class
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// BaseCustomComputePipeline class
 ////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief カスタムComputePipeline基底クラス
 class BaseCustomComputePipeline {
@@ -111,3 +115,4 @@ private:
 
 };
 
+SXAVENGER_ENGINE_NAMESPACE_END

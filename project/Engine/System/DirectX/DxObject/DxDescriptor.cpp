@@ -1,11 +1,15 @@
 #include "DxDescriptor.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* DXOBJECT
 #include "DxDescriptorHeaps.h"
+
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Descriptor sturcture methods
@@ -20,18 +24,18 @@ void Descriptor::Delete() {
 }
 
 const D3D12_CPU_DESCRIPTOR_HANDLE& Descriptor::GetCPUHandle() const {
-	Exception::Assert(type_.has_value(), "descriptor type is nullopt.");
+	StreamLogger::AssertA(type_.has_value(), "descriptor type is nullopt.");
 	return handles_.first;
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& Descriptor::GetGPUHandle() const {
-	Exception::Assert(type_.has_value(),           "descriptor type is nullopt.");
-	Exception::Assert(handles_.second.has_value(), "descriptor type not having a GPUHandle.");
+	StreamLogger::AssertA(type_.has_value(),           "descriptor type is nullopt.");
+	StreamLogger::AssertA(handles_.second.has_value(), "descriptor type not having a GPUHandle.");
 	return handles_.second.value();
 }
 
 const uint32_t Descriptor::GetIndex() const {
-	Exception::Assert(type_.has_value(), "descriptor type is nullopt.");
+	StreamLogger::AssertA(type_.has_value(), "descriptor type is nullopt.");
 	return index_;
 }
 

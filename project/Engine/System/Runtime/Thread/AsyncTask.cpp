@@ -1,10 +1,11 @@
 #include "AsyncTask.h"
+SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Utility/Logger.h>
+#include <Engine/System/Utility/RuntimeLogger.h>
 
 //* c++
 #include <thread>
@@ -23,7 +24,7 @@ void AsyncTask::Execute(const AsyncThread* thread) {
 
 void AsyncTask::Wait(Status status) const {
 	while (status_ != status) {
+		RuntimeLogger::LogComment("[AsyncTask]", "waiting for task... tag: " + tag_);
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		Logger::LogRuntime("[AsyncTask]", "waiting for task... \n tag: " + tag_, SxavengerLogger::Category::Comment);
 	}
 }

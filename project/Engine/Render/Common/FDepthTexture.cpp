@@ -1,11 +1,12 @@
 #include "FDepthTexture.h"
-_DXOBJECT_USING
+SXAVENGER_ENGINE_USING
+DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/SxavengerSystem.h>
+#include <Engine/System/System.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRasterizerDepth structure methods
@@ -13,7 +14,7 @@ _DXOBJECT_USING
 
 void FDepthTexture::FRasterizerDepth::Create(const Vector2ui& size) {
 
-	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
+	auto device = System::GetDxDevice()->GetDevice();
 
 	{ //!< resourceの生成
 		// propの設定
@@ -52,7 +53,7 @@ void FDepthTexture::FRasterizerDepth::Create(const Vector2ui& size) {
 	{ //!< DSVの生成
 
 		// handleの取得
-		descriptorDSV_ = SxavengerSystem::GetDescriptor(kDescriptor_DSV);
+		descriptorDSV_ = System::GetDescriptor(kDescriptor_DSV);
 
 		// descの設定
 		D3D12_DEPTH_STENCIL_VIEW_DESC desc = {};
@@ -70,7 +71,7 @@ void FDepthTexture::FRasterizerDepth::Create(const Vector2ui& size) {
 	{ //!< SRVの生成
 
 		// handleの取得
-		descriptorSRV_ = SxavengerSystem::GetDescriptor(DxObject::kDescriptor_SRV);
+		descriptorSRV_ = System::GetDescriptor(DxObject::kDescriptor_SRV);
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
@@ -156,7 +157,7 @@ void FDepthTexture::FRasterizerDepth::EndState(const DirectXQueueContext* contex
 void FDepthTexture::FRaytracingDepth::Create(const Vector2ui& size) {
 
 	// deviceの取得
-	auto device = SxavengerSystem::GetDxDevice()->GetDevice();
+	auto device = System::GetDxDevice()->GetDevice();
 
 	{ //!< resourceの生成
 
@@ -190,7 +191,7 @@ void FDepthTexture::FRaytracingDepth::Create(const Vector2ui& size) {
 	{ //!< UAVの生成
 
 		// handleの取得
-		descriptorUAV_ = SxavengerSystem::GetDescriptor(kDescriptor_UAV);
+		descriptorUAV_ = System::GetDescriptor(kDescriptor_UAV);
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};

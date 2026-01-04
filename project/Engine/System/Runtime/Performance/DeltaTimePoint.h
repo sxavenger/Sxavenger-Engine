@@ -3,11 +3,17 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* preformace
-#include "TimePoint.h"
-
 //* engine
-#include <Engine/System/SxavengerSystem.h>
+#include <Engine/Foundation.h>
+#include <Engine/System/System.h>
+
+//* lib
+#include <Lib/Adapter/Time/TimePoint.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DeltaTimePoint class
@@ -39,12 +45,12 @@ public:
 
 template <TimeUnit _Unit, std::floating_point _Value>
 inline void DeltaTimePoint<_Unit, _Value>::AddDeltaTime() {
-	this->time += static_cast<_Value>(SxavengerSystem::GetDeltaTime().time);
+	this->time += static_cast<_Value>(System::GetDeltaTimed().time);
 }
 
 template <TimeUnit _Unit, std::floating_point _Value>
 inline void DeltaTimePoint<_Unit, _Value>::SubtractionDeltaTime() {
-	this->time -= static_cast<_Value>(SxavengerSystem::GetDeltaTime().time);
+	this->time -= static_cast<_Value>(System::GetDeltaTimed().time);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -56,3 +62,5 @@ using DeltaTimePointf = DeltaTimePoint<_Unit, float>;
 
 template <TimeUnit _Unit>
 using DeltaTimePointd = DeltaTimePoint<_Unit, double>;
+
+SXAVENGER_ENGINE_NAMESPACE_END
