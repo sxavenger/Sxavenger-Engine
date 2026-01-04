@@ -12,7 +12,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Assets/Asset/AssetStorage.h>
 #include <Engine/Components/Component/Audio/AudioController.h>
 #include <Engine/Components/Component/ComponentHelper.h>
-#include <Engine/Components/Entity/MonoBehaviourStorage.h>
+#include <Engine/Components/Entity/EntityBehaviourStorage.h>
 #include <Engine/Render/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
 
@@ -33,7 +33,7 @@ void EngineExecution::Init(Execution::Context* context) {
 }
 
 void EngineExecution::Term() {
-	sMonoBehaviourStorage->Term();
+	sEntityBehaviourStorage->Term();
 	sAudioController->Term();
 	sAssetStorage->Term();
 	sContentStorage->Term();
@@ -110,7 +110,7 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 
 		Graphics::ResetPrimtive();
 
-		sMonoBehaviourStorage->UnregisterBehaviour();
+		sEntityBehaviourStorage->UnregisterBehaviour();
 
 		System::Record("end [engine]");
 		System::EndPerformace();

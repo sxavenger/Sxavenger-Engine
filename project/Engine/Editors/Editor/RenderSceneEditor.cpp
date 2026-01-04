@@ -22,7 +22,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Components/Component/Light/Punctual/SpotLightComponent.h>
 #include <Engine/Components/Component/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Components/Component/ComponentHelper.h>
-#include <Engine/Components/Entity/MonoBehaviour.h>
+#include <Engine/Components/Entity/EntityBehaviour.h>
 #include <Engine/Module/Exporter/TextureExporter.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Render/FRenderCore.h>
@@ -162,7 +162,7 @@ void RenderSceneEditor::Render() {
 	}
 }
 
-void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
+void RenderSceneEditor::Manipulate(EntityBehaviour* behaviour) {
 	if (gizmoUsed_.has_value() && gizmoUsed_.value() != GuizmoUsed::Scene) {
 		return;
 	}
@@ -241,7 +241,7 @@ void RenderSceneEditor::Manipulate(MonoBehaviour* behaviour) {
 	component->UpdateMatrix();
 }
 
-void RenderSceneEditor::ManipulateCanvas(MonoBehaviour* behaviour) {
+void RenderSceneEditor::ManipulateCanvas(EntityBehaviour* behaviour) {
 	if (gizmoUsed_.has_value() && gizmoUsed_.value() != GuizmoUsed::Canvas) {
 		return;
 	}

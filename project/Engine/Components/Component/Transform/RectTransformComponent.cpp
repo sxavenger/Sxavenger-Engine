@@ -6,7 +6,7 @@ DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../../Entity/MonoBehaviour.h"
+#include "../../Entity/EntityBehaviour.h"
 
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
@@ -16,7 +16,7 @@ DXOBJECT_USING
 // RectTransformComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-RectTransformComponent::RectTransformComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {
+RectTransformComponent::RectTransformComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {
 	buffer_ = std::make_unique<ConstantBuffer<Matrix4x4>>();
 	buffer_->Create(System::GetDxDevice());
 	buffer_->At() = Matrix4x4::Identity();

@@ -5,7 +5,7 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* entity
-#include "../../Entity/MonoBehaviour.h"
+#include "../../Entity/EntityBehaviour.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Audio3dListenerComponent class methods

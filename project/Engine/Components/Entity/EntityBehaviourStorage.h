@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* entity
 #include "BehaviourAddress.h"
-#include "MonoBehaviour.h"
+#include "EntityBehaviour.h"
 
 //* engine
 #include <Engine/Foundation.h>
@@ -19,9 +19,9 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// MonoBehaviourStorage class
+// EntityBehaviourStorage class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class MonoBehaviourStorage {
+class EntityBehaviourStorage {
 public:
 
 	//=========================================================================================
@@ -41,13 +41,13 @@ public:
 
 	//* getter *//
 
-	MonoBehaviour* GetBehaviour(const BehaviourAddress& address) const;
+	EntityBehaviour* GetBehaviour(const BehaviourAddress& address) const;
 
 	//* for each *//
 
-	void ForEachRoot(const std::function<void(MonoBehaviour*)>& function) const;
+	void ForEachRoot(const std::function<void(EntityBehaviour*)>& function) const;
 
-	void ForEachRootOnly(const std::function<void(MonoBehaviour*)>& function) const;
+	void ForEachRootOnly(const std::function<void(EntityBehaviour*)>& function) const;
 
 	//* static behaviour option *//
 
@@ -59,7 +59,7 @@ public:
 
 	//* singleton *//
 
-	static MonoBehaviourStorage* GetInstance();
+	static EntityBehaviourStorage* GetInstance();
 
 private:
 
@@ -67,7 +67,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unordered_map<uintptr_t, std::unique_ptr<MonoBehaviour>> behaviours_;
+	std::unordered_map<uintptr_t, std::unique_ptr<EntityBehaviour>> behaviours_;
 
 	std::queue<uintptr_t> unregister_;
 
@@ -76,6 +76,6 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // singleton instance
 ////////////////////////////////////////////////////////////////////////////////////////////
-static MonoBehaviourStorage* sMonoBehaviourStorage = MonoBehaviourStorage::GetInstance();
+static EntityBehaviourStorage* sEntityBehaviourStorage = EntityBehaviourStorage::GetInstance();
 
 SXAVENGER_ENGINE_NAMESPACE_END

@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* entity
 #include "BehaviourAddress.h"
-#include "MonoBehaviour.h"
+#include "EntityBehaviour.h"
 
 //* engine
 #include <Engine/Foundation.h>

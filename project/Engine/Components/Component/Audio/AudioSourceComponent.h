@@ -36,7 +36,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	AudioSourceComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	AudioSourceComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~AudioSourceComponent() override { Stop(); }
 
 	//* component option *//

@@ -5,7 +5,7 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../../../Entity/MonoBehaviour.h"
+#include "../../../Entity/EntityBehaviour.h"
 
 //* engine
 #include <Engine/System/UI/SxImGui.h>
@@ -112,7 +112,7 @@ void SkyAtmosphereComponent::Parameter::SetEnvironment(const DxObject::Descripto
 // SkyAtmosphereComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-SkyAtmosphereComponent::SkyAtmosphereComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {
+SkyAtmosphereComponent::SkyAtmosphereComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {
 	atmosphere_ = std::make_unique<DxObject::ConstantBuffer<Atmosphere>>();
 	atmosphere_->Create(System::GetDxDevice());
 	atmosphere_->At().Init();

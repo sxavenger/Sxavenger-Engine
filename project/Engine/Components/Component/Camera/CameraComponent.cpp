@@ -6,7 +6,7 @@ DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../../Entity/MonoBehaviour.h"
+#include "../../Entity/EntityBehaviour.h"
 #include "../Transform/TransformComponent.h"
 
 //* engine
@@ -82,7 +82,7 @@ void CameraComponent::InputJson(const json& data) {
 	tag_ = magic_enum::enum_cast<Tag>(JsonSerializeFormatter<std::string>::Deserialize(data.at("tag"))).value();
 }
 
-CameraComponent::CameraComponent(MonoBehaviour* behaviour)
+CameraComponent::CameraComponent(EntityBehaviour* behaviour)
 	: BaseComponent(behaviour) {
 
 	CreateBuffer();

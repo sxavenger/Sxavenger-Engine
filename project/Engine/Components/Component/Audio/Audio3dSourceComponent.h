@@ -46,7 +46,7 @@ public:
 	// public methods
 	//=========================================================================================
 	
-	Audio3dSourceComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	Audio3dSourceComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~Audio3dSourceComponent() override = default;
 
 	void Play();

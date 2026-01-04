@@ -30,7 +30,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	PrimitiveRendererComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	PrimitiveRendererComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~PrimitiveRendererComponent() override = default;
 
 	void ShowComponentInspector() override;

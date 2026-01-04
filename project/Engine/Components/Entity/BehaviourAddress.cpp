@@ -5,7 +5,7 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* entity
-#include "MonoBehaviourStorage.h"
+#include "EntityBehaviourStorage.h"
 
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
@@ -59,17 +59,17 @@ BehaviourAddress& BehaviourAddress::operator=(BehaviourAddress&& other) noexcept
 	return *this;
 }
 
-MonoBehaviour* BehaviourAddress::operator->() const {
+EntityBehaviour* BehaviourAddress::operator->() const {
 	StreamLogger::AssertA(address_.has_value(), "behaviour address is nullptr.");
-	return sMonoBehaviourStorage->GetBehaviour(address_.value());
+	return sEntityBehaviourStorage->GetBehaviour(address_.value());
 }
 
-MonoBehaviour* BehaviourAddress::Get() const {
+EntityBehaviour* BehaviourAddress::Get() const {
 	if (!address_.has_value()) {
 		return nullptr;
 	}
 
-	return sMonoBehaviourStorage->GetBehaviour(address_.value());
+	return sEntityBehaviourStorage->GetBehaviour(address_.value());
 }
 
 uintptr_t BehaviourAddress::GetAddress() const {

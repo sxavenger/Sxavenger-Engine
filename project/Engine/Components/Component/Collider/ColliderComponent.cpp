@@ -5,7 +5,7 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../../Entity/MonoBehaviour.h"
+#include "../../Entity/EntityBehaviour.h"
 
 //* collider
 #include "CollisionCallbackCollection.h"

@@ -6,7 +6,7 @@ DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../../Entity/MonoBehaviour.h"
+#include "../../Entity/EntityBehaviour.h"
 
 //* engine
 #include <Engine/System/UI/SxImGui.h>
@@ -17,7 +17,7 @@ DXOBJECT_USING
 // SpriteRendererComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-SpriteRendererComponent::SpriteRendererComponent(MonoBehaviour* behaviour)
+SpriteRendererComponent::SpriteRendererComponent(EntityBehaviour* behaviour)
 	: BaseComponent(behaviour) {
 
 	input_.Create(4, 2);

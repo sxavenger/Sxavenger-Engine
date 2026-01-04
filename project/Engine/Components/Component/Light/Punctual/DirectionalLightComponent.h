@@ -57,7 +57,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	DirectionalLightComponent(MonoBehaviour* behaviour);
+	DirectionalLightComponent(EntityBehaviour* behaviour);
 	~DirectionalLightComponent() override = default;
 
 	void ShowComponentInspector() override;

@@ -40,6 +40,9 @@ public:
 	// public methods
 	//=========================================================================================
 
+	ContentObserver() = default;
+	ContentObserver(const std::shared_ptr<T>& content) { Register(content); }
+
 	void Reset();
 
 	void Register(const std::shared_ptr<T>& content);
@@ -48,7 +51,7 @@ public:
 
 	ContentCondition GetCondition() const;
 
-	//* operator *//
+	//* operator [assign] *//
 
 	void operator=(const std::shared_ptr<T>& content) { Register(content); }
 

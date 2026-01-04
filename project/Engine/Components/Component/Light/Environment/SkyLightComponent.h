@@ -80,7 +80,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	SkyLightComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
+	SkyLightComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) { Init(); }
 	~SkyLightComponent() override = default;
 
 	void ShowComponentInspector() override;

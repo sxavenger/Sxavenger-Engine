@@ -235,8 +235,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Components\Component\Transform\TransformComponent.h" />
     <ClInclude Include="Engine\Components\Entity\BehaviourAddress.h" />
     <ClInclude Include="Engine\Components\Entity\BehaviourHelper.h" />
-    <ClInclude Include="Engine\Components\Entity\MonoBehaviour.h" />
-    <ClInclude Include="Engine\Components\Entity\MonoBehaviourStorage.h" />
+    <ClInclude Include="Engine\Components\Entity\EntityBehaviour.h" />
+    <ClInclude Include="Engine\Components\Entity\EntityBehaviourStorage.h" />
     <ClInclude Include="Engine\Editors\Editor\AssetEditor.h" />
     <ClInclude Include="Engine\Editors\Editor\AudioEditor.h" />
     <ClInclude Include="Engine\Editors\Editor\BaseEditor.h" />
@@ -460,8 +460,8 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Components\Component\Transform\TransformComponent.cpp" />
     <ClCompile Include="Engine\Components\Entity\BehaviourAddress.cpp" />
     <ClCompile Include="Engine\Components\Entity\BehaviourHelper.cpp" />
-    <ClCompile Include="Engine\Components\Entity\MonoBehaviour.cpp" />
-    <ClCompile Include="Engine\Components\Entity\MonoBehaviourStorage.cpp" />
+    <ClCompile Include="Engine\Components\Entity\EntityBehaviour.cpp" />
+    <ClCompile Include="Engine\Components\Entity\EntityBehaviourStorage.cpp" />
     <ClCompile Include="Engine\Editors\Editor\AssetEditor.cpp" />
     <ClCompile Include="Engine\Editors\Editor\AudioEditor.cpp" />
     <ClCompile Include="Engine\Editors\Editor\BaseEditor.cpp" />

@@ -8,7 +8,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/Utility/RuntimeLogger.h>
 #include <Engine/Components/Component/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Components/Component/ComponentStorage.h>
-#include <Engine/Components/Entity/MonoBehaviour.h>
+#include <Engine/Components/Entity/EntityBehaviour.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassPostProcess class methods

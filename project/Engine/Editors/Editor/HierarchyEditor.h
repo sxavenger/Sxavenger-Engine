@@ -9,7 +9,7 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/Configuration/Configuration.h>
-#include <Engine/Components/Entity/MonoBehaviour.h>
+#include <Engine/Components/Entity/EntityBehaviour.h>
 
 //* lib
 #include <Lib/Geometry/Color4.h>
@@ -73,18 +73,18 @@ private:
 
 	//* helper method *//
 
-	void ForEachBehaviourHierarchy(const MonoBehaviour::Hierarchy& hierarchy, const std::function<void(MonoBehaviour*)>& function);
+	void ForEachBehaviourHierarchy(const EntityBehaviour::Hierarchy& hierarchy, const std::function<void(EntityBehaviour*)>& function);
 
-	void HierarchySelectable(MonoBehaviour* behaviour);
+	void HierarchySelectable(EntityBehaviour* behaviour);
 
-	bool HierarchyFilter(MonoBehaviour* behaviour, const std::string& filter);
-	void HierarchySelectableFilter(MonoBehaviour* behaviour, const std::string& filter);
+	bool HierarchyFilter(EntityBehaviour* behaviour, const std::string& filter);
+	void HierarchySelectableFilter(EntityBehaviour* behaviour, const std::string& filter);
 
-	bool CheckSelected(MonoBehaviour* behaviour);
+	bool CheckSelected(EntityBehaviour* behaviour);
 
-	void SetSelected(MonoBehaviour* behaviour);
+	void SetSelected(EntityBehaviour* behaviour);
 
-	void SetSelectedView(MonoBehaviour* behaviour);
+	void SetSelectedView(EntityBehaviour* behaviour);
 
 };
 

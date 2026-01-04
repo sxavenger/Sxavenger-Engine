@@ -6,7 +6,7 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/Components/Entity/BehaviourAddress.h>
-#include <Engine/Components/Entity/MonoBehaviour.h>	
+#include <Engine/Components/Entity/EntityBehaviour.h>	
 
 //* c++
 #include <string>
@@ -38,13 +38,13 @@ public:
 
 	//* operator [access] *//
 
-	MonoBehaviour* operator->() const { return address_.Get(); }
+	EntityBehaviour* operator->() const { return address_.Get(); }
 
 	//* behaviour option *//
 
 	const BehaviourAddress& GetAddress() { return address_; }
 
-	MonoBehaviour* GetBehaviour() const { return address_.Get(); }
+	EntityBehaviour* GetBehaviour() const { return address_.Get(); }
 
 protected:
 

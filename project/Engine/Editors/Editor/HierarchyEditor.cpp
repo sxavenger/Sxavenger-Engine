@@ -13,7 +13,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/Utility/RuntimeLogger.h>
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/Assets/Content/ContentStorage.h>
-#include <Engine/Components/Entity/MonoBehaviourStorage.h>
+#include <Engine/Components/Entity/EntityBehaviourStorage.h>
 #include <Engine/Components/Entity/BehaviourHelper.h>
 
 //* external
@@ -59,7 +59,7 @@ void HierarchyEditor::ShowActorMenu() {
 
 		if (ImGui::MenuItem("Behaviour")) {
 			BehaviourAddress address = BehaviourHelper::CreateTransformBehaviour();
-			address->SetMobility(MonoBehaviour::Mobility::Static);
+			address->SetMobility(EntityBehaviour::Mobility::Static);
 		}
 
 		ImGui::Dummy({ 0, 4 });
@@ -69,17 +69,17 @@ void HierarchyEditor::ShowActorMenu() {
 
 		if (ImGui::MenuItem("Directional Light")) {
 			BehaviourAddress address = BehaviourHelper::CreateDirectionalLightBehaviour();
-			address->SetMobility(MonoBehaviour::Mobility::Static);
+			address->SetMobility(EntityBehaviour::Mobility::Static);
 		}
 
 		if (ImGui::MenuItem("Point Light")) {
 			BehaviourAddress address =  BehaviourHelper::CreatePointLightBehaviour();
-			address->SetMobility(MonoBehaviour::Mobility::Static);
+			address->SetMobility(EntityBehaviour::Mobility::Static);
 		}
 
 		if (ImGui::MenuItem("Spot Light")) {
 			BehaviourAddress address = BehaviourHelper::CreateSpotLightBehaviour();
-			address->SetMobility(MonoBehaviour::Mobility::Static);
+			address->SetMobility(EntityBehaviour::Mobility::Static);
 		}
 
 		ImGui::EndMenu();
@@ -100,8 +100,8 @@ void HierarchyEditor::ShowSceneMenu() {
 			);
 
 			if (filepath.has_value()) {
-				sMonoBehaviourStorage->ClearStaticBehaviours();
-				sMonoBehaviourStorage->InputJson(JsonHandler::LoadFromJson(filepath.value()));
+				sEntityBehaviourStorage->ClearStaticBehaviours();
+				sEntityBehaviourStorage->InputJson(JsonHandler::LoadFromJson(filepath.value()));
 			}
 
 			RuntimeLogger::LogComment("[HierarchyEditor]", "load scene.");
@@ -121,7 +121,7 @@ void HierarchyEditor::ShowSceneMenu() {
 			if (filepath.has_value()) {
 				JsonHandler::WriteToJson(
 					filepath.value(),
-					sMonoBehaviourStorage->PerseToJson()
+					sEntityBehaviourStorage->PerseToJson()
 				);
 			}
 
@@ -129,7 +129,7 @@ void HierarchyEditor::ShowSceneMenu() {
 		}
 
 		if (ImGui::Button("clear")) {
-			sMonoBehaviourStorage->ClearStaticBehaviours();
+			sEntityBehaviourStorage->ClearStaticBehaviours();
 			RuntimeLogger::LogComment("[HierarchyEditor]", "clear scene.");
 		}
 
@@ -150,13 +150,13 @@ void HierarchyEditor::ShowHierarchyWindow() {
 
 	if (hierarchyBuf_.empty()) {
 		//!< 通常表示
-		sMonoBehaviourStorage->ForEachRootOnly([this](MonoBehaviour* behaviour) {
+		sEntityBehaviourStorage->ForEachRootOnly([this](EntityBehaviour* behaviour) {
 			HierarchySelectable(behaviour);
 		});
 		
 	} else {
 		//!< フィルター表示
-		sMonoBehaviourStorage->ForEachRootOnly([this](MonoBehaviour* behaviour) {
+		sEntityBehaviourStorage->ForEachRootOnly([this](EntityBehaviour* behaviour) {
 			HierarchySelectableFilter(behaviour, hierarchyBuf_);
 		});
 	}
@@ -182,26 +182,26 @@ void HierarchyEditor::ShowHierarchyWindow() {
 		sContentStorage->DragAndDropTargetContentFunc<ContentModel>([this](const std::shared_ptr<ContentModel>& content) {
 			BehaviourAddress address = BehaviourHelper::CreateStaticMeshBehaviour(content);
 			address->SetName(content->GetFilepath().stem().generic_string());
-			address->SetMobility(MonoBehaviour::Mobility::Static);
+			address->SetMobility(EntityBehaviour::Mobility::Static);
 		});
 
 		sContentStorage->DragAndDropTargetContentFunc<ContentScene>([this](const std::shared_ptr<ContentScene>& content) {
 			content->WaitComplete(); // contentの読み込みを待つ
-			sMonoBehaviourStorage->InputJson(content->GetData());
+			sEntityBehaviourStorage->InputJson(content->GetData());
 		});
 
 		sContentStorage->DragAndDropTargetContentFunc<ContentBehaviour>([this](const std::shared_ptr<ContentBehaviour>& content) {
 			content->WaitComplete(); // contentの読み込みを待つ
 			BehaviourAddress address = BehaviourHelper::Create();
 			address->InputJson(content->GetData());
-			address->SetMobility(MonoBehaviour::Mobility::Static);
+			address->SetMobility(EntityBehaviour::Mobility::Static);
 		});
 	}
 
 	ImGui::End();
 }
 
-void HierarchyEditor::ForEachBehaviourHierarchy(const MonoBehaviour::Hierarchy& hierarchy, const std::function<void(MonoBehaviour*)>& function) {
+void HierarchyEditor::ForEachBehaviourHierarchy(const EntityBehaviour::Hierarchy& hierarchy, const std::function<void(EntityBehaviour*)>& function) {
 	// child持ちのbehaviour
 	for (auto& child : hierarchy | std::views::filter([](const BehaviourAddress& address) { return address->HasChild(); })) {
 		function(child.Get());
@@ -213,7 +213,7 @@ void HierarchyEditor::ForEachBehaviourHierarchy(const MonoBehaviour::Hierarchy& 
 	}
 }
 
-void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
+void HierarchyEditor::HierarchySelectable(EntityBehaviour* behaviour) {
 
 	bool isSelect     = CheckSelected(behaviour);
 	std::string label = std::format("{} # {:p}", behaviour->GetName(), static_cast<const void*>(behaviour));
@@ -281,7 +281,7 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 	}
 
 	if (isOpen) {
-		ForEachBehaviourHierarchy(behaviour->GetChildren(), [this](MonoBehaviour* child) {
+		ForEachBehaviourHierarchy(behaviour->GetChildren(), [this](EntityBehaviour* child) {
 			HierarchySelectable(child);
 		});
 
@@ -290,19 +290,19 @@ void HierarchyEditor::HierarchySelectable(MonoBehaviour* behaviour) {
 	
 }
 
-bool HierarchyEditor::HierarchyFilter(MonoBehaviour* behaviour, const std::string& filter) {
+bool HierarchyEditor::HierarchyFilter(EntityBehaviour* behaviour, const std::string& filter) {
 	// 自身とfilterの比較
 	bool result = (behaviour->GetName().find(filter) != std::string::npos);
 
 	// childとfilterの比較
-	ForEachBehaviourHierarchy(behaviour->GetChildren(), [&](MonoBehaviour* child) {
+	ForEachBehaviourHierarchy(behaviour->GetChildren(), [&](EntityBehaviour* child) {
 		result |= HierarchyFilter(child, filter);
 	});
 
 	return result;
 }
 
-void HierarchyEditor::HierarchySelectableFilter(MonoBehaviour* behaviour, const std::string& filter) {
+void HierarchyEditor::HierarchySelectableFilter(EntityBehaviour* behaviour, const std::string& filter) {
 
 	if (!HierarchyFilter(behaviour, filter)) {
 		return;
@@ -374,7 +374,7 @@ void HierarchyEditor::HierarchySelectableFilter(MonoBehaviour* behaviour, const 
 	}
 
 	if (isOpen) {
-		ForEachBehaviourHierarchy(behaviour->GetChildren(), [&](MonoBehaviour* child) {
+		ForEachBehaviourHierarchy(behaviour->GetChildren(), [&](EntityBehaviour* child) {
 			HierarchySelectableFilter(child, filter);
 		});
 
@@ -383,7 +383,7 @@ void HierarchyEditor::HierarchySelectableFilter(MonoBehaviour* behaviour, const 
 
 }
 
-bool HierarchyEditor::CheckSelected(MonoBehaviour* behaviour) {
+bool HierarchyEditor::CheckSelected(EntityBehaviour* behaviour) {
 	if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>()) {
 		return editor->CheckInspector(behaviour);
 	}
@@ -391,13 +391,13 @@ bool HierarchyEditor::CheckSelected(MonoBehaviour* behaviour) {
 	return false;
 }
 
-void HierarchyEditor::SetSelected(MonoBehaviour* behaviour) {
+void HierarchyEditor::SetSelected(EntityBehaviour* behaviour) {
 	if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>()) {
 		editor->SetInspector(behaviour);
 	}
 }
 
-void HierarchyEditor::SetSelectedView(MonoBehaviour* behaviour) {
+void HierarchyEditor::SetSelectedView(EntityBehaviour* behaviour) {
 	if (auto transform = behaviour->GetComponent<TransformComponent>()) {
 		if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<RenderSceneEditor>()) {
 			editor->SetCameraPoint(transform->GetPosition());

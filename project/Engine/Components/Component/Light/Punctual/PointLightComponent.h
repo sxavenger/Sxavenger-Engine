@@ -59,7 +59,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	PointLightComponent(MonoBehaviour* behaviour);
+	PointLightComponent(EntityBehaviour* behaviour);
 	~PointLightComponent() override = default;
 
 	void ShowComponentInspector() override;

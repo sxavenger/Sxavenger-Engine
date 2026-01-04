@@ -34,7 +34,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	RectTransformComponent(MonoBehaviour* behaviour);
+	RectTransformComponent(EntityBehaviour* behaviour);
 	~RectTransformComponent() override = default;
 
 	//* component option *//

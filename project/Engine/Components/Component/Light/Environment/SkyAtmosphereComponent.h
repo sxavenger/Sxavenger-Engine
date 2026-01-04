@@ -123,7 +123,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	SkyAtmosphereComponent(MonoBehaviour* behaviour);
+	SkyAtmosphereComponent(EntityBehaviour* behaviour);
 	~SkyAtmosphereComponent() override = default;
 
 	void ShowComponentInspector() override;

@@ -32,7 +32,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	Audio3dListenerComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	Audio3dListenerComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~Audio3dListenerComponent() override = default;
 
 	const X3DAUDIO_LISTENER GetListener() const;

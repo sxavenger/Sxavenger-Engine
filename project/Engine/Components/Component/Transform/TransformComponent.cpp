@@ -6,7 +6,7 @@ DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../../Entity/MonoBehaviour.h"
+#include "../../Entity/EntityBehaviour.h"
 
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
@@ -16,7 +16,7 @@ DXOBJECT_USING
 // TransformComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-TransformComponent::TransformComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {
+TransformComponent::TransformComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {
 	buffer_ = std::make_unique<ConstantBuffer<TransformationMatrix>>();
 	buffer_->Create(System::GetDxDevice());
 	buffer_->At().Init();

@@ -28,9 +28,9 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// MonoBehaviour class
+// EntityBehaviour class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class MonoBehaviour final
+class EntityBehaviour final
 	: public BaseInspector, public IJsonSerializer {
 public:
 	// TODO: BehaviourEntityに命名変更予定.
@@ -60,8 +60,8 @@ public:
 	// public methods
 	//=========================================================================================
 
-	MonoBehaviour();
-	~MonoBehaviour();
+	EntityBehaviour();
+	~EntityBehaviour();
 
 	//* status option *//
 
@@ -180,7 +180,7 @@ public:
 
 	//* for each child *//
 
-	void ForEachChild(const std::function<void(MonoBehaviour*)>& function) const;
+	void ForEachChild(const std::function<void(EntityBehaviour*)>& function) const;
 
 	//* getter *//
 
@@ -240,20 +240,20 @@ private:
 
 	//* hierarchy [pointer] helper *//
 
-	void SetParent(MonoBehaviour* parent);
+	void SetParent(EntityBehaviour* parent);
 
-	void RemoveParent(const MonoBehaviour* parent);
+	void RemoveParent(const EntityBehaviour* parent);
 
-	void RemoveChild(MonoBehaviour* child);
+	void RemoveChild(EntityBehaviour* child);
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// MonoBehaviour class template methods
+// EntityBehaviour class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <Component _Ty>
-_Ty* MonoBehaviour::AddComponent() {
+_Ty* EntityBehaviour::AddComponent() {
 	// component typeの取得
 	constexpr const std::type_info* type = &typeid(_Ty);
 
@@ -262,20 +262,20 @@ _Ty* MonoBehaviour::AddComponent() {
 		components_[type] = sComponentStorage->RegisterComponent<_Ty>(this);
 		
 	} else {
-		RuntimeLogger::LogWarning("[MonoBehaviour]", "component is already added. component is only one.");
+		RuntimeLogger::LogWarning("[EntityBehaviour]", "component is already added. component is only one.");
 	}
 
 	return static_cast<_Ty*>(components_[type]->get());
 }
 
 template <Component _Ty>
-void MonoBehaviour::RemoveComponent() {
+void EntityBehaviour::RemoveComponent() {
 	// component typeの取得
 	constexpr const std::type_info* type = &typeid(_Ty);
 
 
 	if (!components_.contains(type)) { //!< componentが存在しない場合
-		RuntimeLogger::LogWarning("[MonoBehaviour]", "component is not found. type: " + std::string(type->name()));
+		RuntimeLogger::LogWarning("[EntityBehaviour]", "component is not found. type: " + std::string(type->name()));
 	}
 
 	//!< componentの削除
@@ -284,7 +284,7 @@ void MonoBehaviour::RemoveComponent() {
 }
 
 template <Component _Ty>
-const _Ty* MonoBehaviour::GetComponent() const {
+const _Ty* EntityBehaviour::GetComponent() const {
 	//!< component typeの取得
 	constexpr const std::type_info* type = &typeid(_Ty);
 
@@ -297,7 +297,7 @@ const _Ty* MonoBehaviour::GetComponent() const {
 }
 
 template <Component _Ty>
-_Ty* MonoBehaviour::GetComponent() {
+_Ty* EntityBehaviour::GetComponent() {
 	//!< component typeの取得
 	constexpr const std::type_info* type = &typeid(_Ty);
 
@@ -310,7 +310,7 @@ _Ty* MonoBehaviour::GetComponent() {
 }
 
 template <Component _Ty>
-const _Ty* MonoBehaviour::RequireComponent() const {
+const _Ty* EntityBehaviour::RequireComponent() const {
 	//!< component typeの取得
 	constexpr const std::type_info* type = &typeid(_Ty);
 
@@ -323,7 +323,7 @@ const _Ty* MonoBehaviour::RequireComponent() const {
 }
 
 template <Component _Ty>
-_Ty* MonoBehaviour::RequireComponent() {
+_Ty* EntityBehaviour::RequireComponent() {
 	//!< component typeの取得
 	constexpr const std::type_info* type = &typeid(_Ty);
 

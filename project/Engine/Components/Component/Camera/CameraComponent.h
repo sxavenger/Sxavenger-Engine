@@ -98,7 +98,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	CameraComponent(MonoBehaviour* behaviour);
+	CameraComponent(EntityBehaviour* behaviour);
 	~CameraComponent() override = default;
 
 	void ShowComponentInspector() override;

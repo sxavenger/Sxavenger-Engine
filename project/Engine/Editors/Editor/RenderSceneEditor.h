@@ -57,9 +57,9 @@ public:
 
 	//* manipulator option *//
 
-	void Manipulate(MonoBehaviour* behaviour);
+	void Manipulate(EntityBehaviour* behaviour);
 
-	void ManipulateCanvas(MonoBehaviour* behaviour);
+	void ManipulateCanvas(EntityBehaviour* behaviour);
 
 	//* camera option *//
 

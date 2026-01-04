@@ -59,7 +59,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ColliderComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	ColliderComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {}
 	virtual ~ColliderComponent() = default;
 
 	void ShowComponentInspector() override;

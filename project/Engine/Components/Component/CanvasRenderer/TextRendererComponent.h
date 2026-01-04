@@ -31,7 +31,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	TextRendererComponent(MonoBehaviour* behaviour);
+	TextRendererComponent(EntityBehaviour* behaviour);
 	~TextRendererComponent() override = default;
 
 	void ShowComponentInspector() override;

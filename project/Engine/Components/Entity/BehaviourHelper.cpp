@@ -5,7 +5,7 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* entity
-#include "MonoBehaviourStorage.h"
+#include "EntityBehaviourStorage.h"
 
 //* component
 #include "../Component/Transform/TransformComponent.h"
@@ -22,18 +22,18 @@ SXAVENGER_ENGINE_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 BehaviourAddress BehaviourHelper::Create() {
-	return sMonoBehaviourStorage->RegisterBehaviour();
+	return sEntityBehaviourStorage->RegisterBehaviour();
 }
 
 BehaviourAddress BehaviourHelper::Create(const std::string& name) {
-	BehaviourAddress address = sMonoBehaviourStorage->RegisterBehaviour();
+	BehaviourAddress address = sEntityBehaviourStorage->RegisterBehaviour();
 	address->SetName(name);
 
 	return address;
 }
 
 void BehaviourHelper::Destroy(BehaviourAddress& address) {
-	sMonoBehaviourStorage->PushUnregisterQueue(address);
+	sEntityBehaviourStorage->PushUnregisterQueue(address);
 }
 
 void BehaviourHelper::CreateTransformBehaviour(const BehaviourAddress& address) {
@@ -130,7 +130,7 @@ void BehaviourHelper::CreateSkinnedMeshBehaviour(const BehaviourAddress& address
 
 		BehaviourAddress child = BehaviourHelper::Create(mesh->GetName());
 
-		MonoBehaviour* ptr = child.Get();
+		EntityBehaviour* ptr = child.Get();
 		address->AddChild(std::move(child));
 
 		//!< transform component の追加

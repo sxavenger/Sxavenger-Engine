@@ -55,6 +55,12 @@ void ExampleGameLoop::InitSystem() {
 
 	camera_ = std::make_unique<ControllableCameraActor>();
 
+
+	SxxEngine::ContentObserver<ContentModel> observer
+		= SxxEngine::sContentStorage->Import<ContentModel>("assets/models/sponza/sponza.gltf");
+
+	auto content = observer.WaitGet();
+	
 }
 
 void ExampleGameLoop::TermSystem() {

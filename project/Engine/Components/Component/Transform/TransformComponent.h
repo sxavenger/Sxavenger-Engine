@@ -34,7 +34,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	TransformComponent(MonoBehaviour* behaviour);
+	TransformComponent(EntityBehaviour* behaviour);
 	~TransformComponent() override = default;
 
 	//* component option *//

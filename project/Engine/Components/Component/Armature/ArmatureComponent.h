@@ -29,7 +29,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ArmatureComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	ArmatureComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~ArmatureComponent() override = default;
 
 	//* armature option *//

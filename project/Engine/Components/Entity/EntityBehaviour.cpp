@@ -1,11 +1,11 @@
-#include "MonoBehaviour.h"
+#include "EntityBehaviour.h"
 SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* entity
-#include "MonoBehaviourStorage.h"
+#include "EntityBehaviourStorage.h"
 
 //* engine
 #include <Engine/System/UI/SxImGui.h>
@@ -14,12 +14,12 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Editors/Editor/RenderSceneEditor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// MonoBehaviour class methods
+// EntityBehaviour class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-MonoBehaviour::MonoBehaviour() = default;
+EntityBehaviour::EntityBehaviour() = default;
 
-MonoBehaviour::~MonoBehaviour() {
+EntityBehaviour::~EntityBehaviour() {
 
 	//!< parentの登録解除
 	if (HasParent()) {
@@ -34,9 +34,9 @@ MonoBehaviour::~MonoBehaviour() {
 			continue;
 		}
 
-		//!< 特殊処理: 後にMonoBehaviourStorageで解放されるため、所有権を渡す
+		//!< 特殊処理: 後にEntityBehaviourStorageで解放されるため、所有権を渡す
 		BehaviourAddress address = { child.GetAddress(), BehaviourAddress::Ownership::Owned };
-		sMonoBehaviourStorage->PushUnregisterQueue(address);
+		sEntityBehaviourStorage->PushUnregisterQueue(address);
 	}
 
 	//!< componentの登録解除
@@ -46,7 +46,7 @@ MonoBehaviour::~MonoBehaviour() {
 	
 }
 
-void MonoBehaviour::SetActive(bool isActive) {
+void EntityBehaviour::SetActive(bool isActive) {
 	isActive_ = isActive;
 
 	for (const auto& child : children_) {
@@ -54,20 +54,20 @@ void MonoBehaviour::SetActive(bool isActive) {
 	}
 }
 
-void MonoBehaviour::SetRenamable(bool isRenamable) {
+void EntityBehaviour::SetRenamable(bool isRenamable) {
 	isRenamable_ = isRenamable;
 }
 
-void MonoBehaviour::SetName(const std::string& name) {
+void EntityBehaviour::SetName(const std::string& name) {
 	if (!isRenamable_) {
-		StreamLogger::EngineLog("[MonoBehaviour] warning | behaviour is not renamable.");
+		StreamLogger::EngineLog("[EntityBehaviour] warning | behaviour is not renamable.");
 		return;
 	}
 
 	name_ = name;
 }
 
-BaseComponent* MonoBehaviour::AddComponent(const std::string& component) {
+BaseComponent* EntityBehaviour::AddComponent(const std::string& component) {
 
 	const std::type_info* type = sComponentStorage->GetComponentInfo(component);
 
@@ -76,16 +76,16 @@ BaseComponent* MonoBehaviour::AddComponent(const std::string& component) {
 		components_[type] = sComponentStorage->RegisterComponent(component, this);
 
 	} else {
-		RuntimeLogger::LogWarning("[MonoBehaviour]", "component is already added. component is only one.");
+		RuntimeLogger::LogWarning("[EntityBehaviour]", "component is already added. component is only one.");
 	}
 
 	return components_[type]->get();
 }
 
-void MonoBehaviour::RemoveComponent(const std::type_info* type) {
+void EntityBehaviour::RemoveComponent(const std::type_info* type) {
 	// componentの削除
 	if (!components_.contains(type)) {
-		RuntimeLogger::LogWarning("[MonoBehaviour]", "component is not found. type: " + std::string(type->name()));
+		RuntimeLogger::LogWarning("[EntityBehaviour]", "component is not found. type: " + std::string(type->name()));
 		return;
 	}
 
@@ -93,25 +93,25 @@ void MonoBehaviour::RemoveComponent(const std::type_info* type) {
 	components_.erase(type);
 }
 
-void MonoBehaviour::AddChild(const BehaviourAddress& child) {
+void EntityBehaviour::AddChild(const BehaviourAddress& child) {
 	StreamLogger::AssertA(child != nullptr, "behaviour address is nullptr.");
 	child->SetParent(this);
 	children_.emplace(child);
 }
 
-void MonoBehaviour::AddChild(BehaviourAddress&& child) {
+void EntityBehaviour::AddChild(BehaviourAddress&& child) {
 	StreamLogger::AssertA(child != nullptr, "behaviour address is nullptr.");
 	child->SetParent(this);
 	children_.emplace(std::move(child));
 }
 
-void MonoBehaviour::RemoveChild(const BehaviourAddress& child) {
+void EntityBehaviour::RemoveChild(const BehaviourAddress& child) {
 	StreamLogger::AssertA(children_.contains(child), "child behaviour not found.");
 	child->RemoveParent(this);
 	children_.erase(child);
 }
 
-BehaviourAddress MonoBehaviour::FindChild(const std::string& name) const {
+BehaviourAddress EntityBehaviour::FindChild(const std::string& name) const {
 	// FIXME: o(n)なのでmapなどに変更検討
 
 	for (const auto& child : children_) {
@@ -123,23 +123,23 @@ BehaviourAddress MonoBehaviour::FindChild(const std::string& name) const {
 	return nullptr;
 }
 
-const BehaviourAddress& MonoBehaviour::GetParent() const {
+const BehaviourAddress& EntityBehaviour::GetParent() const {
 	return parent_;
 }
 
-const BehaviourAddress& MonoBehaviour::RequireParent() const {
+const BehaviourAddress& EntityBehaviour::RequireParent() const {
 	StreamLogger::AssertA(HasParent(), "parent behaviour is empty.");
 	return parent_;
 }
 
-void MonoBehaviour::ForEachChild(const std::function<void(MonoBehaviour*)>& function) const {
+void EntityBehaviour::ForEachChild(const std::function<void(EntityBehaviour*)>& function) const {
 	for (const auto& child : children_) {
 		function(child.Get());
 		child->ForEachChild(function);
 	}
 }
 
-void MonoBehaviour::ShowInspector() {
+void EntityBehaviour::ShowInspector() {
 
 	ImGui::BeginDisabled(!isRenamable_); //!< 名前変更不可の場合はdisabled
 
@@ -237,11 +237,11 @@ void MonoBehaviour::ShowInspector() {
 	ImGui::SameLine();
 
 	if (ImGui::Button("Delete Behaviour")) {
-		sMonoBehaviourStorage->PushUnregisterQueue(this->GetAddress());
+		sEntityBehaviourStorage->PushUnregisterQueue(this->GetAddress());
 	}
 }
 
-void MonoBehaviour::LateUpdateInspector() {
+void EntityBehaviour::LateUpdateInspector() {
 	// Manipulateの設定
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
 		editor->Manipulate(this);
@@ -252,7 +252,7 @@ void MonoBehaviour::LateUpdateInspector() {
 	});
 }
 
-json MonoBehaviour::PerseToJson() const {
+json EntityBehaviour::PerseToJson() const {
 	json root = json::object();
 
 	//* properties
@@ -278,7 +278,7 @@ json MonoBehaviour::PerseToJson() const {
 	return root;
 }
 
-void MonoBehaviour::InputJson(const json& data) {
+void EntityBehaviour::InputJson(const json& data) {
 
 	name_        = data.value("name", "new behaviour");
 	isRenamable_ = data.value("isRenamable", true);
@@ -300,37 +300,37 @@ void MonoBehaviour::InputJson(const json& data) {
 	//* children
 	for (const auto& childData : data["children"]) {
 
-		BehaviourAddress address = sMonoBehaviourStorage->RegisterBehaviour();
-		MonoBehaviour* ptr = address.Get();
+		BehaviourAddress address = sEntityBehaviourStorage->RegisterBehaviour();
+		EntityBehaviour* ptr = address.Get();
 		AddChild(std::move(address));
 		ptr->InputJson(childData);
 	}
 
 }
 
-void MonoBehaviour::LoadComponent(const std::filesystem::path& filepath) {
+void EntityBehaviour::LoadComponent(const std::filesystem::path& filepath) {
 	json data;
 	if (JsonHandler::LoadFromJson(filepath, data)) {
 		InputJson(data);
 	}
 }
 
-void MonoBehaviour::SaveComponent(const std::filesystem::path& filepath) {
+void EntityBehaviour::SaveComponent(const std::filesystem::path& filepath) {
 	json data = PerseToJson();
 	JsonHandler::WriteToJson(filepath, data);
 }
 
-void MonoBehaviour::SetParent(MonoBehaviour* parent) {
+void EntityBehaviour::SetParent(EntityBehaviour* parent) {
 	StreamLogger::AssertA(!HasParent(), "behaviour already have parent.");
 	parent_ = BehaviourAddress(parent->GetAddress(), BehaviourAddress::Ownership::Borrowed);
 }
 
-void MonoBehaviour::RemoveParent(const MonoBehaviour* parent) {
+void EntityBehaviour::RemoveParent(const EntityBehaviour* parent) {
 	StreamLogger::AssertA(parent_ == parent->GetAddress(), "parent behaviour mismatch.");
 	parent_ = nullptr;
 }
 
-void MonoBehaviour::RemoveChild(MonoBehaviour* child) {
+void EntityBehaviour::RemoveChild(EntityBehaviour* child) {
 	StreamLogger::AssertA(children_.contains(child->GetAddress()), "child behaviour not found.");
 	child->RemoveParent(this);
 	children_.erase(child->GetAddress());

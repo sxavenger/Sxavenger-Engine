@@ -64,7 +64,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	PostProcessLayerComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	PostProcessLayerComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~PostProcessLayerComponent() override = default;
 
 	void ShowComponentInspector() override;

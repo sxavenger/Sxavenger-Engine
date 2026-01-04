@@ -23,7 +23,7 @@ SXAVENGER_ENGINE_USING
 #include "Audio/Audio3dSourceComponent.h"
 
 //* entity
-#include "../Entity/MonoBehaviourStorage.h"
+#include "../Entity/EntityBehaviourStorage.h"
 
 //* c++
 #include <execution>
@@ -39,7 +39,7 @@ void ComponentHelper::BeginFrame() {
 }
 
 void ComponentHelper::UpdateTransform() {
-	sMonoBehaviourStorage->ForEachRoot([](MonoBehaviour* behaviour) {
+	sEntityBehaviourStorage->ForEachRoot([](EntityBehaviour* behaviour) {
 		if (auto component = behaviour->GetComponent<TransformComponent>()) {
 			component->UpdateMatrix();
 		}

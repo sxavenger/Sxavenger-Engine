@@ -53,7 +53,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	SpriteRendererComponent(MonoBehaviour* behaviour);
+	SpriteRendererComponent(EntityBehaviour* behaviour);
 	~SpriteRendererComponent() override = default;
 
 	void ShowComponentInspector() override;

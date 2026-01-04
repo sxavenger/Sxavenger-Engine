@@ -39,7 +39,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	MeshRendererComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	MeshRendererComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~MeshRendererComponent() override = default;
 
 	void ShowComponentInspector() override;

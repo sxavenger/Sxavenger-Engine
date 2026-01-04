@@ -5,7 +5,7 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../../Entity/MonoBehaviour.h"
+#include "../../Entity/EntityBehaviour.h"
 
 //* engine
 #include <Engine/Foundation.h>
@@ -19,7 +19,7 @@ SXAVENGER_ENGINE_USING
 // TextRendererComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-TextRendererComponent::TextRendererComponent(MonoBehaviour* behaviour)
+TextRendererComponent::TextRendererComponent(EntityBehaviour* behaviour)
 	: BaseComponent(behaviour) {
 
 	input_.Create(static_cast<uint32_t>(kMaxTextLength * 4), static_cast<uint32_t>(kMaxTextLength * 2));

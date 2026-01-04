@@ -5,7 +5,7 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* entity
-#include "../Entity/MonoBehaviour.h"
+#include "../Entity/EntityBehaviour.h"
 
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
@@ -14,7 +14,7 @@ SXAVENGER_ENGINE_USING
 // BaseComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-MonoBehaviour* BaseComponent::GetBehaviour() const {
+EntityBehaviour* BaseComponent::GetBehaviour() const {
 	return behaviour_;
 }
 
@@ -22,11 +22,11 @@ bool BaseComponent::IsActive() const {
 	return behaviour_->IsActive();
 }
 
-MonoBehaviour* BaseComponent::GetParent() const {
+EntityBehaviour* BaseComponent::GetParent() const {
 	return behaviour_->GetParent().Get();
 }
 
-MonoBehaviour* BaseComponent::RequireParent() const {
+EntityBehaviour* BaseComponent::RequireParent() const {
 	StreamLogger::AssertA(behaviour_->HasParent(), "parent is nullptr.");
 	return behaviour_->GetParent().Get();
 }

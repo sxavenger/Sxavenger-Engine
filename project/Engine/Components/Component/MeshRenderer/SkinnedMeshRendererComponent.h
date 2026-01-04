@@ -100,7 +100,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	SkinnedMeshRendererComponent(MonoBehaviour* behaviour) : BaseComponent(behaviour) {}
+	SkinnedMeshRendererComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {}
 	~SkinnedMeshRendererComponent() override = default;
 
 	void ShowComponentInspector() override;

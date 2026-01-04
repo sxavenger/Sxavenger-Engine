@@ -60,7 +60,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	SpotLightComponent(MonoBehaviour* behaviour);
+	SpotLightComponent(EntityBehaviour* behaviour);
 	~SpotLightComponent() override = default;
 
 	void ShowComponentInspector() override;

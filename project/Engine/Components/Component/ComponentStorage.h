@@ -37,7 +37,7 @@ public:
 	using Storage = std::unordered_map<const std::type_info*, ComponentContainer>;
 
 	//* factory *//
-	using Factory = std::unordered_map<std::string, std::pair<const std::type_info*, std::function<std::unique_ptr<BaseComponent>(MonoBehaviour*)>>>;
+	using Factory = std::unordered_map<std::string, std::pair<const std::type_info*, std::function<std::unique_ptr<BaseComponent>(EntityBehaviour*)>>>;
 
 public:
 
@@ -52,7 +52,7 @@ public:
 	//! @param[in] behavior componentを所有するEntity
 	//! @return 登録したcomponentのiterator
 	template <Component _Ty>
-	ComponentIterator RegisterComponent(MonoBehaviour* behavior);
+	ComponentIterator RegisterComponent(EntityBehaviour* behavior);
 
 	//! @brief componentを登録解除
 	//! @tparam _Ty componentの型
@@ -75,7 +75,7 @@ public:
 	//! @param[in] component componentの名前
 	//! @param[in] behavior componentを所有するEntity
 	//! @return 登録したcomponentのiterator
-	ComponentIterator RegisterComponent(const std::string& component, MonoBehaviour* behavior);
+	ComponentIterator RegisterComponent(const std::string& component, EntityBehaviour* behavior);
 
 	const std::type_info* GetComponentInfo(const std::string& component) const;
 
@@ -140,7 +140,7 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <Component _Ty>
-ComponentStorage::ComponentIterator ComponentStorage::RegisterComponent(MonoBehaviour* behavior) {
+ComponentStorage::ComponentIterator ComponentStorage::RegisterComponent(EntityBehaviour* behavior) {
 	RegisterFactory<_Ty>();
 	constexpr const std::type_info* type = &typeid(_Ty);
 	return storage_[type].emplace(storage_[type].end(), std::make_unique<_Ty>(behavior));
@@ -155,7 +155,7 @@ void ComponentStorage::UnregisterComponent(const ComponentIterator& iterator) {
 template <Component _Ty>
 void ComponentStorage::RegisterFactory() {
 	constexpr const std::type_info* type = &typeid(_Ty);
-	factory_.try_emplace(type->name(), type, [](MonoBehaviour* behaviour) { return std::make_unique<_Ty>(behaviour); });
+	factory_.try_emplace(type->name(), type, [](EntityBehaviour* behaviour) { return std::make_unique<_Ty>(behaviour); });
 }
 
 template <Component _Ty>

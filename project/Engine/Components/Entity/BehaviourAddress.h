@@ -19,7 +19,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 //-----------------------------------------------------------------------------------------
 // forward
 //-----------------------------------------------------------------------------------------
-class MonoBehaviour;
+class EntityBehaviour;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BehaviourAddress class
@@ -84,7 +84,7 @@ public:
 
 	//* operator [access] *//
 
-	MonoBehaviour* operator->() const;
+	EntityBehaviour* operator->() const;
 
 	//* operator [cast] *//
 
@@ -92,7 +92,7 @@ public:
 
 	//* getter *//
 
-	MonoBehaviour* Get() const;
+	EntityBehaviour* Get() const;
 	//!< TODO: Reference型を用意する.
 
 	Ownership GetOwnership() const { return ownership_; }

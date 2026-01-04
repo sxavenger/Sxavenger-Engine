@@ -6,7 +6,7 @@ DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../../../Entity/MonoBehaviour.h"
+#include "../../../Entity/EntityBehaviour.h"
 
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
@@ -34,7 +34,7 @@ void SpotLightComponent::Parameter::Init() {
 // SpotLightComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-SpotLightComponent::SpotLightComponent(MonoBehaviour* behaviour)
+SpotLightComponent::SpotLightComponent(EntityBehaviour* behaviour)
 	: BaseComponent(behaviour) {
 
 	parameter_ = std::make_unique<ConstantBuffer<Parameter>>();

@@ -175,6 +175,10 @@
 		"Packages/textures/icon/file.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"2e9018c9-fd82-4c69-a5559d3cef87574e": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"2ea9f37f-2a1f-4288-8ea27655bd2b66b0": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMaterial"
@@ -271,6 +275,10 @@
 		"assets/models/sponza/9916269861720640319.jpg",
 		"class SxxEngine::AssetTexture"
 	],
+	"4100baa5-2b3f-4985-ad1b704f7f186ffd": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class SxxEngine::AssetSkeleton"
+	],
 	"410505cc-f23e-445a-bf32037dda949451": [
 		"assets/models/sponza/1219024358953944284.jpg",
 		"class SxxEngine::AssetTexture"
@@ -327,6 +335,10 @@
 		"Packages/textures/icon/model.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"50856d28-20ae-4ad1-beac703032efb354": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"51261c41-0072-469a-abda69a44e35356a": [
 		"Packages/textures/icon/scene.png",
 		"class SxxEngine::AssetTexture"
@@ -350,6 +362,10 @@
 	"532dcd37-c488-4332-a1eb9cbcee46ce1e": [
 		"assets/models/tree/MI_EuropeanBeech_Decoration_BaseColor.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"53e32305-56de-4f93-93c93aa3eda78397": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"53f32297-aa2d-44e5-aaafb15086619e20": [
 		"assets/models/cube/textures/concrete_floor_worn_001_nor_dx_1k.png.png",
@@ -483,6 +499,10 @@
 		"assets/models/sponza/466164707995436622.jpg",
 		"class SxxEngine::AssetTexture"
 	],
+	"6f851328-eb96-4479-a0812c05e490c9e5": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"6fafeb53-890b-44cf-bb5d7a823875d6dd": [
 		"assets/models/sponza/8783994986360286082.jpg",
 		"class SxxEngine::AssetTexture"
@@ -591,6 +611,10 @@
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
+	"846089f3-7fb7-4a3c-8710140845ab395b": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"84cfe45b-fe0c-4088-8e509ca07307a668": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
@@ -621,6 +645,10 @@
 	],
 	"8ac95251-5bd1-4704-9cd095f7f2662eef": [
 		"assets/models/sponza/Sponza.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"8b85fae8-1f75-425c-837bbf81b61ab102": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
 	"8c16b476-138c-4595-87ebeb6209664608": [
@@ -702,6 +730,10 @@
 	"a25f501a-eeb0-4587-96899d42ff7491b3": [
 		"assets/models/tree/MI_EuropeanBeech_Trunk_05_Normal.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"a2ce6e2d-7dbf-4256-a80dfbe697577cb5": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"a4f06bf8-2724-4d62-9e199f83ccb71e9d": [
 		"assets/models/tree/tree.gltf",
@@ -799,6 +831,10 @@
 		"assets/models/PictureFrame/picture_frame.gltf",
 		"class SxxEngine::AssetSkeleton"
 	],
+	"b814a749-eb17-44a6-a40968a3fc8471d4": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"b82aa7af-d534-4562-91f6dc4c54cfcb20": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
@@ -806,6 +842,10 @@
 	"b856c0f0-c01e-45a4-847c03b208e2537c": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"b91904fc-4931-4900-8adf7aba74157f56": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"b9335a93-2896-401a-bfad48775722bf29": [
 		"assets/models/tree/tree.gltf",
@@ -826,6 +866,10 @@
 	"bd1cdc60-caa6-40b9-aff01e919c32526a": [
 		"assets/models/cornell_box/cornell-box.obj",
 		"class SxxEngine::AssetSkeleton"
+	],
+	"be242eac-4092-4c11-8adea2513beb52bc": [
+		"assets/models/macbeth_chart/Color_checker.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"bf59a921-f032-4312-8e162b2aca05bd69": [
 		"assets/models/sponza/Sponza.gltf",
@@ -898,6 +942,10 @@
 	"cb90fc0e-ce05-470c-9079174636cd9574": [
 		"assets/models/sponza/white.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"ccb0ddd6-3288-47b9-a1d6a73bd1f269d0": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"cd6a7434-4316-4722-8454a213f740ef71": [
 		"assets/models/sponza/Sponza.gltf",
@@ -1110,6 +1158,10 @@
 	"f2a38c11-6e26-46c1-aad4d8990382a2f7": [
 		"assets/models/sponza/6151467286084645207.jpg",
 		"class SxxEngine::AssetTexture"
+	],
+	"f2f0a8ea-2511-47df-bb1f4f852fbe5f03": [
+		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"f31f206f-8b71-45be-920f985b55197484": [
 		"packages/textures/icon/operation_translate.png",

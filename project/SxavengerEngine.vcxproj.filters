@@ -393,10 +393,10 @@
     <ClInclude Include="Engine\Components\Entity\BehaviourHelper.h">
       <Filter>Engine\Components\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Entity\MonoBehaviour.h">
+    <ClInclude Include="Engine\Components\Entity\EntityBehaviour.h">
       <Filter>Engine\Components\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Entity\MonoBehaviourStorage.h">
+    <ClInclude Include="Engine\Components\Entity\EntityBehaviourStorage.h">
       <Filter>Engine\Components\Entity</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Editors\Editor\AssetEditor.h">
@@ -1038,10 +1038,10 @@
     <ClCompile Include="Engine\Components\Entity\BehaviourHelper.cpp">
       <Filter>Engine\Components\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Entity\MonoBehaviour.cpp">
+    <ClCompile Include="Engine\Components\Entity\EntityBehaviour.cpp">
       <Filter>Engine\Components\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Entity\MonoBehaviourStorage.cpp">
+    <ClCompile Include="Engine\Components\Entity\EntityBehaviourStorage.cpp">
       <Filter>Engine\Components\Entity</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Editors\Editor\AssetEditor.cpp">
