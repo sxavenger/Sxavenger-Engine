@@ -70,10 +70,11 @@ public:
 
 	void SetPrimitive(PrimitiveType type);
 
-
+	void ClearRTVFormat();
 	void SetRTVFormat(DXGI_FORMAT format);
 	void SetRTVFormat(uint8_t index, DXGI_FORMAT format);
 	void SetRTVFormats(uint8_t size, const DXGI_FORMAT formats[]);
+
 	void SetDSVFormat(DXGI_FORMAT format);
 
 	void CreateDefaultDesc();
@@ -83,7 +84,7 @@ public:
 	D3D12_INPUT_LAYOUT_DESC GetInputLayout() const;
 
 	//=========================================================================================
-	// public varaibles
+	// public variables
 	//=========================================================================================
 
 	//* descs *//

@@ -45,23 +45,6 @@ public:
 
 	void Init(const Vector2ui& size);
 
-	//* transition option *//
-
-	void TransitionBeginRenderTarget(const DirectXQueueContext* context, const D3D12_CPU_DESCRIPTOR_HANDLE& depthStencilHandle);
-
-	void TransitionEndRenderTarget(const DirectXQueueContext* context);
-
-	void ClearRenderTarget(const DirectXQueueContext* context);
-
-	void TransitionBeginUnordered(const DirectXQueueContext* context);
-
-	void TransitionEndUnordered(const DirectXQueueContext* context);
-
-	//* option *//
-
-	void ForEach(const std::function<void(FBaseTexture*)>& funciton);
-	void ForEach(const std::function<void(size_t, FBaseTexture*)>& funciton);
-
 	//* getter *//
 
 	FBaseTexture* GetGBuffer(Layout layout) const;

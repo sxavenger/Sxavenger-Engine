@@ -21,24 +21,28 @@ void CheckDiscard(float4 color, float threshold = 0.0f) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 struct GeometryForwardOutput {
+	//!< Transparency Render Target (Weighted Blended OIT)
 
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
 	
-	float4 color : SV_Target0;
+	float4 accumulate : SV_Target0;
+	float revealage   : SV_Target1;
 	
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-	
-	void SetColor(float4 _color) {
-		color = _color;
+
+	void SetColor(float4 color, float weight) {
+		accumulate = float4(color.rgb * color.a, color.a) * weight;
+		revealage  = color.a;
 	}
 	
 };
 
-struct GeometryDeferredOutput { //!< FSceneTextures::GBuffers
+struct GeometryDeferredOutput {
+	//!< Deferred Render Target
 
 	//=========================================================================================
 	// public variables

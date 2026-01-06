@@ -863,6 +863,7 @@
     <ClInclude Include="Engine\Assets\Content\ContentBehaviour.h" />
     <ClInclude Include="Demo\Interact\InteractItem.h" />
     <ClInclude Include="Engine\Module\Actor\PerformanceActor.h" />
+    <ClInclude Include="Engine\Render\GBuffer\FTransparentGBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1457,5 +1458,6 @@
     <ClCompile Include="Engine\Assets\Content\ContentBehaviour.cpp" />
     <ClCompile Include="Demo\Interact\InteractItem.cpp" />
     <ClCompile Include="Engine\Module\Actor\PerformanceActor.cpp" />
+    <ClCompile Include="Engine\Render\GBuffer\FTransparentGBuffer.cpp" />
   </ItemGroup>
 </Project>

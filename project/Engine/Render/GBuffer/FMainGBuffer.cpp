@@ -32,91 +32,34 @@ void FMainGBuffer::Init(const Vector2ui& size) {
 	}
 }
 
-void FMainGBuffer::TransitionBeginRenderTargetScene(const DirectXQueueContext* context, const D3D12_CPU_DESCRIPTOR_HANDLE& depthStencilHandle) {
+void FMainGBuffer::TransitionBeginRenderTarget(const DirectXQueueContext* context, Layout layout, const D3D12_CPU_DESCRIPTOR_HANDLE& handleDSV) {
 
 	auto commandList = context->GetCommandList();
 
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::Scene)]->TransitionBeginRenderTarget();
+	buffers_[static_cast<size_t>(layout)]->TransitionBeginRenderTarget(context);
 
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-
-	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, 1> handles = {};
-	handles[0] = buffers_[static_cast<size_t>(Layout::Scene)]->GetCPUHandleRTV();
+	D3D12_CPU_DESCRIPTOR_HANDLE handle = buffers_[static_cast<size_t>(layout)]->GetCPUHandleRTV();
 
 	commandList->OMSetRenderTargets(
-		static_cast<UINT>(handles.size()), handles.data(), false,
-		&depthStencilHandle
+		1, &handle, false,
+		&handleDSV
 	);
 }
 
-void FMainGBuffer::TransitionEndRenderTargetScene(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::Scene)]->TransitionEndRenderTarget();
-
-	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+void FMainGBuffer::TransitionEndRenderTarget(const DirectXQueueContext* context, Layout layout) {
+	buffers_[static_cast<size_t>(layout)]->TransitionEndRenderTarget(context);
 }
 
-void FMainGBuffer::ClearRenderTargetScene(const DirectXQueueContext* context) {
-	buffers_[static_cast<size_t>(Layout::Scene)]->ClearRenderTarget(context);
+void FMainGBuffer::ClearRenderTarget(const DirectXQueueContext* context, Layout layout) {
+	buffers_[static_cast<size_t>(layout)]->ClearRenderTarget(context);
 }
 
-void FMainGBuffer::TransitionBeginUnorderedScene(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::Scene)]->TransitionBeginUnordered();
-
-	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+void FMainGBuffer::TransitionBeginUnordered(const DirectXQueueContext* context, Layout layout) {
+	buffers_[static_cast<size_t>(layout)]->TransitionBeginUnordered(context);
 }
 
-void FMainGBuffer::TransitionEndUnorderedScene(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::Scene)]->TransitionEndUnordered();
-
-	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-}
-
-void FMainGBuffer::TransitionBeginRenderTargetUI(const DirectXQueueContext* context, const D3D12_CPU_DESCRIPTOR_HANDLE& depthStencilHandle) {
-
-	auto commandList = context->GetCommandList();
-
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::Canvas)]->TransitionBeginRenderTarget();
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-
-	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, 1> handles = {};
-	handles[0] = buffers_[static_cast<size_t>(Layout::Canvas)]->GetCPUHandleRTV();
-
-	commandList->OMSetRenderTargets(
-		static_cast<UINT>(handles.size()), handles.data(), false,
-		&depthStencilHandle
-	);
-
-}
-
-void FMainGBuffer::TransitionEndRenderTargetUI(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::Canvas)]->TransitionEndRenderTarget();
-
-	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-}
-
-void FMainGBuffer::ClearRenderTargetUI(const DirectXQueueContext* context) {
-	buffers_[static_cast<size_t>(Layout::Canvas)]->ClearRenderTarget(context);
-}
-
-void FMainGBuffer::TransitionBeginUnorderedUI(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::Canvas)]->TransitionBeginUnordered();
-
-	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-}
-
-void FMainGBuffer::TransitionEndUnorderedUI(const DirectXQueueContext* context) {
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	barriers[0] = buffers_[static_cast<size_t>(Layout::Canvas)]->TransitionEndUnordered();
-
-	context->GetCommandList()->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+void FMainGBuffer::TransitionEndUnordered(const DirectXQueueContext* context, Layout layout) {
+	buffers_[static_cast<size_t>(layout)]->TransitionEndUnordered(context);
 }
 
 FBaseTexture* FMainGBuffer::GetGBuffer(Layout layout) const {

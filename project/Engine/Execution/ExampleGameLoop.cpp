@@ -101,12 +101,19 @@ void ExampleGameLoop::InitSystem() {
 		text->SetText(t);
 	}
 
-	{
+	/*{
 		json data;
 		if (JsonHandler::LoadFromJson("assets/scene/sponza.scene", data)) {
 			sEntityBehaviourStorage->InputJson(data);
 		}
-	}
+	}*/
+
+	test_ = std::make_unique<GameObject>();
+	(*test_)->SetName("test");
+	/*BehaviourHelper::CreateStaticMeshBehaviour(
+		*test_,
+		sContentStorage->Import<ContentModel>("packages/model/Sponza/glTF/Sponza.gltf")
+	);*/
 	
 }
 

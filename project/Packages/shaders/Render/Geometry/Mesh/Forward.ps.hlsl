@@ -20,9 +20,13 @@ GeometryForwardOutput main(GeometryPSInput input) {
 	MaterialLib::TextureSampler parameter;
 	parameter.Set(input.texcoord, gSampler);
 
-	output.color.rgb = gMaterials[input.instanceId].albedo.GetAlbedo(parameter);
-	output.color.a   = gMaterials[input.instanceId].transparency.GetTransparency(parameter);
+	float4 color = (float4)0;
+	color.rgb = gMaterials[input.instanceId].albedo.GetAlbedo(parameter);
+	color.a   = gMaterials[input.instanceId].transparency.GetTransparency(parameter);
 
+	float weight = WeightedBlendedOIT::CalculateWeight(color.a, input.position.z);
+
+	output.SetColor(color, weight);
 	return output;
 	
 }

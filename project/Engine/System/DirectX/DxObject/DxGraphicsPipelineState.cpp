@@ -77,6 +77,10 @@ void GraphicsPipelineDesc::SetPrimitive(PrimitiveType type) {
 	}
 }
 
+void GraphicsPipelineDesc::ClearRTVFormat() {
+	rtvFormats.clear();
+}
+
 void GraphicsPipelineDesc::SetRTVFormat(DXGI_FORMAT format) {
 	rtvFormats.emplace_back(format);
 	StreamLogger::AssertA(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
@@ -245,7 +249,7 @@ void GraphicsPipelineState::CreateDirectXRootSignature(Device* device, D3D12_ROO
 void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 	if (isUseMeshShaderPipeline_) {
 
-		//!< mesh piplineの設定
+		//!< mesh pipelineの設定
 		D3DX12_MESH_SHADER_PIPELINE_STATE_DESC desc = {};
 		desc.pRootSignature     = rootSignature_.Get();
 		desc.RasterizerState    = pipelineDesc_.rasterizerDesc;

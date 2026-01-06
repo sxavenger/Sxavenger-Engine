@@ -43,7 +43,7 @@ private:
 
 	std::shared_ptr<DirectXWindowContext> main_;
 
-	//* gameobject *//
+	//* game object *//
 
 	std::unique_ptr<GameObject> atmosphere_;
 	std::unique_ptr<ControllableCameraActor> camera_;
@@ -52,6 +52,11 @@ private:
 
 	std::unique_ptr<GameObject> demoText_;
 	std::unique_ptr<GameObject> instructionText_;
+
+	//* test *//
+
+	std::unique_ptr<GameObject> test_;
+
 
 	//=========================================================================================
 	// private methods

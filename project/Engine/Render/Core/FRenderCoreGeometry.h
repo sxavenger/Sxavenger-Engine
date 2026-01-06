@@ -31,10 +31,11 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Type : uint32_t {
 		Forward_MeshVS,
+		Forward_MeshMS,
 		Deferred_MeshVS,
 		Deferred_MeshMS,
-		Forward_CPUParticleVS,
-		Forward_GPUParticleVS,
+		//Forward_CPUParticleVS,
+		//Forward_GPUParticleVS,
 	};
 
 public:

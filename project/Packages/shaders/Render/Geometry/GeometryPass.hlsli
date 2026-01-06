@@ -6,6 +6,9 @@
 //* geometry
 #include "GeometryRenderTarget.hlsli"
 
+//* library
+#include "../../Library/WeightedBlendedOIT.hlsli" //!< transparency pass
+
 //* content
 #include "../../Content/Mesh.hlsli"
 #include "../../Content/Material.hlsli"
