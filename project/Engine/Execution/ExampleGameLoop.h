@@ -56,7 +56,7 @@ private:
 	//* test *//
 
 	std::unique_ptr<GameObject> test_;
-
+	float transparency_ = 1.0f;
 
 	//=========================================================================================
 	// private methods

@@ -11,6 +11,7 @@
 #include <Engine/Foundation.h>
 #include <Engine/Graphics/Animation/Animation.h>
 #include <Engine/Assets/Content/ContentModel.h>
+#include <Engine/Assets/Asset/AssetMaterial.h>
 
 //* c++
 #include <string>
@@ -58,6 +59,10 @@ public:
 	static void CreateSkinnedMeshBehaviour(const BehaviourAddress& address, const std::shared_ptr<ContentModel>& model);
 	static BehaviourAddress CreateSkinnedMeshBehaviour(const std::shared_ptr<ContentModel>& model);
 
+	//* ForEach option *//
+
+	static void ForEachBehaviour(const BehaviourAddress& address, const std::function<void(EntityBehaviour*)>& function);
+
 	//* animation helper *//
 
 	static void ApplyAnimation(
@@ -71,6 +76,12 @@ public:
 		const Animation& currAnimation, TimePointd<TimeUnit::second> currTime, bool currIsLoop,
 		float transitionT
 	);
+
+	//* material helper *//
+
+	static void DetachBehaviourMaterial(const BehaviourAddress& address);
+
+	static void ModifyBehaviourMaterial(const BehaviourAddress& address, const std::function<void(AssetMaterial*)>& function);
 
 private:
 

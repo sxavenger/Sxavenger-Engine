@@ -57,7 +57,7 @@ void ControllableCameraActor::Around() {
 
 	angle_ += delta * 0.002f;
 
-	angle_.y = std::clamp(angle_.y, -kPi, kPi);
+	angle_.y = std::clamp(angle_.y, -kPi / 2.0f, kPi / 2.0f);
 	angle_.x = std::fmod(angle_.x, kTau);
 
 	auto transform = address_->GetComponent<SXAVENGER_ENGINE TransformComponent>();

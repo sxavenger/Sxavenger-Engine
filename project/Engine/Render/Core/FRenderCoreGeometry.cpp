@@ -91,9 +91,9 @@ void FRenderCoreGeometry::CreateDesc() {
 		revealage.DestBlend             = D3D12_BLEND_INV_SRC_COLOR;
 		revealage.BlendOp               = D3D12_BLEND_OP_ADD;
 		revealage.SrcBlendAlpha         = D3D12_BLEND_ZERO;
-		revealage.DestBlendAlpha        = D3D12_BLEND_ZERO;
+		revealage.DestBlendAlpha        = D3D12_BLEND_INV_SRC_ALPHA;
 		revealage.BlendOpAlpha          = D3D12_BLEND_OP_ADD;
-		revealage.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_RED;
+		revealage.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
 		forwardDesc_.SetBlendDesc(1, revealage);
 		forwardDesc_.SetIndependentBlendEnable(true);

@@ -138,31 +138,30 @@ void FRenderPassForwardTransparent::PassSkinnedMesh(const DirectXQueueContext* c
 	DxObject::BindBufferDesc parameter = {};
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 
-	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
+	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
 		if (!component->IsEnable()) {
 			return; //!< 不適格component.
 		}
 
 		auto transform = component->RequireTransform();
 
-		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
 
-		if (material->GetMode() == AssetMaterial::Mode::Opaque) {
-			return; //!< 透明なジオメトリは別のパスで描画
+		//!< 半透明ジオメトリ描画
+		if (material->GetMode() != AssetMaterial::Mode::Translucent) {
+			return;
 		}
 
 		// メッシュの描画
-		mesh->BindIABuffer(context);
+		component->BindIABuffer(context);
 
 		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
-		 
+
 		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Forward_MeshVS, context, parameter);
 
-		mesh->DrawCall(context, 1);
-		//!< todo: インスタンス描画対応
+		component->DrawCall(context, 1);
 
 	});
 

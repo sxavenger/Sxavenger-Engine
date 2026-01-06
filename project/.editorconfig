@@ -1,13 +1,17 @@
-# top-most EditorConfig file
 root = true
 
-# Unix-style newlines with a newline ending every file
+# Spell Checker
+spelling_checkable_types = identifires, comment
+spelling_languages = en-us
+spelling_use_default_exclusion_dictionary = true
+spelling_exclusion_path = ./exclusion.dic
+
 [*]
+charset = utf-8
 end_of_line = crlf
+trim_trailing_whitespace = true
 insert_final_newline = true
 
 [*.{cpp,h,hlsl,hlsli}]
 indent_style = tab
 indent_size = 4
-charset = utf-8
-trim_trailing_whitespace = true

@@ -170,9 +170,10 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 		auto transform = component->RequireTransform();
 
 		auto material = component->GetMaterial();
-		
+
+		//!< 不透明ジオメトリ描画
 		if (material->GetMode() != AssetMaterial::Mode::Opaque) {
-			return; //!< 透明なジオメトリは別のパスで描画
+			return;
 		}
 
 		// メッシュの描画

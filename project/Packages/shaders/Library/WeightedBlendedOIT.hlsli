@@ -23,8 +23,12 @@ namespace WeightedBlendedOIT {
 	//! @brief Calculate weight for Weighted Blended OIT
 	//! @param[in] alpha: fragment alpha
 	//! @param[in] depth: fragment depth (SV_Position.z)
-	float CalculateWeight(float alpha, float depth) {
-		float w = max(1e-2, 3e3 * pow(1.0f - depth, 3));
+	
+	float CalculateWeight(float alpha, float depth, float near, float far) {
+
+		float d = ((near * far) / -depth - far) / (near - far);
+		
+		float w = max(1e-2, 3e3 * pow(1.0f - d, 3.0f));
 		return alpha * w;
 	}
 

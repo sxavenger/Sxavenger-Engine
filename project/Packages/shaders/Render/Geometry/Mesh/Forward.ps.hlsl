@@ -24,7 +24,7 @@ GeometryForwardOutput main(GeometryPSInput input) {
 	color.rgb = gMaterials[input.instanceId].albedo.GetAlbedo(parameter);
 	color.a   = gMaterials[input.instanceId].transparency.GetTransparency(parameter);
 
-	float weight = WeightedBlendedOIT::CalculateWeight(color.a, input.position.z);
+	float weight = WeightedBlendedOIT::CalculateWeight(color.a, input.position.z, gCamera.near, gCamera.far);
 
 	output.SetColor(color, weight);
 	return output;
