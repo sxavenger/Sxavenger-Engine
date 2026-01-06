@@ -9,7 +9,7 @@
 // buffers
 //=========================================================================================
 
-cbuffer Infomation : register(b11) {
+cbuffer Information : register(b11) {
 	float blendWeight; //!< blend weight
 }
 

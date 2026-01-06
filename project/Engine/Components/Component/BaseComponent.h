@@ -37,7 +37,7 @@ public:
 	BaseComponent(EntityBehaviour* behaviour) : behaviour_(behaviour) {}
 	virtual ~BaseComponent() = default;
 
-	virtual json PerseToJson() const override { return json(); }
+	virtual json ParseToJson() const override { return json(); }
 
 	virtual void InputJson(const json&) override {}
 

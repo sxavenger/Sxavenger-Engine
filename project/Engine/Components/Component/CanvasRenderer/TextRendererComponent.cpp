@@ -65,7 +65,7 @@ void TextRendererComponent::SetText(const std::wstring& text) {
 	text_ = text.substr(0, kMaxTextLength - 1);
 }
 
-void TextRendererComponent::PerseText() {
+void TextRendererComponent::ParseText() {
 	if (text_.empty()) {
 		return;
 	}
@@ -170,7 +170,7 @@ const RectTransformComponent* TextRendererComponent::GetRectTransform() const {
 	return BaseComponent::GetBehaviour()->GetComponent<RectTransformComponent>();
 }
 
-json TextRendererComponent::PerseToJson() const {
+json TextRendererComponent::ParseToJson() const {
 	json component = json::object();
 	component["text"]  = ToString(text_);
 	component["font"]  = font_.Serialize();

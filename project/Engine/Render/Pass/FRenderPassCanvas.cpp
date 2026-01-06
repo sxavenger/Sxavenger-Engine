@@ -74,7 +74,7 @@ void FRenderPassCanvas::PassText(const DirectXQueueContext* context, const Confi
 			return;
 		}
 
-		component->PerseText();
+		component->ParseText();
 		// todo: engine側のupdateでやるようにする
 
 		component->BindIABuffer(context);

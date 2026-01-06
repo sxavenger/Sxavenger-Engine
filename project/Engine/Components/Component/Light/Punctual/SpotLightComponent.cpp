@@ -107,7 +107,7 @@ const TransformComponent* SpotLightComponent::RequireTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }
 
-json SpotLightComponent::PerseToJson() const {
+json SpotLightComponent::ParseToJson() const {
 	json data = json::object();
 
 	data["color"]           = JsonSerializeFormatter<Color3f>::Serialize(parameter_->At().color);

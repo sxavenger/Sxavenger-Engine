@@ -46,7 +46,7 @@ const TransformComponent* MeshRendererComponent::RequireTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }
 
-json MeshRendererComponent::PerseToJson() const {
+json MeshRendererComponent::ParseToJson() const {
 	json data = json::object();
 
 	data["mesh"]     = mesh_.Serialize();

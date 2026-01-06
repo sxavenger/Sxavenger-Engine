@@ -47,7 +47,7 @@ public:
 
 	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityRotate = 0.01f, float granularityScale = 0.01f);
 
-	json PerseToJson() const override;
+	json ParseToJson() const override;
 
 	void InputJson(const json& data) override;
 
@@ -102,7 +102,7 @@ public:
 
 	Matrix4x4 ToMatrix() const;
 
-	json PerseToJson() const override;
+	json ParseToJson() const override;
 
 	void InputJson(const json& data) override;
 
@@ -133,7 +133,7 @@ public:
 
 	Matrix4x4 ToMatrix() const;
 
-	json PerseToJson() const override;
+	json ParseToJson() const override;
 
 	void InputJson(const json& data) override;
 

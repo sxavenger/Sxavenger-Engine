@@ -997,7 +997,7 @@ void RenderSceneEditor::UpdateCamera() {
 	}
 }
 
-void RenderSceneEditor::ShowCameraInfomation(const WindowRect& rect) {
+void RenderSceneEditor::ShowCameraInformation(const WindowRect& rect) {
 
 	ImVec2 cursol = ImGui::GetCursorPos();
 

@@ -52,7 +52,7 @@ public:
 
 	//* json option *//
 
-	json PerseToJson() const override;
+	json ParseToJson() const override;
 
 	void InputJson(const json& data) override;
 

@@ -27,7 +27,7 @@ void DebugPrimitive::DrawToScene(const DirectXQueueContext* context, const D3D12
 
 	DxObject::BindBufferDesc desc = {};
 	desc.SetAddress("gCamera", camera); //!< HACK: cameraがcomponentなのでGPUVirtualAddressを直接渡す
-	desc.Set32bitConstants("Infomation", 2, &Configuration::GetConfig().resolution);
+	desc.Set32bitConstants("Information", 2, &Configuration::GetConfig().resolution);
 
 	{ //!< Line
 		pipelines_[static_cast<uint32_t>(PipelineType::Line)]->SetPipeline(context->GetDxCommand());

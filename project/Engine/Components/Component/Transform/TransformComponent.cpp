@@ -28,7 +28,7 @@ void TransformComponent::ShowComponentInspector() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& TransformComponent::GetGPUVirtualAddress() const {
-	StreamLogger::AssertA(buffer_ != nullptr, "transform buffer is not craete.");
+	StreamLogger::AssertA(buffer_ != nullptr, "transform buffer is not create.");
 	return buffer_->GetGPUVirtualAddress();
 }
 
@@ -41,7 +41,7 @@ const Vector3f TransformComponent::GetDirection() const {
 }
 
 const TransformationMatrix& TransformComponent::GetTransformationMatrix() const {
-	StreamLogger::AssertA(buffer_ != nullptr, "transform buffer is not craete.");
+	StreamLogger::AssertA(buffer_ != nullptr, "transform buffer is not create.");
 	return buffer_->At();
 }
 
@@ -73,9 +73,9 @@ void TransformComponent::TransferGPU() {
 	}
 }
 
-json TransformComponent::PerseToJson() const {
+json TransformComponent::ParseToJson() const {
 	json component = json::object();
-	component["transform"] = transform_.PerseToJson();
+	component["transform"] = transform_.ParseToJson();
 
 	return component;
 }

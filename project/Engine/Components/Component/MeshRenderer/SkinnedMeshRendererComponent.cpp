@@ -119,7 +119,7 @@ const TransformComponent* SkinnedMeshRendererComponent::RequireTransform() const
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }
 
-json SkinnedMeshRendererComponent::PerseToJson() const {
+json SkinnedMeshRendererComponent::ParseToJson() const {
 	json data = json::object();
 
 	data["referenceMesh"] = referenceMesh_.Serialize();

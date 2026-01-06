@@ -104,5 +104,5 @@ void ControllableCameraActor::FixMouse() {
 	mouse_->SetPosition(point);
 
 	// マウスの非表示
-	mouse_->ShowCousor(false);
+	mouse_->SetShowCursor(false);
 }
