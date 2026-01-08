@@ -224,7 +224,7 @@ void FRenderCoreProbe::CreatePipeline() {
 		desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 		desc.SetDepthStencil(true);
 
-		desc.SetBlendMode(0, BlendMode::kBlendModeNormal);
+		desc.SetBlendMode(0, BlendMode::Normal);
 		desc.SetIndependentBlendEnable(false);
 
 		desc.SetPrimitive(DxObject::PrimitiveType::TrianglList);

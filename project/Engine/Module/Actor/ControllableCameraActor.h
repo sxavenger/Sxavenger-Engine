@@ -25,6 +25,8 @@ public:
 	ControllableCameraActor();
 	~ControllableCameraActor() override = default;
 
+	void Inspectable() override;
+
 	void Update();
 
 private:
@@ -43,6 +45,7 @@ private:
 	Vector2f angle_;
 
 	float speed_ = 1.0f;
+	float sensitivity_ = 0.002f;
 
 	//=========================================================================================
 	// private methods
