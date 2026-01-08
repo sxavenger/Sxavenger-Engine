@@ -1,6 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <Filter Include="Demo">
+      <UniqueIdentifier>{6A15847C-564C-850D-FF38-6B10EB4E010F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Demo\Camera">
+      <UniqueIdentifier>{A22E10BF-0EE4-88B4-97D8-828B038D7FB8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Demo\Execution">
+      <UniqueIdentifier>{6D904BF5-595E-3FFB-42F2-AF212E5F1B60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Demo\Interact">
+      <UniqueIdentifier>{D39B6A46-3F5C-E67C-0897-2FFA74162B59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Demo\Player">
+      <UniqueIdentifier>{460B24DE-B2C0-9CD3-3BB5-96AAA76993D7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{DBC7D3B0-C769-FE86-B024-12DB9C6585D7}</UniqueIdentifier>
     </Filter>
@@ -85,17 +100,20 @@
     <Filter Include="Engine\Module">
       <UniqueIdentifier>{30D9DE4B-9C99-5A82-65D4-A3FFD1539F5E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Module\Actor">
+      <UniqueIdentifier>{38F13B39-A452-1947-2DC0-5FF999205006}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Module\Exporter">
       <UniqueIdentifier>{F8ADDC6F-E4A7-05C2-CD14-9CD2B9AD6B2E}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Module\GameObject">
       <UniqueIdentifier>{B0753351-9C9A-82D1-C5E5-6761B16981EF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Module\Parameter">
+      <UniqueIdentifier>{E0F2CAAB-4C2A-1343-5534-7766C1EA393C}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Module\Pipeline">
       <UniqueIdentifier>{55D74E13-41D1-7765-2A3E-0E7616D7DDD1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Module\Scene">
-      <UniqueIdentifier>{4D6A813A-B9CB-5E48-4239-A5FAAE999507}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Render">
       <UniqueIdentifier>{EAE1D856-56A2-548D-1FDD-9D0A8B5C9969}</UniqueIdentifier>
@@ -207,6 +225,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Demo\Camera\CameraHandle.h">
+      <Filter>Demo\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo\Camera\PerspectiveCamera.h">
+      <Filter>Demo\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo\Execution\DemoGameLoop.h">
+      <Filter>Demo\Execution</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo\Interact\InteractItem.h">
+      <Filter>Demo\Interact</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo\Player\Player.h">
+      <Filter>Demo\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo\Player\PlayerHandle.h">
+      <Filter>Demo\Player</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Assets\Asset\AssetAnimation.h">
       <Filter>Engine\Assets\Asset</Filter>
     </ClInclude>
@@ -244,6 +280,9 @@
       <Filter>Engine\Assets\Content</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Assets\Content\ContentAudio.h">
+      <Filter>Engine\Assets\Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Assets\Content\ContentBehaviour.h">
       <Filter>Engine\Assets\Content</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Assets\Content\ContentBlob.h">
@@ -429,6 +468,9 @@
     <ClInclude Include="Engine\Execution\EngineExecution.h">
       <Filter>Engine\Execution</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Execution\ExampleGameLoop.h">
+      <Filter>Engine\Execution</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Execution\FeatureLevelExecution.h">
       <Filter>Engine\Execution</Filter>
     </ClInclude>
@@ -498,11 +540,23 @@
     <ClInclude Include="Engine\Graphics\TextureBuffer\UnorderedTexture.h">
       <Filter>Engine\Graphics\TextureBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Module\Actor\ControllableCameraActor.h">
+      <Filter>Engine\Module\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\Actor\PerformanceActor.h">
+      <Filter>Engine\Module\Actor</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Module\Exporter\TextureExporter.h">
       <Filter>Engine\Module\Exporter</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\GameObject\GameObject.h">
       <Filter>Engine\Module\GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\Parameter\SerializeGui.h">
+      <Filter>Engine\Module\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\Parameter\SerializeParameter.h">
+      <Filter>Engine\Module\Parameter</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h">
       <Filter>Engine\Module\Pipeline</Filter>
@@ -534,6 +588,9 @@
     <ClInclude Include="Engine\Render\Core\FRenderCoreLight.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreProbe.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
@@ -562,6 +619,12 @@
       <Filter>Engine\Render\GBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\GBuffer\FMainGBuffer.h">
+      <Filter>Engine\Render\GBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\GBuffer\FProbeGBuffer.h">
+      <Filter>Engine\Render\GBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\GBuffer\FTransparentGBuffer.h">
       <Filter>Engine\Render\GBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FBaseRenderPass.h">
@@ -849,23 +912,26 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Execution\ExampleGameLoop.h" />
-    <ClInclude Include="Engine\Render\GBuffer\FProbeGBuffer.h" />
-    <ClInclude Include="Engine\Render\Core\FRenderCoreProbe.h" />
-    <ClInclude Include="Engine\Module\Actor\ControllableCameraActor.h" />
-    <ClInclude Include="Demo\Execution\DemoGameLoop.h" />
-    <ClInclude Include="Demo\Player\Player.h" />
-    <ClInclude Include="Engine\Module\Parameter\SerializeParameter.h" />
-    <ClInclude Include="Engine\Module\Parameter\SerializeGui.h" />
-    <ClInclude Include="Demo\Player\PlayerHandle.h" />
-    <ClInclude Include="Demo\Camera\CameraHandle.h" />
-    <ClInclude Include="Demo\Camera\PerspectiveCamera.h" />
-    <ClInclude Include="Engine\Assets\Content\ContentBehaviour.h" />
-    <ClInclude Include="Demo\Interact\InteractItem.h" />
-    <ClInclude Include="Engine\Module\Actor\PerformanceActor.h" />
-    <ClInclude Include="Engine\Render\GBuffer\FTransparentGBuffer.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Demo\Camera\CameraHandle.cpp">
+      <Filter>Demo\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo\Camera\PerspectiveCamera.cpp">
+      <Filter>Demo\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo\Execution\DemoGameLoop.cpp">
+      <Filter>Demo\Execution</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo\Interact\InteractItem.cpp">
+      <Filter>Demo\Interact</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo\Player\Player.cpp">
+      <Filter>Demo\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo\Player\PlayerHandle.cpp">
+      <Filter>Demo\Player</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
       <Filter>Engine\Assets\Asset</Filter>
     </ClCompile>
@@ -900,6 +966,9 @@
       <Filter>Engine\Assets\Content</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Assets\Content\ContentAudio.cpp">
+      <Filter>Engine\Assets\Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Assets\Content\ContentBehaviour.cpp">
       <Filter>Engine\Assets\Content</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Assets\Content\ContentBlob.cpp">
@@ -1076,6 +1145,9 @@
     <ClCompile Include="Engine\Execution\EngineExecution.cpp">
       <Filter>Engine\Execution</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Execution\ExampleGameLoop.cpp">
+      <Filter>Engine\Execution</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Execution\FeatureLevelExecution.cpp">
       <Filter>Engine\Execution</Filter>
     </ClCompile>
@@ -1127,6 +1199,12 @@
     <ClCompile Include="Engine\Graphics\TextureBuffer\UnorderedTexture.cpp">
       <Filter>Engine\Graphics\TextureBuffer</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Module\Actor\ControllableCameraActor.cpp">
+      <Filter>Engine\Module\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\Actor\PerformanceActor.cpp">
+      <Filter>Engine\Module\Actor</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Module\Exporter\TextureExporter.cpp">
       <Filter>Engine\Module\Exporter</Filter>
     </ClCompile>
@@ -1163,6 +1241,9 @@
     <ClCompile Include="Engine\Render\Core\FRenderCoreLight.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreProbe.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
@@ -1191,6 +1272,12 @@
       <Filter>Engine\Render\GBuffer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\GBuffer\FMainGBuffer.cpp">
+      <Filter>Engine\Render\GBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\GBuffer\FProbeGBuffer.cpp">
+      <Filter>Engine\Render\GBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\GBuffer\FTransparentGBuffer.cpp">
       <Filter>Engine\Render\GBuffer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FBaseRenderPass.cpp">
@@ -1446,18 +1533,5 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\Execution\ExampleGameLoop.cpp" />
-    <ClCompile Include="Engine\Render\GBuffer\FProbeGBuffer.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCoreProbe.cpp" />
-    <ClCompile Include="Engine\Module\Actor\ControllableCameraActor.cpp" />
-    <ClCompile Include="Demo\Execution\DemoGameLoop.cpp" />
-    <ClCompile Include="Demo\Player\Player.cpp" />
-    <ClCompile Include="Demo\Player\PlayerHandle.cpp" />
-    <ClCompile Include="Demo\Camera\CameraHandle.cpp" />
-    <ClCompile Include="Demo\Camera\PerspectiveCamera.cpp" />
-    <ClCompile Include="Engine\Assets\Content\ContentBehaviour.cpp" />
-    <ClCompile Include="Demo\Interact\InteractItem.cpp" />
-    <ClCompile Include="Engine\Module\Actor\PerformanceActor.cpp" />
-    <ClCompile Include="Engine\Render\GBuffer\FTransparentGBuffer.cpp" />
   </ItemGroup>
 </Project>

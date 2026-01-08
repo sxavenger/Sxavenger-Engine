@@ -26,12 +26,16 @@ namespace WeightedBlendedOIT {
 	//! @param[in] near: camera near plane
 	//! @param[in] far: camera far plane
 	float CalculateWeight(float transparency, float depth, float near, float far) {
+#if 1
 		//!< [Weighted Blended Order-Independent Transparency] Depth Weights Improve Occlusion (Eq.10)
-
 		float d = ((near * far) / -depth - far) / (near - far);
 		
 		float w = max(1e-2, 3e3 * pow(1.0f - d, 3.0f));
 		return transparency * w;
+#else
+		//!< [OpenGL / Weighted Blended] Weight Function
+		return clamp(pow(min(1.0, transparency * 10.0) + 0.01, 3.0) * 1e8 * pow(1.0 - depth * 0.9, 3.0), 1e-2, 3e3);
+#endif
 	}
 
 	//! @brief Check if the value is approximately opaque (1.0)
@@ -46,4 +50,4 @@ namespace WeightedBlendedOIT {
 		return accumulation.rgb / max(accumulation.a, kEpsilon);
 	}
 	
-} 
+}
