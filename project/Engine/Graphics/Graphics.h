@@ -64,7 +64,7 @@ public:
 	//-----------------------------------------------------------------------------------------
 
 		//! @brief デバッグPrimitiveのリセット
-	static void ResetPrimtive();
+	static void ResetPrimitive();
 
 	//! @brief LinePrimitiveの追加
 	//! @param[in] v1 座標

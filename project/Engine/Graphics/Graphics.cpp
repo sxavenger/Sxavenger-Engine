@@ -41,7 +41,7 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& Graphics::GetGPUHandleSRV(const std::string& 
 	return collection_->GetGPUHandleSRV(name);
 }
 
-void Graphics::ResetPrimtive() {
+void Graphics::ResetPrimitive() {
 	debugPrimitive_->ResetPrimitive();
 }
 
