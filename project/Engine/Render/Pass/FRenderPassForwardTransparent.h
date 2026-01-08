@@ -37,8 +37,11 @@ private:
 
 	void EndPassRenderTarget(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
-	void PassStaticMesh(const DirectXQueueContext* context, const Config& config);
-	void PassSkinnedMesh(const DirectXQueueContext* context, const Config& config);
+	void PassStaticMeshOpaque(const DirectXQueueContext* context, const Config& config);
+	void PassSkinnedMeshOpaque(const DirectXQueueContext* context, const Config& config);
+
+	void PassStaticMeshTransparent(const DirectXQueueContext* context, const Config& config);
+	void PassSkinnedMeshTransparent(const DirectXQueueContext* context, const Config& config);
 
 	void TransitionTransparentPass(const DirectXQueueContext* context, const Config& config);
 

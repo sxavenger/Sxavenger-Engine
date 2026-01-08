@@ -75,6 +75,8 @@ cs
 gs
 ds
 hs
+ms
+as
 sv_position
 texcoord
 float2
@@ -119,3 +121,5 @@ skybox
 wireframe
 fullscreen
 vsync
+mesh
+meshlet

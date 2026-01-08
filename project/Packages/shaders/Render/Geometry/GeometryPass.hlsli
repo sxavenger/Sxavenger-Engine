@@ -24,7 +24,7 @@
 struct GeometryPSInput {
 
 	//=========================================================================================
-	// public methods
+	// public variables
 	//=========================================================================================
 	
 	float4 position  : SV_Position;
@@ -36,6 +36,7 @@ struct GeometryPSInput {
 	
 	uint instanceId  : INSTANCEID;
 	float clip       : SV_ClipDistance;
+	
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

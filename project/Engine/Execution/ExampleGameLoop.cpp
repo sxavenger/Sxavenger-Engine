@@ -124,6 +124,16 @@ void ExampleGameLoop::InitSystem() {
 	(*test_)->SetInspectable([this]() {
 		ImGui::DragFloat("transparency", &transparency_, 0.01f, 0.0f, 1.0f);
 	});
+
+	BehaviourHelper::ModifyBehaviourMaterial(
+		test_->GetAddress(), [&](AssetMaterial* material) {
+
+		if (Random::UniformDistribution<int32_t>(0, 4) == 0) {
+			return;
+		}
+
+		material->SetMode(AssetMaterial::Mode::Translucent);
+	});
 }
 
 void ExampleGameLoop::TermSystem() {
@@ -157,8 +167,9 @@ void ExampleGameLoop::UpdateSystem() {
 
 	BehaviourHelper::ModifyBehaviourMaterial(
 		test_->GetAddress(), [&](AssetMaterial* material) {
-		material->SetMode(AssetMaterial::Mode::Translucent);
-		material->GetBuffer().transparency.SetValue(transparency_);
+		if (material->GetMode() == AssetMaterial::Mode::Translucent) {
+			material->GetBuffer().transparency.SetValue(transparency_);
+		}
 	});
 
 	//-----------------------------------------------------------------------------------------

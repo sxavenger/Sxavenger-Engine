@@ -13,20 +13,19 @@ SamplerState gSampler : register(s0);
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
 [earlydepthstencil]
-GeometryForwardOutput main(GeometryPSInput input) {
-
-	GeometryForwardOutput output = (GeometryForwardOutput)0;
+GeometryForwardTransparentOutput main(GeometryPSInput input) {
+	
+	GeometryForwardTransparentOutput output = (GeometryForwardTransparentOutput)0;
 
 	MaterialLib::TextureSampler parameter;
 	parameter.Set(input.texcoord, gSampler);
 
-	float4 color = (float4)0;
-	color.rgb = gMaterials[input.instanceId].albedo.GetAlbedo(parameter);
-	color.a   = gMaterials[input.instanceId].transparency.GetTransparency(parameter);
+	float3 albedo      = gMaterials[input.instanceId].albedo.GetAlbedo(parameter);
+	float transparency = gMaterials[input.instanceId].transparency.GetTransparency(parameter);
 
-	float weight = WeightedBlendedOIT::CalculateWeight(color.a, input.position.z, gCamera.near, gCamera.far);
+	float weight = WeightedBlendedOIT::CalculateWeight(transparency, input.position.z, gCamera.near, gCamera.far);
 
-	output.SetColor(color, weight);
+	output.SetColor(albedo, transparency, weight);
 	return output;
-	
+
 }
