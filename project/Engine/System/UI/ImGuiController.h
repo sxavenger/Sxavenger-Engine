@@ -8,6 +8,7 @@
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
+#include <Engine/System/UI/SxImGui.h>
 
 //* external
 #include <imgui.h>

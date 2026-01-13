@@ -27,6 +27,11 @@ ControllableCameraActor::ControllableCameraActor()
 	mouse_    = SXAVENGER_ENGINE System::GetMouseInput();
 }
 
+void ControllableCameraActor::Inspectable() {
+	SxImGui::DragScalar<float>("sensitivity", &sensitivity_, 0.0001f, 0.0f, std::nullopt);
+	SxImGui::DragScalar<float>("speed",       &speed_, 0.01f, 0.1f, std::nullopt);
+}
+
 void ControllableCameraActor::Update() {
 	if (CheckNeedUpdate()) {
 		Around();
@@ -55,9 +60,9 @@ bool ControllableCameraActor::CheckNeedUpdate() {
 void ControllableCameraActor::Around() {
 	Vector2f delta = mouse_->GetDeltaPosition();
 
-	angle_ += delta * 0.002f;
+	angle_ += delta * sensitivity_;
 
-	angle_.y = std::clamp(angle_.y, -kPi, kPi);
+	angle_.y = std::clamp(angle_.y, -kPi / 2.0f, kPi / 2.0f);
 	angle_.x = std::fmod(angle_.x, kTau);
 
 	auto transform = address_->GetComponent<SXAVENGER_ENGINE TransformComponent>();
@@ -67,6 +72,7 @@ void ControllableCameraActor::Around() {
 void ControllableCameraActor::Move() {
 
 	Vector2f direction = {};
+	Vector3f velocity  = {};
 
 	if (keyboard_->IsPress(KeyId::KEY_W)) {
 		direction.y += 1.0f;
@@ -84,17 +90,28 @@ void ControllableCameraActor::Move() {
 		direction.x += 1.0f;
 	}
 
+	if (keyboard_->IsPress(KeyId::KEY_E)) {
+		velocity.y += 1.0f;
+	}
+
+	if (keyboard_->IsPress(KeyId::KEY_Q)) {
+		velocity.y -= 1.0f;
+	}
+
 	if (keyboard_->IsPress(KeyId::KEY_LSHIFT)) {
 		direction *= 2.0f;
+		velocity  *= 2.0f;
 	}
 
 	speed_ += mouse_->GetDeltaWheelNormalized() * 0.1f;
-	speed_ = std::clamp(speed_, 0.1f, 10.0f);
+	speed_ = std::max(speed_, 0.1f);
 
 	direction *= speed_ * SXAVENGER_ENGINE System::GetDeltaTimef().time;
+	velocity  *= speed_ * SXAVENGER_ENGINE System::GetDeltaTimef().time;
 
 	auto transform = address_->GetComponent<SXAVENGER_ENGINE TransformComponent>();
 	transform->translate += Quaternion::RotateVector({ direction.x, 0.0f, direction.y }, transform->rotate);
+	transform->translate += velocity;
 
 }
 
@@ -104,5 +121,5 @@ void ControllableCameraActor::FixMouse() {
 	mouse_->SetPosition(point);
 
 	// マウスの非表示
-	mouse_->ShowCousor(false);
+	mouse_->SetShowCursor(false);
 }

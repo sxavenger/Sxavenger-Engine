@@ -98,7 +98,7 @@ const TransformComponent* PointLightComponent::RequireTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }
 
-json PointLightComponent::PerseToJson() const {
+json PointLightComponent::ParseToJson() const {
 	json data = json::object();
 
 	data["color"]           = JsonSerializeFormatter<Color3f>::Serialize(parameter_->At().color);

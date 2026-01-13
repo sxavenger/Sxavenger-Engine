@@ -40,29 +40,17 @@ public:
 
 	void Init(const Vector2ui& size);
 
-	//* scene transition option *//
+	//* transition option *//
 
-	void TransitionBeginRenderTargetScene(const DirectXQueueContext* context, const D3D12_CPU_DESCRIPTOR_HANDLE& depthStencilHandle);
+	void TransitionBeginRenderTarget(const DirectXQueueContext* context, Layout layout, const D3D12_CPU_DESCRIPTOR_HANDLE& handleDSV);
 
-	void TransitionEndRenderTargetScene(const DirectXQueueContext* context);
+	void TransitionEndRenderTarget(const DirectXQueueContext* context, Layout layout);
 
-	void ClearRenderTargetScene(const DirectXQueueContext* context);
+	void ClearRenderTarget(const DirectXQueueContext* context, Layout layout);
 
-	void TransitionBeginUnorderedScene(const DirectXQueueContext* context);
+	void TransitionBeginUnordered(const DirectXQueueContext* context, Layout layout);
 
-	void TransitionEndUnorderedScene(const DirectXQueueContext* context);
-
-	//* UI transition option *//
-
-	void TransitionBeginRenderTargetUI(const DirectXQueueContext* context, const D3D12_CPU_DESCRIPTOR_HANDLE& depthStencilHandle);
-
-	void TransitionEndRenderTargetUI(const DirectXQueueContext* context);
-
-	void ClearRenderTargetUI(const DirectXQueueContext* context);
-
-	void TransitionBeginUnorderedUI(const DirectXQueueContext* context);
-
-	void TransitionEndUnorderedUI(const DirectXQueueContext* context);
+	void TransitionEndUnordered(const DirectXQueueContext* context, Layout layout);
 
 	//* getter *//
 

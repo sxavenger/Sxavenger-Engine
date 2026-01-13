@@ -27,7 +27,7 @@ void DebugPrimitive::DrawToScene(const DirectXQueueContext* context, const D3D12
 
 	DxObject::BindBufferDesc desc = {};
 	desc.SetAddress("gCamera", camera); //!< HACK: cameraがcomponentなのでGPUVirtualAddressを直接渡す
-	desc.Set32bitConstants("Infomation", 2, &Configuration::GetConfig().resolution);
+	desc.Set32bitConstants("Information", 2, &Configuration::GetConfig().resolution);
 
 	{ //!< Line
 		pipelines_[static_cast<uint32_t>(PipelineType::Line)]->SetPipeline(context->GetDxCommand());
@@ -367,7 +367,7 @@ void DebugPrimitive::CreatePipeline() {
 		desc.SetDepthStencil(true);
 
 		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
-		desc.SetBlendMode(0, BlendMode::kBlendModeNormal_AlphaMax);
+		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
 
 		pipeline->CreatePipeline(System::GetDxDevice(), desc);
 	}
@@ -395,7 +395,7 @@ void DebugPrimitive::CreatePipeline() {
 		desc.SetDepthStencil(false);
 
 		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
-		desc.SetBlendMode(0, BlendMode::kBlendModeNormal_AlphaMax);
+		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
 
 		pipeline->CreatePipeline(System::GetDxDevice(), desc);
 	}
@@ -423,7 +423,7 @@ void DebugPrimitive::CreatePipeline() {
 		desc.SetDepthStencil(true);
 
 		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
-		desc.SetBlendMode(0, BlendMode::kBlendModeNormal_AlphaMax);
+		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
 
 		pipeline->CreatePipeline(System::GetDxDevice(), desc);
 	}
@@ -451,7 +451,7 @@ void DebugPrimitive::CreatePipeline() {
 		desc.SetDepthStencil(false);
 
 		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
-		desc.SetBlendMode(0, BlendMode::kBlendModeNormal_AlphaMax);
+		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
 
 		pipeline->CreatePipeline(System::GetDxDevice(), desc);
 

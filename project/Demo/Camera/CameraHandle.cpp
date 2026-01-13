@@ -54,7 +54,7 @@ Vector2f CameraHandle::GetMouseDirection() {
 
 	// マウスの制御
 	mouse_->SetPosition(static_cast<Vector2i>(Configuration::GetConfig().resolution) / 2);
-	mouse_->ShowCousor(false);
+	mouse_->SetShowCursor(false);
 
 	Vector2f delta = mouse_->GetDeltaPosition();
 	return delta * sensitivity_;

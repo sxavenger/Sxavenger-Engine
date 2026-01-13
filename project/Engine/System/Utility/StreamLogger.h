@@ -135,8 +135,8 @@ private:
 
 	//* output exception helper methods *//
 
-	static ExceptionMessage<std::string> PerseExceptionMessageA(const std::source_location& location, std::thread::id id, const std::string& label, const std::string& detail);
-	static ExceptionMessage<std::wstring> PerseExceptionMessageW(const std::source_location& location, std::thread::id id, const std::wstring& label, const std::wstring& detail);
+	static ExceptionMessage<std::string> ParseExceptionMessageA(const std::source_location& location, std::thread::id id, const std::string& label, const std::string& detail);
+	static ExceptionMessage<std::wstring> ParseExceptionMessageW(const std::source_location& location, std::thread::id id, const std::wstring& label, const std::wstring& detail);
 
 	static void OpenExceptionWindowA(const ExceptionMessage<std::string>& message);
 	static void OpenExceptionWindowW(const ExceptionMessage<std::wstring>& message);

@@ -33,6 +33,7 @@ public:
 		LightingTransition,
 		MipmapTransition,
 		VelocityTransition,
+		TransparentTransition,
 	};
 
 public:

@@ -6,6 +6,9 @@
 //* geometry
 #include "GeometryRenderTarget.hlsli"
 
+//* library
+#include "../../Library/WeightedBlendedOIT.hlsli" //!< transparency pass
+
 //* content
 #include "../../Content/Mesh.hlsli"
 #include "../../Content/Material.hlsli"
@@ -21,7 +24,7 @@
 struct GeometryPSInput {
 
 	//=========================================================================================
-	// public methods
+	// public variables
 	//=========================================================================================
 	
 	float4 position  : SV_Position;
@@ -33,6 +36,7 @@ struct GeometryPSInput {
 	
 	uint instanceId  : INSTANCEID;
 	float clip       : SV_ClipDistance;
+	
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

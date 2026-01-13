@@ -13,18 +13,46 @@ DXOBJECT_USING
 #include <Lib/Geometry/Color4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// Option structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+D3D12_RESOURCE_FLAGS FBaseTexture::Option::GetResourceFlags() const {
+	D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE;
+
+	if (flag.Test(Flag::RenderTarget)) {
+		flags |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+	}
+
+	if (flag.Test(Flag::UnorderedAccess)) {
+		flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
+	}
+
+	return flags;
+}
+
+std::optional<D3D12_CLEAR_VALUE> FBaseTexture::Option::GetClearValue() const {
+	if (!flag.Test(Flag::RenderTarget)) {
+		return std::nullopt;
+	}
+
+	D3D12_CLEAR_VALUE clearValue = {};
+	clearValue.Format   = format;
+	clearValue.Color[0] = clearColor.r;
+	clearValue.Color[1] = clearColor.g;
+	clearValue.Color[2] = clearColor.b;
+	clearValue.Color[3] = clearColor.a;
+
+	return clearValue;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // FBaseTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<Flag> flag) {
+void FBaseTexture::Create(const Option& option) {
 
 	// deviceの取り出し
 	auto device = System::GetDxDevice()->GetDevice();
-
-	// 引数の保存
-	format_ = format;
-	flag_   = flag;
-	size_   = size;
 
 	{ //!< resourceの生成
 
@@ -34,16 +62,16 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<F
 
 		// descの設定
 		D3D12_RESOURCE_DESC desc = {};
-		desc.Width            = size.x;
-		desc.Height           = size.y;
+		desc.Width            = option.size.x;
+		desc.Height           = option.size.y;
 		desc.MipLevels        = 1;
 		desc.DepthOrArraySize = 1;
-		desc.Format           = format;
+		desc.Format           = option.format;
 		desc.SampleDesc.Count = 1;
 		desc.Dimension        = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-		desc.Flags            = GetResourceFlags();
+		desc.Flags            = option.GetResourceFlags();
 
-		std::optional<D3D12_CLEAR_VALUE> clearValue = GetClearValue();
+		std::optional<D3D12_CLEAR_VALUE> clearValue = option.GetClearValue();
 
 		auto hr = device->CreateCommittedResource(
 			&prop,
@@ -58,14 +86,14 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<F
 		resource_->SetName(L"FTexture");
 	}
 
-	if (flag_.Test(Flag::RenderTarget)) { //!< RTVの生成
+	if (option.flag.Test(Flag::RenderTarget)) { //!< RTVの生成
 
 		// handleの取得
 		descriptorRTV_ = System::GetDescriptor(kDescriptor_RTV);
 
 		// descの設定
 		D3D12_RENDER_TARGET_VIEW_DESC desc = {};
-		desc.Format        = format;
+		desc.Format        = option.format;
 		desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 		// RTVの生成
@@ -76,14 +104,14 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<F
 		);
 	}
 
-	if (flag_.Test(Flag::UnorderedAccess)) { //!< UAVの生成
+	if (option.flag.Test(Flag::UnorderedAccess)) { //!< UAVの生成
 
 		// handleの取得
 		descriptorUAV_ = System::GetDescriptor(kDescriptor_UAV);
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
-		desc.Format        = format;
+		desc.Format        = option.format;
 		desc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
 
 		// UAVの生成
@@ -102,7 +130,7 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<F
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-		desc.Format                    = format;
+		desc.Format                    = option.format;
 		desc.ViewDimension             = D3D12_SRV_DIMENSION_TEXTURE2D;
 		desc.Shader4ComponentMapping   = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 		desc.Texture2D.MipLevels       = 1;
@@ -114,7 +142,10 @@ void FBaseTexture::Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<F
 			descriptorSRV_.GetCPUHandle()
 		);
 	}
-	
+
+	// 引数の保存
+	option_ = option;
+
 }
 
 void FBaseTexture::Term() {
@@ -125,7 +156,7 @@ void FBaseTexture::Term() {
 }
 
 D3D12_RESOURCE_BARRIER FBaseTexture::TransitionBeginRenderTarget() const {
-	StreamLogger::AssertA(flag_.Test(Flag::RenderTarget), "texture is not render target.");
+	StreamLogger::AssertA(option_.flag.Test(Flag::RenderTarget), "Texture is not render target.");
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -158,17 +189,15 @@ void FBaseTexture::TransitionEndRenderTarget(const DirectXQueueContext* context)
 }
 
 void FBaseTexture::ClearRenderTarget(const DirectXQueueContext* context) const {
-	static constexpr Color4f clearColor = { 0.0f, 0.0f, 0.0f, 0.0f };
-
 	context->GetCommandList()->ClearRenderTargetView(
 		descriptorRTV_.GetCPUHandle(),
-		&clearColor.r,
+		&option_.clearColor.r,
 		0, nullptr
 	);
 }
 
 D3D12_RESOURCE_BARRIER FBaseTexture::TransitionBeginUnordered() const {
-	StreamLogger::AssertA(flag_.Test(Flag::UnorderedAccess), "texture is not unordered access.");
+	StreamLogger::AssertA(option_.flag.Test(Flag::UnorderedAccess), "Texture is not unordered access.");
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -237,26 +266,12 @@ void FBaseTexture::BarrierUAV(const DirectXQueueContext* context) const {
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-D3D12_RESOURCE_FLAGS FBaseTexture::GetResourceFlags() const {
-	D3D12_RESOURCE_FLAGS flags = D3D12_RESOURCE_FLAG_NONE;
-
-	if (flag_.Test(Flag::RenderTarget)) {
-		flags |= D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
-	}
-
-	if (flag_.Test(Flag::UnorderedAccess)) {
-		flags |= D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-	}
-
-	return flags;
+const D3D12_CPU_DESCRIPTOR_HANDLE& FBaseTexture::GetCPUHandleRTV() const {
+	StreamLogger::AssertA(option_.flag.Test(Flag::RenderTarget), "Texture is not render target.");
+	return descriptorRTV_.GetCPUHandle();
 }
 
-std::optional<D3D12_CLEAR_VALUE> FBaseTexture::GetClearValue() const {
-	if (!flag_.Test(Flag::RenderTarget)) {
-		return std::nullopt;
-	}
-
-	D3D12_CLEAR_VALUE clearValue = {};
-	clearValue.Format = format_;
-	return clearValue;
+const D3D12_GPU_DESCRIPTOR_HANDLE& FBaseTexture::GetGPUHandleUAV() const {
+	StreamLogger::AssertA(option_.flag.Test(Flag::UnorderedAccess), "Texture is not unordered access.");
+	return descriptorUAV_.GetGPUHandle();
 }

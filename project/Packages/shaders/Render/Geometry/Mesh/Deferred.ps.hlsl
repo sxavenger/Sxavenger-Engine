@@ -22,9 +22,8 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 	parameter.Set(input.texcoord, gSampler);
 
 	float transparency = gMaterials[input.instanceId].transparency.GetTransparency(parameter);
-	if (transparency <= 0.1f) {
-		discard;
-	}
+
+	clip(transparency - 0.1f); //!< 半透明描画を破棄 [transparency <= 0.1]
 
 	output.SetAlbedo(gMaterials[input.instanceId].albedo.GetAlbedo(parameter));
 	output.SetNormal(gMaterials[input.instanceId].normal.GetNormal(input.normal, parameter, tbn));

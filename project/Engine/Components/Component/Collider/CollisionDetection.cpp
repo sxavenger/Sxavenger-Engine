@@ -229,9 +229,9 @@ bool CollisionDetection::AABBToOBB(
 			+ std::abs(obbB.size.y * Vector3f::Dot(obbAxesB[1], axisNormalize))
 			+ std::abs(obbB.size.z * Vector3f::Dot(obbAxesB[2], axisNormalize));
 
-		float disatnce = std::abs(Vector3f::Dot(positionA - positionB, axisNormalize));
+		float distance = std::abs(Vector3f::Dot(positionA - positionB, axisNormalize));
 
-		if (disatnce > aabbAProjection + obbBProjection) {
+		if (distance > aabbAProjection + obbBProjection) {
 			return false;
 		}
 	}
@@ -289,9 +289,9 @@ bool CollisionDetection::OBBTo(
 			+ std::abs(obbB.size.y * Vector3f::Dot(obbAxesB[1], axisNormalize))
 			+ std::abs(obbB.size.z * Vector3f::Dot(obbAxesB[2], axisNormalize));
 
-		float disatnce = std::abs(Vector3f::Dot(positionA - positionB, axisNormalize));
+		float distance = std::abs(Vector3f::Dot(positionA - positionB, axisNormalize));
 
-		if (disatnce > obbAProjection + obbBProjection) {
+		if (distance > obbAProjection + obbBProjection) {
 			return false;
 		}
 	}

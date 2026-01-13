@@ -25,8 +25,6 @@ SXAVENGER_ENGINE_USING
 void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, const Config& config) {
 
 	if (config.CheckStatus(Config::Status::Geometry_Warning)) {
-		ClearPassDirect(context, config.buffer);
-		ClearPassIndirect(context, config.buffer);
 		return;
 	}
 
@@ -205,7 +203,7 @@ void FRenderPassDeferredLighting::PassEmpty(const DirectXQueueContext* context, 
 	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
-	// deferred paraemter
+	// deferred parameter
 	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
 	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
 	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
@@ -231,7 +229,7 @@ void FRenderPassDeferredLighting::PassDirectionalLight(const DirectXQueueContext
 	parameter.SetAddress("gScene", config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
-	// deferred paraemter
+	// deferred parameter
 	parameter.SetHandle("gAlbedo", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
 	parameter.SetHandle("gNormal", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
 	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
@@ -266,7 +264,7 @@ void FRenderPassDeferredLighting::PassPointLight(const DirectXQueueContext* cont
 	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
-	// deferred paraemter
+	// deferred parameter
 	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
 	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
 	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
@@ -299,7 +297,7 @@ void FRenderPassDeferredLighting::PassSpotLight(const DirectXQueueContext* conte
 	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
-	// deferred paraemter
+	// deferred parameter
 	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
 	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
 	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
@@ -329,7 +327,7 @@ void FRenderPassDeferredLighting::PassSkyLight(const DirectXQueueContext* contex
 	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
-	// deferred paraemter
+	// deferred parameter
 	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
 	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
 	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
@@ -651,10 +649,9 @@ void FRenderPassDeferredLighting::PassProbeEvaluation(const DirectXQueueContext*
 
 void FRenderPassDeferredLighting::TransitionLightingPass(const DirectXQueueContext* context, const Config& config) {
 
-	config.buffer->BeginUnorderedMainScene(context);
+	config.buffer->TransitionBeginUnorderedMainScene(context);
 
 	auto core = FRenderCore::GetInstance()->GetTransition();
-
 	core->SetPipeline(FRenderCoreTransition::Transition::LightingTransition, context);
 
 	DxObject::BindBufferDesc parameter = {};
@@ -671,6 +668,6 @@ void FRenderPassDeferredLighting::TransitionLightingPass(const DirectXQueueConte
 	core->BindComputeBuffer(FRenderCoreTransition::Transition::LightingTransition, context, parameter);
 	core->Dispatch(context, config.buffer->GetSize());
 
-	config.buffer->EndUnorderedMainScene(context);
+	config.buffer->TransitionEndUnorderedMainScene(context);
 
 }

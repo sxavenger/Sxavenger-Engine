@@ -108,7 +108,7 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 		System::RemoveClosedWindow();
 		System::PresentWindows();
 
-		Graphics::ResetPrimtive();
+		Graphics::ResetPrimitive();
 
 		sEntityBehaviourStorage->UnregisterBehaviour();
 

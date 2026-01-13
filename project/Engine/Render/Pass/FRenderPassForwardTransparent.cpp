@@ -21,7 +21,6 @@ void FRenderPassForwardTransparent::Render(const DirectXQueueContext* context, c
 
 	// waning処理
 	if (config.CheckStatus(FBaseRenderPass::Config::Status::Geometry_Warning)) {
-		ClearPass(context, config.buffer);
 		return;
 	}
 
@@ -29,13 +28,23 @@ void FRenderPassForwardTransparent::Render(const DirectXQueueContext* context, c
 
 	BeginPassRenderTarget(context, config.buffer);
 
-	PassStaticMesh(context, config);
+	context->BeginEvent(L"Opaque [Depth Pre-pass]");
 
-	PassSkinnedMesh(context, config);
+	PassStaticMeshOpaque(context, config);
+	PassSkinnedMeshOpaque(context, config);
 
-	PassParticles(context, config);
+	context->EndEvent();
+
+	context->BeginEvent(L"Transparent");
+
+	PassStaticMeshTransparent(context, config);
+	PassSkinnedMeshTransparent(context, config);
+
+	context->EndEvent();
 
 	EndPassRenderTarget(context, config.buffer);
+
+	TransitionTransparentPass(context, config);
 
 	context->EndEvent();
 
@@ -45,89 +54,55 @@ void FRenderPassForwardTransparent::BeginPassRenderTarget(const DirectXQueueCont
 
 	auto commandList = context->GetCommandList();
 
-	std::array<FBaseTexture*, 1> buffers = {
-		buffer->GetGBuffer(FMainGBuffer::Layout::Scene),
+	std::array<D3D12_RESOURCE_BARRIER, FTransparentGBuffer::kLayoutCount> barriers = {
+		buffer->GetGBuffer(FTransparentGBuffer::Layout::Accumulate)->TransitionBeginRenderTarget(),
+		buffer->GetGBuffer(FTransparentGBuffer::Layout::Revealage)->TransitionBeginRenderTarget(),
 	};
-
-	FDepthTexture* depth = buffer->GetDepth();
-
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	for (size_t i = 0; i < buffers.size(); ++i) {
-		barriers[i] = buffers[i]->TransitionBeginRenderTarget();
-	}
 
 	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 
+	FDepthTexture* depth = buffer->GetDepth();
 	depth->TransitionBeginRasterizer(context);
 
-	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, 1> handles = {};
-	for (size_t i = 0; i < buffers.size(); ++i) {
-		handles[i] = buffers[i]->GetCPUHandleRTV();
-	}
+	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, FTransparentGBuffer::kLayoutCount> handles = {
+		buffer->GetGBuffer(FTransparentGBuffer::Layout::Accumulate)->GetCPUHandleRTV(),
+		buffer->GetGBuffer(FTransparentGBuffer::Layout::Revealage)->GetCPUHandleRTV(),
+	};
 
 	commandList->OMSetRenderTargets(
 		static_cast<UINT>(handles.size()), handles.data(), false,
 		&depth->GetRasterizerCPUHandleDSV()
 	);
 
+	buffer->GetGBuffer(FTransparentGBuffer::Layout::Accumulate)->ClearRenderTarget(context);
+	buffer->GetGBuffer(FTransparentGBuffer::Layout::Revealage)->ClearRenderTarget(context);
 }
 
 void FRenderPassForwardTransparent::EndPassRenderTarget(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
 
 	auto commandList = context->GetCommandList();
 
-	std::array<FBaseTexture*, 1> buffers = {
-		buffer->GetGBuffer(FMainGBuffer::Layout::Scene),
-	};
-
 	FDepthTexture* depth = buffer->GetDepth();
-
 	depth->TransitionEndRasterizer(context);
 
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	for (size_t i = 0; i < buffers.size(); ++i) {
-		barriers[i] = buffers[i]->TransitionEndRenderTarget();
-	}
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-
-}
-
-void FRenderPassForwardTransparent::ClearPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
-
-	auto commandList = context->GetCommandList();
-
-	std::array<FBaseTexture*, 1> buffers = {
-		buffer->GetGBuffer(FMainGBuffer::Layout::Scene),
+	std::array<D3D12_RESOURCE_BARRIER, FTransparentGBuffer::kLayoutCount> barriers = {
+		buffer->GetGBuffer(FTransparentGBuffer::Layout::Accumulate)->TransitionEndRenderTarget(),
+		buffer->GetGBuffer(FTransparentGBuffer::Layout::Revealage)->TransitionEndRenderTarget(),
 	};
 
-	std::array<D3D12_RESOURCE_BARRIER, 1> barriers = {};
-	for (size_t i = 0; i < buffers.size(); ++i) {
-		barriers[i] = buffers[i]->TransitionBeginRenderTarget();
-	}
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-
-	for (size_t i = 0; i < buffers.size(); ++i) {
-		buffers[i]->ClearRenderTarget(context);
-	}
-	
-	for (size_t i = 0; i < buffers.size(); ++i) {
-		barriers[i] = buffers[i]->TransitionEndRenderTarget();
-	}
-
 	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 
 }
 
-void FRenderPassForwardTransparent::PassStaticMesh(const DirectXQueueContext* context, const Config& config) {
+void FRenderPassForwardTransparent::PassStaticMeshOpaque(const DirectXQueueContext* context, const Config& config) {
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
-	core->SetPipeline(FRenderCoreGeometry::Type::Forward_MeshVS, context, config.buffer->GetSize());
+	core->SetPipeline(FRenderCoreGeometry::Type::ForwardOpaque_MeshMS, context, config.buffer->GetSize());
 
 	// common parameterの設定
 	DxObject::BindBufferDesc parameter = {};
-	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gCullCamera", config.cullCamera->GetGPUVirtualAddress());
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
 		if (!component->IsEnable()) {
@@ -139,34 +114,78 @@ void FRenderPassForwardTransparent::PassStaticMesh(const DirectXQueueContext* co
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
 
-		if (material->GetMode() == AssetMaterial::Mode::Opaque) {
-			return; //!< 不透明なジオメトリは別のパスで描画
-		}
+		const auto& meshlet = mesh->GetInputMesh().GetMeshlet();
 
-		// メッシュの描画
-		mesh->BindIABuffer(context);
+		//!< 半透明ジオメトリ描画
+		if (material->GetMode() != AssetMaterial::Mode::Translucent) {
+			return;
+		}
 
 		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
-		 
-		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Forward_MeshVS, context, parameter);
 
-		mesh->DrawCall(context, 1);
-		//!< todo: インスタンス描画対応
+		parameter.Set32bitConstants("Information", 1, &meshlet.meshletCount);
+		parameter.SetAddress("gVertices",   mesh->GetInputVertex()->GetGPUVirtualAddress());
+		parameter.SetAddress("gIndices",    meshlet.uniqueVertexIndices->GetGPUVirtualAddress());
+		parameter.SetAddress("gMeshlets",   meshlet.meshlets->GetGPUVirtualAddress());
+		parameter.SetAddress("gPrimitives", meshlet.primitiveIndices->GetGPUVirtualAddress());
+		parameter.SetAddress("gBounds",     meshlet.meshletBounds->GetGPUVirtualAddress());
+		 
+		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::ForwardOpaque_MeshMS, context, parameter);
+		meshlet.Dispatch(context, 1);
 
 	});
 
 }
 
-void FRenderPassForwardTransparent::PassSkinnedMesh(const DirectXQueueContext* context, const Config& config) {
+void FRenderPassForwardTransparent::PassSkinnedMeshOpaque(const DirectXQueueContext* context, const Config& config) {
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
-	core->SetPipeline(FRenderCoreGeometry::Type::Forward_MeshVS, context, config.buffer->GetSize());
+	core->SetPipeline(FRenderCoreGeometry::Type::ForwardOpaque_MeshVS, context, config.buffer->GetSize());
 
 	// common parameterの設定
 	DxObject::BindBufferDesc parameter = {};
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+
+	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
+		if (!component->IsEnable()) {
+			return; //!< 不適格component.
+		}
+
+		auto transform = component->RequireTransform();
+
+		auto material = component->GetMaterial();
+
+		//!< 半透明ジオメトリ描画
+		if (material->GetMode() != AssetMaterial::Mode::Translucent) {
+			return;
+		}
+
+		// メッシュの描画
+		component->BindIABuffer(context);
+
+		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
+		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
+		//!< todo: materialをConstantBufferに変更する
+
+		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::ForwardOpaque_MeshVS, context, parameter);
+
+		component->DrawCall(context, 1);
+
+	});
+
+}
+
+void FRenderPassForwardTransparent::PassStaticMeshTransparent(const DirectXQueueContext* context, const Config& config) {
+
+	auto core = FRenderCore::GetInstance()->GetGeometry();
+	core->SetPipeline(FRenderCoreGeometry::Type::ForwardTransparent_MeshMS, context, config.buffer->GetSize());
+
+	// common parameterの設定
+	DxObject::BindBufferDesc parameter = {};
+	parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gCullCamera", config.cullCamera->GetGPUVirtualAddress());
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
 		if (!component->IsEnable()) {
@@ -178,23 +197,91 @@ void FRenderPassForwardTransparent::PassSkinnedMesh(const DirectXQueueContext* c
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
 
-		if (material->GetMode() == AssetMaterial::Mode::Opaque) {
-			return; //!< 透明なジオメトリは別のパスで描画
-		}
+		const auto& meshlet = mesh->GetInputMesh().GetMeshlet();
 
-		// メッシュの描画
-		mesh->BindIABuffer(context);
+		//!< 半透明ジオメトリ描画
+		if (material->GetMode() != AssetMaterial::Mode::Translucent) {
+			return;
+		}
 
 		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
-		 
-		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Forward_MeshVS, context, parameter);
 
-		mesh->DrawCall(context, 1);
-		//!< todo: インスタンス描画対応
+		parameter.Set32bitConstants("Information", 1, &meshlet.meshletCount);
+		parameter.SetAddress("gVertices",   mesh->GetInputVertex()->GetGPUVirtualAddress());
+		parameter.SetAddress("gIndices",    meshlet.uniqueVertexIndices->GetGPUVirtualAddress());
+		parameter.SetAddress("gMeshlets",   meshlet.meshlets->GetGPUVirtualAddress());
+		parameter.SetAddress("gPrimitives", meshlet.primitiveIndices->GetGPUVirtualAddress());
+		parameter.SetAddress("gBounds",     meshlet.meshletBounds->GetGPUVirtualAddress());
+		 
+		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::ForwardTransparent_MeshMS, context, parameter);
+		meshlet.Dispatch(context, 1);
 
 	});
+
+}
+
+void FRenderPassForwardTransparent::PassSkinnedMeshTransparent(const DirectXQueueContext* context, const Config& config) {
+
+	auto core = FRenderCore::GetInstance()->GetGeometry();
+	core->SetPipeline(FRenderCoreGeometry::Type::ForwardTransparent_MeshVS, context, config.buffer->GetSize());
+
+	// common parameterの設定
+	DxObject::BindBufferDesc parameter = {};
+	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+
+	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
+		if (!component->IsEnable()) {
+			return; //!< 不適格component.
+		}
+
+		auto transform = component->RequireTransform();
+
+		auto material = component->GetMaterial();
+
+		//!< 半透明ジオメトリ描画
+		if (material->GetMode() != AssetMaterial::Mode::Translucent) {
+			return;
+		}
+
+		// メッシュの描画
+		component->BindIABuffer(context);
+
+		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
+		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
+		//!< todo: materialをConstantBufferに変更する
+
+		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::ForwardTransparent_MeshVS, context, parameter);
+
+		component->DrawCall(context, 1);
+
+	});
+
+}
+
+void FRenderPassForwardTransparent::TransitionTransparentPass(const DirectXQueueContext* context, const Config& config) {
+
+	config.buffer->TransitionBeginUnorderedMainScene(context);
+
+	auto core = FRenderCore::GetInstance()->GetTransition();
+	core->SetPipeline(FRenderCoreTransition::Transition::TransparentTransition, context);
+
+	DxObject::BindBufferDesc parameter = {};
+	// common parameter
+	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+
+	// input
+	parameter.SetHandle("gAccumulate", config.buffer->GetGBuffer(FTransparentGBuffer::Layout::Accumulate)->GetGPUHandleSRV());
+	parameter.SetHandle("gRevealage",  config.buffer->GetGBuffer(FTransparentGBuffer::Layout::Revealage)->GetGPUHandleSRV());
+
+	// output
+	parameter.SetHandle("gOutput", config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleUAV());
+
+	core->BindComputeBuffer(FRenderCoreTransition::Transition::TransparentTransition, context, parameter);
+	core->Dispatch(context, config.buffer->GetSize());
+
+	config.buffer->TransitionEndUnorderedMainScene(context);
 
 }
 

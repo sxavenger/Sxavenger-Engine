@@ -59,7 +59,7 @@ Matrix4x4 CameraComponent::Projection::ToProj() const {
 // CameraComponent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-json CameraComponent::PerseToJson() const {
+json CameraComponent::ParseToJson() const {
 	json component = json::object();
 
 	component["sensor"] = JsonSerializeFormatter<Vector2f>::Serialize(projection_.sensor);
@@ -115,13 +115,13 @@ void CameraComponent::ShowComponentInspector() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& CameraComponent::GetGPUVirtualAddress() const {
-	StreamLogger::AssertA(buffers_[currentIndex_] != nullptr, "camera buffer is not craete.");
+	StreamLogger::AssertA(buffers_[currentIndex_] != nullptr, "camera buffer is not create.");
 	return buffers_[currentIndex_]->GetGPUVirtualAddress();
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& CameraComponent::GetPrevGPUVirtualAddress() const {
 	size_t prevIndex = (currentIndex_ + buffers_.size() - 1) % buffers_.size();
-	StreamLogger::AssertA(buffers_[prevIndex] != nullptr, "camera buffer is not craete.");
+	StreamLogger::AssertA(buffers_[prevIndex] != nullptr, "camera buffer is not create.");
 	return buffers_[prevIndex]->GetGPUVirtualAddress();
 }
 
@@ -153,12 +153,12 @@ void CameraComponent::UpdateProj() {
 }
 
 const CameraComponent::Camera& CameraComponent::GetCamera() const {
-	StreamLogger::AssertA(buffers_[currentIndex_] != nullptr, "camera buffer is not craete.");
+	StreamLogger::AssertA(buffers_[currentIndex_] != nullptr, "camera buffer is not create.");
 	return buffers_[currentIndex_]->At();
 }
 
 Vector3f CameraComponent::GetPosition() const {
-	StreamLogger::AssertA(buffers_[currentIndex_] != nullptr, "camera buffer is not craete.");
+	StreamLogger::AssertA(buffers_[currentIndex_] != nullptr, "camera buffer is not create.");
 	return Matrix4x4::GetTranslation(buffers_[currentIndex_]->At().world);
 }
 

@@ -152,6 +152,18 @@ BehaviourAddress BehaviourHelper::CreateSkinnedMeshBehaviour(const std::shared_p
 	return address;
 }
 
+void BehaviourHelper::ForEachBehaviour(EntityBehaviour* behaviour, const std::function<void(EntityBehaviour*)>& function) {
+	function(behaviour);
+
+	for (const auto& child : behaviour->GetChildren()) {
+		BehaviourHelper::ForEachBehaviour(child.Get(), function);
+	}
+}
+
+void BehaviourHelper::ForEachBehaviour(const BehaviourAddress& address, const std::function<void(EntityBehaviour*)>& function) {
+	BehaviourHelper::ForEachBehaviour(address.Get(), function);
+}
+
 void BehaviourHelper::ApplyAnimation(const BehaviourAddress& address, const Animation& animation, TimePointd<TimeUnit::second> time, bool isLoop) {
 	auto child = address->FindChild(ArmatureComponent::kArmatureName);
 	child->GetComponent<ArmatureComponent>()->UpdateAnimation(animation, time, isLoop);
@@ -166,6 +178,55 @@ void BehaviourHelper::ApplyAnimationTransition(
 	child->GetComponent<ArmatureComponent>()->TransitionAnimation(
 		prevAnimation, prevTime, prevIsLoop, currAnimation, currTime, currIsLoop, transitionT
 	);
+}
+
+void BehaviourHelper::DetachBehaviourMaterial(const BehaviourAddress& address) {
+	BehaviourHelper::ForEachBehaviour(address, [](EntityBehaviour* behaviour) {
+		if (MeshRendererComponent* component = behaviour->GetComponent<MeshRendererComponent>()) {
+			std::shared_ptr<AssetMaterial> material = std::make_shared<AssetMaterial>(std::nullopt);
+			std::shared_ptr<AssetMaterial> reference = component->GetMaterial();
+			reference->WaitComplete();
+			reference->Wait();
+			reference->Update();
+
+			material->Copy(*reference);
+
+			component->SetMaterial(material);
+		}
+
+		if (auto component = behaviour->GetComponent<SkinnedMeshRendererComponent>()) {
+			std::shared_ptr<AssetMaterial> material = std::make_shared<AssetMaterial>(std::nullopt);
+			std::shared_ptr<AssetMaterial> reference = component->GetMaterial();
+			reference->WaitComplete();
+			reference->Wait();
+			reference->Update();
+
+			material->Copy(*reference);
+
+			component->SetMaterial(material);
+		}
+	});
+}
+
+void BehaviourHelper::ModifyBehaviourMaterial(EntityBehaviour* behaviour, const std::function<void(AssetMaterial*)>& function) {
+	// material parameterがptrであるcomponentに対してfunctionを実行
+	BehaviourHelper::ForEachBehaviour(behaviour, [&](EntityBehaviour* entity) {
+		if (auto component = entity->GetComponent<MeshRendererComponent>()) {
+			if (component->GetMaterialParameter().GetState() == AssetState::Ptr) {
+				function(component->GetMaterial().get());
+			}
+		}
+
+		if (auto component = entity->GetComponent<SkinnedMeshRendererComponent>()) {
+			if (component->GetMaterialParameter().GetState() == AssetState::Ptr) {
+				function(component->GetMaterial().get());
+			}
+		}
+	});
+}
+
+void BehaviourHelper::ModifyBehaviourMaterial(const BehaviourAddress& address, const std::function<void(AssetMaterial*)>& function) {
+	BehaviourHelper::ModifyBehaviourMaterial(address.Get(), function);
 }
 
 void BehaviourHelper::CreateStaticMeshBehaviourNode(const BehaviourAddress& parent, const BornNode& node, const std::shared_ptr<ContentModel>& model) {

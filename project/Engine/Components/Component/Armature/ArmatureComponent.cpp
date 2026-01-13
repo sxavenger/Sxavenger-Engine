@@ -67,7 +67,7 @@ void ArmatureComponent::ShowComponentInspector() {
 	PushBornLine(mat, skeleton_.joints);
 }
 
-json ArmatureComponent::PerseToJson() const {
+json ArmatureComponent::ParseToJson() const {
 	json data = json::object();
 	data["skeleton"] = referenceSkeleton_.Serialize();
 	return data;

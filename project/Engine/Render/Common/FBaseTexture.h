@@ -9,6 +9,8 @@
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
+#include <Lib/Geometry/Vector2.h>
+#include <Lib/Geometry/Color4.h>
 #include <Lib/Sxl/Flag.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -33,6 +35,32 @@ public:
 		All = RenderTarget | UnorderedAccess
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Option structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Option {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		D3D12_RESOURCE_FLAGS GetResourceFlags() const;
+
+		std::optional<D3D12_CLEAR_VALUE> GetClearValue() const;
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		Vector2ui   size;
+		DXGI_FORMAT format;
+
+		Sxl::Flag<Flag> flag = Flag::None;
+		Color4f clearColor   = {};
+
+	};
+
 public:
 
 	//=========================================================================================
@@ -40,10 +68,10 @@ public:
 	//=========================================================================================
 
 	FBaseTexture() = default;
-	FBaseTexture(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<Flag> flag) { Create(size, format, flag); }
-	virtual ~FBaseTexture() { Term(); }
+	FBaseTexture(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<Flag> flag, Color4f clearColor = {}) { Create({ .size = size, .format = format, .flag = flag, .clearColor = clearColor }); }
+	virtual ~FBaseTexture() { Term(); } 
 
-	void Create(const Vector2ui& size, DXGI_FORMAT format, Sxl::Flag<Flag> flag);
+	void Create(const Option& option);
 
 	void Term();
 
@@ -75,18 +103,18 @@ public:
 
 	ID3D12Resource* GetResource() const { return resource_.Get(); }
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const { return descriptorRTV_.GetCPUHandle(); }
-
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const { return descriptorUAV_.GetGPUHandle(); }
-
 	const DxObject::Descriptor& GetDescriptorSRV() const { return descriptorSRV_; }
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const { return descriptorSRV_.GetGPUHandle(); }
 
-	const DXGI_FORMAT& GetFormat() const { return format_; }
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleRTV() const;
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const;
+
+	const DXGI_FORMAT& GetFormat() const { return option_.format; }
 
 	static const D3D12_RESOURCE_STATES GetDefaultState() { return kDefaultState_; }
 
-	const Vector2ui& GetSize() const { return size_; }
+	const Vector2ui& GetSize() const { return option_.size; }
 
 private:
 
@@ -94,7 +122,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* directx12 *//
+	//* DirectX12 *//
 
 	ComPtr<ID3D12Resource> resource_;
 
@@ -104,11 +132,7 @@ private:
 
 	//* parameter *//
 
-	Vector2ui size_;
-
-	DXGI_FORMAT format_;
-
-	Sxl::Flag<Flag> flag_ = Flag::None;
+	Option option_;
 
 	//* default state *//
 
@@ -117,10 +141,6 @@ private:
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
-
-	D3D12_RESOURCE_FLAGS GetResourceFlags() const;
-
-	std::optional<D3D12_CLEAR_VALUE> GetClearValue() const;
 
 };
 

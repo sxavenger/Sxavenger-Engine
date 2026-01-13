@@ -19,8 +19,10 @@ void FRenderTargetBuffer::Create(const Vector2ui& size) {
 
 	deferred_.Init(size_);
 	lighting_.Init(size_);
-	probe_.Init();
+	transparent_.Init(size_);
 	main_.Init(size_);
+
+	probe_.Init();
 
 	depth_ = std::make_unique<FDepthTexture>();
 	depth_->Create(size_);
@@ -36,47 +38,58 @@ void FRenderTargetBuffer::Create(const Vector2ui& size) {
 	AttachIndex();
 }
 
-void FRenderTargetBuffer::BeginRenderTargetDeferred(const DirectXQueueContext* context) {
-	// OMSetRenderTargetsの設定
+void FRenderTargetBuffer::TransitionBeginRenderTargetMainScene(const DirectXQueueContext* context) {
 	depth_->TransitionBeginRasterizer(context);
-	deferred_.TransitionBeginRenderTarget(context, depth_->GetRasterizerCPUHandleDSV());
+	main_.TransitionBeginRenderTarget(context, FMainGBuffer::Layout::Scene, depth_->GetRasterizerCPUHandleDSV());
+}
 
-	// ClearRenderTargetの設定
+void FRenderTargetBuffer::TransitionEndRenderTargetMainScene(const DirectXQueueContext* context) {
+	depth_->TransitionEndRasterizer(context);
+	main_.TransitionEndRenderTarget(context, FMainGBuffer::Layout::Scene);
+}
+
+void FRenderTargetBuffer::TransitionBeginUnorderedMainScene(const DirectXQueueContext* context) {
+	main_.TransitionBeginUnordered(context, FMainGBuffer::Layout::Scene);
+}
+
+void FRenderTargetBuffer::TransitionEndUnorderedMainScene(const DirectXQueueContext* context) {
+	main_.TransitionEndUnordered(context, FMainGBuffer::Layout::Scene);
+}
+
+void FRenderTargetBuffer::TransitionBeginRenderTargetMainCanvas(const DirectXQueueContext* context) {
+	main_.TransitionBeginRenderTarget(context, FMainGBuffer::Layout::Canvas, priority_->GetCPUHandleDSV());
+}
+
+void FRenderTargetBuffer::TransitionEndRenderTargetMainCanvas(const DirectXQueueContext* context) {
+	main_.TransitionEndRenderTarget(context, FMainGBuffer::Layout::Canvas);
+}
+
+void FRenderTargetBuffer::ClearRenderTargetMain(const DirectXQueueContext* context) {
+
+	auto commandList = context->GetCommandList();
+
+	std::array<D3D12_RESOURCE_BARRIER, 2> barriers = {
+		main_.GetGBuffer(FMainGBuffer::Layout::Scene)->TransitionBeginRenderTarget(),
+		main_.GetGBuffer(FMainGBuffer::Layout::Canvas)->TransitionBeginRenderTarget(),
+	};
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	main_.ClearRenderTarget(context, FMainGBuffer::Layout::Scene);
+	main_.ClearRenderTarget(context, FMainGBuffer::Layout::Canvas);
+
+	barriers = {
+		main_.GetGBuffer(FMainGBuffer::Layout::Scene)->TransitionEndRenderTarget(),
+		main_.GetGBuffer(FMainGBuffer::Layout::Canvas)->TransitionEndRenderTarget(),
+	};
+
+	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+
+	depth_->TransitionBeginRasterizer(context);
 	depth_->ClearRasterizerDepth(context);
-	deferred_.ClearRenderTarget(context);
-}
-
-void FRenderTargetBuffer::EndRenderTargetDeferred(const DirectXQueueContext* context) {
 	depth_->TransitionEndRasterizer(context);
-	deferred_.TransitionEndRenderTarget(context);
-}
 
-void FRenderTargetBuffer::BeginUnorderedMainScene(const DirectXQueueContext* context) {
-	main_.TransitionBeginUnorderedScene(context);
-}
-
-void FRenderTargetBuffer::EndUnorderedMainScene(const DirectXQueueContext* context) {
-	main_.TransitionEndUnorderedScene(context);
-}
-
-void FRenderTargetBuffer::BeginRenderTargetMainTransparent(const DirectXQueueContext* context) {
-	depth_->TransitionBeginRasterizer(context);
-	main_.TransitionBeginRenderTargetScene(context, depth_->GetRasterizerCPUHandleDSV());
-}
-
-void FRenderTargetBuffer::EndRenderTargetMainTransparent(const DirectXQueueContext* context) {
-	depth_->TransitionEndRasterizer(context);
-	main_.TransitionEndRenderTargetScene(context);
-}
-
-void FRenderTargetBuffer::BeginRenderTargetMainUI(const DirectXQueueContext* context) {
-	main_.TransitionBeginRenderTargetUI(context, priority_->GetCPUHandleDSV());
-	main_.ClearRenderTargetUI(context);
 	priority_->ClearDepth(context);
-}
-
-void FRenderTargetBuffer::EndRenderTargetMainUI(const DirectXQueueContext* context) {
-	main_.TransitionEndRenderTargetUI(context);
 }
 
 void FRenderTargetBuffer::BeginPostProcess(const DirectXQueueContext* context) {
@@ -93,6 +106,10 @@ FBaseTexture* FRenderTargetBuffer::GetGBuffer(FDeferredGBuffer::Layout layout) {
 
 FBaseTexture* FRenderTargetBuffer::GetGBuffer(FLightingGBuffer::Layout layout) {
 	return lighting_.GetGBuffer(layout);
+}
+
+FBaseTexture* FRenderTargetBuffer::GetGBuffer(FTransparentGBuffer::Layout layout) {
+	return transparent_.GetGBuffer(layout);
 }
 
 FBaseTexture* FRenderTargetBuffer::GetGBuffer(FMainGBuffer::Layout layout) {

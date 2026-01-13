@@ -288,7 +288,7 @@ void MouseInput::UpdateInputState() {
 	// Async_Stackのクリア
 	inputs_[static_cast<uint8_t>(InputType::Async_Stack)].Clear();
 
-	ShowCousor(true);
+	ShowCursor(true);
 }
 
 Vector2i MouseInput::GetPosition() const {
@@ -340,7 +340,7 @@ void MouseInput::SetPosition(const Vector2i& position) const {
 	SetCursorPos(point.x, point.y);
 }
 
-void MouseInput::ShowCousor(bool isShow) const {
+void MouseInput::SetShowCursor(bool isShow) const {
 	while (isShow ? ShowCursor(isShow) < 0 : ShowCursor(isShow) >= 0) {}
 }
 
