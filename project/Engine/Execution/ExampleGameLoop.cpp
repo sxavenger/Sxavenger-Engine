@@ -110,6 +110,35 @@ void ExampleGameLoop::InitSystem() {
 			sEntityBehaviourStorage->InputJson(data);
 		}
 	}
+
+	for (size_t i = 0; i < cubes_.size(); ++i) {
+		cubes_[i] = std::make_unique<GameObject>();
+		(*cubes_[i])->SetName(std::format("cube[{}]", i));
+
+		auto& transform = (*cubes_[i])->AddComponent<TransformComponent>()->GetTransform();
+		transform.translate = { 0.0f, 0.0f, static_cast<float>(i) * 2.0f };
+
+		BehaviourHelper::CreateStaticMeshBehaviour(
+			cubes_[i]->GetAddress(),
+			sContentStorage->Import<ContentModel>("assets/models/primitive/cube.obj")
+		);
+
+		BehaviourHelper::DetachBehaviourMaterial(cubes_[i]->GetAddress());
+
+		BehaviourHelper::ModifyBehaviourMaterial(cubes_[i]->GetAddress(), [](AssetMaterial* material) {
+			material->SetMode(AssetMaterial::Mode::Translucent);
+			material->GetBuffer().transparency.SetValue(0.5f);
+			material->GetBuffer().albedo.SetValue(kWhite3<float>);
+		});
+
+		(*cubes_[i])->SetInspectable([](EntityBehaviour* behaviour) {
+			BehaviourHelper::ModifyBehaviourMaterial(behaviour, [](AssetMaterial* material) {
+				material->GetBuffer().albedo.SetImGuiCommand();
+				material->GetBuffer().transparency.SetImGuiCommand();
+			});
+		});
+
+	}
 }
 
 void ExampleGameLoop::TermSystem() {

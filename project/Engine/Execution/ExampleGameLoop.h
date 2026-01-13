@@ -53,6 +53,10 @@ private:
 	std::unique_ptr<GameObject> demoText_;
 	std::unique_ptr<GameObject> instructionText_;
 
+	//* test *//
+
+	std::array<std::unique_ptr<GameObject>, 4> cubes_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
