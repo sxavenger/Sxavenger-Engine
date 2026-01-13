@@ -46,6 +46,8 @@ public:
 	using Hierarchy = std::unordered_set<BehaviourAddress, BehaviourAddress::Hash, BehaviourAddress::Hash>;
 	// TODO: orderが必要ならlistに変更, iterator管理も必要
 
+	using InspectableFunction = std::function<void(EntityBehaviour*)>;
+
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Mobility enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -193,7 +195,10 @@ public:
 
 	virtual void LateUpdateInspector() override;
 
-	void SetInspectable(const std::function<void()>& function) { inspectable_ = function; }
+	//* inspectable option *//
+
+	void SetInspectable(const InspectableFunction& function) { inspectable_ = function; }
+	void SetInspectable(const std::function<void()>& function) { inspectable_ = std::bind(function); }
 	void SetInspectable(std::nullptr_t) { inspectable_ = nullptr; }
 
 	//* json serializer option *//
@@ -232,7 +237,7 @@ private:
 
 	//* inspectable *//
 
-	std::function<void()> inspectable_ = nullptr;
+	InspectableFunction inspectable_ = nullptr;
 
 	//=========================================================================================
 	// private methods

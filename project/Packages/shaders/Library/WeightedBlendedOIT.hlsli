@@ -36,7 +36,7 @@ namespace WeightedBlendedOIT {
 	//! @brief Check if the value is approximately opaque (1.0)
 	//! @param[in] v: value to check
 	bool IsApproximatelyOpacity(float v) {
-		return abs(v - 1.0f) <= (abs(v) < 1.0f ? 1.0f : abs(v)) * kEpsilon;
+		return abs(v - 1.0f) <= max(abs(v), 1.0f) * kEpsilon;
 	}
 
 	//! @brief Calculate the final transparent color from accumulation buffer

@@ -61,7 +61,9 @@ public:
 
 	//* ForEach option *//
 
+	static void ForEachBehaviour(EntityBehaviour* behaviour, const std::function<void(EntityBehaviour*)>& function);
 	static void ForEachBehaviour(const BehaviourAddress& address, const std::function<void(EntityBehaviour*)>& function);
+
 
 	//* animation helper *//
 
@@ -81,6 +83,7 @@ public:
 
 	static void DetachBehaviourMaterial(const BehaviourAddress& address);
 
+	static void ModifyBehaviourMaterial(EntityBehaviour* behaviour, const std::function<void(AssetMaterial*)>& function);
 	static void ModifyBehaviourMaterial(const BehaviourAddress& address, const std::function<void(AssetMaterial*)>& function);
 
 private:

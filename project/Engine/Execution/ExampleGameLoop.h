@@ -53,11 +53,6 @@ private:
 	std::unique_ptr<GameObject> demoText_;
 	std::unique_ptr<GameObject> instructionText_;
 
-	//* test *//
-
-	std::unique_ptr<GameObject> test_;
-	float transparency_ = 1.0f;
-
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

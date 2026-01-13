@@ -54,19 +54,19 @@ void AssetMaterial::Albedo::SetTextureMultiply(uint32_t _index) {
 }
 
 void AssetMaterial::Albedo::SetImGuiCommand() {
-	if (ImGui::RadioButton("value", type == Type::Value)) {
+	if (ImGui::RadioButton("Value", type == Type::Value)) {
 		type = Type::Value;
 	}
 
 	ImGui::SameLine();
 
-	if (ImGui::RadioButton("texture", type == Type::Texture)) {
+	if (ImGui::RadioButton("Texture", type == Type::Texture)) {
 		type = Type::Texture;
 	}
 
 	ImGui::SameLine();
 
-	if (ImGui::RadioButton("multiply", type == Type::Multiply)) {
+	if (ImGui::RadioButton("Multiply", type == Type::Multiply)) {
 		type = Type::Multiply;
 	}
 
@@ -92,13 +92,13 @@ void AssetMaterial::Albedo::SetImGuiCommand() {
 
 void AssetMaterial::Transparency::Init() {
 	type = Type::Value;
-	alpha = 1.0f;
+	value = 1.0f;
 	index = NULL;
 }
 
-void AssetMaterial::Transparency::SetValue(float _alpha) {
-	type = Type::Value;
-	alpha = _alpha;
+void AssetMaterial::Transparency::SetValue(float _value) {
+	type  = Type::Value;
+	value = _value;
 }
 
 void AssetMaterial::Transparency::SetTexture(uint32_t _index) {
@@ -107,22 +107,25 @@ void AssetMaterial::Transparency::SetTexture(uint32_t _index) {
 }
 
 void AssetMaterial::Transparency::SetImGuiCommand() {
-	if (ImGui::RadioButton("value", type == Type::Value)) {
+	if (ImGui::RadioButton("Value", type == Type::Value)) {
 		type = Type::Value;
 	}
 
 	ImGui::SameLine();
 
-	if (ImGui::RadioButton("texture", type == Type::Texture)) {
+	if (ImGui::RadioButton("Texture", type == Type::Texture)) {
 		type = Type::Texture;
 	}
 
-	if (type == Type::Value) {
-		ImGui::DragFloat("alpha", &alpha, 0.01f, 0.0f, 1.0f);
+	switch (type) {
+		case Type::Value:
+			ImGui::DragFloat("value", &value, 0.01f, 0.0f, 1.0f);
+			break;
 
-	} else {
-		ImGui::Text("texture index: %d", index);
-	}
+		case Type::Texture:
+			ImGui::Text("texture index: %d", index);
+			break;
+	};
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,13 +147,13 @@ void AssetMaterial::Normal::SetTexture(uint32_t _index) {
 }
 
 void AssetMaterial::Normal::SetImGuiCommand() {
-	if (ImGui::RadioButton("none", type == Type::None)) {
+	if (ImGui::RadioButton("None", type == Type::None)) {
 		type = Type::None;
 	}
 
 	ImGui::SameLine();
 
-	if (ImGui::RadioButton("texture", type == Type::Texture)) {
+	if (ImGui::RadioButton("Texture", type == Type::Texture)) {
 		type = Type::Texture;
 	}
 
@@ -180,18 +183,18 @@ void AssetMaterial::Property::SetTexture(uint32_t _index) {
 }
 
 void AssetMaterial::Property::SetImGuiCommand() {
-	if (ImGui::RadioButton("value", type == Type::Value)) {
+	if (ImGui::RadioButton("Value", type == Type::Value)) {
 		type = Type::Value;
 	}
 
 	ImGui::SameLine();
 
-	if (ImGui::RadioButton("texture", type == Type::Texture)) {
+	if (ImGui::RadioButton("Texture", type == Type::Texture)) {
 		type = Type::Texture;
 	}
 
 	if (type == Type::Value) {
-		ImGui::DragFloat("v", &value, 0.01f, 0.0f, 1.0f);
+		ImGui::DragFloat("value", &value, 0.01f, 0.0f, 1.0f);
 
 	} else {
 		ImGui::Text("texture index: %d", index);

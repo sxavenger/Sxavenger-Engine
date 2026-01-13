@@ -208,11 +208,9 @@ void EntityBehaviour::ShowInspector() {
 	{
 		ImGui::SeparatorText("inspectable");
 		if (inspectable_ != nullptr) {
-			inspectable_();
+			inspectable_(this);
 		}
 	}
-
-	
 
 	ImGui::Separator();
 

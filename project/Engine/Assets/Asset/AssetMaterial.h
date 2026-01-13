@@ -130,7 +130,7 @@ public:
 
 		//* option *//
 
-		void SetValue(float _alpha);
+		void SetValue(float _value);
 
 		void SetTexture(uint32_t _index);
 
@@ -144,7 +144,7 @@ public:
 
 		Type type = Type::Value;
 
-		float alpha    = 1.0f;
+		float value    = 1.0f;
 		uint32_t index = NULL;
 
 	};

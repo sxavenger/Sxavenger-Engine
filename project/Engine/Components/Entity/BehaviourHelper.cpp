@@ -152,12 +152,16 @@ BehaviourAddress BehaviourHelper::CreateSkinnedMeshBehaviour(const std::shared_p
 	return address;
 }
 
-void BehaviourHelper::ForEachBehaviour(const BehaviourAddress& address, const std::function<void(EntityBehaviour*)>& function) {
-	function(address.Get());
+void BehaviourHelper::ForEachBehaviour(EntityBehaviour* behaviour, const std::function<void(EntityBehaviour*)>& function) {
+	function(behaviour);
 
-	for (const auto& child : address->GetChildren()) {
-		BehaviourHelper::ForEachBehaviour(child, function);
+	for (const auto& child : behaviour->GetChildren()) {
+		BehaviourHelper::ForEachBehaviour(child.Get(), function);
 	}
+}
+
+void BehaviourHelper::ForEachBehaviour(const BehaviourAddress& address, const std::function<void(EntityBehaviour*)>& function) {
+	BehaviourHelper::ForEachBehaviour(address.Get(), function);
 }
 
 void BehaviourHelper::ApplyAnimation(const BehaviourAddress& address, const Animation& animation, TimePointd<TimeUnit::second> time, bool isLoop) {
@@ -204,21 +208,25 @@ void BehaviourHelper::DetachBehaviourMaterial(const BehaviourAddress& address) {
 	});
 }
 
-void BehaviourHelper::ModifyBehaviourMaterial(const BehaviourAddress& address, const std::function<void(AssetMaterial*)>& function) {
+void BehaviourHelper::ModifyBehaviourMaterial(EntityBehaviour* behaviour, const std::function<void(AssetMaterial*)>& function) {
 	// material parameterがptrであるcomponentに対してfunctionを実行
-	BehaviourHelper::ForEachBehaviour(address, [&](EntityBehaviour* behaviour) {
-		if (auto component = behaviour->GetComponent<MeshRendererComponent>()) {
+	BehaviourHelper::ForEachBehaviour(behaviour, [&](EntityBehaviour* entity) {
+		if (auto component = entity->GetComponent<MeshRendererComponent>()) {
 			if (component->GetMaterialParameter().GetState() == AssetState::Ptr) {
 				function(component->GetMaterial().get());
 			}
 		}
 
-		if (auto component = behaviour->GetComponent<SkinnedMeshRendererComponent>()) {
+		if (auto component = entity->GetComponent<SkinnedMeshRendererComponent>()) {
 			if (component->GetMaterialParameter().GetState() == AssetState::Ptr) {
 				function(component->GetMaterial().get());
 			}
 		}
 	});
+}
+
+void BehaviourHelper::ModifyBehaviourMaterial(const BehaviourAddress& address, const std::function<void(AssetMaterial*)>& function) {
+	BehaviourHelper::ModifyBehaviourMaterial(address.Get(), function);
 }
 
 void BehaviourHelper::CreateStaticMeshBehaviourNode(const BehaviourAddress& parent, const BornNode& node, const std::shared_ptr<ContentModel>& model) {

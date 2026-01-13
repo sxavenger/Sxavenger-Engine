@@ -104,26 +104,12 @@ void ExampleGameLoop::InitSystem() {
 		text->SetText(t);
 	}
 
-	/*{
+	{
 		json data;
 		if (JsonHandler::LoadFromJson("assets/scene/sponza.scene", data)) {
 			sEntityBehaviourStorage->InputJson(data);
 		}
-	}*/
-
-	test_ = std::make_unique<GameObject>();
-	(*test_)->SetName("test");
-
-	BehaviourHelper::CreateStaticMeshBehaviour(
-		test_->GetAddress(),
-		sContentStorage->Import<ContentModel>("assets/models/sponza/sponza.gltf")
-	);
-
-	BehaviourHelper::DetachBehaviourMaterial(test_->GetAddress());
-
-	(*test_)->SetInspectable([this]() {
-		ImGui::DragFloat("transparency", &transparency_, 0.01f, 0.0f, 1.0f);
-	});
+	}
 }
 
 void ExampleGameLoop::TermSystem() {
@@ -154,12 +140,6 @@ void ExampleGameLoop::UpdateSystem() {
 	}
 
 	performance_->Update();
-
-	BehaviourHelper::ModifyBehaviourMaterial(
-		test_->GetAddress(), [&](AssetMaterial* material) {
-		material->SetMode(AssetMaterial::Mode::Translucent);
-		material->GetBuffer().transparency.SetValue(transparency_);
-	});
 
 	//-----------------------------------------------------------------------------------------
 	// SystemUpdate
