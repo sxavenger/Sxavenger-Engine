@@ -1,6 +1,13 @@
 #include "FRenderCoreProbe.h"
 SXAVENGER_ENGINE_USING
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/Utility/Convert.h>
+#include <Engine/Assets/Asset/AssetMaterial.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreProbe class
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +110,7 @@ void FRenderCoreProbe::CreateHitgroup() {
 		hitgroup.closesthit = L"mainClosesthit";
 		hitgroup.anyhit     = L"mainAnyhit";
 
-		expt.ExportHitgroup(L"Mesh", hitgroup);
+		expt.ExportHitgroup(ToWString(magic_enum::enum_name(AssetMaterial::Mode::Opaque)), hitgroup);
 		expt.SetBlob(&blob);
 
 		//* root signature
@@ -125,7 +132,7 @@ void FRenderCoreProbe::CreateHitgroup() {
 		hitgroup.closesthit = L"mainEmissiveClosesthit";
 		hitgroup.anyhit     = L"mainEmissiveAnyhit";
 
-		expt.ExportHitgroup(L"Emissive", hitgroup);
+		expt.ExportHitgroup(ToWString(magic_enum::enum_name(AssetMaterial::Mode::Emissive)), hitgroup);
 		expt.SetBlob(&blob);
 
 		//* root signature

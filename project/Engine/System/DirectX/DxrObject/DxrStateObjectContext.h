@@ -37,6 +37,14 @@ DXROBJECT_NAMESPACE_BEGIN
 struct StateObjectDesc {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+	template <typename T>
+	using ExportArray = std::array<T, kExportTypeCount>;
+
+public:
 
 	//=========================================================================================
 	// public methods
@@ -59,11 +67,13 @@ public:
 
 	//* getter *//
 
-	size_t GetCount(ExportType type) const { return exports_[static_cast<size_t>(type)].size(); }
+	const std::unordered_map<std::string, const DxrObject::ExportGroup*>& GetExports(ExportType type) const {return exports_[static_cast<size_t>(type)];}
 
-	const std::unordered_set<const DxrObject::ExportGroup*>& GetExports(ExportType type) const { return exports_[static_cast<size_t>(type)]; }
+	const DxrObject::ExportGroup* GetExport(ExportType type, const std::string& name) const;
 
-	size_t GetMaxStride(ExportType type) const { return maxStrides_[static_cast<size_t>(type)]; }
+	size_t GetExportCount(ExportType type) const { return exports_[static_cast<size_t>(type)].size(); }
+
+	size_t GetStride(ExportType type) const { return strides_[static_cast<size_t>(type)]; }
 
 	//=========================================================================================
 	// public variables
@@ -83,9 +93,8 @@ private:
 
 	//* export parameters *//
 
-	std::array<std::unordered_set<const DxrObject::ExportGroup*>, kExportTypeCount> exports_ = {};
-	std::array<size_t, kExportTypeCount>                                            maxStrides_ = {};
-	
+	ExportArray<std::unordered_map<std::string, const DxrObject::ExportGroup*>> exports_ = {}; //!< exportのコンテナ
+	ExportArray<size_t>                                                         strides_ = {}; //!< exportごとの最大stride
 
 };
 
@@ -171,6 +180,7 @@ private:
 	static UINT WriteGPUHandle(uint8_t* dst, const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
 
 	uint8_t* WriteExport(uint8_t* dst, UINT size, const ExportGroup* expt, const WriteBindBufferDesc* desc = nullptr);
+	uint8_t* WriteExport(uint8_t* dst, UINT size, ExportType type, const std::string& name, const WriteBindBufferDesc* desc = nullptr);
 
 };
 
