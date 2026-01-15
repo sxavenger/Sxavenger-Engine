@@ -60,7 +60,7 @@ void ExampleGameLoop::InitSystem() {
 	(*atmosphere_)->AddComponent<SkyLightComponent>();
 	(*atmosphere_)->AddComponent<DirectionalLightComponent>();
 
-	(*atmosphere_)->GetComponent<TransformComponent>()->rotate = Quaternion::AxisAngle(Vector3f{ 1.0f, 0.0f, 0.0f }.Normalize(), kPi / 2.0f);
+	(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate = Quaternion::AxisAngle(Vector3f{1.0f, 0.0f, 0.0f}.Normalize(), kPi / 2.0f);
 
 	camera_ = std::make_unique<ControllableCameraActor>();
 
@@ -159,13 +159,12 @@ void ExampleGameLoop::UpdateSystem() {
 		config.option.Inverse(FBaseRenderPass::Config::Option::IndirectLighting);
 	}
 
-
 	if (keyboard->IsPress(KeyId::KEY_LEFT)) {
-		(*atmosphere_)->GetComponent<TransformComponent>()->rotate *= Quaternion::AxisAngle(Vector3f{ 1.0f, 1.0f, 0.0f }.Normalize(), 0.01f);
+		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate *= Quaternion::AxisAngle(Vector3f{ 1.0f, 1.0f, 0.0f }.Normalize(), 0.01f);
 	}
 
 	if (keyboard->IsPress(KeyId::KEY_RIGHT)) {
-		(*atmosphere_)->GetComponent<TransformComponent>()->rotate *= Quaternion::AxisAngle(Vector3f{ 1.0f, 1.0f, 0.0f }.Normalize(), -0.01f);
+		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate *= Quaternion::AxisAngle(Vector3f{ 1.0f, 1.0f, 0.0f }.Normalize(), -0.01f);
 	}
 
 	performance_->Update();

@@ -82,7 +82,7 @@ void PerspectiveCamera::UpdateFirstPerson() {
 
 	if (target_ != nullptr) {
 		if (auto transform = target_->GetComponent<TransformComponent>()) {
-			point_ = transform->GetPosition() + Quaternion::RotateVector((*offset_), transform->rotate);
+			point_ = transform->GetPosition() + Quaternion::RotateVector((*offset_), (*transform)->rotate);
 		}
 	}
 }

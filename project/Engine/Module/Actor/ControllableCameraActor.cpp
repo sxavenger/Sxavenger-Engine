@@ -66,7 +66,7 @@ void ControllableCameraActor::Around() {
 	angle_.x = std::fmod(angle_.x, kTau);
 
 	auto transform = address_->GetComponent<SXAVENGER_ENGINE TransformComponent>();
-	transform->rotate = Quaternion::AxisAngle({ 0.0f, 1.0f, 0.0f }, angle_.x) * Quaternion::AxisAngle({ 1.0f, 0.0f, 0.0f }, angle_.y);
+	(*transform)->rotate = Quaternion::AxisAngle({ 0.0f, 1.0f, 0.0f }, angle_.x) * Quaternion::AxisAngle({ 1.0f, 0.0f, 0.0f }, angle_.y);
 }
 
 void ControllableCameraActor::Move() {
@@ -110,8 +110,8 @@ void ControllableCameraActor::Move() {
 	velocity  *= speed_ * SXAVENGER_ENGINE System::GetDeltaTimef().time;
 
 	auto transform = address_->GetComponent<SXAVENGER_ENGINE TransformComponent>();
-	transform->translate += Quaternion::RotateVector({ direction.x, 0.0f, direction.y }, transform->rotate);
-	transform->translate += velocity;
+	(*transform)->translate += Quaternion::RotateVector({ direction.x, 0.0f, direction.y }, (*transform)->rotate);
+	(*transform)->translate += velocity;
 
 }
 
