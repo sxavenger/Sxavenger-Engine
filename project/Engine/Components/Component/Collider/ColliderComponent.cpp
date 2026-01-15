@@ -281,7 +281,7 @@ TransformComponent* ColliderComponent::RequireTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }
 
-json ColliderComponent::PerseToJson() const {
+json ColliderComponent::ParseToJson() const {
 	json data = json::object();
 
 	data["isEnable"] = JsonSerializeFormatter<bool>::Serialize(isEnable_);

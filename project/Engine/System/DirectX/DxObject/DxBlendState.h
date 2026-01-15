@@ -16,13 +16,13 @@
 // BlendMode enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class BlendMode : uint8_t {
-	kBlendModeNone,            //!< ブレンドなし
-	kBlendModeNormal,          //!< 通常αブレンド
-	kBlendModeNormal_AlphaMax, //!< αブレンド(アルファ最大)
-	kBlendModeAdd,             //!< 加算
-	kBlendModeSubtract,        //!< 減算
-	kBlendModeMultiply,        //!< 乗算
-	kBlendModeScreen           //!< スクリーン
+	None,            //!< ブレンドなし
+	Normal,          //!< 通常αブレンド
+	Normal_AlphaMax, //!< αブレンド(アルファ最大)
+	Add,             //!< 加算
+	Subtract,        //!< 減算
+	Multiply,        //!< 乗算
+	Screen           //!< スクリーン
 };
 
 

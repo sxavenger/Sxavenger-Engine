@@ -9,6 +9,7 @@
 #include "Common/FPriorityTexture.h"
 #include "GBuffer/FDeferredGBuffer.h"
 #include "GBuffer/FLightingGBuffer.h"
+#include "GBuffer/FTransparentGBuffer.h"
 #include "GBuffer/FProbeGBuffer.h"
 #include "GBuffer/FMainGBuffer.h"
 
@@ -50,17 +51,16 @@ public:
 
 	//* transition option *//
 
-	void BeginRenderTargetDeferred(const DirectXQueueContext* context);
-	void EndRenderTargetDeferred(const DirectXQueueContext* context);
+	void TransitionBeginRenderTargetMainScene(const DirectXQueueContext* context);
+	void TransitionEndRenderTargetMainScene(const DirectXQueueContext* context);
 
-	void BeginUnorderedMainScene(const DirectXQueueContext* context);
-	void EndUnorderedMainScene(const DirectXQueueContext* context);
+	void TransitionBeginUnorderedMainScene(const DirectXQueueContext* context);
+	void TransitionEndUnorderedMainScene(const DirectXQueueContext* context);
 
-	void BeginRenderTargetMainTransparent(const DirectXQueueContext* context);
-	void EndRenderTargetMainTransparent(const DirectXQueueContext* context);
+	void TransitionBeginRenderTargetMainCanvas(const DirectXQueueContext* context);
+	void TransitionEndRenderTargetMainCanvas(const DirectXQueueContext* context);
 
-	void BeginRenderTargetMainUI(const DirectXQueueContext* context);
-	void EndRenderTargetMainUI(const DirectXQueueContext* context);
+	void ClearRenderTargetMain(const DirectXQueueContext* context);
 
 	void BeginPostProcess(const DirectXQueueContext* context);
 	void EndPostProcess(const DirectXQueueContext* context);
@@ -69,6 +69,7 @@ public:
 
 	FBaseTexture* GetGBuffer(FDeferredGBuffer::Layout layout);
 	FBaseTexture* GetGBuffer(FLightingGBuffer::Layout layout);
+	FBaseTexture* GetGBuffer(FTransparentGBuffer::Layout layout);
 	FBaseTexture* GetGBuffer(FMainGBuffer::Layout layout);
 
 	FDeferredGBuffer& GetDeferredGBuffer() { return deferred_; }
@@ -103,10 +104,12 @@ private:
 
 	//* GBuffer parameter *//
 
-	FDeferredGBuffer deferred_;
-	FLightingGBuffer lighting_;
-	FProbeGBuffer    probe_;
-	FMainGBuffer     main_;
+	FDeferredGBuffer    deferred_;
+	FLightingGBuffer    lighting_;
+	FTransparentGBuffer transparent_;
+	FMainGBuffer        main_;
+
+	FProbeGBuffer probe_;
 
 	//* depth stencil parameter *//
 

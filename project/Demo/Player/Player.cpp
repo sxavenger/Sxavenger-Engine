@@ -70,7 +70,7 @@ void Player::SetDash(const Vector3f& velocity) {
 
 void Player::SetFacingQuaternion(const Quaternion& quaternion) {
 	auto transform = (*this)->GetComponent<TransformComponent>();
-	transform->rotate = Quaternion::Slerp(transform->rotate, quaternion, 0.4f);
+	(*transform)->rotate = Quaternion::Slerp((*transform)->rotate, quaternion, 0.4f);
 }
 
 void Player::SetAnimationState(AnimationType type) {
@@ -133,6 +133,6 @@ void Player::UpdateAnimation() {
 void Player::Move() {
 
 	auto transform = (*this)->GetComponent<TransformComponent>();
-	transform->translate += velocity_ * static_cast<float>(System::GetDeltaTimed().time);
+	(*transform)->translate += velocity_ * static_cast<float>(System::GetDeltaTimed().time);
 
 }

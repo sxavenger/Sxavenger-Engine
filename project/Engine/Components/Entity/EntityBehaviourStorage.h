@@ -55,7 +55,7 @@ public:
 
 	void InputJson(const json& data);
 
-	json PerseToJson() const;
+	json ParseToJson() const;
 
 	//* singleton *//
 

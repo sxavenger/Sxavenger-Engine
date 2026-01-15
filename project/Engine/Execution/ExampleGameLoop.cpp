@@ -19,6 +19,9 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Editors/EditorEngine.h>
 #include <Engine/Editors/Editor/DevelopEditor.h>
 
+//* lib
+#include <Lib/Adapter/Random/Random.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ExampleGameLoop class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,7 +60,7 @@ void ExampleGameLoop::InitSystem() {
 	(*atmosphere_)->AddComponent<SkyLightComponent>();
 	(*atmosphere_)->AddComponent<DirectionalLightComponent>();
 
-	(*atmosphere_)->GetComponent<TransformComponent>()->rotate = Quaternion::AxisAngle(Vector3f{ 1.0f, 0.0f, 0.0f }.Normalize(), kPi / 2.0f);
+	(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate = Quaternion::AxisAngle(Vector3f{1.0f, 0.0f, 0.0f}.Normalize(), kPi / 2.0f);
 
 	camera_ = std::make_unique<ControllableCameraActor>();
 
@@ -107,7 +110,35 @@ void ExampleGameLoop::InitSystem() {
 			sEntityBehaviourStorage->InputJson(data);
 		}
 	}
-	
+
+	for (size_t i = 0; i < cubes_.size(); ++i) {
+		cubes_[i] = std::make_unique<GameObject>();
+		(*cubes_[i])->SetName(std::format("cube[{}]", i));
+
+		auto& transform = (*cubes_[i])->AddComponent<TransformComponent>()->GetTransform();
+		transform.translate = { 0.0f, 0.0f, static_cast<float>(i) * 2.0f };
+
+		BehaviourHelper::CreateStaticMeshBehaviour(
+			cubes_[i]->GetAddress(),
+			sContentStorage->Import<ContentModel>("assets/models/primitive/cube.obj")
+		);
+
+		BehaviourHelper::DetachBehaviourMaterial(cubes_[i]->GetAddress());
+
+		BehaviourHelper::ModifyBehaviourMaterial(cubes_[i]->GetAddress(), [](AssetMaterial* material) {
+			material->SetMode(AssetMaterial::Mode::Translucent);
+			material->GetBuffer().transparency.SetValue(0.5f);
+			material->GetBuffer().albedo.SetValue(kWhite3<float>);
+		});
+
+		(*cubes_[i])->SetInspectable([](EntityBehaviour* behaviour) {
+			BehaviourHelper::ModifyBehaviourMaterial(behaviour, [](AssetMaterial* material) {
+				material->GetBuffer().albedo.SetImGuiCommand();
+				material->GetBuffer().transparency.SetImGuiCommand();
+			});
+		});
+
+	}
 }
 
 void ExampleGameLoop::TermSystem() {
@@ -119,8 +150,6 @@ void ExampleGameLoop::UpdateSystem() {
 	// Update
 	//-----------------------------------------------------------------------------------------
 
-
-
 	camera_->Update();
 
 	auto keyboard = System::GetKeyboardInput();
@@ -130,13 +159,12 @@ void ExampleGameLoop::UpdateSystem() {
 		config.option.Inverse(FBaseRenderPass::Config::Option::IndirectLighting);
 	}
 
-
 	if (keyboard->IsPress(KeyId::KEY_LEFT)) {
-		(*atmosphere_)->GetComponent<TransformComponent>()->rotate *= Quaternion::AxisAngle(Vector3f{ 1.0f, 1.0f, 0.0f }.Normalize(), 0.01f);
+		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate *= Quaternion::AxisAngle(Vector3f{ 1.0f, 1.0f, 0.0f }.Normalize(), 0.01f);
 	}
 
 	if (keyboard->IsPress(KeyId::KEY_RIGHT)) {
-		(*atmosphere_)->GetComponent<TransformComponent>()->rotate *= Quaternion::AxisAngle(Vector3f{ 1.0f, 1.0f, 0.0f }.Normalize(), -0.01f);
+		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate *= Quaternion::AxisAngle(Vector3f{ 1.0f, 1.0f, 0.0f }.Normalize(), -0.01f);
 	}
 
 	performance_->Update();

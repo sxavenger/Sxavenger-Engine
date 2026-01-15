@@ -62,25 +62,23 @@ public:
 
 	const Vector3f GetDirection() const;
 
+	//* operator [accessor] *//
+
+	const QuaternionTransform* operator->() const { return &transform_; }
+	QuaternionTransform* operator->() { return &transform_; }
+
+	const QuaternionTransform& operator*() const { return transform_; }
+	QuaternionTransform& operator*() { return transform_; }
+
 	//* transformation option *//
 
 	const TransformationMatrix& GetTransformationMatrix() const;
 
 	//* json option *//
 
-	json PerseToJson() const override;
+	json ParseToJson() const override;
 
 	void InputJson(const json& data) override;
-
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-
-	//* transform option *//
-
-	Vector3f& translate = transform_.translate;
-	Quaternion& rotate  = transform_.rotate;
-	Vector3f& scale     = transform_.scale;
 
 private:
 

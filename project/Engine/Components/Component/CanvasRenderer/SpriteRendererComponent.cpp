@@ -111,10 +111,10 @@ const RectTransformComponent* SpriteRendererComponent::GetRectTransform() const 
 	return BaseComponent::GetBehaviour()->RequireComponent<RectTransformComponent>();
 }
 
-json SpriteRendererComponent::PerseToJson() const {
+json SpriteRendererComponent::ParseToJson() const {
 	json component = json::object();
 	component["isEnable"]    = JsonSerializeFormatter<bool>::Serialize(isEnable_);
-	component["transformUV"] = transformUV_.PerseToJson();
+	component["transformUV"] = transformUV_.ParseToJson();
 	component["texture"]     = texture_.Serialize();
 
 	for (uint8_t i = 0; i < magic_enum::enum_count<VertexPoint>(); ++i) {

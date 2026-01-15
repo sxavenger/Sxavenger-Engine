@@ -103,7 +103,7 @@ public:
 		uint8_t                                    instanceMask = 0xFF;
 
 		//* table書き込み
-		const ExportGroup*  expt;
+		std::string name; //!< exportの名前.
 		WriteBindBufferDesc parameter;
 	};
 

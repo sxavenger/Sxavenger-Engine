@@ -59,7 +59,7 @@ void PostProcessGrayScale::Process(const DirectXQueueContext* context, const Pro
 	BindBufferDesc desc = {};
 	// common
 	desc.Set32bitConstants("Dimension", 2, &info.buffer->GetSize());
-	desc.Set32bitConstants("Infomation", 1, &info.weight);
+	desc.Set32bitConstants("Information", 1, &info.weight);
 
 	//* textures
 	desc.SetHandle("gInput",  process->GetPrevTexture()->GetGPUHandleSRV());

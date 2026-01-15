@@ -30,11 +30,23 @@ public:
 	// Type enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Type : uint32_t {
-		Forward_MeshVS,
+		ForwardOpaque_MeshVS,
+		ForwardOpaque_MeshMS,
+		ForwardTransparent_MeshVS,
+		ForwardTransparent_MeshMS,
 		Deferred_MeshVS,
 		Deferred_MeshMS,
-		Forward_CPUParticleVS,
-		Forward_GPUParticleVS,
+		//Forward_CPUParticleVS,
+		//Forward_GPUParticleVS,
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Desc enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Desc : uint8_t {
+		Deferred,
+		ForwardOpaque,
+		ForwardTransparent,
 	};
 
 public:
@@ -61,8 +73,7 @@ private:
 
 	std::array<std::unique_ptr<CustomReflectionGraphicsPipeline>, magic_enum::enum_count<Type>()> pipelines_;
 
-	DxObject::GraphicsPipelineDesc deferredDesc_ = {};
-	DxObject::GraphicsPipelineDesc forwardDesc_  = {};
+	std::array<DxObject::GraphicsPipelineDesc, magic_enum::enum_count<Desc>()> descs_ = {};
 
 	//* directory *//
 

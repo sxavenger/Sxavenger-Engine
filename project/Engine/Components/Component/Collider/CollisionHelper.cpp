@@ -52,7 +52,7 @@ Vector3f CollisionHelper::PushBackAABB(ColliderComponent* target, ColliderCompon
 	}
 
 	//!< 押し戻し量をtargetの位置に加算
-	targetTransform->translate += pushback;
+	(*targetTransform)->translate += pushback;
 
 	return pushback.Normalize();
 }

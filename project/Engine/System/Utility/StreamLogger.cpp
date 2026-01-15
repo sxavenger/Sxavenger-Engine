@@ -35,7 +35,7 @@ void StreamLogger::Init() {
 		//file << "profile: " << _PROFILE << "\n";
 	}
 
-	StreamLogger::Log(std::format("[StreamLogger] initalize. filename: {}", filename_.string()));
+	StreamLogger::Log(std::format("[StreamLogger] initialize. filename: {}", filename_.string()));
 
 	isInitialized_ = true;
 }
@@ -52,7 +52,7 @@ void StreamLogger::Log(const std::wstring& message) {
 
 NORETURN void StreamLogger::Exception(const std::string& label, const std::string& detail, const std::source_location& location) {
 
-	ExceptionMessage<std::string> message = StreamLogger::PerseExceptionMessageA(location, std::this_thread::get_id(), label, detail);
+	ExceptionMessage<std::string> message = StreamLogger::ParseExceptionMessageA(location, std::this_thread::get_id(), label, detail);
 
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
@@ -81,7 +81,7 @@ NORETURN void StreamLogger::Exception(const std::string& label, const std::strin
 
 NORETURN void StreamLogger::Exception(const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
 
-	ExceptionMessage<std::wstring> message = StreamLogger::PerseExceptionMessageW(location, std::this_thread::get_id(), label, detail);
+	ExceptionMessage<std::wstring> message = StreamLogger::ParseExceptionMessageW(location, std::this_thread::get_id(), label, detail);
 
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
@@ -277,7 +277,7 @@ std::wstring StreamLogger::GetTagMessageW(const std::wstring& tag, const std::ws
 	return message.str();
 }
 
-StreamLogger::ExceptionMessage<std::string> StreamLogger::PerseExceptionMessageA(const std::source_location& location, std::thread::id id, const std::string& label, const std::string& detail) {
+StreamLogger::ExceptionMessage<std::string> StreamLogger::ParseExceptionMessageA(const std::source_location& location, std::thread::id id, const std::string& label, const std::string& detail) {
 	ExceptionMessage<std::string> message;
 
 	message.location = StreamLogger::GetLocationMessageA(location);
@@ -294,7 +294,7 @@ StreamLogger::ExceptionMessage<std::string> StreamLogger::PerseExceptionMessageA
 	return message;
 }
 
-StreamLogger::ExceptionMessage<std::wstring> StreamLogger::PerseExceptionMessageW(const std::source_location& location, std::thread::id id, const std::wstring& label, const std::wstring& detail) {
+StreamLogger::ExceptionMessage<std::wstring> StreamLogger::ParseExceptionMessageW(const std::source_location& location, std::thread::id id, const std::wstring& label, const std::wstring& detail) {
 	ExceptionMessage<std::wstring> message;
 	message.location = StreamLogger::GetLocationMessageW(location);
 	message.thread   = StreamLogger::GetThreadMessageW(id);

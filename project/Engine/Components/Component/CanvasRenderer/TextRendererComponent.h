@@ -48,7 +48,7 @@ public:
 
 	//* render option *//
 
-	void PerseText();
+	void ParseText();
 
 	void BindIABuffer(const DirectXQueueContext* context);
 
@@ -69,7 +69,7 @@ public:
 
 	//* json option *//
 
-	json PerseToJson() const override;
+	json ParseToJson() const override;
 
 	void InputJson(const json& data) override;
 

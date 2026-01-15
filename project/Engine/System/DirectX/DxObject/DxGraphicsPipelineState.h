@@ -62,7 +62,7 @@ public:
 	void ClearElement();
 
 	void SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);
-	void SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_MASK writeMask = D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC func = D3D12_COMPARISON_FUNC_LESS_EQUAL);
+	void SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_MASK writeMask = D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC func = D3D12_COMPARISON_FUNC_LESS);
 
 	void SetBlendMode(uint8_t renderTargetIndex, BlendMode mode);
 	void SetBlendDesc(uint8_t renderTargetIndex, const D3D12_RENDER_TARGET_BLEND_DESC& desc);
@@ -70,10 +70,11 @@ public:
 
 	void SetPrimitive(PrimitiveType type);
 
-
+	void ClearRTVFormat();
 	void SetRTVFormat(DXGI_FORMAT format);
 	void SetRTVFormat(uint8_t index, DXGI_FORMAT format);
 	void SetRTVFormats(uint8_t size, const DXGI_FORMAT formats[]);
+
 	void SetDSVFormat(DXGI_FORMAT format);
 
 	void CreateDefaultDesc();
@@ -83,7 +84,7 @@ public:
 	D3D12_INPUT_LAYOUT_DESC GetInputLayout() const;
 
 	//=========================================================================================
-	// public varaibles
+	// public variables
 	//=========================================================================================
 
 	//* descs *//

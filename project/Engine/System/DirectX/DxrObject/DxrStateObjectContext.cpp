@@ -6,7 +6,11 @@ DXROBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
+#include <Engine/System/Utility/Convert.h>
 #include <Engine/System/Utility/StreamLogger.h>
+
+//* c++
+#include <ranges>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // StateObjectDesc structure
@@ -14,8 +18,8 @@ DXROBJECT_USING
 
 void StateObjectDesc::AddExport(const DxrObject::ExportGroup* expt) {
 	ExportType type = expt->GetType();
-	exports_[static_cast<size_t>(type)].emplace(expt);
-	maxStrides_[static_cast<size_t>(type)] = std::max(maxStrides_[static_cast<size_t>(type)], expt->GetBufferStride());
+	exports_[static_cast<size_t>(type)].emplace(ToString(expt->GetName()), expt);
+	strides_[static_cast<size_t>(type)] = std::max(strides_[static_cast<size_t>(type)], expt->GetBufferStride());
 }
 
 void StateObjectDesc::SetPayloadStride(size_t stride) {
@@ -29,6 +33,11 @@ void StateObjectDesc::SetAttributeStride(size_t stride) {
 void StateObjectDesc::SetMaxRecursionDepth(uint8_t depth) {
 	StreamLogger::AssertA(depth > 0 && depth < D3D12_RAYTRACING_MAX_DECLARABLE_TRACE_RECURSION_DEPTH, "recursion depth is out of range.");
 	maxRecursionDepth = depth;
+}
+
+const DxrObject::ExportGroup* StateObjectDesc::GetExport(ExportType type, const std::string& name) const {
+	StreamLogger::AssertA(exports_[static_cast<size_t>(type)].contains(name), "export group is not found. name: " + name);
+	return exports_[static_cast<size_t>(type)].at(name);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -96,22 +105,22 @@ void StateObjectContext::UpdateShaderTable(
 
 	// shader単体のsizeの設定
 	UINT raygenerationRecordSize = kShaderRecordSize;
-	raygenerationRecordSize     += static_cast<UINT>(desc_.GetMaxStride(ExportType::Raygeneration));
+	raygenerationRecordSize     += static_cast<UINT>(desc_.GetStride(ExportType::Raygeneration));
 	raygenerationRecordSize      = Alignment(raygenerationRecordSize, kShaderRecordAlignment);
 
 	// miss
 	UINT missRecordSize = kShaderRecordSize;
-	missRecordSize     += static_cast<UINT>(desc_.GetMaxStride(ExportType::Miss));
+	missRecordSize     += static_cast<UINT>(desc_.GetStride(ExportType::Miss));
 	missRecordSize      = Alignment(missRecordSize, kShaderRecordAlignment);
 
 	// hitgroup
 	UINT hitgroupRecordSize = kShaderRecordSize;
-	hitgroupRecordSize     += static_cast<UINT>(desc_.GetMaxStride(ExportType::Hitgroup));
+	hitgroupRecordSize     += static_cast<UINT>(desc_.GetStride(ExportType::Hitgroup));
 	hitgroupRecordSize      = Alignment(hitgroupRecordSize, kShaderRecordAlignment);
 
 	// 使用する各シェーダーの個数より、シェーダーテーブルのサイズを求める.
-	UINT raygenerationSize = static_cast<UINT>(desc_.GetCount(ExportType::Raygeneration)) * raygenerationRecordSize;
-	UINT missSize          = static_cast<UINT>(desc_.GetCount(ExportType::Miss)) * missRecordSize;
+	UINT raygenerationSize = static_cast<UINT>(desc_.GetExportCount(ExportType::Raygeneration)) * raygenerationRecordSize;
+	UINT missSize          = static_cast<UINT>(desc_.GetExportCount(ExportType::Miss)) * missRecordSize;
 	UINT hitgroupSize      = static_cast<UINT>(toplevelAS->GetInstanceDescCount()) * hitgroupRecordSize;
 
 	// 各テーブル開始位置にアライメント調整
@@ -145,7 +154,7 @@ void StateObjectContext::UpdateShaderTable(
 	{
 		uint8_t* address = addressStart;
 
-		for (const auto& expt : desc_.GetExports(ExportType::Raygeneration)) {
+		for (const auto& expt : desc_.GetExports(ExportType::Raygeneration) | std::views::values) {
 			address = WriteExport(address, raygenerationRecordSize, expt, raygeneration);
 		}
 	}
@@ -154,7 +163,7 @@ void StateObjectContext::UpdateShaderTable(
 	{
 		uint8_t* address = addressStart + raygenerationRegion;
 
-		for (const auto& expt : desc_.GetExports(ExportType::Miss)) {
+		for (const auto& expt : desc_.GetExports(ExportType::Miss) | std::views::values) {
 			address = WriteExport(address, missRecordSize, expt, miss);
 		}
 	}
@@ -165,7 +174,7 @@ void StateObjectContext::UpdateShaderTable(
 
 		if (toplevelAS != nullptr) { //!< HACK
 			for (const auto& instance : toplevelAS->GetInstances()) {
-				address = WriteExport(address, hitgroupRecordSize, instance.expt, &instance.parameter);
+				address = WriteExport(address, hitgroupRecordSize, ExportType::Hitgroup, instance.name, &instance.parameter);
 			}
 		}
 	}
@@ -229,15 +238,15 @@ void StateObjectContext::BindDXGILibrarySubobject(CD3DX12_STATE_OBJECT_DESC& des
 	//!< blobごとにexportを仕分け
 	std::unordered_map<const DxrObject::RaytracingBlob*, std::vector<const DxrObject::ExportGroup*>> map = {};
 
-	for (const auto& expt : desc_.GetExports(ExportType::Raygeneration)) {
+	for (const auto& expt : desc_.GetExports(ExportType::Raygeneration) | std::views::values) {
 		map[expt->GetBlob()].emplace_back(expt);
 	}
 
-	for (const auto& expt : desc_.GetExports(ExportType::Miss)) {
+	for (const auto& expt : desc_.GetExports(ExportType::Miss) | std::views::values) {
 		map[expt->GetBlob()].emplace_back(expt);
 	}
 
-	for (const auto& expt : desc_.GetExports(ExportType::Hitgroup)) {
+	for (const auto& expt : desc_.GetExports(ExportType::Hitgroup) | std::views::values) {
 		map[expt->GetBlob()].emplace_back(expt);
 	}
 
@@ -294,7 +303,7 @@ void StateObjectContext::BindGlobalRootSignatureSubobject(CD3DX12_STATE_OBJECT_D
 
 void StateObjectContext::BindExportLocalRootSignatureSubobject(CD3DX12_STATE_OBJECT_DESC& desc) {
 
-	for (const auto& expt : desc_.GetExports(ExportType::Raygeneration)) {
+	for (const auto& expt : desc_.GetExports(ExportType::Raygeneration) | std::views::values) {
 		if (expt->GetRootSignature() == nullptr) {
 			continue;
 		}
@@ -307,7 +316,7 @@ void StateObjectContext::BindExportLocalRootSignatureSubobject(CD3DX12_STATE_OBJ
 		exportSubobject->SetSubobjectToAssociate(*localRootSignatureSubobject);
 	}
 
-	for (const auto& expt : desc_.GetExports(ExportType::Miss)) {
+	for (const auto& expt : desc_.GetExports(ExportType::Miss) | std::views::values) {
 		if (expt->GetRootSignature() == nullptr) {
 			continue;
 		}
@@ -320,7 +329,7 @@ void StateObjectContext::BindExportLocalRootSignatureSubobject(CD3DX12_STATE_OBJ
 		exportSubobject->SetSubobjectToAssociate(*localRootSignatureSubobject);
 	}
 
-	for (const auto& expt : desc_.GetExports(ExportType::Hitgroup)) {
+	for (const auto& expt : desc_.GetExports(ExportType::Hitgroup) | std::views::values) {
 
 		const auto& hitgroup = expt->GetHitgroup();
 
@@ -406,4 +415,8 @@ uint8_t* StateObjectContext::WriteExport(uint8_t* dst, UINT size, const ExportGr
 	}
 
 	return end;
+}
+
+uint8_t* StateObjectContext::WriteExport(uint8_t* dst, UINT size, ExportType type, const std::string& name, const WriteBindBufferDesc* desc) {
+	return WriteExport(dst, size, desc_.GetExport(type, name), desc);
 }

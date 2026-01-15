@@ -237,7 +237,7 @@ public:
 
 	//* cursor option *//
 
-	void ShowCousor(bool isShow) const;
+	void SetShowCursor(bool isShow) const;
 
 	//* mouse input option *//
 

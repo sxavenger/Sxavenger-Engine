@@ -4,7 +4,7 @@
 // common defines
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-#define _NOT_USED_1 1
+#define NOT_USED_1 1
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common methods
@@ -17,28 +17,36 @@ void CheckDiscard(float4 color, float threshold = 0.0f) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// render target for geometry pass
+// Render Target structures / Forward
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-struct GeometryForwardOutput {
+struct GeometryForwardTransparentOutput {
+	//!< Transparent Forward Render Target [Weighted Blended OIT]
 
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
 	
-	float4 color : SV_Target0;
+	float4 accumulate : SV_Target0;
+	float revealage   : SV_Target1;
 	
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-	
-	void SetColor(float4 _color) {
-		color = _color;
+
+	void SetColor(float3 albedo, float transparency, float weight) {
+		accumulate = float4(albedo * transparency, transparency) * weight;
+		revealage  = transparency;
 	}
 	
 };
 
-struct GeometryDeferredOutput { //!< FSceneTextures::GBuffers
+////////////////////////////////////////////////////////////////////////////////////////////
+// Render Target structures / Deferred
+////////////////////////////////////////////////////////////////////////////////////////////
+
+struct GeometryDeferredOutput {
+	//!< Deferred Render Target
 
 	//=========================================================================================
 	// public variables
@@ -55,23 +63,23 @@ struct GeometryDeferredOutput { //!< FSceneTextures::GBuffers
 	
 	void SetNormal(float3 n) {
 		float3 map = (n + 1.0f) * 0.5f; //!< [-1, 1] -> [0, 1]
-		normal = float4(map, _NOT_USED_1);
+		normal = float4(map, NOT_USED_1);
 	}
 	
 	void SetMaterial(float ao, float roughness, float metallic) {
 		materialARM.r = ao;
 		materialARM.g = max(roughness, 0.02f);
 		materialARM.b = metallic;
-		materialARM.a = _NOT_USED_1;
+		materialARM.a = NOT_USED_1;
 	}
 	
 	void SetAlbedo(float3 _albedo /*AP1*/) {
 		albedo.rgb = _albedo;
-		albedo.a   = _NOT_USED_1;
+		albedo.a   = NOT_USED_1;
 	}
 	
 	void SetPosition(float3 pos) {
-		position = float4(pos, _NOT_USED_1);
+		position = float4(pos, NOT_USED_1);
 	}
 	
 };

@@ -52,7 +52,7 @@ Vector3f QuaternionTransform::GetForward() const {
 	return Quaternion::RotateVector(kForward3<>, rotate);
 }
 
-json QuaternionTransform::PerseToJson() const {
+json QuaternionTransform::ParseToJson() const {
 	json data = json::object();
 	data["translate"] = JsonSerializeFormatter<Vector3f>::Serialize(translate);
 	data["rotate"]    = JsonSerializeFormatter<Quaternion>::Serialize(rotate);
@@ -94,7 +94,7 @@ Matrix4x4 Transform2d::ToMatrix() const {
 	return Matrix4x4::MakeAffine({ scale.x, scale.y, 0.0f }, { 0.0f, 0.0f, rotate }, { translate.x, translate.y, 0.0f });
 }
 
-json Transform2d::PerseToJson() const {
+json Transform2d::ParseToJson() const {
 	json data = json::object();
 	data["translate"] = JsonSerializeFormatter<Vector2f>::Serialize(translate);
 	data["rotate"]    = JsonSerializeFormatter<float>::Serialize(rotate);
@@ -139,7 +139,7 @@ Matrix4x4 RectTransform::ToMatrix() const {
 	return Matrix4x4::MakeAffine({ scale.x, scale.y, 1.0f }, { 0.0f, 0.0f, rotate }, { translate.x, translate.y, priority });
 }
 
-json RectTransform::PerseToJson() const {
+json RectTransform::ParseToJson() const {
 	json data = json::object();
 	data["translate"] = JsonSerializeFormatter<Vector2f>::Serialize(translate);
 	data["rotate"]    = JsonSerializeFormatter<float>::Serialize(rotate);

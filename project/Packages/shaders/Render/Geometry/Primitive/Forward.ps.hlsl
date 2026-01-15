@@ -17,9 +17,15 @@ GeometryForwardOutput main(GeometryPSInput input) {
 
 	GeometryForwardOutput output = (GeometryForwardOutput)0;
 
-	output.color.rgb = float3(1.0f, 1.0f, 1.0f);
-	output.color.a   = 1.0f;
+	MaterialLib::TextureSampler parameter;
+	parameter.Set(input.texcoord, gSampler);
 
+	float4 color = (float4)0;
+	color.rgb = float3(1.0f, 1.0f, 1.0f);
+	color.a   = 1.0f;
+
+	float weight = WeightedBlendedOIT::CalculateWeight(color.a, input.position.z);
+
+	output.SetColor(color, weight);
 	return output;
-	
 }

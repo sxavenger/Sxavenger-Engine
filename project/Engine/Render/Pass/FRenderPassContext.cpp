@@ -22,6 +22,10 @@ void FRenderPassContext::Render(const DirectXQueueContext* context, const FBaseR
 		return; //!< configが不適格
 	}
 
+	context->BeginEvent(L"FRenderPassContext | ClearRenderTarget");
+	conf.buffer->ClearRenderTargetMain(context);
+	context->EndEvent();
+
 	for (const auto& pass : passes_) {
 		pass->Render(context, conf);
 	}
@@ -40,9 +44,13 @@ FBaseRenderPass::Config FRenderPassContext::ApplyConfig(const FBaseRenderPass::C
 		}
 	}
 
+#ifdef _DEVELOPMENT
 	if (config.cullCamera == nullptr) { //!< culling用cameraが設定されていない場合, cameraと同じものを使用する
 		config.cullCamera = config.camera;
 	}
+#else
+	config.cullCamera = config.camera; //!< cameraと同じものを使用する
+#endif
 
 	if (config.scene == nullptr) { //!< sceneが設定されていない場合, main renderから取得
 		config.scene = FMainRender::GetInstance()->GetScene();

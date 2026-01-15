@@ -208,11 +208,9 @@ void EntityBehaviour::ShowInspector() {
 	{
 		ImGui::SeparatorText("inspectable");
 		if (inspectable_ != nullptr) {
-			inspectable_();
+			inspectable_(this);
 		}
 	}
-
-	
 
 	ImGui::Separator();
 
@@ -252,7 +250,7 @@ void EntityBehaviour::LateUpdateInspector() {
 	});
 }
 
-json EntityBehaviour::PerseToJson() const {
+json EntityBehaviour::ParseToJson() const {
 	json root = json::object();
 
 	//* properties
@@ -263,7 +261,7 @@ json EntityBehaviour::PerseToJson() const {
 	//* components
 	json& components = root["components"] = json::array();
 	for (const auto& [type, component] : components_) {
-		json data         = (*component)->PerseToJson();
+		json data         = (*component)->ParseToJson();
 		data["component"] = type->name();
 
 		components.emplace_back(data);
@@ -272,7 +270,7 @@ json EntityBehaviour::PerseToJson() const {
 	//* children
 	json& children = root["children"] = json::array();
 	for (const auto& child : children_) {
-		children.emplace_back(child->PerseToJson());
+		children.emplace_back(child->ParseToJson());
 	}
 
 	return root;
@@ -316,7 +314,7 @@ void EntityBehaviour::LoadComponent(const std::filesystem::path& filepath) {
 }
 
 void EntityBehaviour::SaveComponent(const std::filesystem::path& filepath) {
-	json data = PerseToJson();
+	json data = ParseToJson();
 	JsonHandler::WriteToJson(filepath, data);
 }
 

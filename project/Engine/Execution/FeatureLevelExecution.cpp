@@ -111,14 +111,14 @@ void FeatureLevelExecution::CheckSupport() {
 	
 	{ //!< shader model
 
-		for (uint32_t model = D3D_HIGHEST_SHADER_MODEL; model >= D3D_SHADER_MODEL_5_1; --model) {
-			D3D12_FEATURE_DATA_SHADER_MODEL shaderModel = { D3D_HIGHEST_SHADER_MODEL };
+		D3D12_FEATURE_DATA_SHADER_MODEL shaderModel = { D3D_HIGHEST_SHADER_MODEL };
 
-			auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(D3D12_FEATURE_DATA_SHADER_MODEL));
-			if (SUCCEEDED(hr)) {
-				StreamLogger::Log(std::format("[FeatureLevelExecution] >> [Feature Support::D3D12_FEATURE_SHADER_MODEL]: {}", magic_enum::enum_name(shaderModel.HighestShaderModel)));
-				break;
-			}
+		auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(D3D12_FEATURE_DATA_SHADER_MODEL));
+		if (SUCCEEDED(hr)) {
+			StreamLogger::Log(std::format("[FeatureLevelExecution] >> [Feature Support::D3D12_FEATURE_SHADER_MODEL]: {}", magic_enum::enum_name(shaderModel.HighestShaderModel)));
+
+		} else {
+			StreamLogger::Log("[FeatureLevelExecution] >> [Feature Support::D3D12_FEATURE_SHADER_MODEL]: Unknown.");
 		}
 	}
 

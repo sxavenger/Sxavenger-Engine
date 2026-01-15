@@ -151,25 +151,25 @@ void TopLevelAS::EndSetupInstance(DxObject::Device* device, DxObject::CommandCon
 void TopLevelAS::Build(DxObject::Device* device, DxObject::CommandContext* context) {
 
 	// build descの設定
-	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC buildDesc = {};
-	buildDesc.Inputs.Type           = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
-	buildDesc.Inputs.DescsLayout    = D3D12_ELEMENTS_LAYOUT_ARRAY;
-	buildDesc.Inputs.NumDescs       = static_cast<UINT>(instances_.size());
-	buildDesc.Inputs.InstanceDescs  = descs_->GetGPUVirtualAddress();
-	buildDesc.Inputs.Flags
+	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC desc = {};
+	desc.Inputs.Type           = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
+	desc.Inputs.DescsLayout    = D3D12_ELEMENTS_LAYOUT_ARRAY;
+	desc.Inputs.NumDescs       = static_cast<UINT>(instances_.size());
+	desc.Inputs.InstanceDescs  = descs_->GetGPUVirtualAddress();
+	desc.Inputs.Flags
 		= D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE
 		| D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_TRACE;
 
 	// input情報からbufferの生成
-	AccelerationStructureBuffers::Create(device, buildDesc.Inputs);
+	AccelerationStructureBuffers::Create(device, desc.Inputs);
 
 	// bufferの設定
-	buildDesc.ScratchAccelerationStructureData = scratch->GetGPUVirtualAddress();
-	buildDesc.DestAccelerationStructureData    = asbuffer->GetGPUVirtualAddress();
+	desc.ScratchAccelerationStructureData = scratch->GetGPUVirtualAddress();
+	desc.DestAccelerationStructureData    = asbuffer->GetGPUVirtualAddress();
 
 	// build descの設定
 	context->GetCommandList()->BuildRaytracingAccelerationStructure(
-		&buildDesc, 0, nullptr
+		&desc, 0, nullptr
 	);
 
 	// barrierの設定
@@ -183,22 +183,22 @@ void TopLevelAS::Build(DxObject::Device* device, DxObject::CommandContext* conte
 
 void TopLevelAS::Update(DxObject::CommandContext* context) {
 
-	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC buildASDesc = {};
-	buildASDesc.Inputs.Type          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
-	buildASDesc.Inputs.DescsLayout   = D3D12_ELEMENTS_LAYOUT_ARRAY;
-	buildASDesc.Inputs.NumDescs      = static_cast<UINT>(instances_.size());
-	buildASDesc.Inputs.InstanceDescs = descs_->GetGPUVirtualAddress();
-	buildASDesc.Inputs.Flags
+	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_DESC desc = {};
+	desc.Inputs.Type          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
+	desc.Inputs.DescsLayout   = D3D12_ELEMENTS_LAYOUT_ARRAY;
+	desc.Inputs.NumDescs      = static_cast<UINT>(instances_.size());
+	desc.Inputs.InstanceDescs = descs_->GetGPUVirtualAddress();
+	desc.Inputs.Flags
 		= D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE
 		| D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PERFORM_UPDATE
 		| D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_TRACE;
 
-	buildASDesc.SourceAccelerationStructureData  = asbuffer->GetGPUVirtualAddress();
-	buildASDesc.DestAccelerationStructureData    = asbuffer->GetGPUVirtualAddress();
-	buildASDesc.ScratchAccelerationStructureData = update->GetGPUVirtualAddress();
+	desc.SourceAccelerationStructureData  = asbuffer->GetGPUVirtualAddress();
+	desc.DestAccelerationStructureData    = asbuffer->GetGPUVirtualAddress();
+	desc.ScratchAccelerationStructureData = update->GetGPUVirtualAddress();
 
 	context->GetCommandList()->BuildRaytracingAccelerationStructure(
-		&buildASDesc, 0, nullptr
+		&desc, 0, nullptr
 	);
 
 	D3D12_RESOURCE_BARRIER barrier = {};

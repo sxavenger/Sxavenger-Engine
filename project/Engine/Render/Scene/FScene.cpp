@@ -66,23 +66,11 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 		std::shared_ptr<AssetMesh> mesh         = component->GetMesh();
 		std::shared_ptr<AssetMaterial> material = component->GetMaterial();
 
-		mesh->Update(context); //!< meshの更新
-
-		FRenderCoreRestir::HitgroupExportType type = {};
-
-		switch (material->GetMode()) {
-			case AssetMaterial::Mode::Opaque:
-				type = FRenderCoreRestir::HitgroupExportType::Mesh;
-				break;
-
-			case AssetMaterial::Mode::Emissive:
-				type = FRenderCoreRestir::HitgroupExportType::Emissive;
-				break;
-
-			default:
-				RuntimeLogger::LogWarning("[FScene]", "MeshRendererComponent has unsupported material mode.");
-				return;
+		if (material->GetMode() == AssetMaterial::Mode::Translucent) {
+			return; //!< 透明マテリアルはTLASに登録しない
 		}
+
+		mesh->Update(context); //!< meshの更新
 
 		// instanceの設定
 		DxrObject::TopLevelAS::Instance instance = {};
@@ -94,7 +82,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 		instance.instanceId    = NULL;
 
 		//* ExportGroupの設定
-		instance.expt = FRenderCore::GetInstance()->GetRestir()->GetExportGroup(type);
+		instance.name = magic_enum::enum_name(material->GetMode());
 		instance.parameter.SetAddress(0, mesh->GetInputVertex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(1, mesh->GetInputIndex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(2, material->GetGPUVirtualAddress());
@@ -110,23 +98,11 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 
 		std::shared_ptr<AssetMaterial> material = component->GetMaterial();
 
-		component->Update(context); //!< meshの更新
-
-		FRenderCoreRestir::HitgroupExportType type = {};
-
-		switch (material->GetMode()) {
-			case AssetMaterial::Mode::Opaque:
-				type = FRenderCoreRestir::HitgroupExportType::Mesh;
-				break;
-
-			case AssetMaterial::Mode::Emissive:
-				type = FRenderCoreRestir::HitgroupExportType::Emissive;
-				break;
-
-			default:
-				RuntimeLogger::LogWarning("[FScene]", "MeshRendererComponent has unsupported material mode.");
-				return;
+		if (material->GetMode() == AssetMaterial::Mode::Translucent) {
+			return; //!< 透明マテリアルはTLASに登録しない
 		}
+
+		component->Update(context); //!< meshの更新
 
 		// instanceの設定
 		DxrObject::TopLevelAS::Instance instance = {};
@@ -138,7 +114,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 		instance.instanceId    = NULL;
 
 		//* ExportGroupの設定
-		instance.expt = FRenderCore::GetInstance()->GetRestir()->GetExportGroup(type);
+		instance.name = magic_enum::enum_name(material->GetMode());
 		instance.parameter.SetAddress(0, component->GetInputVertex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(1, component->GetInputIndex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(2, material->GetGPUVirtualAddress());

@@ -121,7 +121,7 @@ void HierarchyEditor::ShowSceneMenu() {
 			if (filepath.has_value()) {
 				JsonHandler::WriteToJson(
 					filepath.value(),
-					sEntityBehaviourStorage->PerseToJson()
+					sEntityBehaviourStorage->ParseToJson()
 				);
 			}
 

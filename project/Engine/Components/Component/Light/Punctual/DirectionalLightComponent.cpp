@@ -69,7 +69,7 @@ const TransformComponent* DirectionalLightComponent::RequireTransform() const {
 	return BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
 }
 
-json DirectionalLightComponent::PerseToJson() const {
+json DirectionalLightComponent::ParseToJson() const {
 	json data = json::object();
 
 	data["color"]           = JsonSerializeFormatter<Color3f>::Serialize(parameter_->At().color);

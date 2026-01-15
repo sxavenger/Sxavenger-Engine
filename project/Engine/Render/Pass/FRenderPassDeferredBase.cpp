@@ -20,7 +20,6 @@ void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const C
 
 	// waning処理
 	if (config.CheckStatus(FBaseRenderPass::Config::Status::Geometry_Warning)) {
-		ClearPass(context, config.buffer);
 		return;
 	}
 
@@ -83,8 +82,6 @@ void FRenderPassDeferredBase::BeginPassRenderTarget(const DirectXQueueContext* c
 		buffers[i]->ClearRenderTarget(context);
 	}
 
-	depth->ClearRasterizerDepth(context);
-
 }
 
 void FRenderPassDeferredBase::EndPassRenderTarget(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
@@ -111,42 +108,6 @@ void FRenderPassDeferredBase::EndPassRenderTarget(const DirectXQueueContext* con
 
 }
 
-void FRenderPassDeferredBase::ClearPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
-
-	auto commandList = context->GetCommandList();
-
-	FDepthTexture* depth = buffer->GetDepth();
-
-	//* RenderTargetへtransition *//
-
-	std::array<D3D12_RESOURCE_BARRIER, FDeferredGBuffer::kLayoutCount> barriers = {};
-	buffer->GetDeferredGBuffer().ForEach([&](size_t i, FBaseTexture* texture) {
-		barriers[i] = texture->TransitionBeginRenderTarget();
-	});
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-
-	depth->TransitionBeginRasterizer(context);
-
-	//* clear *//
-
-	buffer->GetDeferredGBuffer().ForEach([&](FBaseTexture* texture) {
-		texture->ClearRenderTarget(context);
-	});
-
-	depth->ClearRasterizerDepth(context);
-
-	//* default stateへtransition *//
-
-	depth->TransitionEndRasterizer(context);
-
-	buffer->GetDeferredGBuffer().ForEach([&](size_t i, FBaseTexture* texture) {
-		barriers[i] = texture->TransitionEndRenderTarget();
-	});
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-}
-
 void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context, const Config& config) {
 
 	auto core = FRenderCore::GetInstance()->GetGeometry();
@@ -169,8 +130,9 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 
 		const auto& meshlet = mesh->GetInputMesh().GetMeshlet();
 
+		//!< 不透明なジオメトリは別のパスで描画
 		if (material->GetMode() != AssetMaterial::Mode::Opaque) {
-			return; //!< 透明なジオメトリは別のパスで描画
+			return;
 		}
 
 		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
@@ -208,9 +170,10 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 		auto transform = component->RequireTransform();
 
 		auto material = component->GetMaterial();
-		
+
+		//!< 不透明ジオメトリ描画
 		if (material->GetMode() != AssetMaterial::Mode::Opaque) {
-			return; //!< 透明なジオメトリは別のパスで描画
+			return;
 		}
 
 		// メッシュの描画

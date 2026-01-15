@@ -28,7 +28,7 @@ void RectTransformComponent::ShowComponentInspector() {
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& RectTransformComponent::GetGPUVirtualAddress() const {
-	StreamLogger::AssertA(buffer_ != nullptr, "transform buffer is not craete.");
+	StreamLogger::AssertA(buffer_ != nullptr, "transform buffer is not create.");
 	return buffer_->GetGPUVirtualAddress();
 }
 
@@ -59,9 +59,9 @@ const Vector2f RectTransformComponent::GetPosition() const {
 	return { pos.x, pos.y };
 }
 
-json RectTransformComponent::PerseToJson() const {
+json RectTransformComponent::ParseToJson() const {
 	json component = json::object();
-	component["transform"] = transform_.PerseToJson();
+	component["transform"] = transform_.ParseToJson();
 
 	return component;
 }

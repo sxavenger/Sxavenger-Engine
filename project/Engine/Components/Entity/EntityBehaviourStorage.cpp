@@ -112,12 +112,12 @@ void EntityBehaviourStorage::InputJson(const json& data) {
 	}
 }
 
-json EntityBehaviourStorage::PerseToJson() const {
+json EntityBehaviourStorage::ParseToJson() const {
 	json root = json::array();
 
 	for (const auto& [address, behaviour] : behaviours_) {
 		if (behaviour->GetMobility() == EntityBehaviour::Mobility::Static) {
-			root.emplace_back(behaviour->PerseToJson());
+			root.emplace_back(behaviour->ParseToJson());
 		}
 	}
 

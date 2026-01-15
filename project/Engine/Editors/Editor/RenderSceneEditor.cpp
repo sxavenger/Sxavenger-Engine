@@ -115,10 +115,10 @@ void RenderSceneEditor::Render() {
 
 	FMainRender::GetInstance()->GetContext()->Render(context, config_);
 
-	context->BeginEvent(L"RenderSceneEditor | Transparent Render");
+	context->BeginEvent(L"RenderSceneEditor | Debug Render");
 
 	//* Debug Render *//
-	textures_->BeginRenderTargetMainTransparent(context);
+	textures_->TransitionBeginRenderTargetMainScene(context);
 
 	CameraComponent* camera = (*camera_)->GetComponent<CameraComponent>();
 
@@ -150,7 +150,7 @@ void RenderSceneEditor::Render() {
 
 	Graphics::GetDebugPrimitive()->DrawToScene(context, camera->GetGPUVirtualAddress());
 
-	textures_->EndRenderTargetMainTransparent(context);
+	textures_->TransitionEndRenderTargetMainScene(context);
 
 	context->EndEvent();
 
@@ -997,7 +997,7 @@ void RenderSceneEditor::UpdateCamera() {
 	}
 }
 
-void RenderSceneEditor::ShowCameraInfomation(const WindowRect& rect) {
+void RenderSceneEditor::ShowCameraInformation(const WindowRect& rect) {
 
 	ImVec2 cursol = ImGui::GetCursorPos();
 

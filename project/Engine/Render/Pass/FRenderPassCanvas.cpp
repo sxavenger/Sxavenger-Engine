@@ -22,13 +22,13 @@ void FRenderPassCanvas::Render(const DirectXQueueContext* context, const Config&
 
 	context->BeginEvent(L"RenderPass - Canvas");
 
-	config.buffer->BeginRenderTargetMainUI(context);
+	config.buffer->TransitionBeginRenderTargetMainCanvas(context);
 
 	PassSprite(context, config);
 
 	PassText(context, config);
 
-	config.buffer->EndRenderTargetMainUI(context);
+	config.buffer->TransitionEndRenderTargetMainCanvas(context);
 
 	context->EndEvent();
 }
@@ -74,7 +74,7 @@ void FRenderPassCanvas::PassText(const DirectXQueueContext* context, const Confi
 			return;
 		}
 
-		component->PerseText();
+		component->ParseText();
 		// todo: engine側のupdateでやるようにする
 
 		component->BindIABuffer(context);

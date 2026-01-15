@@ -14,9 +14,10 @@ SXAVENGER_ENGINE_USING
 void FRenderCoreTransition::Init() {
 	CreatePresent();
 
-	CreateTransition(Transition::LightingTransition, kDirectory / "LightingTransition.cs.hlsl");
-	CreateTransition(Transition::MipmapTransition,   kDirectory / "MipmapTransition.cs.hlsl");
-	CreateTransition(Transition::VelocityTransition, kDirectory / "VelocityTransition.cs.hlsl");
+	CreateTransition(Transition::LightingTransition,    kDirectory / "LightingTransition.cs.hlsl");
+	CreateTransition(Transition::MipmapTransition,      kDirectory / "MipmapTransition.cs.hlsl");
+	CreateTransition(Transition::VelocityTransition,    kDirectory / "VelocityTransition.cs.hlsl");
+	CreateTransition(Transition::TransparentTransition, kDirectory / "TransparentTransition.cs.hlsl");
 }
 
 void FRenderCoreTransition::SetPipeline(Transition transition, const DirectXQueueContext* context) {

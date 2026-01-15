@@ -66,11 +66,11 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	CompileProfile profile,
 	const std::wstring& entryPoint) {
 
-	std::wstring filepathW = filepath.generic_wstring(); //!< wstringの寿命確保
+	std::wstring path = filepath.generic_wstring(); //!< wstringの寿命確保
 
 	// hlslファイルを読み込む
 	ComPtr<IDxcBlobEncoding> shaderSource;
-	auto hr = utils_->LoadFile(filepathW.c_str(), nullptr, &shaderSource);
+	auto hr = utils_->LoadFile(path.c_str(), nullptr, &shaderSource);
 	StreamLogger::AssertA(SUCCEEDED(hr), "hlsl not found.", "filepath: " + filepath.generic_string());
 
 	// 読み込んだファイルの内容を設定する
@@ -81,7 +81,7 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 
 	// 基本情報の設定
 	std::vector<LPCWSTR> arguments = {
-		filepathW.c_str(),                                //!< コンパイル対象のhlslファイルパス
+		path.c_str(),                                     //!< コンパイル対象のhlslファイルパス
 		L"-T", profiles_[static_cast<uint32_t>(profile)], //!< ShaderProfileの設定
 		L"-Zi", L"-Qembed_debug",                         //!< デバッグ用情報を埋め込む
 		L"-Zpr",                                          //!< メモリレイアウトは行優先
