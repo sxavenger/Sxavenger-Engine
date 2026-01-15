@@ -55,7 +55,7 @@ public:
 	//! @brief フォーカスされているウィンドウの取得
 	//! @retval ptr フォーカスされているwindowのptr
 	//! @retval nullptr windowが存在しない
-	DirectXWindowContext* GetForcusWindow() const;
+	DirectXWindowContext* GetFocusWindow() const;
 
 	//* debug option *//
 

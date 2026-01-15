@@ -31,7 +31,7 @@ std::weak_ptr<DirectXWindowContext> WindowCollection::CreateMainWindow(const Vec
 
 std::weak_ptr<DirectXWindowContext> WindowCollection::CreateSubWindow(const Vector2ui& size, const std::wstring& name, DirectXWindowContext::ProcessCategory category, const Color4f& color) {
 	if (windows_.contains(name)) {
-		StreamLogger::EngineLog(L"warninig | window with name '" + name + L"' already exists.");
+		StreamLogger::EngineLog(L"warning | window with name '" + name + L"' already exists.");
 		return windows_.at(name);
 	}
 
@@ -101,21 +101,21 @@ void WindowCollection::RemoveClosedWindow() {
 }
 
 
-DirectXWindowContext* WindowCollection::GetForcusWindow() const {
+DirectXWindowContext* WindowCollection::GetFocusWindow() const {
 
-	HWND forcus = GetForegroundWindow();
+	HWND focus = GetForegroundWindow();
 
-	if (forcus == nullptr || !hwnds_.contains(forcus)) {
+	if (focus == nullptr || !hwnds_.contains(focus)) {
 		return nullptr;
 	}
 
-	return hwnds_.at(forcus);
+	return hwnds_.at(focus);
 }
 
 void WindowCollection::SystemDebugGui() {
 	ImGui::Dummy({ 240.0f, 0 });
 
-	DirectXWindowContext* current = GetForcusWindow();
+	DirectXWindowContext* current = GetFocusWindow();
 
 	ImGui::SeparatorText("main window");
 	if (ImGui::Selectable(ToString(main_->GetName()).c_str(), main_.get() == current)) {

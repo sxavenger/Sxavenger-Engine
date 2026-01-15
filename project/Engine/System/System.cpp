@@ -2,10 +2,10 @@
 SXAVENGER_ENGINE_USING
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// namespace -anonymouse-
+// namespace -anonymous-
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
-	//* system orign
+	//* system origin
 	static std::unique_ptr<DirectXCommon>         sDirectXCommon         = nullptr; //!< DirectX12 system
 	static std::unique_ptr<DirectXQueueContext>   sDirectQueueContext    = nullptr; //!< direct queue context
 	static std::unique_ptr<Performance>           sPerformance           = nullptr; //!< performance system
@@ -112,7 +112,7 @@ DirectXWindowContext* System::GetMainWindow() {
 }
 
 DirectXWindowContext* System::GetForcusWindow() {
-	return sWindowCollection->GetForcusWindow();
+	return sWindowCollection->GetFocusWindow();
 }
 
 WindowCollection* System::GetWindowCollection() {
