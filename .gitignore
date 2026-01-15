@@ -333,7 +333,7 @@ FodyWeavers.xsd
 /project/externals/DirectXTex/Shaders/Compiled
 
 # Sxavenger Engine 内部出力関係
-/project/Logs
+*.log
 /project/imgui.ini
 
 # 負荷の高いAssets関係

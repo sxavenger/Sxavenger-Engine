@@ -35,7 +35,7 @@ void StreamLogger::Init() {
 		//file << "profile: " << _PROFILE << "\n";
 	}
 
-	StreamLogger::Log(std::format("[StreamLogger] initalize. filename: {}", filename_.string()));
+	StreamLogger::Log(std::format("[StreamLogger] initialize. filename: {}", filename_.string()));
 
 	isInitialized_ = true;
 }
