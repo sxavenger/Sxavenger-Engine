@@ -9,7 +9,7 @@ namespace {
 	static std::unique_ptr<DirectXCommon>         sDirectXCommon         = nullptr; //!< DirectX12 system
 	static std::unique_ptr<DirectXQueueContext>   sDirectQueueContext    = nullptr; //!< direct queue context
 	static std::unique_ptr<Performance>           sPerformance           = nullptr; //!< performance system
-	static std::unique_ptr<LapTimer>              sLapTimer              = nullptr; //!< lap timer system
+	static std::unique_ptr<CpuTimestamp>          sCpuTimestamp          = nullptr; //!< cpu timestamp system
 	static std::unique_ptr<AsyncThreadCollection> sAsyncThreadCollection = nullptr; //!< async thread system
 
 	//* system user
@@ -33,8 +33,8 @@ void System::Init() {
 	sDirectQueueContext->Init(2, DirectXQueueContext::RenderQueue::Direct);
 	sDirectQueueContext->SetName(L"main");
 
-	sPerformance = std::make_unique<Performance>();
-	sLapTimer    = std::make_unique<LapTimer>();
+	sPerformance  = std::make_unique<Performance>();
+	sCpuTimestamp = std::make_unique<CpuTimestamp>();
 
 	sAsyncThreadCollection = std::make_unique<AsyncThreadCollection>();
 	sAsyncThreadCollection->Init();
@@ -111,7 +111,7 @@ DirectXWindowContext* System::GetMainWindow() {
 	return sWindowCollection->GetMainWindow();
 }
 
-DirectXWindowContext* System::GetForcusWindow() {
+DirectXWindowContext* System::GetFocusWindow() {
 	return sWindowCollection->GetFocusWindow();
 }
 
@@ -147,14 +147,14 @@ Input* System::GetInput() {
 	return sInput.get();
 }
 
-void System::BeginPerformace() {
+void System::BeginPerformance() {
 	sPerformance->Begin();
-	sLapTimer->Begin();
+	sCpuTimestamp->Begin();
 }
 
-void System::EndPerformace() {
+void System::EndPerformance() {
 	sPerformance->End();
-	sLapTimer->End();
+	sCpuTimestamp->End();
 }
 
 TimePointd<TimeUnit::second> System::GetDeltaTimed() {
@@ -166,15 +166,15 @@ TimePointf<TimeUnit::second> System::GetDeltaTimef() {
 }
 
 void System::Record(const std::string& name) {
-	sLapTimer->Record(name);
+	sCpuTimestamp->Record(name);
 }
 
 Performance* System::GetPerformance() {
 	return sPerformance.get();
 }
 
-LapTimer* System::GetLapTimer() {
-	return sLapTimer.get();
+CpuTimestamp* System::GetCpuTimestamp() {
+	return sCpuTimestamp.get();
 }
 
 void System::PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task) {

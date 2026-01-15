@@ -100,7 +100,7 @@ void DevelopEditor::ShowProcessMenu() {
 		ImGui::SeparatorText("process");
 
 		if (processLimit_.has_value()) {
-			if (ImGui::Button("resame")) { //!< 再生
+			if (ImGui::Button("resume")) { //!< 再生
 				processLimit_      = std::nullopt;
 				isProcessRequired_ = true;
 			}
@@ -193,7 +193,7 @@ void DevelopEditor::ShowPerformanceWindow() {
 	}
 
 	BaseEditor::SetNextWindowDocking();
-	ImGui::Begin("Performace ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoTitleBar);
+	ImGui::Begin("Performance ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoTitleBar);
 
 	TimePointf<TimeUnit::second> time = System::GetDeltaTimef();
 
@@ -204,20 +204,20 @@ void DevelopEditor::ShowPerformanceWindow() {
 
 	if (ImGui::BeginItemTooltip()) {
 
-		if (ImGui::BeginTable("## record laps", 2, ImGuiTableFlags_ScrollY | ImGuiTableFlags_Borders)) {
+		if (ImGui::BeginTable("## record timestamp", 2, ImGuiTableFlags_ScrollY | ImGuiTableFlags_Borders)) {
 			ImGui::TableSetupColumn("name");
-			ImGui::TableSetupColumn("lap");
+			ImGui::TableSetupColumn("timestamp");
 			ImGui::TableHeadersRow();
 
-			const auto& laps = System::GetLapTimer()->GetLap();
+			const CpuTimestamp::Timestamp& timestamp = System::GetCpuTimestamp()->GetTimestamp();
 
-			for (const auto& lap : laps) {
+			for (const auto& stamp : timestamp) {
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
-				ImGui::Text(lap.name.c_str());
+				ImGui::Text(stamp.name.c_str());
 
 				ImGui::TableNextColumn();
-				ImGui::Text(std::format("{:.2f}ms / [{:.2f}ms]", lap.delta.time, lap.elapsed.time).c_str());
+				ImGui::Text(std::format("{:.2f}ms / [{:.2f}ms]", stamp.delta.time, stamp.elapsed.time).c_str());
 			}
 
 			ImGui::EndTable();

@@ -777,9 +777,6 @@
     <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h">
       <Filter>Engine\System\Runtime\Performance</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\Runtime\Performance\LapTimer.h">
-      <Filter>Engine\System\Runtime\Performance</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h">
       <Filter>Engine\System\Runtime\Performance</Filter>
     </ClInclude>
@@ -912,6 +909,8 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\Runtime\Performance\CpuTimestamp.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\GpuTimestamp.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Camera\CameraHandle.cpp">
@@ -1412,9 +1411,6 @@
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp">
       <Filter>Engine\System\Runtime\Performance</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\System\Runtime\Performance\LapTimer.cpp">
-      <Filter>Engine\System\Runtime\Performance</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp">
       <Filter>Engine\System\Runtime\Performance</Filter>
     </ClCompile>
@@ -1533,5 +1529,7 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\CpuTimestamp.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\GpuTimestamp.cpp" />
   </ItemGroup>
 </Project>

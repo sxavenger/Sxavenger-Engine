@@ -74,7 +74,7 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 
 	context->SetProcess(Execution::Process::Begin, 0, [this]() {
 		System::GetDxDevice()->CheckDeviceStatus();
-		System::BeginPerformace();
+		System::BeginPerformance();
 		System::GetInput()->Update();
 		System::BeginImGuiFrame();
 		ComponentHelper::BeginFrame();
@@ -113,7 +113,7 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 		sEntityBehaviourStorage->UnregisterBehaviour();
 
 		System::Record("end [engine]");
-		System::EndPerformace();
+		System::EndPerformance();
 	});
 }
 

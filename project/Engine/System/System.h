@@ -17,7 +17,7 @@
 #include "Window/WindowCollection.h"
 #include "Runtime/Input/Input.h"
 #include "Runtime/Performance/Performance.h"
-#include "Runtime/Performance/LapTimer.h"
+#include "Runtime/Performance/CpuTimestamp.h"
 
 #include "Runtime/Thread/AsyncThreadCollection.h"
 #include "UI/ImGuiController.h"
@@ -93,7 +93,7 @@ public:
 	static DirectXWindowContext* GetMainWindow();
 
 	//! @brief フォーカスされているウィンドウの取得
-	static DirectXWindowContext* GetForcusWindow();
+	static DirectXWindowContext* GetFocusWindow();
 
 	static WindowCollection* GetWindowCollection();
 
@@ -119,9 +119,9 @@ public:
 	// Performance option
 	//-----------------------------------------------------------------------------------------
 
-	static void BeginPerformace();
+	static void BeginPerformance();
 
-	static void EndPerformace();
+	static void EndPerformance();
 
 	static TimePointd<TimeUnit::second> GetDeltaTimed();
 	static TimePointf<TimeUnit::second> GetDeltaTimef();
@@ -130,7 +130,7 @@ public:
 
 	static Performance* GetPerformance();
 
-	static LapTimer* GetLapTimer();
+	static CpuTimestamp* GetCpuTimestamp();
 
 	//-----------------------------------------------------------------------------------------
 	// Async thread collection option

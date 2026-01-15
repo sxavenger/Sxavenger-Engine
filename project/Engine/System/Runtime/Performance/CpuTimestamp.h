@@ -20,22 +20,22 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// LapTimer class
+// CpuTimestamp class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class LapTimer {
+class CpuTimestamp {
 public:
 
 	//////////////////////////////////////////////////////////////////////////////////////////
-	// Point structure
+	// Stamp structure
 	//////////////////////////////////////////////////////////////////////////////////////////
-	struct Point {
+	struct Stamp {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		void CalcualteDelta(const TimePointd<TimeUnit::millisecond>& previous);
+		void CalculateDelta(const TimePointd<TimeUnit::millisecond>& previous);
 
 		//=========================================================================================
 		// public variables
@@ -50,7 +50,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////////
 	// using
 	//////////////////////////////////////////////////////////////////////////////////////////
-	using LapTimeContainer = std::list<Point>;
+	using Timestamp = std::list<Stamp>;
 
 public:
 
@@ -64,7 +64,7 @@ public:
 
 	void Record(const std::string& name);
 
-	const LapTimeContainer& GetLap() const;
+	const Timestamp& GetTimestamp() const;
 
 private:
 
@@ -79,7 +79,7 @@ private:
 	//* lap parameter *//
 
 	static const uint8_t kLapCount = 2;
-	std::array<LapTimeContainer, kLapCount> laps_;
+	std::array<Timestamp, kLapCount> timestamps_;
 
 	uint8_t currentIndex_ = 0;
 
@@ -90,3 +90,5 @@ private:
 };
 
 SXAVENGER_ENGINE_NAMESPACE_END
+
+
