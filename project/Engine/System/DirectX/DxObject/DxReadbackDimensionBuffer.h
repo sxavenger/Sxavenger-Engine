@@ -45,11 +45,11 @@ public:
 
 	const T& At(size_t index) const {
 		SXAVENGER_ENGINE StreamLogger::AssertA(index < size_, "Readback Dimension Buffer out of range.");
-		return mappedDatas_[index];
+		return datas_[index];
 	}
 
 	const std::span<T>& GetSpan() const {
-		return mappedDatas_;
+		return datas_;
 	}
 
 	//* getter *//
@@ -84,7 +84,7 @@ private:
 
 	//* mapped data *//
 
-	std::span<T> mappedDatas_;
+	std::span<T> datas_;
 
 };
 
@@ -123,7 +123,7 @@ inline void ReadbackDimensionBuffer<T>::Resize(uint32_t size) {
 	T* mappingTarget = nullptr;
 	resource_->Map(0, nullptr, reinterpret_cast<void**>(&mappingTarget));
 
-	mappedDatas_ = { mappingTarget, size_ };
+	datas_ = { mappingTarget, size_ };
 }
 
 template <class T>
@@ -136,7 +136,7 @@ inline void ReadbackDimensionBuffer<T>::Release() {
 		resource_.Reset();
 	}
 
-	mappedDatas_ = {};
+	datas_ = {};
 }
 
 template <class T>

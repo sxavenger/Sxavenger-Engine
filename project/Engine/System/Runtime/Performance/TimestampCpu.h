@@ -20,9 +20,9 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// CpuTimestamp class
+// TimestampCpu class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class CpuTimestamp {
+class TimestampCpu {
 public:
 
 	//////////////////////////////////////////////////////////////////////////////////////////
@@ -78,8 +78,8 @@ private:
 
 	//* lap parameter *//
 
-	static const uint8_t kLapCount = 2;
-	std::array<Timestamp, kLapCount> timestamps_;
+	static const uint8_t kTimestampCount = 2;
+	std::array<Timestamp, kTimestampCount> timestamps_;
 
 	uint8_t currentIndex_ = 0;
 

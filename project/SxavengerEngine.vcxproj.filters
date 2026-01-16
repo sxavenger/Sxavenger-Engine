@@ -909,8 +909,8 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\Runtime\Performance\CpuTimestamp.h" />
-    <ClInclude Include="Engine\System\Runtime\Performance\GpuTimestamp.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\TimestampCpu.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\TimestampGpu.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Camera\CameraHandle.cpp">
@@ -1529,7 +1529,7 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Performance\CpuTimestamp.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Performance\GpuTimestamp.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\TimestampCpu.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\TimestampGpu.cpp" />
   </ItemGroup>
 </Project>

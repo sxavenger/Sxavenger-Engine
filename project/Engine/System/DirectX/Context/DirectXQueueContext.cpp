@@ -93,6 +93,14 @@ ID3D12CommandQueue* DirectXQueueContext::GetCommandQueue() const {
 	return context_->GetCommandQueue();
 }
 
+uint64_t DirectXQueueContext::GetTimestampFrequency() const {
+	uint64_t frequency = 0;
+	auto hr = context_->GetCommandQueue()->GetTimestampFrequency(&frequency);
+	DxObject::Assert(hr, L"Timestamp Frequency failed.");
+
+	return frequency;
+}
+
 
 D3D12_COMMAND_LIST_TYPE DirectXQueueContext::GetCommandListType(RenderQueue type) {
 	switch (type) {

@@ -28,7 +28,8 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 		return;
 	}
 
-	context->BeginEvent(L"RenderPass - DeferredLighting");
+	context->BeginEvent(L"RenderPass - Deferred Lighting");
+	System::BeginRecordGpu(std::format("[{}] RenderPass - Deferred Lighting", magic_enum::enum_name(config.tag)));
 
 	{ //* Direct Lighting
 		BeginPassDirectLighting(context, config.buffer);
@@ -90,6 +91,7 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 
 	TransitionLightingPass(context, config);
 
+	System::EndRecordGpu();
 	context->EndEvent();
 
 }

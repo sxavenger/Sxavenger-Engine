@@ -79,11 +79,11 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 		System::BeginImGuiFrame();
 		ComponentHelper::BeginFrame();
 
-		System::Record("begin [engine]");
+		System::RecordCpu("begin [engine]");
 	});
 
 	context->SetProcess(Execution::Process::Update, std::numeric_limits<uint32_t>::max(), [this]() {
-		System::Record("update [game logic]");
+		System::RecordCpu("update [game logic]");
 
 		System::EndImGuiFrame();
 
@@ -93,17 +93,19 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 
 		UpdateAsset();
 
-		System::Record("update [engine]");
+		System::RecordCpu("update [engine]");
 	});
 
 	context->SetProcess(Execution::Process::End, 0, [this]() {
-		System::Record("render [draw logic]");
+		System::RecordCpu("render [draw logic]");
+
+		System::GetTimestampGpu()->ReadTimestamp(System::GetDirectQueueContext());
 
 		//System::TransitionAllocator();
 		System::ExecuteAllAllocator();
 		//!< ダブルバッファ変更時, TransitionAllocatorに設定
 		
-		System::Record("render [gpu execution]");
+		System::RecordCpu("render [gpu execution]");
 
 		System::RemoveClosedWindow();
 		System::PresentWindows();
@@ -112,7 +114,7 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 
 		sEntityBehaviourStorage->UnregisterBehaviour();
 
-		System::Record("end [engine]");
+		System::RecordCpu("end [engine]");
 		System::EndPerformance();
 	});
 }

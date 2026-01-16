@@ -9,7 +9,8 @@ namespace {
 	static std::unique_ptr<DirectXCommon>         sDirectXCommon         = nullptr; //!< DirectX12 system
 	static std::unique_ptr<DirectXQueueContext>   sDirectQueueContext    = nullptr; //!< direct queue context
 	static std::unique_ptr<Performance>           sPerformance           = nullptr; //!< performance system
-	static std::unique_ptr<CpuTimestamp>          sCpuTimestamp          = nullptr; //!< cpu timestamp system
+	static std::unique_ptr<TimestampCpu>          sTimestampCpu          = nullptr; //!< cpu timestamp system
+	static std::unique_ptr<TimestampGpu>          sTimestampGpu          = nullptr; //!< gpu timestamp system
 	static std::unique_ptr<AsyncThreadCollection> sAsyncThreadCollection = nullptr; //!< async thread system
 
 	//* system user
@@ -34,7 +35,9 @@ void System::Init() {
 	sDirectQueueContext->SetName(L"main");
 
 	sPerformance  = std::make_unique<Performance>();
-	sCpuTimestamp = std::make_unique<CpuTimestamp>();
+	sTimestampCpu = std::make_unique<TimestampCpu>();
+	sTimestampGpu = std::make_unique<TimestampGpu>();
+	sTimestampGpu->Init(sDirectXCommon->GetDevice());
 
 	sAsyncThreadCollection = std::make_unique<AsyncThreadCollection>();
 	sAsyncThreadCollection->Init();
@@ -149,12 +152,14 @@ Input* System::GetInput() {
 
 void System::BeginPerformance() {
 	sPerformance->Begin();
-	sCpuTimestamp->Begin();
+	sTimestampCpu->Begin();
+	sTimestampGpu->Begin();
 }
 
 void System::EndPerformance() {
 	sPerformance->End();
-	sCpuTimestamp->End();
+	sTimestampCpu->End();
+	sTimestampGpu->End(System::GetDirectQueueContext());
 }
 
 TimePointd<TimeUnit::second> System::GetDeltaTimed() {
@@ -165,16 +170,28 @@ TimePointf<TimeUnit::second> System::GetDeltaTimef() {
 	return sPerformance->GetDeltaTimef();
 }
 
-void System::Record(const std::string& name) {
-	sCpuTimestamp->Record(name);
+void System::RecordCpu(const std::string& name) {
+	sTimestampCpu->Record(name);
+}
+
+void System::BeginRecordGpu(const std::string& name) {
+	sTimestampGpu->BeginRecord(System::GetDirectQueueContext(), name);
+}
+
+void System::EndRecordGpu() {
+	sTimestampGpu->EndRecord(System::GetDirectQueueContext());
 }
 
 Performance* System::GetPerformance() {
 	return sPerformance.get();
 }
 
-CpuTimestamp* System::GetCpuTimestamp() {
-	return sCpuTimestamp.get();
+TimestampCpu* System::GetTimestampCpu() {
+	return sTimestampCpu.get();
+}
+
+TimestampGpu* System::GetTimestampGpu() {
+	return sTimestampGpu.get();
 }
 
 void System::PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task) {

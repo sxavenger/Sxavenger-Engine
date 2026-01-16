@@ -204,12 +204,14 @@ void DevelopEditor::ShowPerformanceWindow() {
 
 	if (ImGui::BeginItemTooltip()) {
 
-		if (ImGui::BeginTable("## record timestamp", 2, ImGuiTableFlags_ScrollY | ImGuiTableFlags_Borders)) {
+		ImGui::SeparatorText("CPU Timestamp");
+
+		if (ImGui::BeginTable("## record cpu timestamp", 2, ImGuiTableFlags_Borders)) {
 			ImGui::TableSetupColumn("name");
-			ImGui::TableSetupColumn("timestamp");
+			ImGui::TableSetupColumn("timestamp - delta / [elapsed]");
 			ImGui::TableHeadersRow();
 
-			const CpuTimestamp::Timestamp& timestamp = System::GetCpuTimestamp()->GetTimestamp();
+			const TimestampCpu::Timestamp& timestamp = System::GetTimestampCpu()->GetTimestamp();
 
 			for (const auto& stamp : timestamp) {
 				ImGui::TableNextRow();
@@ -220,6 +222,26 @@ void DevelopEditor::ShowPerformanceWindow() {
 				ImGui::Text(std::format("{:.2f}ms / [{:.2f}ms]", stamp.delta.time, stamp.elapsed.time).c_str());
 			}
 
+			ImGui::EndTable();
+		}
+
+		ImGui::SeparatorText("GPU Timestamp");
+
+		if (ImGui::BeginTable("## record gpu timestamp", 2, ImGuiTableFlags_Borders)) {
+			ImGui::TableSetupColumn("name");
+			ImGui::TableSetupColumn("timestamp - section");
+			ImGui::TableHeadersRow();
+
+			const TimestampGpu::Timestamp& timestamp = System::GetTimestampGpu()->GetTimestamp();
+
+			for (const auto& stamp : timestamp.stamps) {
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+				ImGui::Text(stamp.name.c_str());
+
+				ImGui::TableNextColumn();
+				ImGui::Text(std::format("{:.2f}ms", stamp.section.time).c_str());
+			}
 			ImGui::EndTable();
 		}
 

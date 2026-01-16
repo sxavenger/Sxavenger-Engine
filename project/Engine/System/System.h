@@ -17,7 +17,8 @@
 #include "Window/WindowCollection.h"
 #include "Runtime/Input/Input.h"
 #include "Runtime/Performance/Performance.h"
-#include "Runtime/Performance/CpuTimestamp.h"
+#include "Runtime/Performance/TimestampCpu.h"
+#include "Runtime/Performance/TimestampGpu.h"
 
 #include "Runtime/Thread/AsyncThreadCollection.h"
 #include "UI/ImGuiController.h"
@@ -126,11 +127,17 @@ public:
 	static TimePointd<TimeUnit::second> GetDeltaTimed();
 	static TimePointf<TimeUnit::second> GetDeltaTimef();
 
-	static void Record(const std::string& name);
+	static void RecordCpu(const std::string& name);
+
+	static void BeginRecordGpu(const std::string& name);
+
+	static void EndRecordGpu();
 
 	static Performance* GetPerformance();
 
-	static CpuTimestamp* GetCpuTimestamp();
+	static TimestampCpu* GetTimestampCpu();
+
+	static TimestampGpu* GetTimestampGpu();
 
 	//-----------------------------------------------------------------------------------------
 	// Async thread collection option

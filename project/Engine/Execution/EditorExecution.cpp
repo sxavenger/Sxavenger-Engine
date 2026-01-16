@@ -48,6 +48,6 @@ void EditorExecution::UpdateEditor() {
 void EditorExecution::RenderEditor() {
 	sEditorEngine->ExecuteEditorFunction<RenderSceneEditor>([&](RenderSceneEditor* editor) {
 		editor->Render();
-		System::Record("render [editor]");
+		System::RecordCpu("render [editor]");
 	});
 }

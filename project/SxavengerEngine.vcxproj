@@ -349,9 +349,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\Runtime\Framework\FrameworkInterface.h" />
     <ClInclude Include="Engine\System\Runtime\Input\Input.h" />
     <ClInclude Include="Engine\System\Runtime\Input\InputId.h" />
-    <ClInclude Include="Engine\System\Runtime\Performance\CpuTimestamp.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\TimestampCpu.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
-    <ClInclude Include="Engine\System\Runtime\Performance\GpuTimestamp.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\TimestampGpu.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncTask.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncThread.h" />
@@ -563,9 +563,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\Runtime\Execution\ExecutionContext.cpp" />
     <ClCompile Include="Engine\System\Runtime\Execution\ExecutionPipeline.cpp" />
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Performance\CpuTimestamp.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\TimestampCpu.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Performance\GpuTimestamp.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\TimestampGpu.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncTask.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncThread.cpp" />

@@ -34,7 +34,7 @@ void EditorEngine::UpdateEditor() {
 #ifdef _DEVELOPMENT
 	ShowMainMenu();
 	ShowWindow();
-	System::Record("update [editors]");
+	System::RecordCpu("update [editors]");
 #endif
 }
 

@@ -1,19 +1,19 @@
-#include "CpuTimestamp.h"
+#include "TimestampCpu.h"
 SXAVENGER_ENGINE_USING
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Stamp structure methods
 //////////////////////////////////////////////////////////////////////////////////////////
 
-void CpuTimestamp::Stamp::CalculateDelta(const TimePointd<TimeUnit::millisecond>& previous) {
+void TimestampCpu::Stamp::CalculateDelta(const TimePointd<TimeUnit::millisecond>& previous) {
 	delta = elapsed - previous;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// CpuTimestamp class methods
+// TimestampCpu class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void CpuTimestamp::Begin() {
+void TimestampCpu::Begin() {
 	// timestampの更新かどうかの判定
 	recordedTimer_ -= runtime_.GetDeltaTime<TimeUnit::second>();
 	isRecord_      = (recordedTimer_ <= 0.0f);
@@ -25,18 +25,18 @@ void CpuTimestamp::Begin() {
 	runtime_.Begin();
 }
 
-void CpuTimestamp::End() {
+void TimestampCpu::End() {
 	runtime_.End();
 
 	if (isRecord_) {
 		//!< timestampの更新終了
-		++currentIndex_ %= kLapCount;      //!< 現在のtimestampIndexを更新
-		recordedTimer_  = recordInterval_; //!< 次のtimestamp更新までの時間をリセット
+		++currentIndex_ %= kTimestampCount; //!< 現在のtimestampIndexを更新
+		recordedTimer_  = recordInterval_;  //!< 次のtimestamp更新までの時間をリセット
 		isRecord_       = false;
 	}
 }
 
-void CpuTimestamp::Record(const std::string& name) {
+void TimestampCpu::Record(const std::string& name) {
 	if (!isRecord_) {
 		return;
 	}
@@ -53,7 +53,7 @@ void CpuTimestamp::Record(const std::string& name) {
 	timestamp.emplace_back(std::move(stamp));
 }
 
-const CpuTimestamp::Timestamp& CpuTimestamp::GetTimestamp() const {
+const TimestampCpu::Timestamp& TimestampCpu::GetTimestamp() const {
 	//!< 計測終了済みのtimestampを返す
-	return timestamps_[(currentIndex_ + kLapCount - 1) % kLapCount];
+	return timestamps_[(currentIndex_ + kTimestampCount - 1) % kTimestampCount];
 }

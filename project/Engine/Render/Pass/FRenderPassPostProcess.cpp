@@ -24,7 +24,8 @@ void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const Co
 		return;
 	}
 
-	context->BeginEvent(L"RenderPass - PostProcess");
+	context->BeginEvent(L"RenderPass - Post Process");
+	System::BeginRecordGpu(std::format("[{}] RenderPass - Post Process", magic_enum::enum_name(config.tag)));
 
 	config.buffer->BeginPostProcess(context);
 
@@ -74,6 +75,7 @@ void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const Co
 
 	config.buffer->EndPostProcess(context);
 
+	System::EndRecordGpu();
 	context->EndEvent();
 
 }

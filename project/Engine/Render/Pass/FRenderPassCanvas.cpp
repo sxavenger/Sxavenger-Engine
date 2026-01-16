@@ -21,6 +21,7 @@ SXAVENGER_ENGINE_USING
 void FRenderPassCanvas::Render(const DirectXQueueContext* context, const Config& config) {
 
 	context->BeginEvent(L"RenderPass - Canvas");
+	System::BeginRecordGpu(std::format("[{}] RenderPass - Canvas", magic_enum::enum_name(config.tag)));
 
 	config.buffer->TransitionBeginRenderTargetMainCanvas(context);
 
@@ -30,6 +31,7 @@ void FRenderPassCanvas::Render(const DirectXQueueContext* context, const Config&
 
 	config.buffer->TransitionEndRenderTargetMainCanvas(context);
 
+	System::EndRecordGpu();
 	context->EndEvent();
 }
 

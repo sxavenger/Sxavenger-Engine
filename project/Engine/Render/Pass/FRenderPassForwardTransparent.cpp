@@ -24,7 +24,9 @@ void FRenderPassForwardTransparent::Render(const DirectXQueueContext* context, c
 		return;
 	}
 
-	context->BeginEvent(L"RenderPass - ForwardTransparent");
+	context->BeginEvent(L"RenderPass - Forward Transparent");
+	System::BeginRecordGpu(std::format("[{}] RenderPass - Forward Transparent", magic_enum::enum_name(config.tag)));
+
 
 	BeginPassRenderTarget(context, config.buffer);
 
@@ -46,6 +48,7 @@ void FRenderPassForwardTransparent::Render(const DirectXQueueContext* context, c
 
 	TransitionTransparentPass(context, config);
 
+	System::EndRecordGpu();
 	context->EndEvent();
 
 }

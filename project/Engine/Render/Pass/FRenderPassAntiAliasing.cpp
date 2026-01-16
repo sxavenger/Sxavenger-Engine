@@ -17,7 +17,8 @@ void FRenderPassAntiAliasing::Render(const DirectXQueueContext* context, const C
 		return;
 	}
 
-	context->BeginEvent(L"RenderPass - AntiAliasing");
+	context->BeginEvent(L"RenderPass - Anti Aliasing");
+	System::BeginRecordGpu(std::format("[{}] RenderPass - Anti Aliasing", magic_enum::enum_name(config.tag)));
 
 	BeginProcessAntiAliasing(context, config.buffer);
 
@@ -33,6 +34,7 @@ void FRenderPassAntiAliasing::Render(const DirectXQueueContext* context, const C
 
 	EndProcessAntiAliasing(context, config.buffer);
 
+	System::EndRecordGpu();
 	context->EndEvent();
 
 }

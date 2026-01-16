@@ -8,6 +8,7 @@ SXAVENGER_ENGINE_USING
 #include "../FRenderCore.h"
 
 //* engine
+#include <Engine/System/System.h>
 #include <Engine/Components/Component/MeshRenderer/MeshRendererComponent.h>
 #include <Engine/Components/Component/MeshRenderer/SkinnedMeshRendererComponent.h>
 #include <Engine/Components/Component/ComponentStorage.h>
@@ -23,7 +24,8 @@ void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const C
 		return;
 	}
 
-	context->BeginEvent(L"RenderPass - DeferredBase");
+	context->BeginEvent(L"RenderPass - Deferred Base");
+	System::BeginRecordGpu(std::format("[{}] RenderPass - Deferred Base", magic_enum::enum_name(config.tag)));
 
 	{ //!< Render Target Pass
 		BeginPassRenderTarget(context, config.buffer);
@@ -43,6 +45,7 @@ void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const C
 		EndPassVelocity(context, config.buffer);
 	}
 
+	System::EndRecordGpu();
 	context->EndEvent();
 }
 

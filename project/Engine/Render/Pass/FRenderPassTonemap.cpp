@@ -18,6 +18,7 @@ void FRenderPassTonemap::Render(const DirectXQueueContext* context, const Config
 	}
 
 	context->BeginEvent(L"RenderPass - Tonemap");
+	System::BeginRecordGpu(std::format("[{}] RenderPass - Tonemap", magic_enum::enum_name(config.tag)));
 
 	FRenderCore::GetInstance()->GetProcess()->SetPipeline(
 		FRenderCoreProcess::CompositeType::Tonemap, context
@@ -42,6 +43,7 @@ void FRenderPassTonemap::Render(const DirectXQueueContext* context, const Config
 
 	// TODO: slope, toe, shoulder... をparameterで調整可能に
 
+	System::EndRecordGpu();
 	context->EndEvent();
 
 }
