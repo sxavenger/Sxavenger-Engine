@@ -51,6 +51,7 @@ void FRenderCoreCanvas::CreateDesc() {
 	desc_.SetBlendDesc(0, desc);
 
 	desc_.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
+	desc_.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC_LESS_EQUAL);
 
 }
 
