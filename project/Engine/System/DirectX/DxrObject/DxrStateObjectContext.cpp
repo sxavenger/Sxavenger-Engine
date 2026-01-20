@@ -393,7 +393,10 @@ uint8_t* StateObjectContext::WriteExport(uint8_t* dst, UINT size, const ExportGr
 
 	// exportのid書き込み
 	auto id = properties_->GetShaderIdentifier(expt->GetName().c_str());
-	StreamLogger::AssertW(id != nullptr, L"export identifier not found. export name: " + expt->GetName());
+
+	if (id == nullptr) {
+		return end; //!< idが存在しない場合
+	}
 
 	dst += WriteIdentifier(dst, id);
 

@@ -2,10 +2,10 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* geometry
-#include "../../Content/Mesh.hlsli"
+#include "../Content/Mesh.hlsli"
 
 //* common
-#include "../../Component/TransformComponent.hlsli"
+#include "../Component/TransformComponent.hlsli"
 
 //=========================================================================================
 // config

@@ -38,5 +38,10 @@ struct CameraComponent {
 		static const float3 forward = float3(0.0f, 0.0f, 1.0f);
 		return normalize(mul(forward, (float3x3)world));
 	}
+
+	float3 GetDirection(float2 uv) {
+		float3 target = mul(float4(uv, 1.0f, 1.0f), projInv).xyz;
+		return normalize(mul(target, (float3x3)world));
+	}
 	
 };
