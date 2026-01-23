@@ -50,9 +50,14 @@ void RenderSceneEditor::Init() {
 
 	gridTexture_ = sContentStorage->Import<ContentTexture>("packages/textures/icon/grid.png")->GetId();
 
-	camera_ = std::make_unique<GameObject>("editor camera");
-	(*camera_)->AddComponent<TransformComponent>();
-	(*camera_)->AddComponent<CameraComponent>();
+	camera_ = std::make_unique<PerspectiveCameraActor>();
+	camera_->SetPerspective(PerspectiveCameraActor::Perspective::ThirdPerson);
+	camera_->SetPoint(kOrigin3<float>);
+	camera_->SetDistance(12.0f);
+	camera_->SetAngle({ 0.0f, kPi / 16.0f });
+	camera_->Update();
+
+	(*camera_)->SetName("editor camera");
 
 	auto camera = (*camera_)->GetComponent<CameraComponent>();
 	camera->SetTag(CameraComponent::Tag::Editor);
@@ -144,8 +149,8 @@ void RenderSceneEditor::Render() {
 		
 	}
 
-	if (isMoveCamera_) {
-		Graphics::PushAxis(point_, 1.0f);
+	if (isMoveCamera_ && camera_->GetPerspective() == PerspectiveCameraActor::Perspective::ThirdPerson && camera_->GetDistance() > 0.0f) {
+		Graphics::PushAxis(camera_->GetPoint(), 1.0f);
 	}
 
 	Graphics::GetDebugPrimitive()->DrawToScene(context, camera->GetGPUVirtualAddress());
@@ -168,6 +173,7 @@ void RenderSceneEditor::Manipulate(EntityBehaviour* behaviour) {
 	}
 
 	SxImGuizmo::SetDrawlist(sceneWindowDrawer_);
+	SxImGuizmo::SetOrthographic(false);
 
 	SxImGuizmo::Operation operation = SxImGuizmo::NONE;
 
@@ -319,7 +325,7 @@ void RenderSceneEditor::ManipulateCanvas(EntityBehaviour* behaviour) {
 }
 
 void RenderSceneEditor::SetCameraPoint(const Vector3f& point) {
-	point_ = point;
+	camera_->SetPoint(point);
 	UpdateView();
 }
 
@@ -337,15 +343,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("layout");
 		ImGui::Separator();
 
-		if (ImGui::BeginCombo("GBuffer", magic_enum::enum_name(buffer_).data())) {
-			for (const auto& [value, name] : magic_enum::enum_entries<GBuffer>()) {
-				if (ImGui::Selectable(name.data(), (value == buffer_))) {
-					buffer_ = value;
-				}
-			}
-		
-			ImGui::EndCombo();
-		}
+		SxImGui::ComboEnum("GBuffer", &buffer_);
 
 		SxImGui::HelpMarker("(!)", "[alt] + [up] || [down]");
 
@@ -355,15 +353,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("process option");
 		ImGui::Separator();
 
-		if (ImGui::BeginCombo("anti-aliasing", magic_enum::enum_name(config_.antiAliasing).data())) {
-			for (const auto& [value, name] : magic_enum::enum_entries<FBaseRenderPass::Config::AntiAliasing>()) {
-				if (ImGui::Selectable(name.data(), (value == config_.antiAliasing))) {
-					config_.antiAliasing = value;
-				}
-			}
-
-			ImGui::EndCombo();
-		}
+		SxImGui::ComboEnum("anti-aliasing", &config_.antiAliasing);
 
 		for (const auto& [value, name] : magic_enum::enum_entries<FBaseRenderPass::Config::Option>()) {
 			if (value == FBaseRenderPass::Config::Option::Default) {
@@ -411,15 +401,7 @@ void RenderSceneEditor::ShowGameMenu() {
 		ImGui::Text("process");
 		ImGui::Separator();
 
-		if (ImGui::BeginCombo("anti-aliasing", magic_enum::enum_name(config.antiAliasing).data())) {
-			for (const auto& [value, name] : magic_enum::enum_entries<FBaseRenderPass::Config::AntiAliasing>()) {
-				if (ImGui::Selectable(name.data(), (value == config.antiAliasing))) {
-					config.antiAliasing = value;
-				}
-			}
-
-			ImGui::EndCombo();
-		}
+		SxImGui::ComboEnum("anti-aliasing", &config.antiAliasing);
 
 		for (const auto& [value, name] : magic_enum::enum_entries<FBaseRenderPass::Config::Option>()) {
 			if (value == FBaseRenderPass::Config::Option::Default) {
@@ -589,7 +571,7 @@ void RenderSceneEditor::ShowSceneWindow() {
 	DisplayGBufferTexture(buffer_);
 
 	if (ImGui::IsWindowHovered() && (ImGui::IsMouseClicked(ImGuiMouseButton_Middle) || ImGui::IsMouseClicked(ImGuiMouseButton_Right))) {
-		//!< window hovered 状態で mouse middle click が押された場合, camera操作(forcus)を許可.
+		//!< window hovered 状態で mouse middle click が押された場合, camera操作(focus)を許可.
 		ImGui::SetWindowFocus();
 	}
 
@@ -915,82 +897,7 @@ void RenderSceneEditor::SetImGuiImagesFullWindowEnable(const std::vector<std::pa
 }
 
 void RenderSceneEditor::UpdateCamera() {
-
-	isMoveCamera_ = false;
-
-	auto mouse     = System::GetInput()->GetMouseInput();
-	auto keyboard  = System::GetInput()->GetKeyboardInput();
-	auto transform = (*camera_)->GetComponent<TransformComponent>();
-
-	// mouseによる回転
-	if (mouse->IsPress(MouseId::MOUSE_MIDDLE)) {
-		Vector2f delta = mouse->GetDeltaPosition();
-		static const Vector2f kSensitivity = { 0.01f, 0.01f };
-
-		angle_   += delta * kSensitivity;
-		angle_.x = std::fmod(angle_.x, kPi * 2.0f);
-		angle_.y = std::clamp(angle_.y, -kPi / 2.0f, kPi / 2.0f);
-
-		isMoveCamera_ = true;
-	}
-
-	// mouseによる移動
-	if (mouse->IsPress(MouseId::MOUSE_RIGHT)) {
-		Vector2f delta = mouse->GetDeltaPosition();
-		static const Vector2f kSensitivity = { 0.01f, 0.01f };
-
-		Vector3f right = Quaternion::RotateVector(kUnitX3<float>, transform->GetTransform().rotate);
-		Vector3f up    = Quaternion::RotateVector(kUnitY3<float>, transform->GetTransform().rotate);
-
-		point_ -= right * delta.x * kSensitivity.x;
-		point_ += up * delta.y * kSensitivity.y;
-
-		isMoveCamera_ = true;
-	}
-
-	if (mouse->IsWheel()) {
-		distance_ = std::max(distance_ - mouse->GetDeltaWheelNormalized(), 0.0f);
-		isMoveCamera_ = true;
-	}
-
-	if (mouse->IsPress(MouseId::MOUSE_RIGHT)) {
-
-		Vector3f direction = {};
-
-		// keyboardによる移動
-		if (keyboard->IsPress(KeyId::KEY_W)) {
-			direction.z += 1.0f;
-		}
-
-		if (keyboard->IsPress(KeyId::KEY_S)) {
-			direction.z -= 1.0f;
-		}
-
-		if (keyboard->IsPress(KeyId::KEY_A)) {
-			direction.x -= 1.0f;
-		}
-
-		if (keyboard->IsPress(KeyId::KEY_D)) {
-			direction.x += 1.0f;
-		}
-
-		// TODO: y軸移動の追加
-
-		if (Any(direction != kOrigin3<float>)) {
-			direction = direction.Normalize();
-
-			Vector3f forward = Quaternion::RotateVector(kUnitZ3<float>, transform->GetTransform().rotate);
-			Vector3f right   = Quaternion::RotateVector(kUnitX3<float>, transform->GetTransform().rotate);
-			Vector3f up      = Quaternion::RotateVector(kUnitY3<float>, transform->GetTransform().rotate);
-
-			static const float kMoveSpeed = 1.0f;
-
-			point_ += (forward * direction.z + right * direction.x) * kMoveSpeed;
-
-			isMoveCamera_ = true;
-		}
-
-	}
+	isMoveCamera_ = camera_->Update();
 
 	if (isMoveCamera_) {
 		UpdateView();
@@ -999,26 +906,17 @@ void RenderSceneEditor::UpdateCamera() {
 
 void RenderSceneEditor::ShowCameraInformation(const WindowRect& rect) {
 
-	ImVec2 cursol = ImGui::GetCursorPos();
+	ImVec2 cursor = ImGui::GetCursorPos();
 
 	ImGui::SetCursorPos({ rect.pos.x + rect.size.x * 0.5f, rect.pos.y + rect.size.y * 0.5f });
 	ImGui::Text("TestA");
 	ImGui::Text("TestB");
 
-	ImGui::SetCursorPos(cursol);
+	ImGui::SetCursorPos(cursor);
 }
 
 void RenderSceneEditor::UpdateView() {
-	auto transform = (*camera_)->GetComponent<TransformComponent>();
-
-	Quaternion r = Quaternion::AxisAngle(kUnitY3<float>, angle_.x) * Quaternion::AxisAngle(kUnitX3<float>, angle_.y);
-
-	Vector3f direciton = Quaternion::RotateVector(kBackward3<float>, r);
-
-	transform->GetTransform().translate = point_ + direciton * distance_;
-	transform->GetTransform().rotate = r;
-	transform->UpdateMatrix();
-
+	(*camera_)->GetComponent<TransformComponent>()->UpdateMatrix();
 	(*camera_)->GetComponent<CameraComponent>()->UpdateView();
 }
 

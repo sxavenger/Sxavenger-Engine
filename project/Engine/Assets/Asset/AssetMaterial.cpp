@@ -386,16 +386,7 @@ void AssetMaterial::ShowInspector() {
 		return;
 	}
 
-	if (ImGui::BeginCombo("mode", magic_enum::enum_name(mode_).data())) {
-		for (const auto& [value, name] : magic_enum::enum_entries<Mode>()) {
-			if (ImGui::Selectable(name.data(), mode_ == value)) {
-				mode_ = value;
-			}
-		}
-		ImGui::EndCombo();
-	}
-
-
+	SxImGui::ComboEnum("mode", &mode_);
 
 }
 

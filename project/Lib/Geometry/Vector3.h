@@ -71,7 +71,7 @@ public:
 	//=========================================================================================
 
 	template <typename FormatContext>
-	auto format(FormatContext& ctx) const {
+	auto Format(FormatContext& ctx) const {
 		return std::format_to(ctx.out(), "({}, {}, {})", x, y, z);
 	}
 
@@ -127,7 +127,16 @@ public:
 	_Ty x, y, z;
 
 	//=========================================================================================
-	// mathmatical methods
+	// formatter
+	//=========================================================================================
+
+	template <typename FormatContext>
+	auto Format(FormatContext& ctx) const {
+		return std::format_to(ctx.out(), "({}, {}, {})", x, y, z);
+	}
+
+	//=========================================================================================
+	// mathematical methods
 	//=========================================================================================
 
 	//* member methods

@@ -66,7 +66,7 @@ public:
 	//=========================================================================================
 
 	template <typename FormatContext>
-	auto format(FormatContext& ctx) const {
+	auto Format(FormatContext& ctx) const {
 		return std::format_to(ctx.out(), "({}, {})", x, y);
 	}
 
@@ -120,7 +120,16 @@ public:
 	_Ty x, y;
 
 	//=========================================================================================
-	// mathmatical methods
+	// formatter
+	//=========================================================================================
+
+	template <typename FormatContext>
+	auto Format(FormatContext& ctx) const {
+		return std::format_to(ctx.out(), "({}, {})", x, y);
+	}
+
+	//=========================================================================================
+	// mathematical methods
 	//=========================================================================================
 
 	Vector2 Saturate() const {

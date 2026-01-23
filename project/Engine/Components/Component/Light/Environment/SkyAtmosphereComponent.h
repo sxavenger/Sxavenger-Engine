@@ -117,6 +117,14 @@ public:
 		// TODO: SkyViewからSkyCubeへの変換 Aerial影
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Mode enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Mode : uint8_t {
+		Dynamic,   //!< リアルタイム計算
+		Precomput, //!< 事前計算テクスチャを使用 (Transmittance, MultiScattering を事前計算したもととして扱う)
+	};
+
 public:
 
 	//=========================================================================================
@@ -128,10 +136,18 @@ public:
 
 	void ShowComponentInspector() override;
 
+	void Update(Mode mode, const DirectXQueueContext* context);
+
 	void UpdateTransmittance(const DirectXQueueContext* context);
 	void UpdateMultipleScattering(const DirectXQueueContext* context);
 	void UpdateSkyView(const DirectXQueueContext* context);
 	void UpdateSkyCube(const DirectXQueueContext* context);
+
+	//* component option *//
+
+	Mode GetMode() const { return mode_; }
+
+	void SetMode(Mode mode) { mode_ = mode; }
 
 	void SetIntensity(float intensity);
 
@@ -168,6 +184,10 @@ private:
 	std::unique_ptr<DxObject::ConstantBuffer<Atmosphere>> atmosphere_;
 	std::unique_ptr<DxObject::ConstantBuffer<Parameter>> parameter_;
 
+	//* mode *//
+
+	Mode mode_ = Mode::Dynamic;
+
 	//* precomputed textures *//
 
 	std::array<Texture, magic_enum::enum_count<Type>()> textures_;
@@ -183,10 +203,14 @@ private:
 	// private methods
 	//=========================================================================================
 
+	//* create helper *//
+	
 	void CreateTransmittance();
 	void CreateMultipleScattering();
 	void CreateSkyView();
 	void CreateSkyCube();
+
+	//* update helper *//
 
 };
 

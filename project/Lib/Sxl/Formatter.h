@@ -33,7 +33,7 @@ public:
 	// 書式設定のロジックを派生クラスがカスタマイズ
 	template <typename FormatContext>
 	auto format(const T& value, FormatContext& ctx) const {
-		return value.format(ctx); // 派生クラスの format メソッドを呼び出す
+		return value.Format(ctx); // 派生クラスの format メソッドを呼び出す
 	}
 
 };

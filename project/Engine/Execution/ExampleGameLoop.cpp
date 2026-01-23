@@ -62,7 +62,7 @@ void ExampleGameLoop::InitSystem() {
 
 	(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate = Quaternion::AxisAngle(Vector3f{1.0f, 0.0f, 0.0f}.Normalize(), kPi / 2.0f);
 
-	camera_ = std::make_unique<ControllableCameraActor>();
+	camera_ = std::make_unique<PerspectiveCameraActor>();
 
 	performance_ = std::make_unique<PerformanceActor>();
 	performance_->SetPosition({ 1190.0f, 0.0f });

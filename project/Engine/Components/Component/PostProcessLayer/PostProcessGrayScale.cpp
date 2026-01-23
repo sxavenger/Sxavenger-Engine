@@ -22,16 +22,7 @@ void PostProcessGrayScale::Parameter::Init() {
 }
 
 void PostProcessGrayScale::Parameter::SetImGuiCommand() {
-	if (ImGui::BeginCombo("Type", magic_enum::enum_name(type).data())) {
-
-		for (const auto& [value, name] : magic_enum::enum_entries<Type>()) {
-			if (ImGui::Selectable(name.data(), type == value)) {
-				type = value;
-			}
-		}
-
-		ImGui::EndCombo();
-	}
+	SxImGui::ComboEnum("Type", &type);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

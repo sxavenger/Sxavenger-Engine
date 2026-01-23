@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* external
 #include <imgui.h>
+#include <magic_enum.hpp>
 
 //* c++
 #include <optional>
@@ -61,6 +62,9 @@ namespace SxImGui {
 
 	template <typename T>
 	bool CheckBoxFlags(const char* label, T* flags, T flags_value);
+
+	template <typename T> requires std::is_enum_v<T>
+	bool ComboEnum(const char* label, T* v, ImGuiComboFlags flags = ImGuiComboFlags_None);
 
 	//=========================================================================================
 	// methods
@@ -203,4 +207,21 @@ bool SxImGui::CheckBoxFlags(const char* label, T* flags, T flags_value) {
 	}
 
 	return pressed;
+}
+
+template <typename T> requires std::is_enum_v<T>
+bool SxImGui::ComboEnum(const char* label, T* v, ImGuiComboFlags flags) {
+	bool changed = false;
+
+	if (ImGui::BeginCombo(label, magic_enum::enum_name(*v).data(), flags)) {
+		for (const auto& [value, name] : magic_enum::enum_entries<T>()) {
+			if (ImGui::Selectable(name.data(), *v == value)) {
+				*v      = value;
+				changed |= true;
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+	return changed;
 }

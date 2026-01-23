@@ -137,6 +137,16 @@ void SkyAtmosphereComponent::ShowComponentInspector() {
 
 }
 
+void SkyAtmosphereComponent::Update(Mode mode, const DirectXQueueContext* context) {
+	if (mode == Mode::Dynamic) {
+		UpdateTransmittance(context);
+		UpdateMultipleScattering(context);
+	}
+
+	UpdateSkyCube(context);
+	//UpdateSkyView(context);
+}
+
 void SkyAtmosphereComponent::UpdateTransmittance(const DirectXQueueContext* context) {
 
 	context->GetDxCommand()->TransitionResourceState(

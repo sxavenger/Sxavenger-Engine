@@ -42,7 +42,7 @@ private:
 
 	std::shared_ptr<SxxEngine::DirectXWindowContext> main_;
 
-	//* gameobject *//
+	//* game object *//
 
 	std::unique_ptr<SxxEngine::GameObject> atmosphere_;
 

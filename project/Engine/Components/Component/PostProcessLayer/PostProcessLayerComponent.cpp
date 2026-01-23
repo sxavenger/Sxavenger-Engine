@@ -24,16 +24,7 @@ SXAVENGER_ENGINE_USING
 
 void PostProcessLayerComponent::ShowComponentInspector() {
 
-	if (ImGui::BeginCombo("tag", magic_enum::enum_name(GetTag()).data())) {
-
-		for (const auto& [value, name] : magic_enum::enum_entries<Tag>()) {
-			if (ImGui::Selectable(name.data(), GetTag() == value)) {
-				SetTag(value);
-			}
-		}
-
-		ImGui::EndCombo();
-	}
+	SxImGui::ComboEnum("tag", &tag_);
 
 	if (ImGui::TreeNodeEx("process layer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
 

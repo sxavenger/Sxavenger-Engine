@@ -11,7 +11,7 @@
 #include <Engine/System/UI/SxImGuizmo.h>
 #include <Engine/Assets/Asset/AssetTexture.h>
 #include <Engine/Assets/Asset/AssetParameter.h>
-#include <Engine/Module/GameObject/GameObject.h>
+#include <Engine/Module/Actor/PerspectiveCameraActor.h>
 #include <Engine/Render/FRenderTargetBuffer.h>
 #include <Engine/Render/Pass/FBaseRenderPass.h>
 
@@ -69,7 +69,7 @@ public:
 
 	bool IsFocusGameWindow() const { return isFocusGameWindow_; }
 
-	bool IsForcusSceneWindow() const { return isFocusSceneWindow_; }
+	bool IsFocusSceneWindow() const { return isFocusSceneWindow_; }
 
 private:
 
@@ -156,8 +156,8 @@ private:
 
 	bool isRender_ = true;
 
-	std::unique_ptr<FRenderTargetBuffer> textures_; //!< debug textures
-	std::unique_ptr<GameObject>          camera_;   //!< scene camera
+	std::unique_ptr<FRenderTargetBuffer>    textures_; //!< debug textures
+	std::unique_ptr<PerspectiveCameraActor> camera_;   //!< scene camera
 
 	FBaseRenderPass::Config config_ = {};
 	bool isDebugCulling_ = false;
@@ -170,10 +170,6 @@ private:
 	GBuffer buffer_ = GBuffer::Scene;
 
 	//* camera *//
-
-	Vector3f point_ = kOrigin3<float>;
-	Vector2f angle_ = { 0.0f, kPi / 16.0f };
-	float distance_ = 12.0f;
 
 	bool isMoveCamera_ = false;
 

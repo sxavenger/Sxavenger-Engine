@@ -273,6 +273,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Graphics\TextureBuffer\UnorderedTexture.h" />
     <ClInclude Include="Engine\Module\Actor\ControllableCameraActor.h" />
     <ClInclude Include="Engine\Module\Actor\PerformanceActor.h" />
+    <ClInclude Include="Engine\Module\Actor\PerspectiveCameraActor.h" />
     <ClInclude Include="Engine\Module\Exporter\TextureExporter.h" />
     <ClInclude Include="Engine\Module\GameObject\GameObject.h" />
     <ClInclude Include="Engine\Module\Parameter\SerializeGui.h" />
@@ -495,6 +496,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Graphics\TextureBuffer\UnorderedTexture.cpp" />
     <ClCompile Include="Engine\Module\Actor\ControllableCameraActor.cpp" />
     <ClCompile Include="Engine\Module\Actor\PerformanceActor.cpp" />
+    <ClCompile Include="Engine\Module\Actor\PerspectiveCameraActor.cpp" />
     <ClCompile Include="Engine\Module\Exporter\TextureExporter.cpp" />
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />

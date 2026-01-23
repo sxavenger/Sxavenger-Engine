@@ -93,15 +93,7 @@ CameraComponent::CameraComponent(EntityBehaviour* behaviour)
 
 void CameraComponent::ShowComponentInspector() {
 
-	if (ImGui::BeginCombo("tag", magic_enum::enum_name(GetTag()).data())) {
-		for (const auto& [value, name] : magic_enum::enum_entries<Tag>()) {
-			if (ImGui::Selectable(name.data(), GetTag() == value)) {
-				SetTag(value);
-			}
-		}
-
-		ImGui::EndCombo();
-	}
+	SxImGui::ComboEnum("tag", &tag_);
 
 	if (ImGui::TreeNodeEx("projection", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
 		ImGui::DragFloat2("sensor", &projection_.sensor.x, 0.01f);
@@ -111,7 +103,9 @@ void CameraComponent::ShowComponentInspector() {
 		UpdateProj();
 	}
 
-	PushLineFrustum();
+	if (tag_ != Tag::Editor) {
+		PushLineFrustum();
+	}
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS& CameraComponent::GetGPUVirtualAddress() const {
