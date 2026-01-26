@@ -12,6 +12,7 @@
 //* c++
 #include <optional>
 #include <source_location>
+#include <deque>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -62,7 +63,12 @@ private:
 	//! has_value: 何回更新処理をするか<frame>(0の場合は更新処理を止める)
 	std::optional<uint32_t> processLimit_ = std::nullopt;
 
-	//* console option *//
+	//* performance parameter *//
+
+	std::deque<float> frameHistory_;              //!< フレーム時間履歴
+	static const size_t kFrameHistoryCount = 514; //!< フレーム時間履歴の最大数
+
+	//* console parameter *//
 
 	//=========================================================================================
 	// private methods

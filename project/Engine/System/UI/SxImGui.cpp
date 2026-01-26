@@ -17,31 +17,31 @@
 #ifndef IMGUI_DEFINE_MATH_OPERATORS
 namespace {
 // ImVec2 operators
-static inline ImVec2  operator*(const ImVec2& lhs, const float rhs)     { return ImVec2(lhs.x * rhs, lhs.y * rhs); }
-static inline ImVec2  operator/(const ImVec2& lhs, const float rhs)     { return ImVec2(lhs.x / rhs, lhs.y / rhs); }
-static inline ImVec2  operator+(const ImVec2& lhs, const ImVec2& rhs)   { return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y); }
-static inline ImVec2  operator-(const ImVec2& lhs, const ImVec2& rhs)   { return ImVec2(lhs.x - rhs.x, lhs.y - rhs.y); }
-static inline ImVec2  operator*(const ImVec2& lhs, const ImVec2& rhs)   { return ImVec2(lhs.x * rhs.x, lhs.y * rhs.y); }
-static inline ImVec2  operator/(const ImVec2& lhs, const ImVec2& rhs)   { return ImVec2(lhs.x / rhs.x, lhs.y / rhs.y); }
-static inline ImVec2  operator-(const ImVec2& lhs)                      { return ImVec2(-lhs.x, -lhs.y); }
-static inline ImVec2& operator*=(ImVec2& lhs, const float rhs)          { lhs.x *= rhs; lhs.y *= rhs; return lhs; }
-static inline ImVec2& operator/=(ImVec2& lhs, const float rhs)          { lhs.x /= rhs; lhs.y /= rhs; return lhs; }
-static inline ImVec2& operator+=(ImVec2& lhs, const ImVec2& rhs)        { lhs.x += rhs.x; lhs.y += rhs.y; return lhs; }
-static inline ImVec2& operator-=(ImVec2& lhs, const ImVec2& rhs)        { lhs.x -= rhs.x; lhs.y -= rhs.y; return lhs; }
-static inline ImVec2& operator*=(ImVec2& lhs, const ImVec2& rhs)        { lhs.x *= rhs.x; lhs.y *= rhs.y; return lhs; }
-static inline ImVec2& operator/=(ImVec2& lhs, const ImVec2& rhs)        { lhs.x /= rhs.x; lhs.y /= rhs.y; return lhs; }
-static inline bool    operator==(const ImVec2& lhs, const ImVec2& rhs)  { return lhs.x == rhs.x && lhs.y == rhs.y; }
-static inline bool    operator!=(const ImVec2& lhs, const ImVec2& rhs)  { return lhs.x != rhs.x || lhs.y != rhs.y; }
-// ImVec4 operators
-static inline ImVec4  operator*(const ImVec4& lhs, const float rhs)     { return ImVec4(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs); }
-static inline ImVec4  operator/(const ImVec4& lhs, const float rhs)     { return ImVec4(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs); }
-static inline ImVec4  operator+(const ImVec4& lhs, const ImVec4& rhs)   { return ImVec4(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w); }
-static inline ImVec4  operator-(const ImVec4& lhs, const ImVec4& rhs)   { return ImVec4(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w); }
-static inline ImVec4  operator*(const ImVec4& lhs, const ImVec4& rhs)   { return ImVec4(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z, lhs.w * rhs.w); }
-static inline ImVec4  operator/(const ImVec4& lhs, const ImVec4& rhs)   { return ImVec4(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z, lhs.w / rhs.w); }
-static inline ImVec4  operator-(const ImVec4& lhs)                      { return ImVec4(-lhs.x, -lhs.y, -lhs.z, -lhs.w); }
-static inline bool    operator==(const ImVec4& lhs, const ImVec4& rhs)  { return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.w == rhs.w; }
-static inline bool    operator!=(const ImVec4& lhs, const ImVec4& rhs)  { return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z || lhs.w != rhs.w; }
+	static inline ImVec2  operator*(const ImVec2& lhs, const float rhs) { return ImVec2(lhs.x * rhs, lhs.y * rhs); }
+	static inline ImVec2  operator/(const ImVec2& lhs, const float rhs) { return ImVec2(lhs.x / rhs, lhs.y / rhs); }
+	static inline ImVec2  operator+(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y); }
+	static inline ImVec2  operator-(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x - rhs.x, lhs.y - rhs.y); }
+	static inline ImVec2  operator*(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x * rhs.x, lhs.y * rhs.y); }
+	static inline ImVec2  operator/(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x / rhs.x, lhs.y / rhs.y); }
+	static inline ImVec2  operator-(const ImVec2& lhs) { return ImVec2(-lhs.x, -lhs.y); }
+	static inline ImVec2& operator*=(ImVec2& lhs, const float rhs) { lhs.x *= rhs; lhs.y *= rhs; return lhs; }
+	static inline ImVec2& operator/=(ImVec2& lhs, const float rhs) { lhs.x /= rhs; lhs.y /= rhs; return lhs; }
+	static inline ImVec2& operator+=(ImVec2& lhs, const ImVec2& rhs) { lhs.x += rhs.x; lhs.y += rhs.y; return lhs; }
+	static inline ImVec2& operator-=(ImVec2& lhs, const ImVec2& rhs) { lhs.x -= rhs.x; lhs.y -= rhs.y; return lhs; }
+	static inline ImVec2& operator*=(ImVec2& lhs, const ImVec2& rhs) { lhs.x *= rhs.x; lhs.y *= rhs.y; return lhs; }
+	static inline ImVec2& operator/=(ImVec2& lhs, const ImVec2& rhs) { lhs.x /= rhs.x; lhs.y /= rhs.y; return lhs; }
+	static inline bool    operator==(const ImVec2& lhs, const ImVec2& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
+	static inline bool    operator!=(const ImVec2& lhs, const ImVec2& rhs) { return lhs.x != rhs.x || lhs.y != rhs.y; }
+	// ImVec4 operators
+	static inline ImVec4  operator*(const ImVec4& lhs, const float rhs) { return ImVec4(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs); }
+	static inline ImVec4  operator/(const ImVec4& lhs, const float rhs) { return ImVec4(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs); }
+	static inline ImVec4  operator+(const ImVec4& lhs, const ImVec4& rhs) { return ImVec4(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w); }
+	static inline ImVec4  operator-(const ImVec4& lhs, const ImVec4& rhs) { return ImVec4(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w); }
+	static inline ImVec4  operator*(const ImVec4& lhs, const ImVec4& rhs) { return ImVec4(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z, lhs.w * rhs.w); }
+	static inline ImVec4  operator/(const ImVec4& lhs, const ImVec4& rhs) { return ImVec4(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z, lhs.w / rhs.w); }
+	static inline ImVec4  operator-(const ImVec4& lhs) { return ImVec4(-lhs.x, -lhs.y, -lhs.z, -lhs.w); }
+	static inline bool    operator==(const ImVec4& lhs, const ImVec4& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.w == rhs.w; }
+	static inline bool    operator!=(const ImVec4& lhs, const ImVec4& rhs) { return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z || lhs.w != rhs.w; }
 }
 #endif // IMGUI_DEFINE_MATH_OPERATORS
 
@@ -130,14 +130,14 @@ bool SxImGui::DragVector3(const char* label, float v[3], float v_speed, float v_
 
 	// 全体のウィジェット幅は通常の DragFloat3 と同じ
 	float widgetWidth = ImGui::CalcItemWidth();
-	float setWidth    = widgetWidth / 3.0f; // 各軸のセル幅
+	float setWidth = widgetWidth / 3.0f; // 各軸のセル幅
 
 	// 角丸四角形のサイズ
-	float rectWidth  = 2.0f;
+	float rectWidth = 2.0f;
 	float rectHeight = ImGui::GetFrameHeight();
-	float rounding   = ImGui::GetStyle().FrameRounding;
-	float dragWidth  = setWidth - rectWidth; // 各 DragFloat の幅
- 
+	float rounding = ImGui::GetStyle().FrameRounding;
+	float dragWidth = setWidth - rectWidth; // 各 DragFloat の幅
+
 	static const ImU32 rectColors[3] = {
 		IM_COL32(203, 38, 0, 255),
 		IM_COL32(103, 169, 0, 255),
@@ -155,18 +155,18 @@ bool SxImGui::DragVector3(const char* label, float v[3], float v_speed, float v_
 			ImVec2 rectPos = ImGui::GetItemRectMin();
 			ImVec2 rectMax(rectPos.x + rectWidth, rectPos.y + rectHeight);
 			ImGui::GetWindowDrawList()->AddRectFilled(rectPos, rectMax, rectColors[i], rounding, ImDrawFlags_RoundCornersTopLeft | ImDrawFlags_RoundCornersBottomLeft);
- 
+
 			// 角丸四角形と DragFloat の間に隙間を作らない
 			ImGui::SameLine(0, 0);
 
 			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0);
-			
+
 			ImGui::SetNextItemWidth(dragWidth - 2);
 			isChanged |= ImGui::DragFloat("", &v[i], v_speed, v_min, v_max, format, flags);
 			ImGui::PopID();
 
 			ImGui::PopStyleVar(); // `FrameRounding` の変更を元に戻す
- 
+
 			// 各セットの後に `SameLine()` を適用して 1 行に並ぶようにする
 			if (i < 2) {
 				ImGui::SameLine(0, 4); // 間隔を調整
@@ -176,12 +176,12 @@ bool SxImGui::DragVector3(const char* label, float v[3], float v_speed, float v_
 		ImGui::EndGroup();
 		ImGui::PopID();
 	}
-	
- 
+
+
 	// 右側に通常通りラベルを表示
 	ImGui::SameLine();
 	ImGui::Text("%s", label);
- 
+
 	return isChanged;
 }
 
@@ -243,7 +243,7 @@ void SxImGui::TextClippedEx(const char* text, const char* end_text, float width)
 
 		ImGui::RenderTextClipped(endTextBeginPos, endTextEndPos, end_text, nullptr, nullptr, {}, nullptr);
 	}
-	
+
 	ImGui::Dummy({ width, ImGui::GetTextLineHeight() });
 }
 
@@ -297,7 +297,7 @@ bool SxImGui::InputText(const char* label, std::string& dst, ImGuiInputTextFlags
 
 	if (isChanged) {
 		size_t pos = buf.find('\0');
-		dst        = (pos != std::string::npos ? buf.substr(0, pos) : buf);
+		dst = (pos != std::string::npos ? buf.substr(0, pos) : buf);
 	}
 
 	return isChanged;
@@ -343,7 +343,7 @@ bool SxImGui::MultilineInputTextFunc(const char* label, const std::string& dst, 
 	}
 
 	if (isChanged) {
-		size_t pos      = buf.find('\0');
+		size_t pos = buf.find('\0');
 		std::string str = (pos != std::string::npos ? buf.substr(0, pos) : buf);
 
 		func(str);
@@ -354,14 +354,14 @@ bool SxImGui::MultilineInputTextFunc(const char* label, const std::string& dst, 
 
 void SxImGui::PlotHistogramFunc(const char* label, const std::function<float(int32_t idx)>& func, int32_t values_count, int32_t values_offset, const char* overlay_text, const std::optional<float>& scale_min, const std::optional<float>& scale_max, ImVec2 graph_size) {
 
-	ImGuiContext& g     = *GImGui;
+	ImGuiContext& g = *GImGui;
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 	if (window->SkipItems) {
 		return;
 	}
 
 	const ImGuiStyle& style = g.Style;
-	const ImGuiID id        = window->GetID(label);
+	const ImGuiID id = window->GetID(label);
 
 	const ImVec2 label_size = ImGui::CalcTextSize(label, NULL, true);
 	const ImVec2 frame_size = ImGui::CalcItemSize(graph_size, ImGui::CalcItemWidth(), label_size.y + style.FramePadding.y * 2.0f);
@@ -393,7 +393,7 @@ void SxImGui::PlotHistogramFunc(const char* label, const std::function<float(int
 			if (v != v) {
 				continue;
 			}
-				
+
 			v_min = ImMin(v_min, v);
 			v_max = ImMax(v_max, v);
 		}
@@ -401,7 +401,7 @@ void SxImGui::PlotHistogramFunc(const char* label, const std::function<float(int
 		if (!v_scale_min.has_value()) {
 			v_scale_min = v_min;
 		}
-			
+
 		if (!v_scale_max.has_value()) {
 			v_scale_max = v_max;
 		}
@@ -412,7 +412,7 @@ void SxImGui::PlotHistogramFunc(const char* label, const std::function<float(int
 	const int32_t values_count_min = 1;
 	int idx_hovered = -1;
 	if (values_count >= values_count_min) {
-		int res_w      = ImMin((int)frame_size.x, values_count);
+		int res_w = ImMin((int)frame_size.x, values_count);
 		int item_count = values_count;
 
 		// Tooltip on hover
@@ -424,7 +424,7 @@ void SxImGui::PlotHistogramFunc(const char* label, const std::function<float(int
 			const float v0 = func((v_idx + values_offset) % values_count);
 
 			ImGui::SetTooltip("%d: %8.4g", v_idx, v0);
-				
+
 			idx_hovered = v_idx;
 		}
 
@@ -436,14 +436,14 @@ void SxImGui::PlotHistogramFunc(const char* label, const std::function<float(int
 		ImVec2 tp0 = ImVec2(t0, 1.0f - ImSaturate((v0 - (*v_scale_min)) * inv_scale));                       // Point in the normalized space of our target rectangle
 		float histogram_zero_line_t = ((*v_scale_min) * (*v_scale_max) < 0.0f) ? (1 + (*v_scale_min) * inv_scale) : ((*v_scale_min) < 0.0f ? 0.0f : 1.0f);   // Where does the zero line stands
 
-		const ImU32 col_base    = ImGui::GetColorU32(ImGuiCol_PlotHistogram);
+		const ImU32 col_base = ImGui::GetColorU32(ImGuiCol_PlotHistogram);
 		const ImU32 col_hovered = ImGui::GetColorU32(ImGuiCol_PlotHistogramHovered);
 
 		for (int32_t n = 0; n < res_w; n++) {
 			const float t1 = t0 + t_step;
 			const int v1_idx = (int)(t0 * item_count + 0.5f);
 			IM_ASSERT(v1_idx >= 0 && v1_idx < values_count);
-			const float v1   = func((v1_idx + values_offset + 1) % values_count);
+			const float v1 = func((v1_idx + values_offset + 1) % values_count);
 			const ImVec2 tp1 = ImVec2(t1, 1.0f - ImSaturate((v1 - (*v_scale_min)) * inv_scale));
 
 			// NB: Draw calls are merged together by the DrawList system. Still, we should render our batch are lower level to save a bit of CPU.
@@ -464,11 +464,115 @@ void SxImGui::PlotHistogramFunc(const char* label, const std::function<float(int
 	if (overlay_text) {
 		ImGui::RenderTextClipped(ImVec2(frame_bb.Min.x, frame_bb.Min.y + style.FramePadding.y), frame_bb.Max, overlay_text, NULL, NULL, ImVec2(0.5f, 0.0f));
 	}
-		
+
 
 	if (label_size.x > 0.0f) {
 		ImGui::RenderText(ImVec2(frame_bb.Max.x + style.ItemInnerSpacing.x, inner_bb.Min.y), label);
 	}
+}
+
+void SxImGui::PlotLinesFunc(const char* label, const std::function<float(int32_t idx)>& func, int32_t values_count, int32_t values_offset, const char* overlay_text, const std::optional<float>& scale_min, const std::optional<float>& scale_max, ImVec2 graph_size) {
+
+	ImGuiContext& g = *GImGui;
+	ImGuiWindow* window = ImGui::GetCurrentWindow();
+	if (window->SkipItems)
+		return;
+
+	const ImGuiStyle& style = g.Style;
+	const ImGuiID id = window->GetID(label);
+
+	const ImVec2 label_size = ImGui::CalcTextSize(label, NULL, true);
+	const ImVec2 frame_size = ImGui::CalcItemSize(graph_size, ImGui::CalcItemWidth(), label_size.y + style.FramePadding.y * 2.0f);
+
+	const ImRect frame_bb(window->DC.CursorPos, window->DC.CursorPos + frame_size);
+	const ImRect inner_bb(frame_bb.Min + style.FramePadding, frame_bb.Max - style.FramePadding);
+	const ImRect total_bb(frame_bb.Min, frame_bb.Max + ImVec2(label_size.x > 0.0f ? style.ItemInnerSpacing.x + label_size.x : 0.0f, 0));
+	ImGui::ItemSize(total_bb, style.FramePadding.y);
+	if (!ImGui::ItemAdd(total_bb, id, &frame_bb, ImGuiItemFlags_NoNav))
+		return;
+
+	bool hovered;
+	ImGui::ButtonBehavior(frame_bb, id, &hovered, NULL);
+
+	float frame_scale_min = scale_min.value_or(std::numeric_limits<float>::infinity());
+	float frame_scale_max = scale_max.value_or(std::numeric_limits<float>::infinity());
+
+	// Determine scale from values if not specified
+	if (!scale_min.has_value() || !scale_max.has_value()) {
+
+		float v_min = std::numeric_limits<float>::max();
+		float v_max = std::numeric_limits<float>::min();
+
+		for (int i = 0; i < values_count; i++) {
+			const float v = func(i);
+			if (v != v) // Ignore NaN values
+				continue;
+			v_min = ImMin(v_min, v);
+			v_max = ImMax(v_max, v);
+		}
+
+		if (!scale_min.has_value())
+			frame_scale_min = v_min;
+
+		if (!scale_max.has_value())
+			frame_scale_max = v_max;
+	}
+
+	ImGui::RenderFrame(frame_bb.Min, frame_bb.Max, ImGui::GetColorU32(ImGuiCol_FrameBg), true, style.FrameRounding);
+
+	const int values_count_min = 2;
+	int idx_hovered = -1;
+	if (values_count >= values_count_min) {
+		int res_w = ImMin((int)frame_size.x, values_count) + (-1);
+		int item_count = values_count + (-1);
+
+		// Tooltip on hover
+		if (hovered && inner_bb.Contains(g.IO.MousePos)) {
+			const float t = ImClamp((g.IO.MousePos.x - inner_bb.Min.x) / (inner_bb.Max.x - inner_bb.Min.x), 0.0f, 0.9999f);
+			const int v_idx = (int)(t * item_count);
+			IM_ASSERT(v_idx >= 0 && v_idx < values_count);
+
+			//const float v0 = func((v_idx + values_offset) % values_count);
+			//const float v1 = func((v_idx + 1 + values_offset) % values_count);
+
+			//ImGui::SetTooltip("%d: %8.4g\n%d: %8.4g", v_idx, v0, v_idx + 1, v1);
+
+			idx_hovered = v_idx;
+		}
+
+		const float t_step = 1.0f / (float)res_w;
+		const float inv_scale = (frame_scale_min == frame_scale_max) ? 0.0f : (1.0f / (frame_scale_max - frame_scale_min));
+
+		float v0 = func((0 + values_offset) % values_count);
+		float t0 = 0.0f;
+		ImVec2 tp0 = ImVec2(t0, 1.0f - ImSaturate((v0 - frame_scale_min) * inv_scale));                       // Point in the normalized space of our target rectangle
+
+		const ImU32 col_base    = ImGui::GetColorU32(ImGuiCol_PlotLines);
+		const ImU32 col_hovered = ImGui::GetColorU32(ImGuiCol_PlotLinesHovered);
+
+		for (int n = 0; n < res_w; n++) {
+			const float t1 = t0 + t_step;
+			const int v1_idx = (int)(t0 * item_count + 0.5f);
+			IM_ASSERT(v1_idx >= 0 && v1_idx < values_count);
+			const float v1 = func((v1_idx + values_offset + 1) % values_count);
+			const ImVec2 tp1 = ImVec2(t1, 1.0f - ImSaturate((v1 - frame_scale_min) * inv_scale));
+
+			// NB: Draw calls are merged together by the DrawList system. Still, we should render our batch are lower level to save a bit of CPU.
+			ImVec2 pos0 = ImLerp(inner_bb.Min, inner_bb.Max, tp0);
+			ImVec2 pos1 = ImLerp(inner_bb.Min, inner_bb.Max, tp1);
+			window->DrawList->AddLine(pos0, pos1, idx_hovered == v1_idx ? col_hovered : col_base);
+
+			t0 = t1;
+			tp0 = tp1;
+		}
+	}
+
+	// Text overlay
+	if (overlay_text)
+		ImGui::RenderTextClipped(ImVec2(frame_bb.Min.x, frame_bb.Min.y + style.FramePadding.y), frame_bb.Max, overlay_text, NULL, NULL, ImVec2(0.5f, 0.0f));
+
+	if (label_size.x > 0.0f)
+		ImGui::RenderText(ImVec2(frame_bb.Max.x + style.ItemInnerSpacing.x, inner_bb.Min.y), label);
 }
 
 bool SxImGui::BeginHoveredTooltip(ImGuiHoveredFlags flags) {
@@ -503,12 +607,12 @@ void SxImGui::HelpMarker(const char* label, const char* text, bool isSameline) {
 }
 
 void SxImGui::Image(ImTextureRef handle, const ImVec2& size) {
-	
+
 	ImVec2 region = ImGui::GetContentRegionAvail();
 
 	// 画像アス比と分割したWindowアス比の計算
 	float textureAspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
-	float windowAspectRatio  = region.x / region.y;
+	float windowAspectRatio = region.x / region.y;
 
 	// 出力する画像サイズの設定
 	ImVec2 displayTextureSize = region;

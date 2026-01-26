@@ -15,6 +15,7 @@ SXAVENGER_ENGINE_USING
 
 //* c++
 #include <ranges>
+#include <numeric>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DevelopEditor class methods
@@ -197,11 +198,21 @@ void DevelopEditor::ShowPerformanceWindow() {
 
 	TimePointf<TimeUnit::second> time = System::GetDeltaTimef();
 
+	//!< 基本情報(テキスト)
 	std::string text = "";
 	text += std::format("[exec speed / frame]: {:.6f}", time.time) + " ";
 	text += std::format("[frame per second]: {:.1f}",   1.0f / time.time);
 	ImGui::Text(text.c_str());
 
+	//!< history(グラフ)
+
+	frameHistory_.emplace_back(1.0f / time.time); //!< fps履歴
+
+	if (frameHistory_.size() > kFrameHistoryCount) {
+		frameHistory_.pop_front();
+	}
+
+	//!< tooltip(詳細情報)
 	if (ImGui::BeginItemTooltip()) {
 
 		ImGui::SeparatorText("CPU Timestamp");
@@ -244,6 +255,21 @@ void DevelopEditor::ShowPerformanceWindow() {
 			}
 			ImGui::EndTable();
 		}
+
+		ImGui::SeparatorText("Frame History");
+
+		float average = std::accumulate(frameHistory_.begin(), frameHistory_.end(), 0.0f) / static_cast<float>(frameHistory_.size());
+		float max     = (*std::max_element(frameHistory_.begin(), frameHistory_.end()));
+
+		SxImGui::PlotLinesFunc(
+			"## fps history",
+			[this](int32_t idx) { return frameHistory_[static_cast<size_t>(idx)]; },
+			static_cast<int32_t>(frameHistory_.size()),
+			0,
+			std::format("average: {:.1f}fps", average).c_str(),
+			0.0f, std::ceil(max / 60.0f) * 60.0f,
+			ImVec2(-1.0f, 128.0f)
+		);
 
 		ImGui::EndTooltip();
 	}
