@@ -44,6 +44,7 @@ void HierarchyEditor::ShowHierarchyMenu() {
 
 		ShowActorMenu();
 		ShowSceneMenu();
+		ShowSummaryMenu();
 
 		ImGui::EndMenu();
 	}
@@ -132,6 +133,41 @@ void HierarchyEditor::ShowSceneMenu() {
 			sEntityBehaviourStorage->ClearStaticBehaviours();
 			RuntimeLogger::LogComment("[HierarchyEditor]", "clear scene.");
 		}
+
+		ImGui::EndMenu();
+	}
+}
+
+void HierarchyEditor::ShowSummaryMenu() {
+	if (ImGui::BeginMenu("summary")) {
+		MenuPadding();
+		ImGui::SeparatorText("summary");
+
+
+		{ //!< Entity Behaviour Summary
+			ImGui::Text("Entity Behaviour Summary");
+			ImGui::Separator();
+
+			size_t count        = 0;
+			size_t activeCount  = 0;
+			size_t rootCount    = 0;
+			size_t movableCount = 0;
+
+			sEntityBehaviourStorage->ForEach([&](EntityBehaviour* behaviour) {
+				count++;
+				activeCount  += behaviour->IsActive();
+				rootCount    += behaviour->IsRoot();
+				movableCount += (behaviour->GetMobility() == EntityBehaviour::Mobility::Movable);
+			});
+
+			ImGui::Text(std::format("behaviour count: {}", count).c_str());
+			ImGui::Text(std::format("active behaviour count: {}", activeCount).c_str());
+			ImGui::Text(std::format("root behaviour count: {}", rootCount).c_str());
+			ImGui::Text(std::format("movable behaviour count: {}", movableCount).c_str());
+
+		}
+	
+
 
 		ImGui::EndMenu();
 	}

@@ -83,15 +83,21 @@ EntityBehaviour* EntityBehaviourStorage::GetBehaviour(const BehaviourAddress& ad
 	return behaviours_.at(value).get();
 }
 
+void EntityBehaviourStorage::ForEach(const std::function<void(EntityBehaviour*)>& function) const {
+	for (const auto& behaviour : behaviours_ | std::views::values) {
+		function(behaviour.get());
+	}
+}
+
 void EntityBehaviourStorage::ForEachRoot(const std::function<void(EntityBehaviour*)>& function) const {
-	for (const auto& root : behaviours_ | std::views::values | std::views::filter([](const std::unique_ptr<EntityBehaviour>& behaviour) { return !behaviour->HasParent(); })) {
+	for (const auto& root : behaviours_ | std::views::values | std::views::filter([](const std::unique_ptr<EntityBehaviour>& behaviour) { return behaviour->IsRoot(); })) {
 		function(root.get());
 		root->ForEachChild(function);
 	}
 }
 
 void EntityBehaviourStorage::ForEachRootOnly(const std::function<void(EntityBehaviour*)>& function) const {
-	for (const auto& root : behaviours_ | std::views::values | std::views::filter([](const std::unique_ptr<EntityBehaviour>& behaviour) { return !behaviour->HasParent(); })) {
+	for (const auto& root : behaviours_ | std::views::values | std::views::filter([](const std::unique_ptr<EntityBehaviour>& behaviour) { return behaviour->IsRoot(); })) {
 		function(root.get());
 	}
 }

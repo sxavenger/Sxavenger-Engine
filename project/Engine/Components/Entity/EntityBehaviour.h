@@ -170,6 +170,11 @@ public:
 	//! @retval false 存在しない
 	bool HasParent() const { return parent_ != nullptr; }
 
+	//! @brief rootか確認
+	//! @return true  rootである
+	//! @return false rootでない
+	bool IsRoot() const { return parent_ == nullptr; }
+
 	//! @brief parentを取得
 	//! @retval address parentのaddress
 	//! @retval nullptr parentが存在しない

@@ -68,6 +68,7 @@ private:
 
 	void ShowActorMenu();
 	void ShowSceneMenu();
+	void ShowSummaryMenu();
 
 	void ShowHierarchyWindow();
 

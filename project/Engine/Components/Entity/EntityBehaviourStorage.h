@@ -45,6 +45,8 @@ public:
 
 	//* for each *//
 
+	void ForEach(const std::function<void(EntityBehaviour*)>& function) const;
+
 	void ForEachRoot(const std::function<void(EntityBehaviour*)>& function) const;
 
 	void ForEachRootOnly(const std::function<void(EntityBehaviour*)>& function) const;
