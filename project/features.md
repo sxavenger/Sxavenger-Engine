@@ -3,9 +3,10 @@
 - FDeferredGBuffer
 - FLightingBuffer
 - FMainBuffer
+// G-Bufferの名称の修正。
 
-
-## Deferred G-Bufferの拡張
+## Reflectionの追加
+### Deferred G-Bufferの拡張
 ``` c++
 // Deferred GBuffer
 enum class Layout {
@@ -18,7 +19,7 @@ enum class Layout {
 };
 ```
 
-## Reflection計算方法
+### Reflection計算方法
 BXDFに対しreflect()でのlとしてSpecular成分として結果を加算
 ```c++
 float3 direction = reflect(Surface.normal, Camera.Direction);
@@ -27,8 +28,16 @@ BXDF specular = BXDF::Create(direction);
 return specular * NdotL * Reflection.Color;
 
 // blended Src + Dst
+// 正確にいうとSpecularの集合率から解きたい。
 ```
 
 ## Primitive Static Meshの埋め込み
-- Cube
-- 
+- Cube (読み込みの際の仮meshとして使用)
+
+## Global Illumination - features
+### DDGIの作成
+早めに手を動かす
+
+### ReSTIRの修正
+Spatio部分の修正
+
