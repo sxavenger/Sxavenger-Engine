@@ -179,6 +179,8 @@ void HierarchyEditor::ShowHierarchyWindow() {
 
 	SxImGui::InputText("## hierarchy filter", hierarchyBuf_);
 
+	ImGui::Separator();
+
 	if (SxGui::Hierarchy::Begin()) {
 
 		sEntityBehaviourStorage->ForEachRootOnly([this](EntityBehaviour* behaviour) {
@@ -289,7 +291,6 @@ void HierarchyEditor::HierarchySelectable(EntityBehaviour* behaviour, const std:
 	//!< menu処理
 	// TODO: 関数化
 	if (ImGui::BeginPopupContextItem(std::format("hierarchy behaviour context menu # 0x{:x}", behaviour->GetAddress()).c_str())) {
-		ImGui::PopStyleVar();
 
 		ImGui::SeparatorText("behaviour context menu");
 		ImGui::Text("name: %s", behaviour->GetName().c_str());
@@ -303,8 +304,6 @@ void HierarchyEditor::HierarchySelectable(EntityBehaviour* behaviour, const std:
 		// TODO: Removeの追加
 
 		ImGui::EndPopup();
-
-		ImGui::PushStyleVarY(ImGuiStyleVar_ItemSpacing, 0);
 	}
 
 	//!< childの表示

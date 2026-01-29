@@ -326,6 +326,7 @@ void RenderSceneEditor::ManipulateCanvas(EntityBehaviour* behaviour) {
 
 void RenderSceneEditor::SetCameraPoint(const Vector3f& point) {
 	camera_->SetPoint(point);
+	camera_->UpdateTransform();
 	UpdateView();
 }
 

@@ -3,15 +3,15 @@
 		"x": 8.0,
 		"y": 4.0
 	},
-	"ChildBorderSize": 1.0,
+	"ChildBorderSize": 0.0,
 	"ChildRounding": 0.0,
 	"ColorButtonPosition": "ImGuiDir_Left",
 	"Colors": {
 		"ImGuiCol_Border": {
-			"a": 50,
-			"b": 54,
-			"g": 54,
-			"r": 54
+			"a": 255,
+			"b": 7,
+			"g": 7,
+			"r": 7
 		},
 		"ImGuiCol_BorderShadow": {
 			"a": 40,
@@ -69,9 +69,9 @@
 		},
 		"ImGuiCol_FrameBg": {
 			"a": 255,
-			"b": 5,
-			"g": 5,
-			"r": 5
+			"b": 3,
+			"g": 3,
+			"r": 3
 		},
 		"ImGuiCol_FrameBgActive": {
 			"a": 80,
@@ -87,9 +87,9 @@
 		},
 		"ImGuiCol_Header": {
 			"a": 255,
-			"b": 30,
-			"g": 30,
-			"r": 30
+			"b": 14,
+			"g": 14,
+			"r": 14
 		},
 		"ImGuiCol_HeaderActive": {
 			"a": 255,
@@ -111,9 +111,9 @@
 		},
 		"ImGuiCol_MenuBarBg": {
 			"a": 255,
-			"b": 30,
-			"g": 30,
-			"r": 30
+			"b": 15,
+			"g": 15,
+			"r": 15
 		},
 		"ImGuiCol_ModalWindowDimBg": {
 			"a": 89,
@@ -164,10 +164,10 @@
 			"r": 255
 		},
 		"ImGuiCol_PopupBg": {
-			"a": 239,
-			"b": 20,
-			"g": 20,
-			"r": 20
+			"a": 250,
+			"b": 10,
+			"g": 10,
+			"r": 10
 		},
 		"ImGuiCol_ResizeGrip": {
 			"a": 50,
@@ -219,15 +219,15 @@
 		},
 		"ImGuiCol_SeparatorActive": {
 			"a": 255,
-			"b": 125,
-			"g": 125,
-			"r": 125
+			"b": 35,
+			"g": 35,
+			"r": 35
 		},
 		"ImGuiCol_SeparatorHovered": {
-			"a": 0,
-			"b": 110,
-			"g": 110,
-			"r": 110
+			"a": 255,
+			"b": 20,
+			"g": 20,
+			"r": 20
 		},
 		"ImGuiCol_SliderGrab": {
 			"a": 255,
@@ -267,27 +267,27 @@
 		},
 		"ImGuiCol_TabHovered": {
 			"a": 255,
-			"b": 50,
-			"g": 50,
-			"r": 50
+			"b": 20,
+			"g": 20,
+			"r": 20
 		},
 		"ImGuiCol_TabSelected": {
 			"a": 255,
-			"b": 30,
-			"g": 30,
-			"r": 30
+			"b": 20,
+			"g": 20,
+			"r": 20
 		},
 		"ImGuiCol_TabSelectedOverline": {
 			"a": 255,
 			"b": 3,
-			"g": 51,
-			"r": 140
+			"g": 46,
+			"r": 184
 		},
 		"ImGuiCol_TableBorderLight": {
 			"a": 255,
-			"b": 63,
-			"g": 58,
-			"r": 58
+			"b": 5,
+			"g": 5,
+			"r": 5
 		},
 		"ImGuiCol_TableBorderStrong": {
 			"a": 255,
@@ -345,9 +345,9 @@
 		},
 		"ImGuiCol_TitleBgActive": {
 			"a": 255,
-			"b": 20,
-			"g": 20,
-			"r": 20
+			"b": 7,
+			"g": 7,
+			"r": 7
 		},
 		"ImGuiCol_TitleBgCollapsed": {
 			"a": 130,
@@ -375,7 +375,7 @@
 		}
 	},
 	"DockingSeparatorSize": 1.0,
-	"FrameBorderSize": 1.0,
+	"FrameBorderSize": 0.0,
 	"FramePadding": {
 		"x": 8.0,
 		"y": 4.0
@@ -388,15 +388,15 @@
 		"x": 8.0,
 		"y": 4.0
 	},
-	"PopupBorderSize": 1.0,
+	"PopupBorderSize": 0.0,
 	"PopupRounding": 0.0,
 	"ScrollbarPadding": 2.0,
 	"ScrollbarRounding": 0.0,
 	"ScrollbarSize": 14.0,
 	"TabBarBorderSize": 1.0,
-	"TabBarOverlineSize": 1.0,
+	"TabBarOverlineSize": 2.0,
 	"TabBorderSize": 0.0,
-	"TabMinWidthBase": 80.0,
+	"TabMinWidthBase": 64.0,
 	"TabRounding": 2.0,
 	"TouchExtraPadding": {
 		"x": 0.0,

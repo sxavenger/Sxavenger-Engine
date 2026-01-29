@@ -157,7 +157,7 @@ void EntityBehaviour::ShowInspector() {
 	ImGui::Text(std::format("mobility - {}", magic_enum::enum_name(mobility_)).c_str());
 
 	{ //!< hierarchyの表示
-		ImGui::BeginChild("## hierarchy child", ImVec2(0, 120), ImGuiChildFlags_ResizeY | ImGuiChildFlags_FrameStyle);
+		ImGui::BeginChild("## hierarchy child", ImVec2(0, 120), ImGuiChildFlags_ResizeY);
 
 		if (SxGui::Hierarchy::Begin()) {
 			HierarchyTreeNode(this);
