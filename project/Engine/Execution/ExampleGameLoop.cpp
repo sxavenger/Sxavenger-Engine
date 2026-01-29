@@ -19,6 +19,8 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Editors/EditorEngine.h>
 #include <Engine/Editors/Editor/DevelopEditor.h>
 
+#include <Engine/System/UI/SxGui.h>
+
 //* lib
 #include <Lib/Adapter/Random/Random.h>
 
@@ -136,6 +138,17 @@ void ExampleGameLoop::InitSystem() {
 				material->GetBuffer().albedo.SetImGuiCommand();
 				material->GetBuffer().transparency.SetImGuiCommand();
 			});
+
+			if (SxGui::Table::Begin("NNN")) {
+
+				static bool n = false;
+				SxGui::Table::CheckBox("TEST", &n);
+
+				static int32_t count = 0;
+				SxGui::Table::DragScalarN<int32_t, 1>("Count", &count, 1.0f, 0, 100);
+
+				SxGui::Table::End();
+			}
 		});
 
 	}

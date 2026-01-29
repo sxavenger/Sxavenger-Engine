@@ -256,6 +256,8 @@ private:
 
 	void RemoveChild(EntityBehaviour* child);
 
+	void HierarchyTreeNode(EntityBehaviour* behaviour);
+
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

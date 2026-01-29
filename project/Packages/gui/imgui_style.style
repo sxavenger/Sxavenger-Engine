@@ -1,0 +1,411 @@
+{
+	"CellPadding": {
+		"x": 8.0,
+		"y": 4.0
+	},
+	"ChildBorderSize": 1.0,
+	"ChildRounding": 0.0,
+	"ColorButtonPosition": "ImGuiDir_Left",
+	"Colors": {
+		"ImGuiCol_Border": {
+			"a": 50,
+			"b": 54,
+			"g": 54,
+			"r": 54
+		},
+		"ImGuiCol_BorderShadow": {
+			"a": 40,
+			"b": 2,
+			"g": 2,
+			"r": 2
+		},
+		"ImGuiCol_Button": {
+			"a": 140,
+			"b": 31,
+			"g": 31,
+			"r": 31
+		},
+		"ImGuiCol_ButtonActive": {
+			"a": 255,
+			"b": 55,
+			"g": 55,
+			"r": 55
+		},
+		"ImGuiCol_ButtonHovered": {
+			"a": 140,
+			"b": 50,
+			"g": 50,
+			"r": 50
+		},
+		"ImGuiCol_CheckMark": {
+			"a": 255,
+			"b": 10,
+			"g": 80,
+			"r": 200
+		},
+		"ImGuiCol_ChildBg": {
+			"a": 255,
+			"b": 5,
+			"g": 5,
+			"r": 5
+		},
+		"ImGuiCol_DockingEmptyBg": {
+			"a": 255,
+			"b": 51,
+			"g": 51,
+			"r": 51
+		},
+		"ImGuiCol_DockingPreview": {
+			"a": 200,
+			"b": 125,
+			"g": 125,
+			"r": 125
+		},
+		"ImGuiCol_DragDropTarget": {
+			"a": 229,
+			"b": 0,
+			"g": 255,
+			"r": 255
+		},
+		"ImGuiCol_FrameBg": {
+			"a": 255,
+			"b": 5,
+			"g": 5,
+			"r": 5
+		},
+		"ImGuiCol_FrameBgActive": {
+			"a": 80,
+			"b": 100,
+			"g": 100,
+			"r": 100
+		},
+		"ImGuiCol_FrameBgHovered": {
+			"a": 70,
+			"b": 70,
+			"g": 70,
+			"r": 70
+		},
+		"ImGuiCol_Header": {
+			"a": 255,
+			"b": 30,
+			"g": 30,
+			"r": 30
+		},
+		"ImGuiCol_HeaderActive": {
+			"a": 255,
+			"b": 73,
+			"g": 73,
+			"r": 73
+		},
+		"ImGuiCol_HeaderHovered": {
+			"a": 255,
+			"b": 52,
+			"g": 52,
+			"r": 52
+		},
+		"ImGuiCol_InputTextCursor": {
+			"a": 255,
+			"b": 255,
+			"g": 255,
+			"r": 255
+		},
+		"ImGuiCol_MenuBarBg": {
+			"a": 255,
+			"b": 30,
+			"g": 30,
+			"r": 30
+		},
+		"ImGuiCol_ModalWindowDimBg": {
+			"a": 89,
+			"b": 204,
+			"g": 204,
+			"r": 204
+		},
+		"ImGuiCol_NavCursor": {
+			"a": 255,
+			"b": 249,
+			"g": 150,
+			"r": 66
+		},
+		"ImGuiCol_NavWindowingDimBg": {
+			"a": 51,
+			"b": 204,
+			"g": 204,
+			"r": 204
+		},
+		"ImGuiCol_NavWindowingHighlight": {
+			"a": 178,
+			"b": 255,
+			"g": 255,
+			"r": 255
+		},
+		"ImGuiCol_PlotHistogram": {
+			"a": 255,
+			"b": 48,
+			"g": 48,
+			"r": 48
+		},
+		"ImGuiCol_PlotHistogramHovered": {
+			"a": 255,
+			"b": 0,
+			"g": 153,
+			"r": 255
+		},
+		"ImGuiCol_PlotLines": {
+			"a": 255,
+			"b": 152,
+			"g": 152,
+			"r": 152
+		},
+		"ImGuiCol_PlotLinesHovered": {
+			"a": 255,
+			"b": 89,
+			"g": 109,
+			"r": 255
+		},
+		"ImGuiCol_PopupBg": {
+			"a": 239,
+			"b": 20,
+			"g": 20,
+			"r": 20
+		},
+		"ImGuiCol_ResizeGrip": {
+			"a": 50,
+			"b": 63,
+			"g": 63,
+			"r": 63
+		},
+		"ImGuiCol_ResizeGripActive": {
+			"a": 242,
+			"b": 79,
+			"g": 79,
+			"r": 79
+		},
+		"ImGuiCol_ResizeGripHovered": {
+			"a": 180,
+			"b": 70,
+			"g": 70,
+			"r": 70
+		},
+		"ImGuiCol_ScrollbarBg": {
+			"a": 20,
+			"b": 5,
+			"g": 5,
+			"r": 5
+		},
+		"ImGuiCol_ScrollbarGrab": {
+			"a": 15,
+			"b": 120,
+			"g": 120,
+			"r": 120
+		},
+		"ImGuiCol_ScrollbarGrabActive": {
+			"a": 120,
+			"b": 120,
+			"g": 120,
+			"r": 120
+		},
+		"ImGuiCol_ScrollbarGrabHovered": {
+			"a": 60,
+			"b": 120,
+			"g": 120,
+			"r": 120
+		},
+		"ImGuiCol_Separator": {
+			"a": 255,
+			"b": 110,
+			"g": 110,
+			"r": 110
+		},
+		"ImGuiCol_SeparatorActive": {
+			"a": 255,
+			"b": 125,
+			"g": 125,
+			"r": 125
+		},
+		"ImGuiCol_SeparatorHovered": {
+			"a": 0,
+			"b": 110,
+			"g": 110,
+			"r": 110
+		},
+		"ImGuiCol_SliderGrab": {
+			"a": 255,
+			"b": 80,
+			"g": 80,
+			"r": 80
+		},
+		"ImGuiCol_SliderGrabActive": {
+			"a": 255,
+			"b": 150,
+			"g": 150,
+			"r": 150
+		},
+		"ImGuiCol_Tab": {
+			"a": 50,
+			"b": 6,
+			"g": 6,
+			"r": 6
+		},
+		"ImGuiCol_TabDimmed": {
+			"a": 0,
+			"b": 10,
+			"g": 10,
+			"r": 10
+		},
+		"ImGuiCol_TabDimmedSelected": {
+			"a": 255,
+			"b": 10,
+			"g": 10,
+			"r": 10
+		},
+		"ImGuiCol_TabDimmedSelectedOverline": {
+			"a": 0,
+			"b": 15,
+			"g": 15,
+			"r": 15
+		},
+		"ImGuiCol_TabHovered": {
+			"a": 255,
+			"b": 50,
+			"g": 50,
+			"r": 50
+		},
+		"ImGuiCol_TabSelected": {
+			"a": 255,
+			"b": 30,
+			"g": 30,
+			"r": 30
+		},
+		"ImGuiCol_TabSelectedOverline": {
+			"a": 255,
+			"b": 3,
+			"g": 51,
+			"r": 140
+		},
+		"ImGuiCol_TableBorderLight": {
+			"a": 255,
+			"b": 63,
+			"g": 58,
+			"r": 58
+		},
+		"ImGuiCol_TableBorderStrong": {
+			"a": 255,
+			"b": 89,
+			"g": 79,
+			"r": 79
+		},
+		"ImGuiCol_TableHeaderBg": {
+			"a": 255,
+			"b": 51,
+			"g": 48,
+			"r": 48
+		},
+		"ImGuiCol_TableRowBg": {
+			"a": 80,
+			"b": 11,
+			"g": 11,
+			"r": 11
+		},
+		"ImGuiCol_TableRowBgAlt": {
+			"a": 80,
+			"b": 7,
+			"g": 7,
+			"r": 7
+		},
+		"ImGuiCol_Text": {
+			"a": 255,
+			"b": 250,
+			"g": 250,
+			"r": 250
+		},
+		"ImGuiCol_TextDisabled": {
+			"a": 255,
+			"b": 102,
+			"g": 102,
+			"r": 102
+		},
+		"ImGuiCol_TextLink": {
+			"a": 255,
+			"b": 249,
+			"g": 150,
+			"r": 66
+		},
+		"ImGuiCol_TextSelectedBg": {
+			"a": 89,
+			"b": 249,
+			"g": 150,
+			"r": 66
+		},
+		"ImGuiCol_TitleBg": {
+			"a": 255,
+			"b": 7,
+			"g": 7,
+			"r": 7
+		},
+		"ImGuiCol_TitleBgActive": {
+			"a": 255,
+			"b": 20,
+			"g": 20,
+			"r": 20
+		},
+		"ImGuiCol_TitleBgCollapsed": {
+			"a": 130,
+			"b": 10,
+			"g": 10,
+			"r": 10
+		},
+		"ImGuiCol_TreeLines": {
+			"a": 255,
+			"b": 48,
+			"g": 48,
+			"r": 48
+		},
+		"ImGuiCol_UnsavedMarker": {
+			"a": 255,
+			"b": 255,
+			"g": 255,
+			"r": 255
+		},
+		"ImGuiCol_WindowBg": {
+			"a": 255,
+			"b": 9,
+			"g": 9,
+			"r": 9
+		}
+	},
+	"DockingSeparatorSize": 1.0,
+	"FrameBorderSize": 1.0,
+	"FramePadding": {
+		"x": 8.0,
+		"y": 4.0
+	},
+	"FrameRounding": 1.0,
+	"GrabMinSize": 8.0,
+	"GrabRounding": 2.0,
+	"IndentSpacing": 16.0,
+	"ItemSpacing": {
+		"x": 8.0,
+		"y": 4.0
+	},
+	"PopupBorderSize": 1.0,
+	"PopupRounding": 0.0,
+	"ScrollbarPadding": 2.0,
+	"ScrollbarRounding": 0.0,
+	"ScrollbarSize": 14.0,
+	"TabBarBorderSize": 1.0,
+	"TabBarOverlineSize": 1.0,
+	"TabBorderSize": 0.0,
+	"TabMinWidthBase": 80.0,
+	"TabRounding": 2.0,
+	"TouchExtraPadding": {
+		"x": 0.0,
+		"y": 0.0
+	},
+	"WindowBorderSize": 0.0,
+	"WindowPadding": {
+		"x": 8.0,
+		"y": 8.0
+	},
+	"WindowRounding": 3.0
+}

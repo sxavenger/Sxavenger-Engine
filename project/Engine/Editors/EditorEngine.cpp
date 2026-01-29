@@ -100,8 +100,32 @@ void EditorEngine::ShowEditorMenu() {
 			lock |= ImGuiWindowFlags_NoResize;
 			ImGui::CheckboxFlags("lock", &windowFlag_, lock);
 
-			if (ImGui::Button("output")) {
-				System::GetImGuiController()->OutputLayout();
+			if (ImGui::Button("ini output")) {
+
+				std::optional<std::filesystem::path> filepath = WinApp::GetSaveFilepath(
+					L"GUI Layoutを保存",
+					std::filesystem::current_path(),
+					{ L"INI File", L"*.ini" },
+					".ini"
+				);
+
+				if (filepath.has_value()) {
+					SxGui::SaveIni(filepath.value());
+				}
+			}
+
+			if (ImGui::Button("style output")) {
+
+				std::optional<std::filesystem::path> filepath = WinApp::GetSaveFilepath(
+					L"GUI Styleを保存",
+					std::filesystem::current_path(),
+					{ L"STYLE File", L"*.style" },
+					".style"
+				);
+
+				if (filepath.has_value()) {
+					SxGui::SaveStyle(filepath.value());
+				}
 			}
 
 			ImGui::EndMenu();

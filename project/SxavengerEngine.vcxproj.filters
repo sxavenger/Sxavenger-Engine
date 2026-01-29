@@ -912,6 +912,7 @@
     <ClInclude Include="Engine\System\Runtime\Performance\TimestampCpu.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\TimestampGpu.h" />
     <ClInclude Include="Engine\Module\Actor\PerspectiveCameraActor.h" />
+    <ClInclude Include="Engine\System\UI\SxGui.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Camera\CameraHandle.cpp">
@@ -1533,5 +1534,6 @@
     <ClCompile Include="Engine\System\Runtime\Performance\TimestampCpu.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\TimestampGpu.cpp" />
     <ClCompile Include="Engine\Module\Actor\PerspectiveCameraActor.cpp" />
+    <ClCompile Include="Engine\System\UI\SxGui.cpp" />
   </ItemGroup>
 </Project>

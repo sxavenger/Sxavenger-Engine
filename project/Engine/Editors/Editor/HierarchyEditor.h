@@ -48,10 +48,6 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* parameter *//
-
-	static inline const Color4f disableColor_ = { 0.4f, 0.4f, 0.4f, 1.0f };
-
 	//* scene parameter *//
 
 	static inline const std::filesystem::path kSceneDirectory = kAssetsDirectory / "scene";
@@ -76,14 +72,8 @@ private:
 
 	void ForEachBehaviourHierarchy(const EntityBehaviour::Hierarchy& hierarchy, const std::function<void(EntityBehaviour*)>& function);
 
-	void HierarchySelectable(EntityBehaviour* behaviour);
-
 	bool HierarchyFilter(EntityBehaviour* behaviour, const std::string& filter);
-	void HierarchySelectableFilter(EntityBehaviour* behaviour, const std::string& filter);
-
-	bool CheckSelected(EntityBehaviour* behaviour);
-
-	void SetSelected(EntityBehaviour* behaviour);
+	void HierarchySelectable(EntityBehaviour* behaviour, const std::string& filter);
 
 	void SetSelectedView(EntityBehaviour* behaviour);
 

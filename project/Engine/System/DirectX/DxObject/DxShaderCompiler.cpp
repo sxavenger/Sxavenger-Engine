@@ -83,14 +83,16 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	std::vector<LPCWSTR> arguments = {
 		path.c_str(),                                     //!< コンパイル対象のhlslファイルパス
 		L"-T", profiles_[static_cast<uint32_t>(profile)], //!< ShaderProfileの設定
-		L"-Zi", L"-Qembed_debug",                         //!< デバッグ用情報を埋め込む
 		L"-Zpr",                                          //!< メモリレイアウトは行優先
 	};
 
 #ifdef _DEVELOPMENT
 	arguments.emplace_back(
-		Configuration::GetConfig().enableShaderOptimization ? L"-O3" : L"-Od"
+		Configuration::GetConfig().enableShaderOptimization ? L"-O3" : L"-Od" //!< 最適化の有無
 	);
+
+	arguments.emplace_back(L"-Zi");
+	arguments.emplace_back(L"-Qembed_debug"); //!< デバッグ情報を埋め込む
 #else
 	// releaseではoption関わらず最適化
 	arguments.emplace_back(L"-O3"); //!< 最適化を最大にする

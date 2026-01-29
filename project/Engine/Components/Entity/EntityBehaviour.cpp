@@ -6,6 +6,7 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* entity
 #include "EntityBehaviourStorage.h"
+#include "BehaviourHelper.h"
 
 //* engine
 #include <Engine/System/UI/SxImGui.h>
@@ -151,21 +152,31 @@ void EntityBehaviour::ShowInspector() {
 
 	SxImGui::InputText("## name", name_);
 
-	ImGui::Text(std::format("mobility - {}", magic_enum::enum_name(mobility_)).c_str());
-
 	ImGui::EndDisabled();
 
-	{
-		ImGui::Separator();
+	ImGui::Text(std::format("mobility - {}", magic_enum::enum_name(mobility_)).c_str());
+
+	{ //!< hierarchyの表示
+		ImGui::BeginChild("## hierarchy child", ImVec2(0, 120), ImGuiChildFlags_ResizeY | ImGuiChildFlags_FrameStyle);
+
+		if (SxGui::Hierarchy::Begin()) {
+			HierarchyTreeNode(this);
+			SxGui::Hierarchy::End();
+		}
+
+		ImGui::EndChild();
+	}
+
+	{ //!< componentの表示・追加・削除
 		ImGui::SeparatorText("components");
 
-		std::queue<const std::type_info*> deleteQueue;
+		std::queue<const std::type_info*> unregister;
 
 		for (const auto& [type, component] : GetComponents()) {
 			ImGui::PushID(type->name());
 
 			if (ImGui::Button(":")) {
-				deleteQueue.emplace(type);
+				unregister.emplace(type);
 			}
 
 			ImGui::SameLine();
@@ -178,9 +189,9 @@ void EntityBehaviour::ShowInspector() {
 			ImGui::PopID();
 		}
 
-		while (!deleteQueue.empty()) {
-			RemoveComponent(deleteQueue.front());
-			deleteQueue.pop();
+		while (!unregister.empty()) {
+			RemoveComponent(unregister.front());
+			unregister.pop();
 		}
 
 		//* componentの追加
@@ -205,7 +216,7 @@ void EntityBehaviour::ShowInspector() {
 		}
 	}
 	
-	{
+	{ //!< inspectableの表示
 		ImGui::SeparatorText("inspectable");
 		if (inspectable_ != nullptr) {
 			inspectable_(this);
@@ -332,4 +343,34 @@ void EntityBehaviour::RemoveChild(EntityBehaviour* child) {
 	StreamLogger::AssertA(children_.contains(child->GetAddress()), "child behaviour not found.");
 	child->RemoveParent(this);
 	children_.erase(child->GetAddress());
+}
+
+void EntityBehaviour::HierarchyTreeNode(EntityBehaviour* behaviour) {
+
+	bool isInspector  = behaviour->CheckInspector();
+	std::string label = std::format("{} # 0x{:x}", GetName(), GetAddress());
+
+	if (!behaviour->IsActive()) {
+		ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+	}
+
+	bool isOpen = SxGui::Hierarchy::TreeNode(label.c_str(), isInspector, !HasChild(), ImGuiTreeNodeFlags_DefaultOpen);
+
+	if (!behaviour->IsActive()) {
+		ImGui::PopStyleColor();
+	}
+
+	//!< 選択処理
+	if (ImGui::IsItemClicked()) {
+		behaviour->SetInspector();
+	}
+
+	if (isOpen) {
+		for (const auto& child : behaviour->children_) {
+			child->HierarchyTreeNode(child.Get());
+		}
+
+		SxGui::Hierarchy::TreePop();
+	}
+
 }

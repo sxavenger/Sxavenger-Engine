@@ -20,6 +20,23 @@ BaseInspector::~BaseInspector() {
 	});
 }
 
+bool BaseInspector::CheckInspector() {
+
+	bool isInspector = false;
+
+	sEditorEngine->ExecuteEditorFunction<InspectorEditor>([&](InspectorEditor* editor) {
+		isInspector = editor->CheckInspector(this);
+	});
+
+	return isInspector;
+}
+
+void BaseInspector::SetInspector() {
+	sEditorEngine->ExecuteEditorFunction<InspectorEditor>([this](InspectorEditor* editor) {
+		editor->SetInspector(this);
+	});
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InspectorEditor class methods
 ////////////////////////////////////////////////////////////////////////////////////////////

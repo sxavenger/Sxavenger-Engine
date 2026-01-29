@@ -11,13 +11,6 @@ DXOBJECT_USING
 #include <Engine/System/System.h>
 #include <Engine/System/UI/SxImGuizmo.h>
 
-//=========================================================================================
-// static variables
-//=========================================================================================
-
-const std::filesystem::path ImGuiController::kImGuiLayoutFilepath_       = "imgui.ini";
-const std::filesystem::path ImGuiController::kImGuiSampleLayoutFilepath_ = kPackagesDirectory / "ini" / "imgui.ini";
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ImGuiController class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,9 +20,7 @@ void ImGuiController::Init(DirectXWindowContext* main) {
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 
-	SettingImGui();
-	ImGui::StyleColorsDark();
-	SetImGuiStyle();
+	SxGui::Setting();
 
 	ImGui_ImplWin32_Init(main->GetHwnd());
 
@@ -73,17 +64,6 @@ void ImGuiController::Init(DirectXWindowContext* main) {
 
 	ImGui_ImplDX12_Init(&info);
 
-	// iniの読み込み
-#ifdef _DEVELOPMENT
-	if (!std::filesystem::exists(kImGuiLayoutFilepath_) && std::filesystem::exists(kImGuiSampleLayoutFilepath_)) {
-		//!< iniファイルが存在しない場合はコピー
-		std::filesystem::copy(kImGuiSampleLayoutFilepath_, kImGuiLayoutFilepath_, std::filesystem::copy_options::overwrite_existing);
-		StreamLogger::EngineLog("[ImGuiController]: imgui layout copyed.");
-	}
-#endif
-
-	ImGui::LoadIniSettingsFromDisk(kImGuiLayoutFilepath_.generic_string().c_str());
-
 	isInit_ = true;
 }
 
@@ -114,11 +94,6 @@ void ImGuiController::Render(DirectXQueueContext* context) {
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), context->GetCommandList());
 	context->EndEvent();
 #endif // _DEVELOPMENT
-}
-
-void ImGuiController::OutputLayout() {
-	std::string filepath = kImGuiLayoutFilepath_.generic_string();
-	ImGui::SaveIniSettingsToDisk(filepath.c_str());
 }
 
 ImVec4 ImGuiController::ToImVec4(const Color4i& color) {
@@ -228,42 +203,8 @@ void ImGuiController::SetImGuiStyle() {
 	// treenode
 	style.Colors[ImGuiCol_TreeLines] = ToImVec4({ 48, 48, 48, 255 });
 
-}
-
-void ImGuiController::SettingImGui() {
-
-	// imguiの設定
-	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	// imgui dockingブランチを参照...
-	
-	{ //!< fontの変更 english
-		std::filesystem::path filepath = kPackagesDirectory / "font" / "FiraMono-Regular.ttf";
-		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 14.0f);
-	}
-
-	{ //!< fontの変更 japanese
-
-		ImFontConfig config = {};
-		config.MergeMode = true;
-
-		static const ImWchar ranges[] = {
-			static_cast<ImWchar>(0x0020), static_cast<ImWchar>(0x00FF),   //!< Basic Latin + Latin-1 Supplement
-			static_cast<ImWchar>(0x3000), static_cast<ImWchar>(0x30FF),   //!< CJK Symbols and Punctuation + Hiragana + Katakana
-			static_cast<ImWchar>(0x4E00), static_cast<ImWchar>(0x9FAF),   //!< CJK Unified Ideographs
-			static_cast<ImWchar>(0xFF00), static_cast<ImWchar>(0xFFEF),   //!< Half-width characters
-			static_cast<ImWchar>(0x1F000), static_cast<ImWchar>(0x1F02F), //!< Emoticons
-			static_cast<ImWchar>(0)
-		};
-
-		std::filesystem::path filepath = kPackagesDirectory / "font" / "MPLUSRounded1c-Regular.ttf";
-		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 16.0f, &config, ranges);
-	}
-
-	//io.Fonts->Build();
-
-	{ //!< imguiの書き込み, 読み込みを手動に変更
-		io.IniFilename = NULL;
-	}
+	// table
+	style.Colors[ImGuiCol_TableRowBg]       = ToImVec4({ 11, 11, 11, 80 });
+	style.Colors[ImGuiCol_TableRowBgAlt]    = ToImVec4({ 7, 7, 7, 80 });
 
 }
