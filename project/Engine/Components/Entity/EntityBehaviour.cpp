@@ -55,6 +55,14 @@ void EntityBehaviour::SetActive(bool isActive) {
 	}
 }
 
+void EntityBehaviour::SetMobility(Mobility mobility) {
+	mobility_ = mobility;
+
+	for (const auto& child : children_) {
+		child->SetMobility(mobility);
+	}
+}
+
 void EntityBehaviour::SetRenamable(bool isRenamable) {
 	isRenamable_ = isRenamable;
 }
@@ -181,7 +189,6 @@ void EntityBehaviour::ShowInspector() {
 
 			ImGui::SameLine();
 
-			// ???: child window に変更...?
 			if (ImGui::CollapsingHeader(type->name(), ImGuiTreeNodeFlags_DefaultOpen)) {
 				(*component)->ShowComponentInspector();
 			}
@@ -229,7 +236,7 @@ void EntityBehaviour::ShowInspector() {
 		auto filepath = WinApp::GetOpenFilepath(L"behaviourを選択", std::filesystem::current_path(), { L"behaviourファイル", L"*.behaviour" });
 
 		if (filepath.has_value()) {
-			LoadComponent(filepath.value());
+			BehaviourHelper::LoadBehaviour(this->GetAddress(), filepath.value());
 		}
 	}
 
@@ -239,7 +246,7 @@ void EntityBehaviour::ShowInspector() {
 		auto filepath = WinApp::GetSaveFilepath(L"behaviourを保存", std::filesystem::current_path(), { L"behaviourファイル", L"*.behaviour" }, ".behaviour");
 
 		if (filepath.has_value()) {
-			SaveComponent(filepath.value());
+			BehaviourHelper::SaveBehaviour(this->GetAddress(), filepath.value());
 		}
 	}
 
@@ -261,7 +268,7 @@ void EntityBehaviour::LateUpdateInspector() {
 	});
 }
 
-json EntityBehaviour::ParseToJson() const {
+json EntityBehaviour::SerializeJson() const {
 	json root = json::object();
 
 	//* properties
@@ -281,13 +288,13 @@ json EntityBehaviour::ParseToJson() const {
 	//* children
 	json& children = root["children"] = json::array();
 	for (const auto& child : children_) {
-		children.emplace_back(child->ParseToJson());
+		children.emplace_back(child->SerializeJson());
 	}
 
 	return root;
 }
 
-void EntityBehaviour::InputJson(const json& data) {
+void EntityBehaviour::DeserializeJson(const json& data) {
 
 	name_        = data.value("name", "new behaviour");
 	isRenamable_ = data.value("isRenamable", true);
@@ -312,21 +319,9 @@ void EntityBehaviour::InputJson(const json& data) {
 		BehaviourAddress address = sEntityBehaviourStorage->RegisterBehaviour();
 		EntityBehaviour* ptr = address.Get();
 		AddChild(std::move(address));
-		ptr->InputJson(childData);
+		ptr->DeserializeJson(childData);
 	}
 
-}
-
-void EntityBehaviour::LoadComponent(const std::filesystem::path& filepath) {
-	json data;
-	if (JsonHandler::LoadFromJson(filepath, data)) {
-		InputJson(data);
-	}
-}
-
-void EntityBehaviour::SaveComponent(const std::filesystem::path& filepath) {
-	json data = ParseToJson();
-	JsonHandler::WriteToJson(filepath, data);
 }
 
 void EntityBehaviour::SetParent(EntityBehaviour* parent) {
@@ -348,7 +343,7 @@ void EntityBehaviour::RemoveChild(EntityBehaviour* child) {
 void EntityBehaviour::HierarchyTreeNode(EntityBehaviour* behaviour) {
 
 	bool isInspector  = behaviour->CheckInspector();
-	std::string label = std::format("{} # 0x{:x}", GetName(), GetAddress());
+	std::string label = std::format("{} {} # 0x{:x}", SxGui::Icon::DeployedCode, GetName(), GetAddress());
 
 	if (!behaviour->IsActive()) {
 		ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));

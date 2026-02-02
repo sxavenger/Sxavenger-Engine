@@ -86,6 +86,31 @@ namespace {
 // SxGui namespace methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+void SxGui::TextCharToUtf8(char out[5], uint32_t c) {
+	if (c < 0x80) {
+		out[0] = static_cast<char>(c);
+		out[1] = 0;
+
+	} else if (c < 0x800) {
+		out[0] = static_cast<char>(0xC0 | (c >> 6));
+		out[1] = static_cast<char>(0x80 | (c & 0x3F));
+		out[2] = 0;
+
+	} else if (c < 0x10000) {
+		out[0] = static_cast<char>(0xE0 | (c >> 12));
+		out[1] = static_cast<char>(0x80 | ((c >> 6) & 0x3F));
+		out[2] = static_cast<char>(0x80 | (c & 0x3F));
+		out[3] = 0;
+
+	} else {
+		out[0] = static_cast<char>(0xF0 | (c >> 18));
+		out[1] = static_cast<char>(0x80 | ((c >> 12) & 0x3F));
+		out[2] = static_cast<char>(0x80 | ((c >> 6) & 0x3F));
+		out[3] = static_cast<char>(0x80 | (c & 0x3F));
+		out[4] = 0;
+	}
+}
+
 void SxGui::Setting() {
 
 	//!< imguiの設定
@@ -103,17 +128,24 @@ void SxGui::Setting() {
 		ImFontConfig config = {};
 		config.MergeMode = true;
 
-		static const ImWchar ranges[] = {
-			static_cast<ImWchar>(0x0020), static_cast<ImWchar>(0x00FF),   //!< Basic Latin + Latin-1 Supplement
-			static_cast<ImWchar>(0x3000), static_cast<ImWchar>(0x30FF),   //!< CJK Symbols and Punctuation + Hiragana + Katakana
-			static_cast<ImWchar>(0x4E00), static_cast<ImWchar>(0x9FAF),   //!< CJK Unified Ideographs
-			static_cast<ImWchar>(0xFF00), static_cast<ImWchar>(0xFFEF),   //!< Half-width characters
-			static_cast<ImWchar>(0x1F000), static_cast<ImWchar>(0x1F02F), //!< Emoticons
-			static_cast<ImWchar>(0)
-		};
-
 		std::filesystem::path filepath = kPackagesDirectory / "font" / "MPLUSRounded1c-Regular.ttf";
-		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 16.0f, &config, ranges);
+		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 16.0f, &config, io.Fonts->GetGlyphRangesJapanese());
+	}
+
+	{ //!< fontの変更 Icons
+		ImFontConfig config = {};
+		config.MergeMode   = true;
+		config.PixelSnapH  = true;
+		config.GlyphOffset = ImVec2(0.0f, 4.0f);
+
+		static const ImWchar ranges[] = {
+			0xE000, 0xF8FF, //!< Private Use Area
+			0
+		};
+		
+		std::filesystem::path filepath = kPackagesDirectory / "font" / "MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.ttf";
+		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 20.0f, &config, ranges);
+
 	}
 
 	{ //!< imguiの書き込み, 読み込みを手動に変更

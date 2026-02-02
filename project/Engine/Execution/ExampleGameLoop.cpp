@@ -142,7 +142,7 @@ void ExampleGameLoop::InitSystem() {
 			if (SxGui::Table::Begin("NNN")) {
 
 				static bool n = false;
-				SxGui::Table::CheckBox("TEST", &n);
+				SxGui::Table::CheckBox(std::format("{} Check", SxGui::Icon::Home), &n);
 
 				static int32_t count = 0;
 				SxGui::Table::DragScalarN<int32_t, 1>("Count", &count, 1.0f, 0, 100);

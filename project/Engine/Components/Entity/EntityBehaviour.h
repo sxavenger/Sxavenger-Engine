@@ -31,7 +31,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 // EntityBehaviour class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class EntityBehaviour final
-	: public BaseInspector, public IJsonSerializer {
+	: public BaseInspector {
 public:
 	// TODO: BehaviourEntityに命名変更予定.
 
@@ -71,7 +71,7 @@ public:
 
 	bool IsActive() const { return isActive_; }
 
-	void SetMobility(Mobility mobility) { mobility_ = mobility; }
+	void SetMobility(Mobility mobility);
 
 	Mobility GetMobility() const { return mobility_; }
 
@@ -208,13 +208,9 @@ public:
 
 	//* json serializer option *//
 
-	json ParseToJson() const override;
+	json SerializeJson() const;
 
-	void InputJson(const json& data) override;
-
-	void LoadComponent(const std::filesystem::path& filepath);
-
-	void SaveComponent(const std::filesystem::path& filepath);
+	void DeserializeJson(const json& data);
 
 private:
 

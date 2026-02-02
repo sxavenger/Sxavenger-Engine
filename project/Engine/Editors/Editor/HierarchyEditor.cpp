@@ -220,7 +220,7 @@ void HierarchyEditor::ShowHierarchyWindow() {
 		sContentStorage->DragAndDropTargetContentFunc<ContentBehaviour>([this](const std::shared_ptr<ContentBehaviour>& content) {
 			content->WaitComplete(); // contentの読み込みを待つ
 			BehaviourAddress address = BehaviourHelper::Create();
-			address->InputJson(content->GetData());
+			address->DeserializeJson(content->GetData());
 			address->SetMobility(EntityBehaviour::Mobility::Static);
 		});
 	}
@@ -263,8 +263,11 @@ void HierarchyEditor::HierarchySelectable(EntityBehaviour* behaviour, const std:
 		return; //!< filterに引っかからない場合, 処理しない
 	}
 
+	//!< mobilityによるicon変更
+	SxGui::Icon icon = behaviour->GetMobility() == EntityBehaviour::Mobility::Static ? SxGui::Icon::DeployedCode : SxGui::Icon::ChessPawn;
+
 	bool isInspector  = behaviour->CheckInspector();
-	std::string label = std::format("{} # 0x{:x}", behaviour->GetName(), behaviour->GetAddress());
+	std::string label = std::format("{} {} # 0x{:x}", icon, behaviour->GetName(), behaviour->GetAddress());
 
 	bool hasChild = behaviour->HasChild();
 
