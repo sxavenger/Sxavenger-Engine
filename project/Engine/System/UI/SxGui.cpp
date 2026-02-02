@@ -156,7 +156,7 @@ void SxGui::Setting() {
 #ifdef _DEVELOPMENT
 		if (!std::filesystem::exists(kGuiLayoutFilepath) && std::filesystem::exists(kGuiSampleLayoutFilepath)) {
 			//!< iniファイルが存在しない場合はコピー
-			std::filesystem::copy(kGuiLayoutFilepath, kGuiSampleLayoutFilepath, std::filesystem::copy_options::overwrite_existing);
+			std::filesystem::copy(kGuiSampleLayoutFilepath, kGuiLayoutFilepath, std::filesystem::copy_options::overwrite_existing);
 			StreamLogger::EngineLog("[SxGui]: imgui layout copied.");
 		}
 #endif
