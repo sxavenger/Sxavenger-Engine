@@ -194,14 +194,14 @@ void DevelopEditor::ShowPerformanceWindow() {
 	}
 
 	BaseEditor::SetNextWindowDocking();
-	ImGui::Begin("Performance ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoTitleBar);
+	ImGui::Begin("Performance ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
 
 	TimePointf<TimeUnit::second> time = System::GetDeltaTimef();
 
 	//!< 基本情報(テキスト)
 	std::string text = "";
-	text += std::format("[exec speed / frame]: {:.6f}", time.time) + " ";
-	text += std::format("[frame per second]: {:.1f}",   1.0f / time.time);
+	text += std::format("{} [exec speed / frame]: {:.4f}sec", SxGui::Icon::Timer, time.time) + "  ";
+	text += std::format("{} [frame per second]: {:.1f}fps",   SxGui::Icon::Stack, 1.0f / time.time);
 	ImGui::Text(text.c_str());
 
 	//!< history(グラフ)

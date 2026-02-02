@@ -143,7 +143,7 @@ void SxGui::Setting() {
 			0
 		};
 		
-		std::filesystem::path filepath = kPackagesDirectory / "font" / "MaterialSymbolsSharp-VariableFont_FILL,GRAD,opsz,wght.ttf";
+		std::filesystem::path filepath = kPackagesDirectory / "font" / "MaterialSymbolsSharp-Light.ttf";
 		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 20.0f, &config, ranges);
 
 	}
@@ -673,14 +673,27 @@ void SxGui::Table::End() {
 	ImGui::PopID();
 }
 
-bool SxGui::Table::CheckBox(const std::string& label, bool* v) {
+void SxGui::Table::NextRow() {
 	ImGui::TableNextRow();
+}
+
+void SxGui::Table::SetColumnIndex(Column column) {
+	ImGui::TableSetColumnIndex(static_cast<int>(column));
+}
+
+bool SxGui::Table::CheckBox(const std::string& label, bool* v) {
+
+	bool changed = false;
+
+	SxGui::Table::NextRow();
 
 	const std::string id = "## " + label;
 
-	ImGui::TableSetColumnIndex(static_cast<int>(Column::Label));
+	SxGui::Table::SetColumnIndex(Column::Widget);
+	changed = ImGui::Checkbox(id.c_str(), v);
+
+	SxGui::Table::SetColumnIndex(Column::Label);
 	ImGui::Text(label.c_str());
 
-	ImGui::TableSetColumnIndex(static_cast<int>(Column::Widget));
-	return ImGui::Checkbox(id.c_str(), v);
+	return changed;
 }

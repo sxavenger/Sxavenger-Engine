@@ -40,6 +40,8 @@ namespace SxGui {
 		Window       = 0xF088,
 		Folder       = 0xE2C7,
 		Terminal     = 0xEB8E,
+		Timer        = 0xE425,
+		Stack        = 0xF500,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,15 +136,18 @@ namespace SxGui {
 		};
 
 		////////////////////////////////////////////////////////////////////////////////////////////
-		// Tree Table
+		// Table methods
 		////////////////////////////////////////////////////////////////////////////////////////////
 
 		bool Begin(const std::string& label);
 
 		void End();
 
+		void NextRow();
+		void SetColumnIndex(Column column);
+
 		////////////////////////////////////////////////////////////////////////////////////////////
-		// widget
+		// widget methods
 		////////////////////////////////////////////////////////////////////////////////////////////
 
 		bool CheckBox(const std::string& label, bool* v);
@@ -202,14 +207,19 @@ constexpr const char* SxGui::GetImGuiFormat() {
 
 template <SxGui::ScalerConcept T, int32_t Component>
 bool SxGui::Table::DragScalarN(const std::string& label, T v[Component], float v_speed, const std::optional<T>& v_min, const std::optional<T>& v_max, const char* format, ImGuiSliderFlags flags) {
-	ImGui::TableNextRow();
+
+	bool changed = false;
+
+	SxGui::Table::NextRow();
 
 	const std::string id = "## " + label;
 
-	ImGui::TableSetColumnIndex(static_cast<int>(Column::Label));
+	SxGui::Table::SetColumnIndex(Column::Widget);
+	std::pair<T, T> range = { v_min.value_or(std::numeric_limits<T>::lowest()), v_max.value_or(std::numeric_limits<T>::max()) };
+	changed = ImGui::DragScalarN(id.c_str(), GetImGuiDataType<T>(), v, Component, v_speed, &range.first, &range.second, format, flags);
+
+	SxGui::Table::SetColumnIndex(Column::Label);
 	ImGui::Text(label.c_str());
 
-	ImGui::TableSetColumnIndex(static_cast<int>(Column::Widget));
-	std::pair<T, T> range = { v_min.value_or(std::numeric_limits<T>::lowest()), v_max.value_or(std::numeric_limits<T>::max()) };
-	return ImGui::DragScalarN(id.c_str(), GetImGuiDataType<T>(), v, Component, v_speed, &range.first, &range.second, format, flags);
+	return changed;
 }

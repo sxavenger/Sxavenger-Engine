@@ -9,9 +9,9 @@
 	"Colors": {
 		"ImGuiCol_Border": {
 			"a": 255,
-			"b": 7,
-			"g": 7,
-			"r": 7
+			"b": 4,
+			"g": 4,
+			"r": 4
 		},
 		"ImGuiCol_BorderShadow": {
 			"a": 40,
@@ -20,10 +20,10 @@
 			"r": 2
 		},
 		"ImGuiCol_Button": {
-			"a": 140,
-			"b": 31,
-			"g": 31,
-			"r": 31
+			"a": 255,
+			"b": 14,
+			"g": 14,
+			"r": 14
 		},
 		"ImGuiCol_ButtonActive": {
 			"a": 255,
@@ -213,9 +213,9 @@
 		},
 		"ImGuiCol_Separator": {
 			"a": 255,
-			"b": 110,
-			"g": 110,
-			"r": 110
+			"b": 65,
+			"g": 65,
+			"r": 65
 		},
 		"ImGuiCol_SeparatorActive": {
 			"a": 255,
@@ -369,9 +369,9 @@
 		},
 		"ImGuiCol_WindowBg": {
 			"a": 255,
-			"b": 9,
-			"g": 9,
-			"r": 9
+			"b": 7,
+			"g": 7,
+			"r": 7
 		}
 	},
 	"DockingSeparatorSize": 1.0,
