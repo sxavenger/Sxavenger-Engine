@@ -31,6 +31,12 @@ public:
 
 	virtual void LateUpdateInspector() {}
 
+	//* inspector option *//
+
+	bool CheckInspector();
+
+	void SetInspector();
+
 private:
 };
 

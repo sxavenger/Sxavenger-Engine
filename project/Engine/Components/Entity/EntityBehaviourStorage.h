@@ -35,7 +35,6 @@ public:
 	BehaviourAddress RegisterBehaviour();
 
 	void PushUnregisterQueue(BehaviourAddress& address);
-	void PushUnregisterQueue(uintptr_t address); //!< Warning: 内部でのみ使用する.
 
 	void UnregisterBehaviour();
 

@@ -80,6 +80,19 @@ bool PerspectiveCameraActor::Update() {
 	return isControl;
 }
 
+void PerspectiveCameraActor::UpdateTransform() {
+
+	auto transform = address_->GetComponent<SXAVENGER_ENGINE TransformComponent>();
+
+	rotation_ = Quaternion::AxisAngle(kUnitY3<float>, angle_.x) * Quaternion::AxisAngle(kUnitX3<float>, angle_.y);
+
+	Vector3f direction = Quaternion::RotateVector(kBackward3<float>, rotation_);
+
+	(*transform)->translate = point_ + direction * distance_;
+	(*transform)->rotate    = rotation_;
+}
+
+
 void PerspectiveCameraActor::SetPerspective(Perspective perspective) {
 	perspective_ = perspective;
 
@@ -285,17 +298,4 @@ bool PerspectiveCameraActor::ShouldUpdate() const {
 	}
 
 	return result;
-}
-
-void PerspectiveCameraActor::UpdateTransform() {
-
-	auto transform = address_->GetComponent<SXAVENGER_ENGINE TransformComponent>();
-
-	rotation_ = Quaternion::AxisAngle(kUnitY3<float>, angle_.x) * Quaternion::AxisAngle(kUnitX3<float>, angle_.y);
-
-	Vector3f direction = Quaternion::RotateVector(kBackward3<float>, rotation_);
-
-	(*transform)->translate = point_ + direction * distance_;
-	(*transform)->rotate    = rotation_;
-
 }

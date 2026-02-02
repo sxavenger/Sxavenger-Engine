@@ -86,6 +86,12 @@ public:
 	static void ModifyBehaviourMaterial(EntityBehaviour* behaviour, const std::function<void(AssetMaterial*)>& function);
 	static void ModifyBehaviourMaterial(const BehaviourAddress& address, const std::function<void(AssetMaterial*)>& function);
 
+	//* json helper *//
+
+	static void LoadBehaviour(const BehaviourAddress& address, const std::filesystem::path& filepath);
+
+	static void SaveBehaviour(const BehaviourAddress& address, const std::filesystem::path& filepath);
+
 private:
 
 	//=========================================================================================

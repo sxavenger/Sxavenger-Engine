@@ -229,6 +229,21 @@ void BehaviourHelper::ModifyBehaviourMaterial(const BehaviourAddress& address, c
 	BehaviourHelper::ModifyBehaviourMaterial(address.Get(), function);
 }
 
+void BehaviourHelper::LoadBehaviour(const BehaviourAddress& address, const std::filesystem::path& filepath) {
+	json data;
+	if (JsonHandler::LoadFromJson(filepath, data)) {
+		address->DeserializeJson(data);
+
+	} else {
+		RuntimeLogger::LogError("[BehaviourHelper]", std::format("failed to load behaviour json file: {}", filepath.string()));
+	}
+}
+
+void BehaviourHelper::SaveBehaviour(const BehaviourAddress& address, const std::filesystem::path& filepath) {
+	json data = address->SerializeJson();
+	JsonHandler::WriteToJson(filepath, data);
+}
+
 void BehaviourHelper::CreateStaticMeshBehaviourNode(const BehaviourAddress& parent, const BornNode& node, const std::shared_ptr<ContentModel>& model) {
 
 	BehaviourAddress child = BehaviourHelper::Create(node.name);

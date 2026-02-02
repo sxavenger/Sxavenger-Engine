@@ -36,6 +36,8 @@ public:
 
 	bool Update();
 
+	void UpdateTransform();
+
 	//* actor option *//
 
 	Perspective GetPerspective() const { return perspective_; }
@@ -92,7 +94,5 @@ private:
 	//* common methods *//
 
 	bool ShouldUpdate() const;
-
-	void UpdateTransform();
 
 };

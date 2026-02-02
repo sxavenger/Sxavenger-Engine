@@ -86,10 +86,12 @@ void AssetEditor::ShowAssetMenu() {
 
 void AssetEditor::ShowAssetWindow() {
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 4, 4 });
+	std::string label = std::format("{} Asset ## Asset Editor", SxGui::Icon::Folder);
 
 	BaseEditor::SetNextWindowDocking();
-	ImGui::Begin("Asset ## Engine Asset Editor", nullptr, BaseEditor::GetWindowFlag());
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 4, 4 });
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag());
 
 	//* Asset Directory *//
 
