@@ -58,13 +58,7 @@ void EntityBehaviourStorage::UnregisterBehaviour() {
 		uintptr_t address = unregister_.front();
 		unregister_.pop();
 
-		if (!behaviours_.contains(address)) {
-			StreamLogger::EngineLog(std::format("[EntityBehaviourStorage] warning | behaviour address not found in unregister queue. address: 0x{:x}", address));
-			//!< FIXME: unregister queueに存在しないaddressが入る場合がある. 一旦警告を出してスキップするように変更.
-			
-			continue;
-		}
-
+		StreamLogger::AssertA(behaviours_.contains(address), std::format("behaviour address not found. address: 0x{:x}", address));
 		behaviours_.erase(address);
 
 		StreamLogger::EngineLog(std::format("[EntityBehaviourStorage] unregistered behaviour. address: 0x{:x}", address));
@@ -103,7 +97,7 @@ void EntityBehaviourStorage::ForEachRootOnly(const std::function<void(EntityBeha
 
 void EntityBehaviourStorage::ClearStaticBehaviours() {
 	for (const auto& [address, behaviour] : behaviours_) {
-		if (behaviour->GetMobility() == EntityBehaviour::Mobility::Static) {
+		if (behaviour->IsRoot() && behaviour->GetMobility() == EntityBehaviour::Mobility::Static) {
 			unregister_.emplace(address);
 		}
 	}
@@ -121,7 +115,7 @@ json EntityBehaviourStorage::ParseToJson() const {
 	json root = json::array();
 
 	for (const auto& [address, behaviour] : behaviours_) {
-		if (behaviour->GetMobility() == EntityBehaviour::Mobility::Static) {
+		if (behaviour->IsRoot() && behaviour->GetMobility() == EntityBehaviour::Mobility::Static) {
 			root.emplace_back(behaviour->SerializeJson());
 		}
 	}
