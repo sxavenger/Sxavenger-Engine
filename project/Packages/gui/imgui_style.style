@@ -396,7 +396,7 @@
 	"TabBarBorderSize": 1.0,
 	"TabBarOverlineSize": 2.0,
 	"TabBorderSize": 0.0,
-	"TabMinWidthBase": 64.0,
+	"TabMinWidthBase": 72.0,
 	"TabRounding": 2.0,
 	"TouchExtraPadding": {
 		"x": 0.0,

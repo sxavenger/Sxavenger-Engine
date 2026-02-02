@@ -28,10 +28,18 @@ namespace SxGui {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Icon enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//!< [Google Material Icon](https://fonts.google.com/icons)
 	enum class Icon : uint32_t {
 		Home         = 0xE88A,
-		DeployedCode = 0xF720,
+		Cube         = 0xF720,
 		ChessPawn    = 0xF3B6,
+		Hierarchy    = 0xE97A,
+		Menu         = 0xE5D2,
+		MenuOpen     = 0xE9BD,
+		Layers       = 0xE53B,
+		Window       = 0xF088,
+		Folder       = 0xE2C7,
+		Terminal     = 0xEB8E,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////

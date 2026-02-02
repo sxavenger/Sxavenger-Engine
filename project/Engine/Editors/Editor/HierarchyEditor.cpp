@@ -174,8 +174,11 @@ void HierarchyEditor::ShowSummaryMenu() {
 }
 
 void HierarchyEditor::ShowHierarchyWindow() {
+
+	std::string label = std::format("{} Hierarchy ## Hierarchy Editor", SxGui::Icon::Hierarchy);
+
 	BaseEditor::SetNextWindowDocking();
-	ImGui::Begin("Hierarchy ## Hierarchy Editor", nullptr, BaseEditor::GetWindowFlag());
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag());
 
 	SxImGui::InputText("## hierarchy filter", hierarchyBuf_);
 
@@ -264,7 +267,7 @@ void HierarchyEditor::HierarchySelectable(EntityBehaviour* behaviour, const std:
 	}
 
 	//!< mobilityによるicon変更
-	SxGui::Icon icon = behaviour->GetMobility() == EntityBehaviour::Mobility::Static ? SxGui::Icon::DeployedCode : SxGui::Icon::ChessPawn;
+	SxGui::Icon icon = behaviour->GetMobility() == EntityBehaviour::Mobility::Static ? SxGui::Icon::Cube : SxGui::Icon::ChessPawn;
 
 	bool isInspector  = behaviour->CheckInspector();
 	std::string label = std::format("{} {} # 0x{:x}", icon, behaviour->GetName(), behaviour->GetAddress());

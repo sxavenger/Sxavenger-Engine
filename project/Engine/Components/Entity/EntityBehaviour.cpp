@@ -253,7 +253,8 @@ void EntityBehaviour::ShowInspector() {
 	ImGui::SameLine();
 
 	if (ImGui::Button("Delete Behaviour")) {
-		sEntityBehaviourStorage->PushUnregisterQueue(this->GetAddress());
+		BehaviourAddress address = { this->GetAddress(), BehaviourAddress::Ownership::Owned }; //!< 所有権を渡す
+		sEntityBehaviourStorage->PushUnregisterQueue(address);
 	}
 }
 
@@ -343,7 +344,7 @@ void EntityBehaviour::RemoveChild(EntityBehaviour* child) {
 void EntityBehaviour::HierarchyTreeNode(EntityBehaviour* behaviour) {
 
 	bool isInspector  = behaviour->CheckInspector();
-	std::string label = std::format("{} {} # 0x{:x}", SxGui::Icon::DeployedCode, GetName(), GetAddress());
+	std::string label = std::format("{} {} # 0x{:x}", SxGui::Icon::Cube, GetName(), GetAddress());
 
 	if (!behaviour->IsActive()) {
 		ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));

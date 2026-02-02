@@ -136,14 +136,14 @@ void SxGui::Setting() {
 		ImFontConfig config = {};
 		config.MergeMode   = true;
 		config.PixelSnapH  = true;
-		config.GlyphOffset = ImVec2(0.0f, 4.0f);
+		config.GlyphOffset = ImVec2(2.0f, 4.0f);
 
 		static const ImWchar ranges[] = {
 			0xE000, 0xF8FF, //!< Private Use Area
 			0
 		};
 		
-		std::filesystem::path filepath = kPackagesDirectory / "font" / "MaterialSymbolsOutlined-VariableFont_FILL,GRAD,opsz,wght.ttf";
+		std::filesystem::path filepath = kPackagesDirectory / "font" / "MaterialSymbolsSharp-VariableFont_FILL,GRAD,opsz,wght.ttf";
 		io.Fonts->AddFontFromFileTTF(filepath.generic_string().c_str(), 20.0f, &config, ranges);
 
 	}

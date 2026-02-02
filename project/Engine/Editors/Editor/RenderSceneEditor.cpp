@@ -478,11 +478,14 @@ void RenderSceneEditor::ShowCaptureMenu() {
 }
 
 void RenderSceneEditor::ShowSceneWindow() {
+
+	std::string label = std::format("{} Scene ## Render Scene Editor", SxGui::Icon::Window);
+
 	BaseEditor::SetNextWindowDocking();
 
 	//* fix window style
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
-	ImGui::Begin("Scene ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar);
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar);
 
 	//* menu bar
 	if (ImGui::BeginMenuBar()) {
@@ -592,11 +595,14 @@ void RenderSceneEditor::ShowSceneWindow() {
 }
 
 void RenderSceneEditor::ShowGameWindow() {
+
+	std::string label = std::format("{} Game ## Render Scene Editor", SxGui::Icon::Window);
+
 	BaseEditor::SetNextWindowDocking();
 
 	//* fix window style
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
-	ImGui::Begin("Game ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	SetImGuiImageFullWindow(
 		checkerboard_.Get()->GetGPUHandleSRV(),
@@ -620,11 +626,14 @@ void RenderSceneEditor::ShowGameWindow() {
 }
 
 void RenderSceneEditor::ShowCanvasWindow() {
+
+	std::string label = std::format("{} Canvas ## Render Scene Editor", SxGui::Icon::Layers);
+
 	BaseEditor::SetNextWindowDocking();
 
 	//* fix window style
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
-	ImGui::Begin("Canvas ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	canvasWindowDrawer_ = ImGui::GetWindowDrawList();
 

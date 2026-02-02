@@ -7,6 +7,9 @@ SXAVENGER_ENGINE_USING
 //* editor
 #include "../EditorEngine.h"
 
+//* engine
+#include <Engine/System/UI/SxGui.h>
+
 //* external
 #include <imgui.h>
 
@@ -64,8 +67,11 @@ void InspectorEditor::UnregisterInspector(BaseInspector* target) {
 }
 
 void InspectorEditor::ShowInspectorWindow() {
+
+	std::string label = std::format("{} Inspector ## Inspector Editor", SxGui::Icon::MenuOpen);
+
 	BaseEditor::SetNextWindowDocking();
-	ImGui::Begin("Inspector ## Engine Inspector Editor", nullptr, BaseEditor::GetWindowFlag());
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag());
 
 	if (inspector_) {
 		inspector_->ShowInspector();

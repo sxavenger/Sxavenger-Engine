@@ -282,8 +282,12 @@ void DevelopEditor::ShowPerformanceWindow() {
 }
 
 void DevelopEditor::ShowConsole() {
+	// TODO: コマンドの実行機能などの追加
+
+	std::string label = std::format("{} Console ## Developer Editor", SxGui::Icon::Terminal);
+
 	BaseEditor::SetNextWindowDocking();
-	ImGui::Begin("Console ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag());
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag());
 
 	//* console option *//
 

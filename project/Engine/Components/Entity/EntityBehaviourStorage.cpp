@@ -53,13 +53,6 @@ void EntityBehaviourStorage::PushUnregisterQueue(BehaviourAddress& address) {
 	StreamLogger::EngineLog(std::format("[EntityBehaviourStorage] pushed behaviour unregister queue. address: 0x{:x}", value));
 }
 
-void EntityBehaviourStorage::PushUnregisterQueue(uintptr_t address) {
-	StreamLogger::AssertA(behaviours_.contains(address), std::format("behaviour address not found. address: 0x{:x}", address));
-
-	unregister_.emplace(address);
-	StreamLogger::EngineLog(std::format("[EntityBehaviourStorage] pushed behaviour unregister queue. (address emplace) address: 0x{:x}", address));
-}
-
 void EntityBehaviourStorage::UnregisterBehaviour() {
 	while (!unregister_.empty()) {
 		uintptr_t address = unregister_.front();
