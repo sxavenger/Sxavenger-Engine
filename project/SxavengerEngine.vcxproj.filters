@@ -115,6 +115,9 @@
     <Filter Include="Engine\Module\Pipeline">
       <UniqueIdentifier>{55D74E13-41D1-7765-2A3E-0E7616D7DDD1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Module\Scene">
+      <UniqueIdentifier>{4D6A813A-B9CB-5E48-4239-A5FAAE999507}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Render">
       <UniqueIdentifier>{EAE1D856-56A2-548D-1FDD-9D0A8B5C9969}</UniqueIdentifier>
     </Filter>
@@ -546,6 +549,9 @@
     <ClInclude Include="Engine\Module\Actor\PerformanceActor.h">
       <Filter>Engine\Module\Actor</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Module\Actor\PerspectiveCameraActor.h">
+      <Filter>Engine\Module\Actor</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Module\Exporter\TextureExporter.h">
       <Filter>Engine\Module\Exporter</Filter>
     </ClInclude>
@@ -563,6 +569,15 @@
     </ClInclude>
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h">
       <Filter>Engine\Module\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\Scene\BaseScene.h">
+      <Filter>Engine\Module\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\Scene\SceneController.h">
+      <Filter>Engine\Module\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\Scene\SceneFactory.h">
+      <Filter>Engine\Module\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h">
       <Filter>Engine\Render\Common</Filter>
@@ -780,6 +795,12 @@
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h">
       <Filter>Engine\System\Runtime\Performance</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\Runtime\Performance\TimestampCpu.h">
+      <Filter>Engine\System\Runtime\Performance</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Runtime\Performance\TimestampGpu.h">
+      <Filter>Engine\System\Runtime\Performance</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncTask.h">
       <Filter>Engine\System\Runtime\Thread</Filter>
     </ClInclude>
@@ -796,6 +817,9 @@
       <Filter>Engine\System\UI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\UI\ImGuiController.h">
+      <Filter>Engine\System\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\UI\SxGui.h">
       <Filter>Engine\System\UI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\UI\SxImGui.h">
@@ -909,10 +933,6 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\Runtime\Performance\TimestampCpu.h" />
-    <ClInclude Include="Engine\System\Runtime\Performance\TimestampGpu.h" />
-    <ClInclude Include="Engine\Module\Actor\PerspectiveCameraActor.h" />
-    <ClInclude Include="Engine\System\UI\SxGui.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Camera\CameraHandle.cpp">
@@ -1206,6 +1226,9 @@
     <ClCompile Include="Engine\Module\Actor\PerformanceActor.cpp">
       <Filter>Engine\Module\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Module\Actor\PerspectiveCameraActor.cpp">
+      <Filter>Engine\Module\Actor</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Module\Exporter\TextureExporter.cpp">
       <Filter>Engine\Module\Exporter</Filter>
     </ClCompile>
@@ -1217,6 +1240,15 @@
     </ClCompile>
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp">
       <Filter>Engine\Module\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\Scene\BaseScene.cpp">
+      <Filter>Engine\Module\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\Scene\SceneController.cpp">
+      <Filter>Engine\Module\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\Scene\SceneFactory.cpp">
+      <Filter>Engine\Module\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp">
       <Filter>Engine\Render\Common</Filter>
@@ -1416,6 +1448,12 @@
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp">
       <Filter>Engine\System\Runtime\Performance</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\System\Runtime\Performance\TimestampCpu.cpp">
+      <Filter>Engine\System\Runtime\Performance</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Runtime\Performance\TimestampGpu.cpp">
+      <Filter>Engine\System\Runtime\Performance</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncTask.cpp">
       <Filter>Engine\System\Runtime\Thread</Filter>
     </ClCompile>
@@ -1429,6 +1467,9 @@
       <Filter>Engine\System</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\UI\ImGuiController.cpp">
+      <Filter>Engine\System\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\UI\SxGui.cpp">
       <Filter>Engine\System\UI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\UI\SxImGui.cpp">
@@ -1531,9 +1572,5 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Performance\TimestampCpu.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Performance\TimestampGpu.cpp" />
-    <ClCompile Include="Engine\Module\Actor\PerspectiveCameraActor.cpp" />
-    <ClCompile Include="Engine\System\UI\SxGui.cpp" />
   </ItemGroup>
 </Project>

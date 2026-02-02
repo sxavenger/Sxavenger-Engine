@@ -280,6 +280,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\Module\Parameter\SerializeParameter.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomComputePipeline.h" />
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h" />
+    <ClInclude Include="Engine\Module\Scene\BaseScene.h" />
+    <ClInclude Include="Engine\Module\Scene\SceneController.h" />
+    <ClInclude Include="Engine\Module\Scene\SceneFactory.h" />
     <ClInclude Include="Engine\Render\Common\FBaseTexture.h" />
     <ClInclude Include="Engine\Render\Common\FDepthTexture.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
@@ -350,10 +353,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\Runtime\Framework\FrameworkInterface.h" />
     <ClInclude Include="Engine\System\Runtime\Input\Input.h" />
     <ClInclude Include="Engine\System\Runtime\Input\InputId.h" />
-    <ClInclude Include="Engine\System\Runtime\Performance\TimestampCpu.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h" />
-    <ClInclude Include="Engine\System\Runtime\Performance\TimestampGpu.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\TimestampCpu.h" />
+    <ClInclude Include="Engine\System\Runtime\Performance\TimestampGpu.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncTask.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncThread.h" />
     <ClInclude Include="Engine\System\Runtime\Thread\AsyncThreadCollection.h" />
@@ -502,6 +505,9 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\Module\GameObject\GameObject.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomComputePipeline.cpp" />
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp" />
+    <ClCompile Include="Engine\Module\Scene\BaseScene.cpp" />
+    <ClCompile Include="Engine\Module\Scene\SceneController.cpp" />
+    <ClCompile Include="Engine\Module\Scene\SceneFactory.cpp" />
     <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FDepthTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
@@ -566,10 +572,10 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\Runtime\Execution\ExecutionContext.cpp" />
     <ClCompile Include="Engine\System\Runtime\Execution\ExecutionPipeline.cpp" />
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Performance\TimestampCpu.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Performance\TimestampGpu.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\TimestampCpu.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Performance\TimestampGpu.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncTask.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncThread.cpp" />
     <ClCompile Include="Engine\System\Runtime\Thread\AsyncThreadCollection.cpp" />
