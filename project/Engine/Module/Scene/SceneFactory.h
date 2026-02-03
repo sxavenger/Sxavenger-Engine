@@ -6,11 +6,19 @@
 //* scene
 #include "BaseScene.h"
 
+//* engine
+#include <Engine/Foundation.h>
+
 //* c++
 #include <memory>
 #include <unordered_map>
 #include <string>
 #include <functional>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Sxavenger Engine namespace
+////////////////////////////////////////////////////////////////////////////////////////////
+SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SceneFactory class
@@ -54,3 +62,5 @@ template <SceneConcept T>
 inline void SceneFactory::Register(const std::string& name) {
 	factory_[name] = []() { return std::make_unique<T>(); };
 }
+
+SXAVENGER_ENGINE_NAMESPACE_END
