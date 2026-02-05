@@ -278,7 +278,7 @@ void HierarchyEditor::HierarchySelectable(EntityBehaviour* behaviour, const std:
 		ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 	}
 
-	bool isOpen = SxGui::Hierarchy::TreeNode(label.c_str(), isInspector, !hasChild, ImGuiTreeNodeFlags_None);
+	bool isOpen = SxGui::Hierarchy::TreeNode(label.c_str(), isInspector, !hasChild);
 
 	if (!behaviour->IsActive()) {
 		ImGui::PopStyleColor();

@@ -12,6 +12,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Components/Component/Light/Environment/SkyLightComponent.h>
 #include <Engine/Components/Component/Transform/RectTransformComponent.h>
 #include <Engine/Components/Component/CanvasRenderer/TextRendererComponent.h>
+#include <Engine/Components/Component/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Components/Component/ComponentHelper.h>
 #include <Engine/Components/Entity/BehaviourHelper.h>
 #include <Engine/Components/Entity/EntityBehaviourStorage.h>
@@ -64,7 +65,17 @@ void ExampleGameLoop::InitSystem() {
 
 	(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate = Quaternion::AxisAngle(Vector3f{1.0f, 0.0f, 0.0f}.Normalize(), kPi / 2.0f);
 
-	camera_ = std::make_unique<PerspectiveCameraActor>();
+	{
+		camera_ = std::make_unique<PerspectiveCameraActor>();
+		auto layer = (*camera_)->AddComponent<PostProcessLayerComponent>();
+		layer->SetTag(PostProcessLayerComponent::Tag::Local);
+
+		auto exposure = layer->AddPostProcess<PostProcessAutoExposure>();
+		exposure->GetParameter().minLogLuminance = -8.0f;
+		exposure->GetParameter().maxLogLuminance = 10.0f;
+		exposure->GetParameter().compensation    = -5.0f;
+	}
+	
 
 	performance_ = std::make_unique<PerformanceActor>();
 	performance_->SetPosition({ 1190.0f, 0.0f });
