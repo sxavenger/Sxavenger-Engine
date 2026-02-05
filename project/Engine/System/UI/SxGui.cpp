@@ -300,11 +300,13 @@ void SxGui::SaveStyle(const std::filesystem::path& filename) {
 // Hierarchy namespace methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-bool SxGui::Hierarchy::Begin() {
+bool SxGui::Hierarchy::Begin(ImGuiTableFlags flags, int32_t column) {
 
-	const ImGuiTableFlags kFlags = ImGuiTableFlags_RowBg;
+	const ImGuiTableFlags kDefault = ImGuiTableFlags_RowBg;
 
-	bool isOpen = ImGui::BeginTable("## Hierarchy", 1, kFlags);
+	flags |= kDefault;
+
+	bool isOpen = ImGui::BeginTable("## Hierarchy", column, flags);
 
 	if (isOpen) {
 		//!< styleの設定
@@ -321,10 +323,18 @@ void SxGui::Hierarchy::End() {
 	ImGui::PopStyleVar();
 }
 
-bool SxGui::Hierarchy::TreeNode(const std::string& label, bool isSelect, bool isLeaf, ImGuiTreeNodeFlags flags) {
-
+void SxGui::Hierarchy::NextRow() {
 	ImGui::TableNextRow();
-	ImGui::TableSetColumnIndex(0);
+}
+
+void SxGui::Hierarchy::SetColumnIndex(int32_t column) {
+	ImGui::TableSetColumnIndex(column);
+}
+
+bool SxGui::Hierarchy::TreeNode(const std::string& label, bool isSelect, bool isLeaf, ImGuiTreeNodeFlags flags, int32_t column) {
+
+	SxGui::Hierarchy::NextRow();
+	SxGui::Hierarchy::SetColumnIndex(column);
 
 	const ImGuiTreeNodeFlags kDefault
 		= ImGuiTreeNodeFlags_OpenOnDoubleClick
@@ -653,8 +663,6 @@ bool SxGui::Table::Begin(const std::string& label) {
 		return false;
 	}
 
-	ImGui::PushID(label.c_str());
-
 	const ImGuiTableFlags kTableFlags
 		= ImGuiTableFlags_Resizable
 		| ImGuiTableFlags_BordersInner;
@@ -670,7 +678,6 @@ bool SxGui::Table::Begin(const std::string& label) {
 
 void SxGui::Table::End() {
 	ImGui::EndTable();
-	ImGui::PopID();
 }
 
 void SxGui::Table::NextRow() {

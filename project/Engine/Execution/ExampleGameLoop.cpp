@@ -152,6 +152,26 @@ void ExampleGameLoop::InitSystem() {
 		});
 
 	}
+
+
+	std::unique_ptr<SxxEngine::GameObject> object = std::make_unique<SxxEngine::GameObject>("Directional Light");
+	(*object)->AddComponent<SxxEngine::TransformComponent>();
+	(*object)->AddComponent<SxxEngine::DirectionalLightComponent>();
+
+	// 解放はunique_ptrのデストラクタで自動的に行われる.
+
+	SxxEngine::BehaviourAddress address = SxxEngine::BehaviourHelper::Create("Directional Light");
+
+	SxxEngine::EntityBehaviour* behaviour = address.Get();
+	behaviour->AddComponent<SxxEngine::TransformComponent>();
+	behaviour->AddComponent<SxxEngine::DirectionalLightComponent>();
+	//!< ヘルパー関数でも作成可能.
+
+	SxxEngine::BehaviourHelper::Destroy(address);
+
+
+
+
 }
 
 void ExampleGameLoop::TermSystem() {

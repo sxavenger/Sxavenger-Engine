@@ -15,7 +15,7 @@ SXAVENGER_ENGINE_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 size_t BehaviourAddress::Hash::operator()(const BehaviourAddress& address) const noexcept {
-	std::size_t hash = NULL;
+	size_t hash = NULL;
 
 	if (address != nullptr) {
 		hash = std::hash<uintptr_t>()(address.GetAddress());

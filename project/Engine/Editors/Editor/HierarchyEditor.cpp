@@ -184,7 +184,7 @@ void HierarchyEditor::ShowHierarchyWindow() {
 
 	ImGui::Separator();
 
-	if (SxGui::Hierarchy::Begin()) {
+	if (SxGui::Hierarchy::Begin(ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_SizingFixedFit)) {
 
 		sEntityBehaviourStorage->ForEachRootOnly([this](EntityBehaviour* behaviour) {
 			HierarchySelectable(behaviour, hierarchyBuf_);
@@ -278,7 +278,7 @@ void HierarchyEditor::HierarchySelectable(EntityBehaviour* behaviour, const std:
 		ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 	}
 
-	bool isOpen = SxGui::Hierarchy::TreeNode(label.c_str(), isInspector, !hasChild);
+	bool isOpen = SxGui::Hierarchy::TreeNode(label.c_str(), isInspector, !hasChild, ImGuiTreeNodeFlags_None);
 
 	if (!behaviour->IsActive()) {
 		ImGui::PopStyleColor();

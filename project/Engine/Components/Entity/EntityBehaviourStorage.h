@@ -24,6 +24,15 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 class EntityBehaviourStorage {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// using
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+	using Storage = std::unordered_map<uintptr_t, std::unique_ptr<EntityBehaviour>>;
+	//!< (EntityBehaviour*)AddressからEntityBehaviourを管理するstorage. 
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -68,7 +77,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::unordered_map<uintptr_t, std::unique_ptr<EntityBehaviour>> behaviours_;
+	Storage storage_;
 
 	std::queue<uintptr_t> unregister_;
 

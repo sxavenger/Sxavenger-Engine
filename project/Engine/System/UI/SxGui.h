@@ -30,18 +30,20 @@ namespace SxGui {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	//!< [Google Material Icon](https://fonts.google.com/icons)
 	enum class Icon : uint32_t {
-		Home         = 0xE88A,
-		Cube         = 0xF720,
-		ChessPawn    = 0xF3B6,
-		Hierarchy    = 0xE97A,
-		Menu         = 0xE5D2,
-		MenuOpen     = 0xE9BD,
-		Layers       = 0xE53B,
-		Window       = 0xF088,
-		Folder       = 0xE2C7,
-		Terminal     = 0xEB8E,
-		Timer        = 0xE425,
-		Stack        = 0xF500,
+		Home          = 0xE88A,
+		Cube          = 0xF720,
+		ChessPawn     = 0xF3B6,
+		Hierarchy     = 0xE97A,
+		Menu          = 0xE5D2,
+		MenuOpen      = 0xE9BD,
+		Layers        = 0xE53B,
+		Window        = 0xF088,
+		Folder        = 0xE2C7,
+		Terminal      = 0xEB8E,
+		Timer         = 0xE425,
+		Stack         = 0xF500,
+		Visibility    = 0xE8F4,
+		VisibilityOff = 0xE8F5,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,11 +102,15 @@ namespace SxGui {
 		// methods
 		//=========================================================================================
 
-		bool Begin();
+		bool Begin(ImGuiTableFlags flags = ImGuiTableFlags_None, int32_t column = 1);
 
 		void End();
 
-		bool TreeNode(const std::string& label, bool isSelect, bool isLeaf, ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_None);
+		void NextRow();
+
+		void SetColumnIndex(int32_t column);
+
+		bool TreeNode(const std::string& label, bool isSelect, bool isLeaf, ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_None, int32_t column = 0);
 
 		void TreePop();
 

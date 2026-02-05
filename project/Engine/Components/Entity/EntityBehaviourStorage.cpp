@@ -16,11 +16,11 @@ void EntityBehaviourStorage::Term() {
 	ClearStaticBehaviours();
 	UnregisterBehaviour();
 
-	if (!behaviours_.empty()) {
+	if (!storage_.empty()) {
 		StreamLogger::EngineLog("[EntityBehaviourStorage] warning | terminating with registered behaviours.");
 	}
 
-	behaviours_.clear();
+	storage_.clear();
 	StreamLogger::EngineLog("[EntityBehaviourStorage] term.");
 }
 
@@ -28,7 +28,7 @@ BehaviourAddress EntityBehaviourStorage::RegisterBehaviour() {
 	std::unique_ptr<EntityBehaviour> behaviour = std::make_unique<EntityBehaviour>();
 	uintptr_t address = behaviour->GetAddress();
 
-	behaviours_.emplace(address, std::move(behaviour));
+	storage_.emplace(address, std::move(behaviour));
 
 	StreamLogger::EngineLog(std::format("[EntityBehaviourStorage] registered behaviour. address: 0x{:x}", address));
 	return BehaviourAddress{ address };
@@ -46,7 +46,7 @@ void EntityBehaviourStorage::PushUnregisterQueue(BehaviourAddress& address) {
 	}
 
 	uintptr_t value = address.GetAddress();
-	StreamLogger::AssertA(behaviours_.contains(value), std::format("behaviour address not found. address: 0x{:x}", value));
+	StreamLogger::AssertA(storage_.contains(value), std::format("behaviour address not found. address: 0x{:x}", value));
 	unregister_.emplace(value);
 
 	address = nullptr;
@@ -58,8 +58,8 @@ void EntityBehaviourStorage::UnregisterBehaviour() {
 		uintptr_t address = unregister_.front();
 		unregister_.pop();
 
-		StreamLogger::AssertA(behaviours_.contains(address), std::format("behaviour address not found. address: 0x{:x}", address));
-		behaviours_.erase(address);
+		StreamLogger::AssertA(storage_.contains(address), std::format("behaviour address not found. address: 0x{:x}", address));
+		storage_.erase(address);
 
 		StreamLogger::EngineLog(std::format("[EntityBehaviourStorage] unregistered behaviour. address: 0x{:x}", address));
 	}
@@ -72,31 +72,31 @@ EntityBehaviour* EntityBehaviourStorage::GetBehaviour(const BehaviourAddress& ad
 
 	uintptr_t value = address.GetAddress();
 
-	StreamLogger::AssertA(behaviours_.contains(value), std::format("behaviour address not found. address: 0x{:x}", value));
-	return behaviours_.at(value).get();
+	StreamLogger::AssertA(storage_.contains(value), std::format("behaviour address not found. address: 0x{:x}", value));
+	return storage_.at(value).get();
 }
 
 void EntityBehaviourStorage::ForEach(const std::function<void(EntityBehaviour*)>& function) const {
-	for (const auto& behaviour : behaviours_ | std::views::values) {
+	for (const auto& behaviour : storage_ | std::views::values) {
 		function(behaviour.get());
 	}
 }
 
 void EntityBehaviourStorage::ForEachRoot(const std::function<void(EntityBehaviour*)>& function) const {
-	for (const auto& root : behaviours_ | std::views::values | std::views::filter([](const std::unique_ptr<EntityBehaviour>& behaviour) { return behaviour->IsRoot(); })) {
+	for (const auto& root : storage_ | std::views::values | std::views::filter([](const std::unique_ptr<EntityBehaviour>& behaviour) { return behaviour->IsRoot(); })) {
 		function(root.get());
 		root->ForEachChild(function);
 	}
 }
 
 void EntityBehaviourStorage::ForEachRootOnly(const std::function<void(EntityBehaviour*)>& function) const {
-	for (const auto& root : behaviours_ | std::views::values | std::views::filter([](const std::unique_ptr<EntityBehaviour>& behaviour) { return behaviour->IsRoot(); })) {
+	for (const auto& root : storage_ | std::views::values | std::views::filter([](const std::unique_ptr<EntityBehaviour>& behaviour) { return behaviour->IsRoot(); })) {
 		function(root.get());
 	}
 }
 
 void EntityBehaviourStorage::ClearStaticBehaviours() {
-	for (const auto& [address, behaviour] : behaviours_) {
+	for (const auto& [address, behaviour] : storage_) {
 		if (behaviour->IsRoot() && behaviour->GetMobility() == EntityBehaviour::Mobility::Static) {
 			unregister_.emplace(address);
 		}
@@ -114,7 +114,7 @@ void EntityBehaviourStorage::InputJson(const json& data) {
 json EntityBehaviourStorage::ParseToJson() const {
 	json root = json::array();
 
-	for (const auto& [address, behaviour] : behaviours_) {
+	for (const auto& [address, behaviour] : storage_) {
 		if (behaviour->IsRoot() && behaviour->GetMobility() == EntityBehaviour::Mobility::Static) {
 			root.emplace_back(behaviour->SerializeJson());
 		}

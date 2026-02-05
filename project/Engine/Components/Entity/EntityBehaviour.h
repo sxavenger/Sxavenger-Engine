@@ -33,7 +33,6 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 class EntityBehaviour final
 	: public BaseInspector {
 public:
-	// TODO: BehaviourEntityに命名変更予定.
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// using
@@ -44,7 +43,6 @@ public:
 
 	//* hierarchy
 	using Hierarchy = std::unordered_set<BehaviourAddress, BehaviourAddress::Hash, BehaviourAddress::Hash>;
-	// TODO: orderが必要ならlistに変更, iterator管理も必要
 
 	using InspectableFunction = std::function<void(EntityBehaviour*)>;
 
@@ -192,7 +190,8 @@ public:
 	//* getter *//
 
 	uintptr_t GetAddress() const { return reinterpret_cast<uintptr_t>(this); }
-	//!< Warning: address受け渡しは内部でのみ使用する.
+	//!< warning: address受け渡しは内部でのみ使用する.
+	// TODO: privateに変更しfriendで各内部クラスに許可を与える.
 
 	//* inspector option *//
 
