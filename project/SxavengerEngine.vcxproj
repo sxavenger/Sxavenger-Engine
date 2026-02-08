@@ -334,6 +334,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxObjectCommon.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResource.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderBlob.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxShaderCompiler.h" />
@@ -557,6 +558,7 @@ copy "$(SolutionDir)externals\assimp\lib\Release\assimp-vc143-mt.dll" "$(TargetD
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxResource.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderBlob.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxShaderCompiler.cpp" />
