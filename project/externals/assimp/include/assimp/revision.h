@@ -4,9 +4,9 @@
 #define GitVersion 0x0
 #define GitBranch ""
 
-#define VER_MAJOR 5
-#define VER_MINOR 4
-#define VER_PATCH 3
+#define VER_MAJOR 6
+#define VER_MINOR 0
+#define VER_PATCH 4
 #define VER_BUILD 0
 
 #define STR_HELP(x) #x
@@ -21,9 +21,9 @@
 #define VER_COPYRIGHT_STR           "\xA9 2006-2023"
 
 #ifdef  NDEBUG
-#define VER_ORIGINAL_FILENAME_STR   "assimp-vc143-mt.dll"
+#define VER_ORIGINAL_FILENAME_STR   "assimp-vc145-mt.dll"
 #else
-#define VER_ORIGINAL_FILENAME_STR   "assimp-vc143-mtd.dll"
+#define VER_ORIGINAL_FILENAME_STR   "assimp-vc145-mtd.dll"
 #endif //  NDEBUG
 
 #endif // ASSIMP_REVISION_H_INC
