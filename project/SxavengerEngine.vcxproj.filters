@@ -732,6 +732,9 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResource.h">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
@@ -933,7 +936,6 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxResource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Camera\CameraHandle.cpp">
@@ -1398,6 +1400,9 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxResource.cpp">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
@@ -1573,6 +1578,5 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxResource.cpp" />
   </ItemGroup>
 </Project>

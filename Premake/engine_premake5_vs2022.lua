@@ -138,13 +138,10 @@ project "SxavengerEngine"
 			"%{prj.location}/externals/assimp/lib/Debug"
 		}
 
+		-- 依存ファイル
 		links {
-			"assimp-vc143-mtd"
-		}
-		
-		-- ビルド後イベント
-		postbuildcommands {
-			'copy "$(SolutionDir)externals\\assimp\\lib\\Debug\\assimp-vc143-mtd.dll" "$(TargetDir)assimp-vc143-mtd.dll"',
+			"assimp-vc145-mtd",
+			"zlibstaticd"
 		}
 
 	-- Develop
@@ -161,13 +158,10 @@ project "SxavengerEngine"
 			"%{prj.location}/externals/assimp/lib/Release"
 		}
 
+		-- 依存ファイル
 		links {
-			"assimp-vc143-mt"
-		}
-		
-		-- ビルド後イベント
-		postbuildcommands {
-			'copy "$(SolutionDir)externals\\assimp\\lib\\Release\\assimp-vc143-mt.dll" "$(TargetDir)assimp-vc143-mt.dll"',
+			"assimp-vc145-mt",
+			"zlibstatic"
 		}
 
 	-- Release
@@ -180,15 +174,11 @@ project "SxavengerEngine"
 
 		-- リンカー設定
 		libdirs {
-			"%{prj.location}/externals/assimp/lib/Release"
+			"%{prj.location}/externals/assimp/lib/Release",
 		}
 
+		-- 依存ファイル
 		links {
-			"assimp-vc143-mt"
+			"assimp-vc145-mt",
+			"zlibstatic"
 		}
-		
-		-- ビルド後イベント
-		postbuildcommands {
-			'copy "$(SolutionDir)externals\\assimp\\lib\\Release\\assimp-vc143-mt.dll" "$(TargetDir)assimp-vc143-mt.dll"'
-		}
-	
