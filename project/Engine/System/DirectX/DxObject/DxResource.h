@@ -51,6 +51,8 @@ public:
 
 	ID3D12Resource* Get() const { return resource_.Get(); }
 
+	D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
+
 	//* helper create methods *//
 
 	static Resource CreateBuffer(

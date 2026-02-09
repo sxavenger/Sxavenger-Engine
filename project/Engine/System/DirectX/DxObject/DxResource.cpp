@@ -57,6 +57,11 @@ void Resource::SetName(const std::wstring& name) const {
 	resource_->SetName(name.c_str());
 }
 
+D3D12_GPU_VIRTUAL_ADDRESS Resource::GetGPUVirtualAddress() const {
+	StreamLogger::AssertA(resource_ != nullptr, "resource is null.");
+	return resource_->GetGPUVirtualAddress();
+}
+
 Resource Resource::CreateBuffer(
 	DxObject::Device* device,
 	D3D12_HEAP_TYPE type, size_t size, D3D12_RESOURCE_FLAGS flags, D3D12_RESOURCE_STATES state) {
