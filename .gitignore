@@ -332,9 +332,6 @@ FodyWeavers.xsd
 # externals build results.
 /project/externals/DirectXTex/Shaders/Compiled
 
-# externals lib
-*.lib
-
 # Sxavenger Engine 内部出力関係
 *.log
 /project/imgui.ini
