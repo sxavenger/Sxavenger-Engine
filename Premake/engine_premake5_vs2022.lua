@@ -115,7 +115,10 @@ project "SxavengerEngine"
 	defines { '_PROFILE="$(Configuration)"', "NOMINMAX" }
 
 	-- リンカー設定(共通)
-	linkoptions { "/WX" }
+	linkoptions {
+		"/WX",
+		"/IGNORE:4099"
+	}
 
 	-- ビルド後イベント(共通)
 	postbuildcommands {
