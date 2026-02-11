@@ -12,6 +12,7 @@ SXAVENGER_ENGINE_USING
 
 //* lib
 #include <Lib/Adapter/Json/JsonHandler.h>
+#include <Lib/Adapter/Time/LocalTimePoint.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ContentTexture class methods
@@ -54,8 +55,16 @@ void ContentTexture::Load(const DirectXQueueContext* context, const std::filesys
 
 #ifdef _DEVELOPMENT
 	// TODO: Auto Compressを実行.
-	//Compress(filepath, option);
+
+	if (CheckCompress()) {
+		StreamLogger::EngineThreadLog("[ContentTexture] compress texture. filepath: " + filepath.generic_string());
+		Compress(filepath, option);
+	}
+
+	
 #endif
+
+	// TODO: CompressさせたTextureの読み込み.
 
 	// imageの読み込み
 	DirectX::ScratchImage image = LoadTexture(filepath, option);
@@ -294,8 +303,6 @@ DirectX::ScratchImage ContentTexture::LoadFromWICFile(const std::filesystem::pat
 
 DirectX::ScratchImage ContentTexture::LoadTexture(const std::filesystem::path& filepath, const Option& option) {
 
-	// TODO: CompressさせたTextureの読み込み.
-
 	const std::filesystem::path& extension = filepath.extension();
 
 	if (extension == ".dds") { //!< filenameが".dds"で終わっている場合
@@ -310,4 +317,83 @@ DirectX::ScratchImage ContentTexture::LoadTexture(const std::filesystem::path& f
 	} else {
 		return LoadFromWICFile(filepath, option);
 	}
+}
+
+bool ContentTexture::CheckCompress() const {
+	//!< compressが必要か確認.
+#ifdef _DEVELOPMENT
+
+	LocalTimePoint fileTime = LocalTimePoint::Convert(
+		std::chrono::clock_cast<std::chrono::system_clock>(std::filesystem::last_write_time(GetFilepath()))
+	);
+
+	json meta               = BaseContent::LoadMeta();
+	LocalTimePoint metaTime = {};
+
+	if (meta.contains("compress")) {
+		//!< compress時間がmetaに存在する場合は、metaから取得する
+		metaTime = LocalTimePoint::Deserialize(meta["compress"].get<std::string>());
+
+	} else {
+		//!< compress時間がmetaに存在しない場合は、初回compressとみなす
+		meta["compress"] = fileTime.Serialize();
+		//BaseContent::SaveMeta(meta);
+	}
+
+	return fileTime != metaTime; //!< ファイルの更新日時とmetaのcompress日時が異なる場合は、compressが必要
+
+#else
+	return false;
+#endif
+}
+
+void ContentTexture::Compress(const std::filesystem::path& filepath, const Option& option) {
+
+	std::filesystem::path extension = filepath.extension();
+
+	if (extension == ".dds") {
+		StreamLogger::EngineThreadLog("[ContentTexture] already compressed texture extension. filepath: " + filepath.generic_string());
+		return; //!< ddsは既に圧縮されているので何もしない
+	}
+
+	DirectX::ScratchImage image = LoadTexture(filepath, option);
+
+	if (DirectX::IsCompressed(image.GetMetadata().format)) {
+		StreamLogger::EngineThreadLog("[ContentTexture] already compressed format texture. filepath: " + filepath.generic_string());
+		return; //!< 既に圧縮formatの場合は何もしない
+	}
+
+	DXGI_FORMAT format = DXGI_FORMAT_BC7_UNORM;
+
+	if (option.encoding == Encoding::Lightness) {
+		format = DirectX::MakeSRGB(format);
+	}
+
+	DirectX::ScratchImage compress = {};
+	auto hr = DirectX::Compress(
+		image.GetImages(),
+		image.GetImageCount(),
+		image.GetMetadata(),
+		format,
+		DirectX::TEX_COMPRESS_SRGB,
+		1.0f,
+		compress
+	);
+	DxObject::Assert(hr, L"texture compress failed. filepath: " + filepath.generic_wstring());
+
+	//!< 出力先を設定
+	std::filesystem::path output = filepath;
+	output += ".dds";
+
+	//!< 圧縮したtextureをddsで保存
+	auto hr = DirectX::SaveToDDSFile(
+		compress.GetImages(),
+		compress.GetImageCount(),
+		compress.GetMetadata(),
+		DirectX::DDS_FLAGS_NONE,
+		output.generic_wstring().c_str()
+	);
+	DxObject::Assert(hr, L"compressed texture save failed. filepath: " + output.generic_wstring());
+
+	StreamLogger::EngineThreadLog("[ContentTexture] compress texture complete. filepath: " + output.generic_string());
 }

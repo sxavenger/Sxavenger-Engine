@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* ucontent
+//* content
 #include "BaseContent.h"
 
 //* engine
@@ -12,7 +12,7 @@
 //* lib
 #include <Lib/Adapter/Uuid/Uuid.h>
 
-//* directx12
+//* DirectX12
 #include <d3dx12.h>
 #include <DirectXTex.h>
 
@@ -111,6 +111,8 @@ private:
 	static DirectX::ScratchImage LoadTexture(const std::filesystem::path& filepath, const Option& option);
 
 	//* compress helper methods *//
+
+	bool CheckCompress() const;
 
 	static void Compress(const std::filesystem::path& filepath, const Option& option);
 
