@@ -68,6 +68,8 @@ public:
 
 	bool IsEnable() const { return isEnable_; }
 
+	void SetTexture(const AssetParameter<AssetTexture>& texture) { texture_ = texture; }
+
 	//* render option *//
 
 	void BindAIBuffer(const DirectXQueueContext* context);

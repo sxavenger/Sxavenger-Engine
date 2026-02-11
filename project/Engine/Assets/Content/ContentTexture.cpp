@@ -51,6 +51,12 @@ void ContentTexture::ShowInspector() {
 }
 
 void ContentTexture::Load(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option) {
+
+#ifdef _DEVELOPMENT
+	// TODO: Auto Compressを実行.
+	//Compress(filepath, option);
+#endif
+
 	// imageの読み込み
 	DirectX::ScratchImage image = LoadTexture(filepath, option);
 
@@ -289,6 +295,8 @@ DirectX::ScratchImage ContentTexture::LoadFromWICFile(const std::filesystem::pat
 }
 
 DirectX::ScratchImage ContentTexture::LoadTexture(const std::filesystem::path& filepath, const Option& option) {
+
+	// TODO: CompressさせたTextureの読み込み.
 
 	const std::filesystem::path& extension = filepath.extension();
 

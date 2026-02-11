@@ -110,6 +110,10 @@ private:
 
 	static DirectX::ScratchImage LoadTexture(const std::filesystem::path& filepath, const Option& option);
 
+	//* compress helper methods *//
+
+	static void Compress(const std::filesystem::path& filepath, const Option& option);
+
 };
 
 SXAVENGER_ENGINE_NAMESPACE_END
