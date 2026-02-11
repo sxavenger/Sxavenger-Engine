@@ -12,6 +12,7 @@ SXAVENGER_ENGINE_USING
 
 //* lib
 #include <Lib/Adapter/Json/JsonHandler.h>
+#include <Lib/Adapter/Time/LocalTimePoint.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ContentTexture class methods
@@ -29,7 +30,7 @@ void ContentTexture::AttachUuid() {
 	BaseContent::CheckExist();
 
 	// idを取得
-	GetUuid();
+	AssignUuid();
 
 	// storageに登録
 	auto asset = std::make_shared<AssetTexture>(id_);
@@ -51,30 +52,46 @@ void ContentTexture::ShowInspector() {
 }
 
 void ContentTexture::Load(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option) {
-	// imageの読み込み
-	DirectX::ScratchImage image = LoadTexture(filepath, option);
+
+#ifdef _DEVELOPMENT
+	//!< Textureの圧縮処理
+	if (option.isCompress && CheckCompress(filepath)) {
+		StreamLogger::EngineThreadLog("[ContentTexture] compress texture. filepath: " + filepath.generic_string());
+		Compress(filepath, option);
+	}
+#endif
+
+	DirectX::ScratchImage image = {};
+
+	if (ExistsCompressed(filepath)) {
+		//!< compressの読み込み
+		std::filesystem::path path = GetCompressedPath(filepath);
+		image = LoadTexture(path, option);
+
+	} else {
+		//!< 通常imageの読み込み
+		image = LoadTexture(filepath, option);
+	}
 
 	// assetの生成
 	auto asset = sAssetStorage->GetAsset<AssetTexture>(id_);
 	asset->Setup(context, image);
 };
 
-void ContentTexture::GetUuid() {
-	std::filesystem::path filepath = BaseContent::GetContentPath();
+void ContentTexture::AssignUuid() {
 
-	if (JsonHandler::CheckExist(filepath)) {
-		//!< Idが既に存在する場合は、Json形式で読み込む
-		json data = JsonHandler::LoadFromJson(filepath);
-		id_ = Uuid::Deserialize(data["id"].get<std::string>());
+	json meta = BaseContent::LoadMeta();
+
+	if (meta.contains("id")) {
+		//!< idが既に存在する場合は、metaから取得する
+		id_ = Uuid::Deserialize(meta["id"].get<std::string>());
 
 	} else {
-		//!< 新しくIdを生成し, Json形式で保存する
+		//!< idが存在しない場合は、新しくidを生成し, metaに保存する
 		id_ = Uuid::Generate();
 
-		json data  = json::object();
-		data["id"] = id_.Serialize();
-
-		JsonHandler::WriteToJson(filepath, data);
+		meta["id"] = id_.Serialize();
+		BaseContent::SaveMeta(meta);
 	}
 }
 
@@ -292,7 +309,7 @@ DirectX::ScratchImage ContentTexture::LoadTexture(const std::filesystem::path& f
 
 	const std::filesystem::path& extension = filepath.extension();
 
-	if (extension == ".dds") { //!< filenameが".dds"で終わっている場合
+	if (extension == ".dds" || extension == ".compress") { //!< filenameが".dds"または".compress"で終わっている場合
 		return LoadFromDDSFile(filepath, option);
 
 	} else if (extension == ".hdr") { //!< filenameが".hdr"で終わっている場合
@@ -304,4 +321,107 @@ DirectX::ScratchImage ContentTexture::LoadTexture(const std::filesystem::path& f
 	} else {
 		return LoadFromWICFile(filepath, option);
 	}
+}
+
+bool ContentTexture::ExistsCompressed(const std::filesystem::path& filepath) const {
+	return std::filesystem::exists(GetCompressedPath(filepath));
+}
+
+bool ContentTexture::CheckCompress(const std::filesystem::path& filepath) const {
+	//!< compressが必要か確認.
+#ifdef _DEVELOPMENT
+
+	LocalTimePoint fileTime = LocalTimePoint::Convert(
+		std::chrono::clock_cast<std::chrono::system_clock>(std::filesystem::last_write_time(filepath))
+	);
+
+	json meta               = BaseContent::LoadMeta();
+	LocalTimePoint metaTime = {};
+
+	if (meta.contains("compress")) {
+		//!< compress時間がmetaに存在する場合は、metaから取得する
+		metaTime = LocalTimePoint::Deserialize(meta["compress"].get<std::string>());
+
+	} else {
+		//!< compress時間がmetaに存在しない場合は、初回compressとみなす
+		meta["compress"] = fileTime.Serialize();
+		BaseContent::SaveMeta(meta);
+	}
+
+	return !ExistsCompressed(filepath) //!< compressファイルが存在しない場合
+		|| fileTime != metaTime;       //!< ファイルの更新日時とmetaのcompress日時が異なる場合
+	//!< いずれかの条件でcompressが必要
+
+#else
+	return false;
+#endif
+}
+
+std::filesystem::path ContentTexture::GetCompressedPath(const std::filesystem::path& filepath) {
+	std::filesystem::path path = filepath;
+	path += ".compress";
+	return path;
+}
+
+void ContentTexture::Compress(const std::filesystem::path& filepath, const Option& option) {
+
+	std::filesystem::path extension = filepath.extension();
+
+	if (extension == ".dds" || extension == ".compress") {
+		StreamLogger::EngineThreadLog("[ContentTexture] already compressed texture extension. filepath: " + filepath.generic_string());
+		return; //!< dds, compressは既に圧縮されているので何もしない
+	}
+
+	DirectX::ScratchImage image = LoadTexture(filepath, option);
+
+	DXGI_FORMAT currentFormat = image.GetMetadata().format;
+
+	if (DirectX::IsCompressed(currentFormat)) {
+		StreamLogger::EngineThreadLog("[ContentTexture] already compressed format texture. filepath: " + filepath.generic_string());
+		return; //!< 既に圧縮formatの場合は何もしない
+	}
+
+	DXGI_FORMAT compressFormat = DXGI_FORMAT_BC7_UNORM;
+
+	if (option.encoding == Encoding::Lightness) {
+		//!< sRGB形式に変換
+		compressFormat = DirectX::MakeSRGB(compressFormat);
+	}
+
+	if (currentFormat == DXGI_FORMAT_R32G32B32A32_FLOAT || currentFormat == DXGI_FORMAT_R16G16B16A16_FLOAT) {
+		//!< HDRの場合はBC6Hで圧縮
+		compressFormat = DXGI_FORMAT_BC6H_UF16;
+	}
+
+	StreamLogger::EngineThreadLog(std::format(
+		"[ContentTexture] compress texture target format: {} -> {}. filepath: {}",
+		magic_enum::enum_name(currentFormat), magic_enum::enum_name(compressFormat), filepath.generic_string()
+	));
+
+	DirectX::ScratchImage compress = {};
+	auto hr = DirectX::Compress(
+		image.GetImages(),
+		image.GetImageCount(),
+		image.GetMetadata(),
+		compressFormat,
+		DirectX::TEX_COMPRESS_SRGB | DirectX::TEX_COMPRESS_BC7_QUICK,
+		1.0f,
+		compress
+	);
+	DxObject::Assert(hr, L"texture compress failed. filepath: " + filepath.generic_wstring());
+
+	//!< 出力先を設定
+	std::filesystem::path path = GetCompressedPath(filepath);
+
+	//!< 圧縮したtextureをddsで保存
+	hr = DirectX::SaveToDDSFile(
+		compress.GetImages(),
+		compress.GetImageCount(),
+		compress.GetMetadata(),
+		DirectX::DDS_FLAGS_NONE,
+		path.generic_wstring().c_str()
+	);
+	DxObject::Assert(hr, L"compressed texture save failed. filepath: " + path.generic_wstring());
+
+	StreamLogger::EngineThreadLog("[ContentTexture] compress texture complete. filepath: " + path.generic_string());
 }

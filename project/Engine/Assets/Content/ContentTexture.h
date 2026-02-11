@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* ucontent
+//* content
 #include "BaseContent.h"
 
 //* engine
@@ -12,7 +12,7 @@
 //* lib
 #include <Lib/Adapter/Uuid/Uuid.h>
 
-//* directx12
+//* DirectX12
 #include <d3dx12.h>
 #include <DirectXTex.h>
 
@@ -51,6 +51,7 @@ public:
 
 		Encoding encoding     = Encoding::Lightness;
 		bool isGenerateMipmap = true;
+		bool isCompress       = true;
 
 	};
 
@@ -93,7 +94,7 @@ private:
 
 	//* helper methods *//
 
-	void GetUuid();
+	void AssignUuid();
 
 	Option GetOption();
 
@@ -109,6 +110,16 @@ private:
 	static DirectX::ScratchImage LoadFromWICFile(const std::filesystem::path& filepath, const Option& option);
 
 	static DirectX::ScratchImage LoadTexture(const std::filesystem::path& filepath, const Option& option);
+
+	//* compress helper methods *//
+
+	bool ExistsCompressed(const std::filesystem::path& filepath) const;
+
+	bool CheckCompress(const std::filesystem::path& filepath) const;
+
+	static std::filesystem::path GetCompressedPath(const std::filesystem::path& filepath);
+
+	static void Compress(const std::filesystem::path& filepath, const Option& option);
 
 };
 

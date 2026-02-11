@@ -45,7 +45,7 @@ void ContentAnimation::AttachUuid() {
 	animations_.resize(aiScene->mNumAnimations);
 
 	// idを取得
-	GetUuid();
+	AssignUuid();
 
 	// storageに登録
 	for (size_t i = 0; i < animations_.size(); ++i) {
@@ -73,35 +73,30 @@ void ContentAnimation::Load(const std::filesystem::path& filepath, uint32_t assi
 	LoadAnimations(aiScene);
 }
 
-void ContentAnimation::GetUuid() {
+void ContentAnimation::AssignUuid() {
 	//!< multi threadにする場合, thread safeにする必要がある.
-	
-	std::filesystem::path filepath = BaseContent::GetContentPath();
 
-	json data;
-	JsonHandler::LoadFromJson(filepath, data);
+	json meta = BaseContent::LoadMeta();
 
-	if (data.contains("animations")) {
-		//!< Idが既に存在する場合は、Json形式で読み込む
+	if (meta.contains("animations")) {
+		//!< idが既に存在する場合は、metaから取得する
 
-		const auto& animationIds = data["animations"].get<std::vector<std::string>>();
+		const auto& animationIds = meta["animations"].get<std::vector<std::string>>();
 		for (size_t i = 0; i < animationIds.size(); ++i) {
 			animations_[i] = Uuid::Deserialize(animationIds[i]);
 		}
 
 	} else {
-		//!< Idが存在しない場合は、生成して保存する
+		//!< idが存在しない場合は、新しくidを生成し, metaに保存する
 		
 		std::generate(animations_.begin(), animations_.end(), []() { return Uuid::Generate(); });
 
-		data["animations"] = json::array();
+		meta["animations"] = json::array();
 
 		for (const auto& animation : animations_) {
-			data["animations"].emplace_back(animation.Serialize());
+			meta["animations"].emplace_back(animation.Serialize());
 		}
-
-		JsonHandler::OverwriteToJson(filepath, data);
-		//!< Model側と競合しないようにするため, 上書きする.
+		BaseContent::SaveMeta(meta);
 	}
 	
 }

@@ -4,6 +4,9 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* lib
+#include <Lib/Adapter/Time/LocalTimePoint.h>
+
 //* windows
 #include <comdef.h>
 
@@ -168,10 +171,21 @@ void StreamLogger::AssertW(bool expression, const std::wstring& label, const std
 
 std::filesystem::path StreamLogger::GetStreamLogFilename() {
 
-	std::chrono::sys_seconds current = std::chrono::floor<std::chrono::seconds>(std::chrono::system_clock::now());
-	std::chrono::zoned_time time{ std::chrono::current_zone(), current };
+	LocalTimePoint current = LocalTimePoint::Now();
 
-	return std::format("{:%Y-%m-%d_%H-%M-%S}.log", time);
+	LocalTimePoint::Date date = current.GetDate();
+	LocalTimePoint::Time time = current.GetTime();
+
+	//!< "YYYY-MM-DD_hh-mm-ss"形式
+	return std::format(
+		"{:04}-{:02}-{:02}_{:02}-{:02}-{:02}.log",
+		date.year,
+		date.month,
+		date.day,
+		time.hour,
+		time.minute,
+		time.second
+	);
 }
 
 void StreamLogger::OutputConsoleA(const std::string& message) {
