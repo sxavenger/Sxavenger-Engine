@@ -103,7 +103,7 @@ private:
 
 	//* helper method *//
 
-	void GetUuid();
+	void AssignUuid();
 
 	void LoadMeshes(const aiScene* aiScene);
 	void LoadMaterials(const aiScene* aiScene, const std::filesystem::path& filepath);

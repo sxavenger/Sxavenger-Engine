@@ -93,7 +93,7 @@ private:
 
 	//* helper methods *//
 
-	void GetUuid();
+	void AssignUuid();
 
 	Option GetOption();
 

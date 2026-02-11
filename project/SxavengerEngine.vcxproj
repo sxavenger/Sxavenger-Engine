@@ -373,6 +373,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Adapter\Json\JsonHandler.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonSerializer.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
+    <ClInclude Include="Lib\Adapter\Time\LocalTimePoint.h" />
     <ClInclude Include="Lib\Adapter\Time\RunTimeTracker.h" />
     <ClInclude Include="Lib\Adapter\Time\TimePoint.h" />
     <ClInclude Include="Lib\Adapter\Uuid\Uuid.h" />
@@ -589,6 +590,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
     <ClCompile Include="Engine\System\Window\WindowCollection.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonHandler.cpp" />
+    <ClCompile Include="Lib\Adapter\Time\LocalTimePoint.cpp" />
     <ClCompile Include="Lib\Adapter\Time\RunTimeTracker.cpp" />
     <ClCompile Include="Lib\Adapter\Time\TimePoint.cpp" />
     <ClCompile Include="Lib\Adapter\Uuid\Uuid.cpp" />

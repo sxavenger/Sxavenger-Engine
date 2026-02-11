@@ -65,7 +65,7 @@ private:
 
 	//* helper methods *//
 
-	void GetUuid();
+	void AssignUuid();
 
 };
 

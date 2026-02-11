@@ -936,6 +936,7 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\Adapter\Time\LocalTimePoint.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Camera\CameraHandle.cpp">
@@ -1578,5 +1579,6 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Lib\Adapter\Time\LocalTimePoint.cpp" />
   </ItemGroup>
 </Project>

@@ -13,6 +13,7 @@
 
 //* lib
 #include <Lib/Adapter/Uuid/Uuid.h>
+#include <Lib/Adapter/Json/JsonHandler.h>
 
 //* c++
 #include <filesystem>
@@ -69,9 +70,9 @@ public:
 
 	virtual void ShowInspector() override;
 
-	//* extension option *//
+	//* meta option *//
 
-	static const std::filesystem::path& GetContentExtension() { return kContentExtension_; }
+	static const std::filesystem::path& GetMetaExtension() { return kMetaExtension_; }
 
 protected:
 
@@ -91,9 +92,15 @@ protected:
 
 	void CheckExist() const;
 
-	std::filesystem::path GetContentPath() const;
-
 	static void SelectInspector(BaseAsset* asset);
+
+	//* meta helper methods *//
+
+	std::filesystem::path GetMetaPath() const;
+
+	json LoadMeta() const;
+
+	void SaveMeta(const json& data) const;
 
 private:
 
@@ -101,7 +108,7 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static const inline std::filesystem::path kContentExtension_ = ".content";
+	static const inline std::filesystem::path kMetaExtension_ = ".content";
 
 };
 

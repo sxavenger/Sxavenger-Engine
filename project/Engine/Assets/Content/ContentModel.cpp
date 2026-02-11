@@ -52,7 +52,7 @@ void ContentModel::AttachUuid() {
 	materials_.resize(aiScene->mNumMaterials);
 
 	// idを取得
-	GetUuid();
+	AssignUuid();
 
 	// storageに登録
 	for (size_t i = 0; i < meshes_.size(); ++i) {
@@ -126,53 +126,64 @@ void ContentModel::Load(const std::filesystem::path& filepath, uint32_t assimpOp
 	LoadSkeleton(aiScene);
 }
 
-void ContentModel::GetUuid() {
+void ContentModel::AssignUuid() {
 	//!< multi threadにする場合, thread safeにする必要がある.
 
-	std::filesystem::path filepath = BaseContent::GetContentPath();
+	json meta = BaseContent::LoadMeta();
 
-	json data;
-	JsonHandler::LoadFromJson(filepath, data);
-
-	if (data.contains("meshes") && data.contains("materials") && data.contains("skeleton")) {
-		//!< Idが既に存在する場合は、Json形式で読み込む
-		
-		const auto& meshIds = data["meshes"].get<std::vector<std::string>>();
-		for (size_t i = 0; i < meshIds.size(); ++i) {
-			meshes_[i] = Uuid::Deserialize(meshIds[i]);
+	//!< meshのid取得
+	if (meta.contains("meshes")) {
+		//!< idが既に存在する場合は、metaから取得する
+		const auto& ids = meta["meshes"].get<std::vector<std::string>>();
+		for (size_t i = 0; i < ids.size(); ++i) {
+			meshes_[i] = Uuid::Deserialize(ids[i]);
 		}
-
-		const auto& materialIds = data["materials"].get<std::vector<std::string>>();
-		for (size_t i = 0; i < materialIds.size(); ++i) {
-			materials_[i] = Uuid::Deserialize(materialIds[i]);
-		}
-
-		skeleton_ = Uuid::Deserialize(data["skeleton"].get<std::string>());
 
 	} else {
-		//!< Idが存在しない場合は、生成して保存する
-		
+		//!< idが存在しない場合は、新しくidを生成し, metaに保存する
 		std::generate(meshes_.begin(), meshes_.end(), []() { return Uuid::Generate(); });
+
+		meta["meshes"] = json::array();
+		for (const auto& mesh : meshes_) {
+			meta["meshes"].emplace_back(mesh.Serialize());
+		}
+
+		BaseContent::SaveMeta(meta);
+	}
+
+	//!< materialのid取得
+	if (meta.contains("materials")) {
+		//!< idが既に存在する場合は、metaから取得する
+		const auto& ids = meta["materials"].get<std::vector<std::string>>();
+		for (size_t i = 0; i < ids.size(); ++i) {
+			materials_[i] = Uuid::Deserialize(ids[i]);
+		}
+
+	} else {
+		//!< idが存在しない場合は、新しくidを生成し, metaに保存する
 		std::generate(materials_.begin(), materials_.end(), []() { return Uuid::Generate(); });
+
+		meta["materials"] = json::array();
+		for (const auto& material : materials_) {
+			meta["materials"].emplace_back(material.Serialize());
+		}
+
+		BaseContent::SaveMeta(meta);
+	}
+
+	//!< skeletonのid取得
+	if (meta.contains("skeleton")) {
+		//!< idが既に存在する場合は、metaから取得する
+		skeleton_ = Uuid::Deserialize(meta["skeleton"].get<std::string>());
+
+	} else {
+		//!< idが存在しない場合は、新しくidを生成し, metaに保存する
 		skeleton_ = Uuid::Generate();
 
-		data["meshes"]    = json::array();
-		data["materials"] = json::array();
-		data["skeleton"]  = json::object();
-
-		for (const auto& mesh : meshes_) {
-			data["meshes"].emplace_back(mesh.Serialize());
-		}
-
-		for (const auto& material : materials_) {
-			data["materials"].emplace_back(material.Serialize());
-		}
-
-		data["skeleton"] = skeleton_.Serialize();
-
-		JsonHandler::OverwriteToJson(filepath, data);
-		//!< Animation側と競合しないようにするため, 上書きする.
+		meta["skeleton"] = skeleton_.Serialize();
+		BaseContent::SaveMeta(meta);
 	}
+
 }
 
 void ContentModel::LoadMeshes(const aiScene* aiScene) {

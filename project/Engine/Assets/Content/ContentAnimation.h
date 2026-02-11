@@ -72,7 +72,7 @@ private:
 
 	//* helper method *//
 
-	void GetUuid();
+	void AssignUuid();
 
 	void LoadAnimations(const aiScene* aiScene);
 

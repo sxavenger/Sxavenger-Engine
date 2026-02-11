@@ -155,8 +155,8 @@ void AssetEditor::ForEachDirectory(const std::filesystem::path& path, const std:
 
 	// file only
 	for (const auto& entry : std::filesystem::directory_iterator(path) | std::views::filter([](const std::filesystem::directory_entry& entry) { return !entry.is_directory(); })) {
-		if (entry.path().extension() == BaseContent::GetContentExtension()) {
-			continue; // contentファイルは除外
+		if (entry.path().extension() == BaseContent::GetMetaExtension()) {
+			continue; //!< metaファイルは除外
 		}
 
 		func(entry);

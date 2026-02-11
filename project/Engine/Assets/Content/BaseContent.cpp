@@ -49,14 +49,28 @@ void BaseContent::CheckExist() const {
 	StreamLogger::AssertA(std::filesystem::exists(GetFilepath()), "File does not exist: " + GetFilepath().generic_string());
 }
 
-std::filesystem::path BaseContent::GetContentPath() const {
-	std::filesystem::path filepath = GetFilepath();
-	filepath += kContentExtension_;
-	return filepath;
-}
-
 void BaseContent::SelectInspector(BaseAsset* asset) {
 	if (auto editor = sEditorEngine->GetEditor<InspectorEditor>()) {
 		editor->SetInspector(asset);
 	}
+}
+
+std::filesystem::path BaseContent::GetMetaPath() const {
+	std::filesystem::path filepath = GetFilepath();
+	filepath += BaseContent::GetMetaExtension();
+	return filepath;
+}
+
+json BaseContent::LoadMeta() const {
+	std::filesystem::path filepath = GetMetaPath();
+
+	json data;
+	JsonHandler::LoadFromJson(filepath, data);
+
+	return data;
+}
+
+void BaseContent::SaveMeta(const json& data) const {
+	std::filesystem::path filepath = GetMetaPath();
+	JsonHandler::OverwriteToJson(filepath, data);
 }

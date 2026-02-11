@@ -29,7 +29,7 @@ void ContentTexture::AttachUuid() {
 	BaseContent::CheckExist();
 
 	// idを取得
-	GetUuid();
+	AssignUuid();
 
 	// storageに登録
 	auto asset = std::make_shared<AssetTexture>(id_);
@@ -65,22 +65,20 @@ void ContentTexture::Load(const DirectXQueueContext* context, const std::filesys
 	asset->Setup(context, image);
 };
 
-void ContentTexture::GetUuid() {
-	std::filesystem::path filepath = BaseContent::GetContentPath();
+void ContentTexture::AssignUuid() {
 
-	if (JsonHandler::CheckExist(filepath)) {
-		//!< Idが既に存在する場合は、Json形式で読み込む
-		json data = JsonHandler::LoadFromJson(filepath);
-		id_ = Uuid::Deserialize(data["id"].get<std::string>());
+	json meta = BaseContent::LoadMeta();
+
+	if (meta.contains("id")) {
+		//!< idが既に存在する場合は、metaから取得する
+		id_ = Uuid::Deserialize(meta["id"].get<std::string>());
 
 	} else {
-		//!< 新しくIdを生成し, Json形式で保存する
+		//!< idが存在しない場合は、新しくidを生成し, metaに保存する
 		id_ = Uuid::Generate();
 
-		json data  = json::object();
-		data["id"] = id_.Serialize();
-
-		JsonHandler::WriteToJson(filepath, data);
+		meta["id"] = id_.Serialize();
+		BaseContent::SaveMeta(meta);
 	}
 }
 
