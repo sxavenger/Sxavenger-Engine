@@ -334,6 +334,7 @@ FodyWeavers.xsd
 
 # Sxavenger Engine 内部出力関係
 *.log
+*.compress
 /project/imgui.ini
 /project/Capture
 

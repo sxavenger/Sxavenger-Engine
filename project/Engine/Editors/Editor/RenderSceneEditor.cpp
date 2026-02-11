@@ -39,16 +39,47 @@ SXAVENGER_ENGINE_USING
 
 void RenderSceneEditor::Init() {
 
-	checkerboard_ = sContentStorage->Import<ContentTexture>("packages/textures/checker_black.png")->GetId();
+	checkerboard_
+		= sContentStorage->Import<ContentTexture>(
+			"packages/textures/checker_black.png",
+			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
+		)->GetId();
 
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)] = sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_translate.png")->GetId();
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)]    = sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_rotate.png")->GetId();
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)]     = sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_scale.png")->GetId();
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)]
+		= sContentStorage->Import<ContentTexture>(
+			"packages/textures/icon/operation_translate.png",
+			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
+		)->GetId();
 
-	modeTexture_[SxImGuizmo::World] = sContentStorage->Import<ContentTexture>("packages/textures/icon/mode_world.png")->GetId();
-	modeTexture_[SxImGuizmo::Local] = sContentStorage->Import<ContentTexture>("packages/textures/icon/mode_local.png")->GetId();
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)]
+		= sContentStorage->Import<ContentTexture>(
+			"packages/textures/icon/operation_rotate.png",
+			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
+		)->GetId();
 
-	gridTexture_ = sContentStorage->Import<ContentTexture>("packages/textures/icon/grid.png")->GetId();
+	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)]
+		= sContentStorage->Import<ContentTexture>(
+			"packages/textures/icon/operation_scale.png",
+			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
+		)->GetId();
+
+	modeTexture_[SxImGuizmo::World]
+		= sContentStorage->Import<ContentTexture>(
+			"packages/textures/icon/mode_world.png",
+			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
+		)->GetId();
+
+	modeTexture_[SxImGuizmo::Local]
+		= sContentStorage->Import<ContentTexture>(
+			"packages/textures/icon/mode_local.png",
+			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
+		)->GetId();
+
+	gridTexture_
+		= sContentStorage->Import<ContentTexture>(
+			"packages/textures/icon/grid.png",
+			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
+		)->GetId();
 
 	camera_ = std::make_unique<PerspectiveCameraActor>();
 	camera_->SetPerspective(PerspectiveCameraActor::Perspective::ThirdPerson);

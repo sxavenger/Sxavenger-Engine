@@ -51,6 +51,7 @@ public:
 
 		Encoding encoding     = Encoding::Lightness;
 		bool isGenerateMipmap = true;
+		bool isCompress       = true;
 
 	};
 
@@ -112,7 +113,11 @@ private:
 
 	//* compress helper methods *//
 
-	bool CheckCompress() const;
+	bool ExistsCompressed(const std::filesystem::path& filepath) const;
+
+	bool CheckCompress(const std::filesystem::path& filepath) const;
+
+	static std::filesystem::path GetCompressedPath(const std::filesystem::path& filepath);
 
 	static void Compress(const std::filesystem::path& filepath, const Option& option);
 

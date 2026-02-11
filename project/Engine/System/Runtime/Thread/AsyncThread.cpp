@@ -118,7 +118,7 @@ void AsyncThreadPool::Create(AsyncExecution execution, size_t size) {
 					}
 
 					task = queue_.front();
-					StreamLogger::EngineThreadLog("[AsyncThreadPool] task poped. tag: " + queue_.front()->GetTag());
+					StreamLogger::EngineThreadLog("[AsyncThreadPool] task popped. tag: " + queue_.front()->GetTag());
 					queue_.pop();
 
 					if (!queue_.empty()) {

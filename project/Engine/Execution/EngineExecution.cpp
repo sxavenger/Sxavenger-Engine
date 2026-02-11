@@ -66,10 +66,10 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 		FMainRender::GetInstance()->Term();
 		FRenderCore::GetInstance()->Term();
 
-		sAssetStorage->Serialize();
-
 		System::Shutdown();
 		System::ExecuteAllAllocator();
+
+		sAssetStorage->Serialize();
 	});
 
 	context->SetProcess(Execution::Process::Begin, 0, [this]() {
