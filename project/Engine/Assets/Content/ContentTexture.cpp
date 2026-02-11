@@ -386,7 +386,7 @@ void ContentTexture::Compress(const std::filesystem::path& filepath, const Optio
 	output += ".dds";
 
 	//!< 圧縮したtextureをddsで保存
-	auto hr = DirectX::SaveToDDSFile(
+	hr = DirectX::SaveToDDSFile(
 		compress.GetImages(),
 		compress.GetImageCount(),
 		compress.GetMetadata(),
