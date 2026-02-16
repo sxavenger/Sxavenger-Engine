@@ -1,7 +1,7 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------
-// _DEFINES
+// define
 //-----------------------------------------------------------------------------------------
 //* c++ attribute
 
@@ -9,7 +9,7 @@
 #define MAYBE_UNUSED [[maybe_unused]]
 
 //! https://cpprefjp.github.io/lang/cpp17/nodiscard.html
-#define NODISCARD    [[nodiscard]]
+#define NODISCARD [[nodiscard]]
 
 //! https://cpprefjp.github.io/lang/cpp20/likely_and_unlikely_attributes.html
 #define LIKELY   [[likely]]
@@ -17,3 +17,6 @@
 
 //! https://cpprefjp.github.io/lang/cpp11/attributes.html
 #define NORETURN [[noreturn]]
+
+//! https://cpprefjp.github.io/lang/cpp14/deprecated_attr.html
+#define DEPRECATED(msg) [[deprecated(msg)]]
