@@ -93,7 +93,7 @@ void SkyLightComponent::SetIntensity(float intensity) {
 	parameter_->At().intensity = intensity;
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& SkyLightComponent::GetGPUVirtualAddress() const {
+const D3D12_GPU_VIRTUAL_ADDRESS SkyLightComponent::GetGPUVirtualAddress() const {
 	return parameter_->GetGPUVirtualAddress();
 }
 

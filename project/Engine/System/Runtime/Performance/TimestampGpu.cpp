@@ -12,7 +12,7 @@ SXAVENGER_ENGINE_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void TimestampGpu::Stamp::SetTime(uint64_t beginTick, uint64_t endTick, uint64_t frequency) {
-	section = TimePointd<TimeUnit::second>{ static_cast<double>(endTick - beginTick) / static_cast<double>(frequency) };
+	section = TimePointd<TimeUnit::millisecond>{ static_cast<double>(endTick - beginTick) / static_cast<double>(frequency) };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,7 +54,6 @@ void TimestampGpu::Init(DxObject::Device* device) {
 	);
 
 	readback_.Capacity(device, Timestamp::kStampCount * 2);
-	readback_.Resize(Timestamp::kStampCount * 2);
 
 }
 

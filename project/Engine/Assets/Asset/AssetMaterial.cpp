@@ -390,7 +390,7 @@ void AssetMaterial::ShowInspector() {
 
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& AssetMaterial::GetGPUVirtualAddress() const {
+const D3D12_GPU_VIRTUAL_ADDRESS AssetMaterial::GetGPUVirtualAddress() const {
 	StreamLogger::AssertA(buffer_ != nullptr, "buffer is not create.");
 	return buffer_->GetGPUVirtualAddress();
 }

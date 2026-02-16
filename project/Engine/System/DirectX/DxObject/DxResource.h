@@ -27,8 +27,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	Resource()                    = default;
-	Resource(Resource&&) noexcept = default;
+	Resource() = default;
 
 	//* resource option *//
 
@@ -47,11 +46,17 @@ public:
 
 	void SetName(const std::wstring& name) const;
 
+	void Map(void** data, const std::optional<D3D12_RANGE>& range = std::nullopt);
+
+	void Unmap(const std::optional<D3D12_RANGE>& range = std::nullopt);
+
 	//* getter *//
 
 	ID3D12Resource* Get() const { return resource_.Get(); }
 
 	D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
+
+	D3D12_RESOURCE_STATES GetCurrentState() const { return current_; }
 
 	//* helper create methods *//
 
@@ -66,10 +71,27 @@ public:
 		const std::optional<D3D12_CLEAR_VALUE>& clearValue
 	);
 
-	//* delete [copy] *//
+	//* operator [copy] *//
+
 	Resource(const Resource&)            = delete;
 	Resource& operator=(const Resource&) = delete;
 
+	//* operator [move] *//
+
+	Resource(Resource&&) noexcept            = default;
+	Resource& operator=(Resource&&) noexcept = default;
+
+	//* operator [assign] *//
+
+	Resource(std::nullopt_t) noexcept { Reset(); }
+	Resource& operator=(std::nullptr_t) noexcept { Reset(); return *this; }
+
+	//* operator [equal] *//
+
+	bool operator==(const Resource& rhs) const { return resource_.Get() == rhs.resource_.Get(); }
+	bool operator!=(const Resource& rhs) const { return resource_.Get() != rhs.resource_.Get(); }
+	bool operator==(std::nullptr_t) const { return resource_.Get() == nullptr; }
+	bool operator!=(std::nullptr_t) const { return resource_.Get() != nullptr; }
 
 private:
 

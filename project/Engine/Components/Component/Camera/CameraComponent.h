@@ -8,7 +8,7 @@
 
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -105,9 +105,9 @@ public:
 
 	//* buffer option *//
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetPrevGPUVirtualAddress() const;
+	const D3D12_GPU_VIRTUAL_ADDRESS GetPrevGPUVirtualAddress() const;
 
 	void SwapBuffer();
 

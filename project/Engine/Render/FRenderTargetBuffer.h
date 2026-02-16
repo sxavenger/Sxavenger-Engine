@@ -16,7 +16,6 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -80,7 +79,7 @@ public:
 
 	FMainGBuffer& GetMainGBuffer() { return main_; }
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetIndexBufferAddress() const;
+	const D3D12_GPU_VIRTUAL_ADDRESS GetIndexBufferAddress() const;
 
 	//* depth stencil option *//
 

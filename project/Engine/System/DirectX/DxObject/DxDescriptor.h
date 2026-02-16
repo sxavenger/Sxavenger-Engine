@@ -58,10 +58,10 @@ public:
 
 	//* operator *//
 
-	Descriptor(Descriptor&&) = default;
+	Descriptor(Descriptor&&)            = default;
 	Descriptor& operator=(Descriptor&&) = default;
 
-	Descriptor(const Descriptor&) = delete;
+	Descriptor(const Descriptor&)            = delete;
 	Descriptor& operator=(const Descriptor&) = delete;
 
 private:

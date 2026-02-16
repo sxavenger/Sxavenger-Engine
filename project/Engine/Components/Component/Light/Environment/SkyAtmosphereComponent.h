@@ -151,7 +151,7 @@ public:
 
 	void SetIntensity(float intensity);
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
 
 	//=========================================================================================
 	// public methods

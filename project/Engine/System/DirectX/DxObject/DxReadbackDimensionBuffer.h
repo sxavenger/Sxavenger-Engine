@@ -5,16 +5,9 @@
 //-----------------------------------------------------------------------------------------
 //* DXOBJECT
 #include "DxObjectCommon.h"
-#include "DxDevice.h"
 #include "DxCommandContext.h"
+#include "DxDimensionBuffer.h"
 #include "DxUnorderedDimensionBuffer.h"
-
-//* engine
-#include <Engine/System/Utility/StreamLogger.h>
-
-//* c++
-#include <optional>
-#include <span>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -24,47 +17,37 @@ DXOBJECT_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ReadbackDimensionBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <class T>
-class ReadbackDimensionBuffer {
+template <typename T>
+class ReadbackDimensionBuffer
+	: public BaseDimensionBuffer {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ReadbackDimensionBuffer() = default;
-	~ReadbackDimensionBuffer() { Release(); }
+	ReadbackDimensionBuffer() : BaseDimensionBuffer(sizeof(T)) {}
+	~ReadbackDimensionBuffer() override { Unmap(); }
 
-	void Capacity(Device* device, uint32_t capacity);
+	void Capacity(
+		DxObject::Device* device,
+		size_t size
+	);
 
-	void Resize(uint32_t size);
-
-	void Release();
-
-	//* accessor option *//
-
-	const T& At(size_t index) const {
-		SXAVENGER_ENGINE StreamLogger::AssertA(index < size_, "Readback Dimension Buffer out of range.");
-		return datas_[index];
-	}
-
-	const std::span<T>& GetSpan() const {
-		return datas_;
-	}
+	void Readback(
+		DxObject::Device* device, DxObject::CommandContext* context,
+		UnorderedDimensionBuffer<T>* source
+	);
 
 	//* getter *//
 
-	ID3D12Resource* GetResource() const { return resource_.Get(); }
+	const std::span<T>& GetSpan() const { return data_; }
 
-	const uint32_t GetSize() const { return size_; }
+	//* access option *//
 
-	const size_t GetStride() const { return stride_; }
+	const T& At(size_t index) const;
 
-	const size_t GetByteSize() const { return size_ * stride_; }
-
-	//* static methods *//
-
-	static void Readback(Device* device, CommandContext* context, UnorderedDimensionBuffer<T>* src, ReadbackDimensionBuffer<T>* dst);
+	const T& operator[](size_t index) const { return At(index); }
 
 private:
 
@@ -72,19 +55,15 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* DirectX12 *//
+	std::span<T> data_ = {};
 
-	ComPtr<ID3D12Resource> resource_;
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
 
-	//* parameter *//
+	void Map();
 
-	uint32_t capacity_          = NULL;
-	uint32_t size_              = NULL;
-	static const size_t stride_ = sizeof(T);
-
-	//* mapped data *//
-
-	std::span<T> datas_;
+	void Unmap();
 
 };
 
@@ -92,77 +71,68 @@ private:
 // ReadbackDimensionBuffer class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T>
-inline void ReadbackDimensionBuffer<T>::Capacity(Device* device, uint32_t capacity) {
-	if (capacity <= capacity_) {
-		return; //!< 既に十分な容量がある場合は何もしない
+template<typename T>
+inline void ReadbackDimensionBuffer<T>::Capacity(
+	DxObject::Device* device,
+	size_t size) {
+
+	if (GetSize() != size) { //!< サイズが異なる場合は再作成
+		BaseDimensionBuffer::CreateBuffer(device, static_cast<uint32_t>(size), Category::Readback);
+		resource_.SetName(L"Readback Dimension Buffer");
 	}
 
-	// capacityの保存
-	capacity_ = capacity;
+	Map();
+}
 
-	// resourceの生成
-	resource_ = CreateBufferResource(
-		device->GetDevice(),
-		D3D12_HEAP_TYPE_READBACK,
-		capacity_ * stride_,
-		D3D12_RESOURCE_FLAG_NONE,
-		D3D12_RESOURCE_STATE_COPY_DEST
+template <typename T>
+inline void ReadbackDimensionBuffer<T>::Readback(
+	DxObject::Device* device, DxObject::CommandContext* context,
+	UnorderedDimensionBuffer<T>* source) {
+
+	//!< resourceの作成
+	if (GetSize() != source->GetSize()) { //!< サイズが異なる場合は再作成
+		BaseDimensionBuffer::CreateBuffer(device, source->GetSize(), Category::Readback);
+		resource_.SetName(L"Readback Dimension Buffer");
+	}
+
+	//!< コピー
+	D3D12_RESOURCE_STATES state = source->Get().GetCurrentState();
+
+	source->Get().Transition(context, D3D12_RESOURCE_STATE_COPY_SOURCE);
+
+	context->GetCommandList()->CopyResource(
+		resource_.Get(),
+		source->GetResource()
 	);
-	resource_->SetName(L"readback dimension buffer");
+
+	source->Get().Transition(context, state);
+
+	Map();
 }
 
-template <class T>
-inline void ReadbackDimensionBuffer<T>::Resize(uint32_t size) {
-	SXAVENGER_ENGINE StreamLogger::AssertA(size <= capacity_, "Readback Dimension Buffer size exceeds capacity.");
-
-	// sizeの保存
-	size_ = size;
-
-	// resourceのマッピング
-	T* mappingTarget = nullptr;
-	resource_->Map(0, nullptr, reinterpret_cast<void**>(&mappingTarget));
-
-	datas_ = { mappingTarget, size_ };
+template <typename T>
+inline const T& ReadbackDimensionBuffer<T>::At(size_t index) const {
+	SXAVENGER_ENGINE StreamLogger::AssertA(index < size_, "Readback Dimension Buffer out of range.");
+	return data_[index];
 }
 
-template <class T>
-inline void ReadbackDimensionBuffer<T>::Release() {
-	size_     = NULL;
-	capacity_ = NULL;
+template <typename T>
+inline void ReadbackDimensionBuffer<T>::Map() {
+	T* ptr = nullptr;
 
+	//!< resourceをマッピング
+	resource_.Map(reinterpret_cast<void**>(&ptr));
+	data_ = std::span<T>(ptr, size_);
+}
+
+template <typename T>
+inline void ReadbackDimensionBuffer<T>::Unmap() {
 	if (resource_ != nullptr) {
-		resource_->Unmap(0, nullptr);
-		resource_.Reset();
+		resource_.Unmap();
 	}
 
-	datas_ = {};
+	data_ = {};
 }
 
-template <class T>
-inline void ReadbackDimensionBuffer<T>::Readback(Device* device, CommandContext* context, UnorderedDimensionBuffer<T>* src, ReadbackDimensionBuffer<T>* dst) {
-
-	auto commandList = context->GetCommandList();
-
-	// dstのcapacityを設定
-	dst->Capacity(device, src->GetSize());
-	dst->Resize(src->GetSize());
-
-	// barrierを設定
-	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Transition.pResource   = src->GetResource();
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_COPY_SOURCE;
-
-	commandList->ResourceBarrier(1, &barrier);
-
-	// copyコマンドを発行
-	commandList->CopyResource(dst->GetResource(), src->GetResource());
-
-	// barrierを設定
-	std::swap(barrier.Transition.StateBefore, barrier.Transition.StateAfter);
-	commandList->ResourceBarrier(1, &barrier);
-}
 
 DXOBJECT_NAMESPACE_END

@@ -126,35 +126,17 @@ void FRenderPassDeferredLighting::EndPassDirectLighting(const DirectXQueueContex
 }
 
 void FRenderPassDeferredLighting::BeginPassIndirectLighting(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
-
-	auto commandList = context->GetCommandList();
-
-	std::vector<D3D12_RESOURCE_BARRIER> barriers = {
-		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Initialize)->TransitionBeginUnordered(),
-		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->TransitionBeginUnordered(),
-		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->TransitionBeginUnordered(),
-		buffer->GetLightingGBuffer().GetMoment()->TransitionBeginUnordered(),
-	};
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-
+	buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Initialize)->TransitionBeginUnordered(context->GetDxCommand());
+	buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->TransitionBeginUnordered(context->GetDxCommand());
+	buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->TransitionBeginUnordered(context->GetDxCommand());
+	buffer->GetLightingGBuffer().GetMoment()->TransitionBeginUnordered(context->GetDxCommand());
 }
 
 void FRenderPassDeferredLighting::EndPassIndirectLighting(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
-
-	auto commandList = context->GetCommandList();
-
-	static const size_t kBufferCount = 5;
-
-	std::vector<D3D12_RESOURCE_BARRIER> barriers = {
-		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Initialize)->TransitionEndUnordered(),
-		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->TransitionEndUnordered(),
-		buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->TransitionEndUnordered(),
-		buffer->GetLightingGBuffer().GetMoment()->TransitionEndUnordered(),
-	};
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
-
+	buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Initialize)->TransitionEndUnordered(context->GetDxCommand());
+	buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Temporal)->TransitionEndUnordered(context->GetDxCommand());
+	buffer->GetLightingGBuffer().GetReservoir(FLightingGBuffer::Reservoir::Spatial)->TransitionEndUnordered(context->GetDxCommand());
+	buffer->GetLightingGBuffer().GetMoment()->TransitionEndUnordered(context->GetDxCommand());
 }
 
 void FRenderPassDeferredLighting::ClearPassDirect(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {

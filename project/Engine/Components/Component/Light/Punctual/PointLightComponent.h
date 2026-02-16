@@ -66,7 +66,7 @@ public:
 
 	//* component option *//
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
 
 	void SetUnit(LightCommon::Units unit);
 

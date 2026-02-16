@@ -570,7 +570,7 @@ void SkyAtmosphereComponent::SetIntensity(float intensity) {
 	atmosphere_->At().intensity = intensity;
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& SkyAtmosphereComponent::GetGPUVirtualAddress() const {
+const D3D12_GPU_VIRTUAL_ADDRESS SkyAtmosphereComponent::GetGPUVirtualAddress() const {
 	return parameter_->GetGPUVirtualAddress();
 }
 

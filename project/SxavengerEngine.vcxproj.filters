@@ -705,9 +705,6 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxConstantBuffer.h">
-      <Filter>Engine\System\DirectX\DxObject</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
@@ -937,6 +934,7 @@
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Adapter\Time\LocalTimePoint.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxGeometryDimensionBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Camera\CameraHandle.cpp">
@@ -1377,9 +1375,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxConstantBuffer.cpp">
-      <Filter>Engine\System\DirectX\DxObject</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
@@ -1580,5 +1575,6 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Lib\Adapter\Time\LocalTimePoint.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxGeometryDimensionBuffer.cpp" />
   </ItemGroup>
 </Project>

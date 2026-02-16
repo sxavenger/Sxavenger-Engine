@@ -27,7 +27,7 @@ void TransformComponent::ShowComponentInspector() {
 	UpdateMatrix();
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& TransformComponent::GetGPUVirtualAddress() const {
+const D3D12_GPU_VIRTUAL_ADDRESS TransformComponent::GetGPUVirtualAddress() const {
 	StreamLogger::AssertA(buffer_ != nullptr, "transform buffer is not create.");
 	return buffer_->GetGPUVirtualAddress();
 }
