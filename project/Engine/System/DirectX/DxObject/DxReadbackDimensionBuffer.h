@@ -39,6 +39,10 @@ public:
 		UnorderedDimensionBuffer<T>* source
 	);
 
+	void Map();
+
+	void Unmap();
+
 	//* getter *//
 
 	const std::span<T>& GetSpan() const { return data_; }
@@ -60,10 +64,6 @@ private:
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
-
-	void Map();
-
-	void Unmap();
 
 };
 
@@ -111,12 +111,6 @@ inline void ReadbackDimensionBuffer<T>::Readback(
 }
 
 template <typename T>
-inline const T& ReadbackDimensionBuffer<T>::At(size_t index) const {
-	SXAVENGER_ENGINE StreamLogger::AssertA(index < size_, "Readback Dimension Buffer out of range.");
-	return data_[index];
-}
-
-template <typename T>
 inline void ReadbackDimensionBuffer<T>::Map() {
 	T* ptr = nullptr;
 
@@ -132,6 +126,12 @@ inline void ReadbackDimensionBuffer<T>::Unmap() {
 	}
 
 	data_ = {};
+}
+
+template <typename T>
+inline const T& ReadbackDimensionBuffer<T>::At(size_t index) const {
+	SXAVENGER_ENGINE StreamLogger::AssertA(index < size_, "Readback Dimension Buffer out of range.");
+	return data_[index];
 }
 
 

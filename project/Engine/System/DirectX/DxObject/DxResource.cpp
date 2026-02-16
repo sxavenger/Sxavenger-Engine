@@ -72,6 +72,10 @@ D3D12_GPU_VIRTUAL_ADDRESS Resource::GetGPUVirtualAddress() const {
 	return resource_->GetGPUVirtualAddress();
 }
 
+const D3D12_RESOURCE_DESC Resource::GetDesc() const {
+	return resource_->GetDesc();
+}
+
 Resource Resource::CreateBuffer(
 	DxObject::Device* device,
 	D3D12_HEAP_TYPE type, size_t size, D3D12_RESOURCE_FLAGS flags, D3D12_RESOURCE_STATES state) {

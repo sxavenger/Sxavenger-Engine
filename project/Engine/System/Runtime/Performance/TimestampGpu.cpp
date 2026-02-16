@@ -12,7 +12,7 @@ SXAVENGER_ENGINE_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void TimestampGpu::Stamp::SetTime(uint64_t beginTick, uint64_t endTick, uint64_t frequency) {
-	section = TimePointd<TimeUnit::millisecond>{ static_cast<double>(endTick - beginTick) / static_cast<double>(frequency) };
+	section = TimePointd<TimeUnit::second>{ static_cast<double>(endTick - beginTick) / static_cast<double>(frequency) };
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,7 +34,7 @@ void TimestampGpu::Timestamp::Resolve(const DxObject::ReadbackDimensionBuffer<ui
 		uint64_t endTick   = buffer.At(index * 2 + 1);
 
 		stamp.SetTime(beginTick, endTick, frequency);
-		++index;
+		index++;
 	}
 }
 
@@ -83,6 +83,8 @@ void TimestampGpu::ReadTimestamp(const DirectXQueueContext* context) {
 		readback_.GetResource(),
 		0
 	);
+
+	readback_.Map();
 }
 
 void TimestampGpu::End(const DirectXQueueContext* context) {

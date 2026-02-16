@@ -39,6 +39,9 @@ void AssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scra
 	auto intermediate = UploadTextureData(context, resource_.Get(), image);
 
 	{ //!< SRVの生成
+
+		descriptorSRV_ = System::GetDescriptor(kDescriptor_SRV);
+
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
 		desc.Format                  = metadata.format;
 		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -48,15 +51,12 @@ void AssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scra
 			desc.TextureCube.MipLevels = UINT_MAX;
 
 		} else {
-			// それ以外はTexture2D扱い
+			//!< それ以外はTexture2D扱い
 			desc.ViewDimension       = D3D12_SRV_DIMENSION_TEXTURE2D;
 			desc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 		}
 
-		// SRVを生成するDescriptorHeapの場所を決める
-		descriptorSRV_ = System::GetDescriptor(kDescriptor_SRV);
-
-		// SRVの生成
+		//!< SRVの生成
 		device->CreateShaderResourceView(
 			resource_.Get(),
 			&desc,
@@ -67,8 +67,6 @@ void AssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scra
 	// metadataの保存
 	metadata_.Assign(metadata);
 
-	isTransition_ = false;
-
 	// textureをuploadさせる.
 	context->ExecuteAllAllocators();
 
@@ -77,21 +75,13 @@ void AssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scra
 }
 
 void AssetTexture::Update(const DirectXQueueContext* context) {
-	if (!BaseAsset::IsComplete() || isTransition_) {
+	if (!BaseAsset::IsComplete()) {
 		return;
 	}
+
 	context->RequestQueue(DirectXQueueContext::RenderQueue::Direct); //!< DirectQueue以上を使用
 
-	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Transition.pResource   = resource_.Get();
-	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE;
-
-	context->GetCommandList()->ResourceBarrier(1, &barrier);
-
-	isTransition_ = true;
+	resource_.Transition(context->GetDxCommand(), D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE);
 }
 
 void AssetTexture::Reset() {
@@ -122,7 +112,7 @@ void AssetTexture::ShowInspector() {
 		return;
 	}
 
-	const D3D12_RESOURCE_DESC desc = resource_->GetDesc();
+	const D3D12_RESOURCE_DESC desc = resource_.GetDesc();
 
 	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen)) {
 		if (desc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D) {
@@ -149,35 +139,22 @@ void AssetTexture::ShowInspector() {
 	}
 }
 
-ComPtr<ID3D12Resource> AssetTexture::CreateTextureResource(const DirectX::TexMetadata& metadata) {
-	// propの設定
-	D3D12_HEAP_PROPERTIES prop = {};
-	prop.Type = D3D12_HEAP_TYPE_DEFAULT;
+DxObject::Resource AssetTexture::CreateTextureResource(const DirectX::TexMetadata& metadata) {
 
-	// descの設定
-	D3D12_RESOURCE_DESC desc = {};
-	desc.Dimension        = static_cast<D3D12_RESOURCE_DIMENSION>(metadata.dimension);
-	desc.Width            = static_cast<UINT>(metadata.width);
-	desc.Height           = static_cast<UINT>(metadata.height);
-	desc.MipLevels        = static_cast<UINT16>(metadata.mipLevels);
-	desc.DepthOrArraySize = static_cast<UINT16>(metadata.arraySize);
-	desc.Format           = metadata.format;
-	desc.SampleDesc.Count = 1;
+	DxObject::Resource resource;
 
-	// resourceの生成
-	ComPtr<ID3D12Resource> resource;
-
-	auto hr = System::GetDxDevice()->GetDevice()->CreateCommittedResource(
-		&prop,
-		D3D12_HEAP_FLAG_NONE,
-		&desc,
+	resource = DxObject::Resource::CreateTexture(
+		System::GetDxDevice(),
+		static_cast<D3D12_RESOURCE_DIMENSION>(metadata.dimension),
+		Vector3ui{ static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height), static_cast<uint32_t>(metadata.depth) },
+		static_cast<UINT16>(metadata.mipLevels),
+		metadata.format,
+		D3D12_RESOURCE_FLAG_NONE,
 		D3D12_RESOURCE_STATE_COMMON,
-		nullptr,
-		IID_PPV_ARGS(&resource)
+		std::nullopt
 	);
-	DxObject::Assert(hr, L"texture resource create failed.");
 
-	resource->SetName(L"Asset | Texture");
+	resource.SetName(L"Asset | Texture");
 	return resource;
 }
 

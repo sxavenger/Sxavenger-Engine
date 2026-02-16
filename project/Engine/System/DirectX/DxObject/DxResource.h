@@ -58,6 +58,8 @@ public:
 
 	D3D12_RESOURCE_STATES GetCurrentState() const { return current_; }
 
+	const D3D12_RESOURCE_DESC GetDesc() const;
+
 	//* helper create methods *//
 
 	static Resource CreateBuffer(
@@ -71,7 +73,7 @@ public:
 		const std::optional<D3D12_CLEAR_VALUE>& clearValue
 	);
 
-	//* operator [copy] *//
+	//* operator [copy] (delete) *//
 
 	Resource(const Resource&)            = delete;
 	Resource& operator=(const Resource&) = delete;
