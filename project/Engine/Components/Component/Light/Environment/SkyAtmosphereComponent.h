@@ -11,6 +11,7 @@
 
 //* engine
 #include <Engine/Foundation.h>
+#include <Engine/System/DirectX/DxObject/DxResource.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
@@ -137,11 +138,7 @@ public:
 	void ShowComponentInspector() override;
 
 	void Update(Mode mode, const DirectXQueueContext* context);
-
-	void UpdateTransmittance(const DirectXQueueContext* context);
-	void UpdateMultipleScattering(const DirectXQueueContext* context);
-	void UpdateSkyView(const DirectXQueueContext* context);
-	void UpdateSkyCube(const DirectXQueueContext* context);
+	void Update(const DirectXQueueContext* context) { Update(mode_, context); }
 
 	//* component option *//
 
@@ -153,10 +150,6 @@ public:
 
 	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
 
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
 	const TransformComponent* RequireTransform() const;
 
 private:
@@ -167,9 +160,31 @@ private:
 	struct Texture {
 	public:
 
-		ComPtr<ID3D12Resource> resource;
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Dimension enum class
+		////////////////////////////////////////////////////////////////////////////////////////////
+		enum class Dimension : uint8_t {
+			Texture2D,
+			TextureCube,
+		};
+
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Create(const Vector2ui& resolution, DXGI_FORMAT format, Dimension dimension);
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		DxObject::Resource resource;
 		DxObject::Descriptor descriptorUAV;
 		DxObject::Descriptor descriptorSRV;
+
+		Vector3ui size;
 
 	};
 
@@ -211,6 +226,11 @@ private:
 	void CreateSkyCube();
 
 	//* update helper *//
+
+	void UpdateTransmittance(const DirectXQueueContext* context);
+	void UpdateMultipleScattering(const DirectXQueueContext* context);
+	void UpdateSkyView(const DirectXQueueContext* context);
+	void UpdateSkyCube(const DirectXQueueContext* context);
 
 };
 
