@@ -11,9 +11,9 @@
 #include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Sxl
+// Sxavenger Library namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-_SXL_NAMESPACE_BEGIN
+SXAVENGER_LIBRARY_NAMESPACE_BEGIN
 
 template <typename T, typename ...Args> requires std::is_constructible_v<T, Args...>
 std::unique_ptr<T> MakeUnique(Args&&... args) {
@@ -25,4 +25,4 @@ std::shared_ptr<T> MakeShared(Args&&... args) {
 	return std::make_shared<T>(std::forward<Args>(args)...);
 }
 
-_SXL_NAMESPACE_END
+SXAVENGER_LIBRARY_NAMESPACE_END

@@ -6,8 +6,12 @@
 //* sxl
 #include "SxavengerLibrary.h"
 
+//* lib
+#include <Lib/CXXAttributeConfig.h>
+
 //* c++
-#include <format>
+#include <string>
+#include <source_location>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Library namespace
@@ -15,26 +19,28 @@
 SXAVENGER_LIBRARY_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BaseFormatter structure
+// Exception class
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <class T>
-struct BaseFormatter {
+class Exception {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	// デフォルトのフォーマットロジック
-	constexpr auto parse(std::format_parse_context& ctx) {
-		return ctx.begin();
-	}
+	NORETURN static void Debugbreak() noexcept;
 
-	// 書式設定のロジックを派生クラスがカスタマイズ
-	template <typename FormatContext>
-	auto format(const T& value, FormatContext& ctx) const {
-		return value.Format(ctx); // 派生クラスの format メソッドを呼び出す
-	}
+	NORETURN static void RuntimeError(const std::string& label, const std::source_location& location = std::source_location::current());
+
+private:
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	static std::string GetLocationMessage(const std::source_location& location);
+
+	static std::string GetLabelMessage(const std::string& label);
 
 };
 

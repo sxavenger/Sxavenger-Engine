@@ -13,6 +13,7 @@
 
 //* lib
 #include <Lib/CXXAttributeConfig.h>
+#include <Lib/Sxl/IndexAllocator.h>
 
 // c++
 #include <queue>
@@ -42,7 +43,7 @@ public:
 	void Init(
 		Device* device,
 		D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType, bool shaderVisible,
-		uint32_t descriptorMaxCount
+		uint32_t descriptorCapacity
 	);
 
 	void Term();
@@ -59,12 +60,12 @@ public:
 		return descriptorHeap_.Get();
 	}
 
-	const uint32_t GetDescriptorMaxCount() const {
-		return descriptorMaxCount_;
+	const uint32_t GetDescriptorCapacity() const {
+		return allocator_.GetCapacity();
 	}
 
 	const uint32_t GetUsedDescriptorsCount() const {
-		return static_cast<uint32_t>(descriptorIndexCount_ - descriptorFreeIndices_.size());
+		return allocator_.GetUsedCount();
 	}
 
 private:
@@ -81,10 +82,7 @@ private:
 
 	//* descriptorPool *//
 
-	uint32_t descriptorMaxCount_;   //!< descriptorの最大数
-	uint32_t descriptorIndexCount_ = 0;
-	
-	std::queue<uint32_t> descriptorFreeIndices_; //!< 動的に消されたDescriptorのIndexの格納先
+	Sxl::IndexAllocator<uint32_t> allocator_;
 
 	//* config *//
 
@@ -134,7 +132,7 @@ public:
 
 	//* getter *//
 
-	const uint32_t GetDescriptorMaxCount(DescriptorType type) const { return pools_.at(type)->GetDescriptorMaxCount(); }
+	const uint32_t GetDescriptorCapacity(DescriptorType type) const { return pools_.at(type)->GetDescriptorCapacity(); }
 
 	ID3D12DescriptorHeap* const GetDescriptorHeap(DescriptorType type) const { return pools_.at(type)->GetDescriptorHeap(); }
 

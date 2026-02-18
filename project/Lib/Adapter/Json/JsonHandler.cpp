@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* lib
+#include <Lib/Sxl/Exception.h>
+
 //* c++
 #include <fstream>
 
@@ -28,13 +31,13 @@ bool JsonHandler::LoadFromJson(const std::filesystem::path& filepath, json& data
 
 json JsonHandler::LoadFromJson(const std::filesystem::path& filepath) {
 	if (!std::filesystem::exists(filepath)) {
-		throw std::runtime_error("JsonHandler::LoadFromJson() : file open error.");
+		Sxl::Exception::RuntimeError("[JsonHandler]: file not exists.");
 	}
 
 	std::ifstream ifs(filepath);
 
 	if (!ifs.is_open()) {
-		throw std::runtime_error("JsonHandler::LoadFromJson() : file open error.");
+		Sxl::Exception::RuntimeError("[JsonHandler]: file open error.");
 	}
 
 	json data = json::parse(ifs);
@@ -45,7 +48,7 @@ void JsonHandler::WriteToJson(const std::filesystem::path& filepath, const json&
 	std::ofstream ofs(filepath);
 
 	if (!ofs.is_open()) {
-		throw std::runtime_error("JsonHandler::WriteToJson() : file open error.");
+		Sxl::Exception::RuntimeError("[JsonHandler]: file open error.");
 		return;
 	}
 
@@ -61,7 +64,7 @@ void JsonHandler::OverwriteToJson(const std::filesystem::path& filepath, const j
 	std::ofstream ofs(filepath);
 
 	if (!ofs.is_open()) {
-		throw std::runtime_error("JsonHandler::OverwriteToJson() : file open error.");
+		Sxl::Exception::RuntimeError("[JsonHandler]: file open error.");
 		return;
 	}
 

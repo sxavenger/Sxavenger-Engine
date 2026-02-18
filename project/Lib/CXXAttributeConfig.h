@@ -1,9 +1,8 @@
 #pragma once
 
 //-----------------------------------------------------------------------------------------
-// define
+// define / c++ attribute
 //-----------------------------------------------------------------------------------------
-//* c++ attribute
 
 //! https://cpprefjp.github.io/lang/cpp17/maybe_unused.html
 #define MAYBE_UNUSED [[maybe_unused]]

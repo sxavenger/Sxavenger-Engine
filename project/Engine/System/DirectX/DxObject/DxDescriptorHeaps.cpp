@@ -23,22 +23,24 @@ DXOBJECT_USING
 void DescriptorPool::Init(
 	Device* devices,
 	D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType, bool shaderVisible,
-	uint32_t descriptorMaxCount) {
+	uint32_t descriptorCapacity) {
 
 	// deviceの取り出し
 	ID3D12Device* device = devices->GetDevice();
 
 	// parameterの保存
 	descriptorHeapType_ = descriptorHeapType;
-	descriptorMaxCount_ = descriptorMaxCount;
 	shaderVisible_      = shaderVisible;
+
+	//!< allocatorの初期化
+	allocator_.Capacity(descriptorCapacity);
 
 	CreateDescriptorHeap(device);
 
 	// handleSizeを取得
 	descriptorHandleSize_ = device->GetDescriptorHandleIncrementSize(descriptorHeapType_);
 
-	StreamLogger::EngineLog(std::format("[DXOBJECT DescriptorPool] descriptor heap type: {}, visibility: {}, count: {}", magic_enum::enum_name(descriptorHeapType), shaderVisible, descriptorMaxCount));
+	StreamLogger::EngineLog(std::format("[DXOBJECT DescriptorPool] descriptor heap type: {}, visibility: {}, capacity: {}", magic_enum::enum_name(descriptorHeapType), shaderVisible, descriptorCapacity));
 }
 
 void DescriptorPool::Term() {
@@ -71,8 +73,7 @@ Descriptor DescriptorPool::GetDescriptor() {
 void DescriptorPool::DeleteDescriptor(Descriptor& descriptor) {
 	std::unique_lock<std::mutex> lock(mutex_);
 	
-	//!< 空き配列に挿入
-	descriptorFreeIndices_.emplace(descriptor.index_);
+	allocator_.Release(descriptor.index_);
 	StreamLogger::EngineLog(std::format("[DXOBJECT DescriptorPool {}] delete descriptor index: {}.", magic_enum::enum_name(descriptorHeapType_), descriptor.index_));
 
 	descriptor.Reset();
@@ -82,7 +83,7 @@ void DescriptorPool::CreateDescriptorHeap(ID3D12Device* device) {
 
 	D3D12_DESCRIPTOR_HEAP_DESC desc = {};
 	desc.Type           = descriptorHeapType_;
-	desc.NumDescriptors = descriptorMaxCount_;
+	desc.NumDescriptors = allocator_.GetCapacity();
 	desc.Flags          = shaderVisible_
 		? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
 
@@ -93,25 +94,8 @@ void DescriptorPool::CreateDescriptorHeap(ID3D12Device* device) {
 }
 
 uint32_t DescriptorPool::GetCurrentDescriptorIndex() {
-	uint32_t result = 0;
-
-	if (!descriptorFreeIndices_.empty()) { //!< 空きindexがある場合
-		// 先頭の空きindexの取得
-		result = descriptorFreeIndices_.front();
-		descriptorFreeIndices_.pop();
-
-		return result;
-	}
-
-	StreamLogger::AssertA(descriptorIndexCount_ < descriptorMaxCount_, std::format("descriptor heap max count over. type: {}", magic_enum::enum_name(descriptorHeapType_).data()));  //!< 作成した分のDescriptorの要素数を超えている
-
-	// 現在のindexCountを返却
-	result = descriptorIndexCount_;
-
-	// 取得するのでインクリメント
-	descriptorIndexCount_++;
-
-	return result;
+	StreamLogger::AssertA(allocator_.CheckAvailable(), std::format("descriptor heap max count over. type: {}", magic_enum::enum_name(descriptorHeapType_).data()));  //!< 作成した分のDescriptorの要素数を超えている
+	return allocator_.Get();
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE DescriptorPool::GetCPUDescriptorHandle(uint32_t index) {
@@ -169,12 +153,12 @@ void DescriptorHeaps::SystemDebugGui() {
 		auto pool = pools_[kDescriptor_RTV].get();
 
 		float used
-			= static_cast<float>(pool->GetUsedDescriptorsCount()) / pool->GetDescriptorMaxCount();
+			= static_cast<float>(pool->GetUsedDescriptorsCount()) / pool->GetDescriptorCapacity();
 
 		std::string overlay = std::format(
 			"use: {} / max: {}",
 			pool->GetUsedDescriptorsCount(),
-			pool->GetDescriptorMaxCount()
+			pool->GetDescriptorCapacity()
 		);
 
 		ImGui::ProgressBar(used, {}, overlay.c_str());
@@ -187,12 +171,12 @@ void DescriptorHeaps::SystemDebugGui() {
 		auto pool = pools_[kDescriptor_DSV].get();
 
 		float used
-			= static_cast<float>(pool->GetUsedDescriptorsCount()) / pool->GetDescriptorMaxCount();
+			= static_cast<float>(pool->GetUsedDescriptorsCount()) / pool->GetDescriptorCapacity();
 
 		std::string overlay = std::format(
 			"use: {} / max: {}",
 			pool->GetUsedDescriptorsCount(),
-			pool->GetDescriptorMaxCount()
+			pool->GetDescriptorCapacity()
 		);
 
 		ImGui::ProgressBar(used, {}, overlay.c_str());
@@ -205,12 +189,12 @@ void DescriptorHeaps::SystemDebugGui() {
 		auto pool = pools_[kDescriptor_CBV_SRV_UAV].get();
 
 		float used
-			= static_cast<float>(pool->GetUsedDescriptorsCount()) / pool->GetDescriptorMaxCount();
+			= static_cast<float>(pool->GetUsedDescriptorsCount()) / pool->GetDescriptorCapacity();
 
 		std::string overlay = std::format(
 			"use: {} / max: {}",
 			pool->GetUsedDescriptorsCount(),
-			pool->GetDescriptorMaxCount()
+			pool->GetDescriptorCapacity()
 		);
 
 		ImGui::ProgressBar(used, {}, overlay.c_str());

@@ -935,6 +935,8 @@
     </ClInclude>
     <ClInclude Include="Lib\Adapter\Time\LocalTimePoint.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGeometryDimensionBuffer.h" />
+    <ClInclude Include="Lib\Sxl\Exception.h" />
+    <ClInclude Include="Lib\Sxl\IndexAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Camera\CameraHandle.cpp">
@@ -1576,5 +1578,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Lib\Adapter\Time\LocalTimePoint.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGeometryDimensionBuffer.cpp" />
+    <ClCompile Include="Lib\Sxl\Exception.cpp" />
   </ItemGroup>
 </Project>

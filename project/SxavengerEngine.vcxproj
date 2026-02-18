@@ -390,9 +390,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Geometry\Vector4.h" />
     <ClInclude Include="Lib\Geometry\VectorComparision.h" />
     <ClInclude Include="Lib\Motion\Motion.h" />
+    <ClInclude Include="Lib\Sxl\Exception.h" />
     <ClInclude Include="Lib\Sxl\Expected.h" />
     <ClInclude Include="Lib\Sxl\Flag.h" />
     <ClInclude Include="Lib\Sxl\Formatter.h" />
+    <ClInclude Include="Lib\Sxl\IndexAllocator.h" />
     <ClInclude Include="Lib\Sxl\OptimizedMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedPathMap.h" />
     <ClInclude Include="Lib\Sxl\OptimizedPathSet.h" />
@@ -599,6 +601,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
     <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
     <ClCompile Include="Lib\Motion\Motion.cpp" />
+    <ClCompile Include="Lib\Sxl\Exception.cpp" />
     <ClCompile Include="Lib\Transform\Transform.cpp" />
     <ClCompile Include="externals\meshoptimizer\allocator.cpp" />
     <ClCompile Include="externals\meshoptimizer\clusterizer.cpp" />
