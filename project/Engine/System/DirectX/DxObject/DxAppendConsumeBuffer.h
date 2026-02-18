@@ -6,12 +6,11 @@
 //* DXOBJECT
 #include "DxObjectCommon.h"
 #include "DxDevice.h"
-#include "DxDescriptorHeaps.h"
 #include "DxDescriptor.h"
+#include "DxResource.h"
 
-//* c++
-#include <optional>
-#include <span>
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -30,15 +29,15 @@ public:
 	//=========================================================================================
 
 	BaseAppendConsumeBuffer(size_t stride) : stride_(stride) {}
-	virtual ~BaseAppendConsumeBuffer() { Release(); }
+	virtual ~BaseAppendConsumeBuffer() { Reset(); }
 
-	void Release();
+	//* option *//
+
+	void Reset();
 
 	//* getter *//
 
-	const D3D12_GPU_DESCRIPTOR_HANDLE& GetAppendCousumeGPUHandleUAV() const;
-
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetCounterGPUVirtualAddress() const;
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleUAV() const;
 
 	const uint32_t GetSize() const { return size_; }
 
@@ -51,16 +50,14 @@ protected:
 	//=========================================================================================
 	// protected variables
 	//=========================================================================================
-
+	
 	//* DirectX12 *//
 
-	ComPtr<ID3D12Resource> resource_;
-	ComPtr<ID3D12Resource> counter_;
-	Descriptor descriptorUAV_;
+	DxObject::Resource resource_;
+	DxObject::Resource counter_;
+	DxObject::Descriptor descriptorUAV_;
 
-	std::optional<D3D12_GPU_VIRTUAL_ADDRESS> counterAddress_ = std::nullopt;
-
-	//* paraemter *//
+	//* parameter *//
 
 	uint32_t size_       = NULL;
 	const size_t stride_ = NULL;
@@ -69,17 +66,14 @@ protected:
 	// protected methods
 	//=========================================================================================
 
-	//* helper methods *//
-
-	void Create(Device* device, DescriptorHeaps* descriptorHeaps, uint32_t size, uint32_t counterSize);
+	void CreateBuffer(DxObject::Device* device, DxObject::Descriptor&& descriptor, uint32_t size);
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AppendConsumeBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief Append/Consume Bufferを管理するクラス.
-template <class T>
+template <typename T>
 class AppendConsumeBuffer
 	: public BaseAppendConsumeBuffer {
 public:
@@ -91,7 +85,7 @@ public:
 	AppendConsumeBuffer() : BaseAppendConsumeBuffer(sizeof(T)) {}
 	~AppendConsumeBuffer() override = default;
 
-	void Create(Device* device, DescriptorHeaps* descriptorHeaps, uint32_t size, uint32_t counterSize = 1);
+	void Create(DxObject::Device* device, DxObject::Descriptor&& descriptor, uint32_t size);
 
 private:
 };
@@ -100,9 +94,11 @@ private:
 // AppendConsumeBuffer class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T>
-void AppendConsumeBuffer<T>::Create(Device* device, DescriptorHeaps* descriptorHeaps, uint32_t size, uint32_t counterSize) {
-	BaseAppendConsumeBuffer::Create(device, descriptorHeaps, size, counterSize);
+template <typename T>
+inline void AppendConsumeBuffer<T>::Create(DxObject::Device* device, DxObject::Descriptor&& descriptor, uint32_t size) {
+	BaseAppendConsumeBuffer::CreateBuffer(device, std::move(descriptor), size);
+	resource_.SetName(L"Append Consume Buffer");
+	counter_.SetName(L"Append Consume Counter");
 }
 
 DXOBJECT_NAMESPACE_END

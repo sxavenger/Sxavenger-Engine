@@ -9,7 +9,6 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
 #include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>

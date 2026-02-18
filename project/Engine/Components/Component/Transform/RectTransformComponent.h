@@ -8,7 +8,7 @@
 
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* lib
 #include <Lib/Geometry/Matrix4x4.h>
@@ -43,7 +43,7 @@ public:
 
 	//* buffer option *//
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
 
 	//* transform option *//
 

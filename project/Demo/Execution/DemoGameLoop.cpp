@@ -122,9 +122,7 @@ void DemoGameLoop::UpdateSystem() {
 	//-----------------------------------------------------------------------------------------
 
 	//!< TODO: ComponentHelperに移動予定
-	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->UpdateTransmittance(System::GetDirectQueueContext());
-	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->UpdateMultipleScattering(System::GetDirectQueueContext());
-	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->UpdateSkyCube(System::GetDirectQueueContext());
+	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->Update(System::GetDirectQueueContext());
 
 	ComponentHelper::UpdateSkinning();
 	// todo: engine側のgameloopに移動.

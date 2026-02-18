@@ -224,10 +224,8 @@ void ExampleGameLoop::UpdateSystem() {
 	// LateUpdate
 	//-----------------------------------------------------------------------------------------
 
-	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->UpdateTransmittance(System::GetDirectQueueContext());
-	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->UpdateMultipleScattering(System::GetDirectQueueContext());
-	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->UpdateSkyCube(System::GetDirectQueueContext());
-	// todo: componentのupdateとしてまとめる.
+	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->Update(System::GetDirectQueueContext());
+	//!< TODO: ComponentHelperに移動予定
 
 	//-----------------------------------------------------------------------------------------
 	// final Update...?

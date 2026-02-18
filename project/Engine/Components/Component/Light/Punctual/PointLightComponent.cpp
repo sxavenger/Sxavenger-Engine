@@ -66,7 +66,7 @@ void PointLightComponent::ShowComponentInspector() {
 	Graphics::PushSphere(RequireTransform()->GetPosition(), parameter.radius, Color4f{ parameter.color, 1.0f });
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& PointLightComponent::GetGPUVirtualAddress() const {
+const D3D12_GPU_VIRTUAL_ADDRESS PointLightComponent::GetGPUVirtualAddress() const {
 	StreamLogger::AssertA(parameter_ != nullptr, "point light buffer is not create.");
 	return parameter_->GetGPUVirtualAddress();
 }

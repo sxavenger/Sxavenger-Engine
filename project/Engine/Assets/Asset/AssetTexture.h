@@ -8,6 +8,7 @@
 
 //* engine
 #include <Engine/Foundation.h>
+#include <Engine/System/DirectX/DxObject/DxResource.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
@@ -88,12 +89,10 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* directx12 *// 
+	//* DirectX12 *// 
 
-	ComPtr<ID3D12Resource> resource_;
-	DxObject::Descriptor   descriptorSRV_;
-
-	bool isTransition_ = false;
+	DxObject::Resource   resource_;
+	DxObject::Descriptor descriptorSRV_;
 
 	//* parameter *//
 
@@ -105,7 +104,7 @@ private:
 
 	//* texture helper methods *//
 
-	static ComPtr<ID3D12Resource> CreateTextureResource(const DirectX::TexMetadata& metadata);
+	static DxObject::Resource CreateTextureResource(const DirectX::TexMetadata& metadata);
 	static NODISCARD ComPtr<ID3D12Resource> UploadTextureData(const DirectXQueueContext* context, ID3D12Resource* texture, const DirectX::ScratchImage& image);
 
 };

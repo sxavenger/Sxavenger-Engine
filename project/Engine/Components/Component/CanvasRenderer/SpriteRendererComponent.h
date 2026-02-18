@@ -9,7 +9,7 @@
 
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/Graphics/InputGeometry/InputCanvasVertex.h>
 #include <Engine/Assets/Asset/AssetTexture.h>
 #include <Engine/Assets/Asset/AssetParameter.h>
@@ -78,7 +78,7 @@ public:
 
 	const AssetParameter<AssetTexture>& GetTextureParameter() const { return texture_; }
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddressUV() const { return bufferUV_->GetGPUVirtualAddress(); }
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddressUV() const { return bufferUV_->GetGPUVirtualAddress(); }
 
 	//* behaviour option *//
 

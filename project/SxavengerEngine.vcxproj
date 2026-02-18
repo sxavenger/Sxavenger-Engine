@@ -323,12 +323,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\DirectX\DxObject\DxBlendState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxCommandContext.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h" />
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxConstantBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDescriptor.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDescriptorHeaps.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDevice.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h" />
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxGeometryDimensionBuffer.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxObjectCommon.h" />
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h" />
@@ -549,12 +549,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\DirectX\DxObject\DxBlendState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxCommandContext.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxConstantBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDescriptor.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDescriptorHeaps.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDevice.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp" />
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxGeometryDimensionBuffer.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxObject\DxResource.cpp" />

@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxGeometryDimensionBuffer.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/System/System.h>
 

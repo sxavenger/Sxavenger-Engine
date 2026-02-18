@@ -108,12 +108,12 @@ void CameraComponent::ShowComponentInspector() {
 	}
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& CameraComponent::GetGPUVirtualAddress() const {
+const D3D12_GPU_VIRTUAL_ADDRESS CameraComponent::GetGPUVirtualAddress() const {
 	StreamLogger::AssertA(buffers_[currentIndex_] != nullptr, "camera buffer is not create.");
 	return buffers_[currentIndex_]->GetGPUVirtualAddress();
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& CameraComponent::GetPrevGPUVirtualAddress() const {
+const D3D12_GPU_VIRTUAL_ADDRESS CameraComponent::GetPrevGPUVirtualAddress() const {
 	size_t prevIndex = (currentIndex_ + buffers_.size() - 1) % buffers_.size();
 	StreamLogger::AssertA(buffers_[prevIndex] != nullptr, "camera buffer is not create.");
 	return buffers_[prevIndex]->GetGPUVirtualAddress();

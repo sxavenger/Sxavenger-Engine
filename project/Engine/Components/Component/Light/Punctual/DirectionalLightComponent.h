@@ -64,7 +64,7 @@ public:
 
 	//* component option *//
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
 
 	const Parameter& GetParameter() const;
 	Parameter& GetParameter();

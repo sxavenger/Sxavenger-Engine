@@ -107,18 +107,16 @@ void PostProcessAutoExposure::Process(const DirectXQueueContext* context, const 
 void PostProcessAutoExposure::ShowInspectorImGui() {
 	parameter_->At().SetImGuiCommand();
 
-	ReadbackDimensionBuffer<uint32_t>::Readback(
+	debugHistogram_->Readback(
 		System::GetDxDevice(),
 		System::GetDirectQueueContext()->GetDxCommand(),
-		histogram_.get(),
-		debugHistogram_.get()
+		histogram_.get()
 	);
 
-	ReadbackDimensionBuffer<float>::Readback(
+	debugAverageLuminance_->Readback(
 		System::GetDxDevice(),
 		System::GetDirectQueueContext()->GetDxCommand(),
-		averageLuminance_.get(),
-		debugAverageLuminance_.get()
+		averageLuminance_.get()
 	);
 
 	uint32_t sum = std::accumulate(debugHistogram_->GetSpan().begin(), debugHistogram_->GetSpan().end(), 0);

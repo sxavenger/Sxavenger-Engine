@@ -8,7 +8,7 @@
 
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/Assets/Asset/AssetTexture.h>
 #include <Engine/Assets/Asset/AssetParameter.h>
 #include <Engine/Render/Common/FLUTTexture.h>

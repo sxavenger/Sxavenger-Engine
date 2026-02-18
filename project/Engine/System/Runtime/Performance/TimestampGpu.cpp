@@ -34,7 +34,7 @@ void TimestampGpu::Timestamp::Resolve(const DxObject::ReadbackDimensionBuffer<ui
 		uint64_t endTick   = buffer.At(index * 2 + 1);
 
 		stamp.SetTime(beginTick, endTick, frequency);
-		++index;
+		index++;
 	}
 }
 
@@ -54,7 +54,6 @@ void TimestampGpu::Init(DxObject::Device* device) {
 	);
 
 	readback_.Capacity(device, Timestamp::kStampCount * 2);
-	readback_.Resize(Timestamp::kStampCount * 2);
 
 }
 
@@ -84,6 +83,8 @@ void TimestampGpu::ReadTimestamp(const DirectXQueueContext* context) {
 		readback_.GetResource(),
 		0
 	);
+
+	readback_.Map();
 }
 
 void TimestampGpu::End(const DirectXQueueContext* context) {

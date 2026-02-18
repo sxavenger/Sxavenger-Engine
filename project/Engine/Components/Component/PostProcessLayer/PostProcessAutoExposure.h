@@ -9,7 +9,6 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxUnorderedDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxReadbackDimensionBuffer.h>
 

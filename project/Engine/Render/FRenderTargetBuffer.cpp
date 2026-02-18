@@ -116,7 +116,7 @@ FBaseTexture* FRenderTargetBuffer::GetGBuffer(FMainGBuffer::Layout layout) {
 	return main_.GetGBuffer(layout);
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& FRenderTargetBuffer::GetIndexBufferAddress() const {
+const D3D12_GPU_VIRTUAL_ADDRESS FRenderTargetBuffer::GetIndexBufferAddress() const {
 	return index_->GetGPUVirtualAddress();
 }
 

@@ -50,7 +50,7 @@ void DirectionalLightComponent::ShowComponentInspector() {
 	Graphics::PushLine(RequireTransform()->GetPosition(), RequireTransform()->GetPosition() + dir, Color4f{ parameter.color, 1.0f }, 0.6f);
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& DirectionalLightComponent::GetGPUVirtualAddress() const {
+const D3D12_GPU_VIRTUAL_ADDRESS DirectionalLightComponent::GetGPUVirtualAddress() const {
 	StreamLogger::AssertA(parameter_ != nullptr, "directional light buffer is not create.");
 	return parameter_->GetGPUVirtualAddress();
 }

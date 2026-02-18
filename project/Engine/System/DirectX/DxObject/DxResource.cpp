@@ -41,7 +41,7 @@ void Resource::Reset() {
 
 void Resource::Transition(DxObject::CommandContext* context, D3D12_RESOURCE_STATES state) {
 	if (current_ == state) {
-		return;
+		return; //!< stateが同じ場合は遷移しない.
 	}
 
 	context->TransitionResourceState(resource_.Get(), current_, state);
@@ -57,9 +57,23 @@ void Resource::SetName(const std::wstring& name) const {
 	resource_->SetName(name.c_str());
 }
 
+void Resource::Map(void** data, const std::optional<D3D12_RANGE>& range) {
+	StreamLogger::AssertA(resource_ != nullptr, "resource is null.");
+	resource_->Map(0, range.has_value() ? &range.value() : nullptr, data);
+}
+
+void Resource::Unmap(const std::optional<D3D12_RANGE>& range) {
+	StreamLogger::AssertA(resource_ != nullptr, "resource is null.");
+	resource_->Unmap(0, range.has_value() ? &range.value() : nullptr);
+}
+
 D3D12_GPU_VIRTUAL_ADDRESS Resource::GetGPUVirtualAddress() const {
 	StreamLogger::AssertA(resource_ != nullptr, "resource is null.");
 	return resource_->GetGPUVirtualAddress();
+}
+
+const D3D12_RESOURCE_DESC Resource::GetDesc() const {
+	return resource_->GetDesc();
 }
 
 Resource Resource::CreateBuffer(
