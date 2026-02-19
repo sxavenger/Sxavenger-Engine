@@ -92,8 +92,6 @@ void FDepthTexture::FRasterizerDepth::Create(const Vector2ui& size) {
 
 void FDepthTexture::FRasterizerDepth::Delete() {
 	resource_.Reset();
-	descriptorDSV_.Delete();
-	descriptorSRV_.Delete();
 }
 
 void FDepthTexture::FRasterizerDepth::BeginWrite(const DirectXQueueContext* context) const {
@@ -210,7 +208,6 @@ void FDepthTexture::FRaytracingDepth::Create(const Vector2ui& size) {
 
 void FDepthTexture::FRaytracingDepth::Delete() {
 	resource_.Reset();
-	descriptorUAV_.Delete();
 }
 
 void FDepthTexture::FRaytracingDepth::BeginWrite(const DirectXQueueContext* context) const {

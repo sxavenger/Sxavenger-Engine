@@ -54,7 +54,6 @@ void ImGuiController::Init(DirectXWindowContext* main) {
 		// descriptorの削除
 		descriptors.remove_if([&](DxObject::Descriptor& descriptor) {
 			if (descriptor.GetCPUHandle().ptr == cpuHandle.ptr) {
-				descriptor.Delete();
 				return true;
 			}
 

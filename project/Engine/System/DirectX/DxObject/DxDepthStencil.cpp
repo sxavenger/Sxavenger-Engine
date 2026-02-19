@@ -14,7 +14,6 @@ void DepthStencil::Init(
 }
 
 void DepthStencil::Term() {
-	descriptorDSV_.Delete();
 }
 
 void DepthStencil::CreateResource(Device* devices, const Vector2ui& size, DXGI_FORMAT format) {

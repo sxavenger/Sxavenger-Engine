@@ -85,7 +85,6 @@ void AssetTexture::Update(const DirectXQueueContext* context) {
 }
 
 void AssetTexture::Reset() {
-	descriptorSRV_.Delete();
 	resource_.Reset();
 	metadata_ = {};
 

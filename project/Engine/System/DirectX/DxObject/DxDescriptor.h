@@ -8,6 +8,7 @@
 
 //* c++
 #include <optional>
+#include <iostream>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -20,16 +21,11 @@ DXOBJECT_NAMESPACE_BEGIN
 class DescriptorPool;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Descriptor sturcture
+// Descriptor structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief Descriptor情報を保管するクラス.
 class Descriptor {
 public:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// using
-	////////////////////////////////////////////////////////////////////////////////////////////
-	using DescriptorHandles = std::pair<D3D12_CPU_DESCRIPTOR_HANDLE, std::optional<D3D12_GPU_DESCRIPTOR_HANDLE>>;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// friend
@@ -37,29 +33,72 @@ public:
 	friend class DescriptorPool;
 	friend class DescriptorHeaps;
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Handle structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Handle {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		//* constructor / destructor *//
+
+		Handle(DescriptorType type) : type(type) {}
+
+		//* getter *//
+
+		const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandle() const;
+
+		const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandle() const;
+
+		uint32_t GetIndex() const;
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		//* type *//
+
+		DescriptorType type;
+
+		//* Handle Index *//
+
+		uint32_t index = NULL;
+
+		//* Descriptor Handle *//
+
+		D3D12_CPU_DESCRIPTOR_HANDLE cpu                = {};
+		std::optional<D3D12_GPU_DESCRIPTOR_HANDLE> gpu = std::nullopt;
+
+	};
+
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	Descriptor()  = default;
-	~Descriptor() = default;
+	Descriptor() = default;
+	~Descriptor() { Reset(); }
 
-	void Delete();
+	void Reset();
 
-	//* getter *//
+	//* descriptor option *//
 
 	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandle() const;
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandle() const;
 
-	const uint32_t GetIndex() const;
+	uint32_t GetIndex() const;
 
-	//* operator *//
+	//* operator [move] *//
 
-	Descriptor(Descriptor&&)            = default;
-	Descriptor& operator=(Descriptor&&) = default;
+	Descriptor(Descriptor&&) noexcept;
+	Descriptor& operator=(Descriptor&&) noexcept;
+
+	//* operator [copy] (delete) *//
 
 	Descriptor(const Descriptor&)            = delete;
 	Descriptor& operator=(const Descriptor&) = delete;
@@ -72,20 +111,12 @@ private:
 
 	//* external *//
 
-	DescriptorPool* descriptorPool_ = nullptr;
+	DescriptorPool* pool_ = nullptr;
 
 	//* parameter *//
 
-	std::optional<DescriptorType> type_ = std::nullopt;
+	std::optional<Handle> handle_ = std::nullopt;
 
-	uint32_t          index_;
-	DescriptorHandles handles_;
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	void Reset();
 };
 
 DXOBJECT_NAMESPACE_END

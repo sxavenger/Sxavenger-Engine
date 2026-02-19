@@ -78,13 +78,17 @@ public:
 	//! @brief ウィンドウとタスクバーのアイコンを設定する
 	void SetIcon(const std::filesystem::path& filepath, const Vector2ui& cursolSize) const;
 
-	//* mode option *//
+	//* window option *//
 
 	//! @brief ウィンドウモードを設定する
 	//! @todo マウスの補正処理を追加する
 	void SetWindowMode(Mode mode);
 
-	//* directx option *//
+	//! @brief ウィンドウのサイズを変更する
+	//! @param size 新しいウィンドウのサイズ
+	void ResizeWindow(const Vector2ui& size);
+
+	//* DirectX option *//
 
 	//! @brief Window描画開始処理
 	void BeginRenderWindow(const DirectXQueueContext* context);

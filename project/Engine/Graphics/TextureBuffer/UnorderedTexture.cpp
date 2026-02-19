@@ -87,7 +87,6 @@ void UnorderedTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 }
 
 void UnorderedTexture::Term() {
-	descriptorUAV_.Delete();
 }
 
 void UnorderedTexture::TransitionBeginUnordered(const DirectXQueueContext* context) {

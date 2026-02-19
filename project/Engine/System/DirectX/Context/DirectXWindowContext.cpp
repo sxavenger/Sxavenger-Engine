@@ -135,6 +135,20 @@ void DirectXWindowContext::SetWindowMode(Mode mode) {
 	}
 }
 
+void DirectXWindowContext::ResizeWindow(const Vector2ui& size) {
+	//!< parameterの保存
+	size_ = size;
+
+	if (swapChain_ != nullptr) {
+		swapChain_->Resize(System::GetDxDevice(), System::GetDxDescriptorHeaps(), DxObject::kDefaultScreenFormat, size_);
+	}
+
+	if (depthStencil_ != nullptr) {
+		depthStencil_ = std::make_unique<DxObject::DepthStencil>();
+		depthStencil_->Init(System::GetDxDevice(), System::GetDxDescriptorHeaps(), size_);
+	}
+}
+
 void DirectXWindowContext::BeginRenderWindow(const DirectXQueueContext* context) {
 
 	// コマンドリストの取得
@@ -191,7 +205,7 @@ const DxObject::SwapChain::ColorSpace DirectXWindowContext::GetColorSpace() cons
 
 LRESULT DirectXWindowContext::WindowProcApplication(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
-	//auto instance = reinterpret_cast<DirectXWindowContext*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+	auto instance = reinterpret_cast<DirectXWindowContext*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
@@ -218,6 +232,18 @@ LRESULT DirectXWindowContext::WindowProcApplication(HWND hwnd, UINT msg, WPARAM 
 		case WM_DISPLAYCHANGE: //!< displayの設定が変更された
 			//instance->CheckSupportHDR();
 			break;
+
+		case WM_SIZE: //!< windowのサイズが変更された
+			{
+				if (wparam == SIZE_MINIMIZED) {
+					break; //!< 最小化されたときはリサイズ処理を行わない
+				}
+
+				// 新しいサイズを取得
+				Vector2ui size = { LOWORD(lparam), HIWORD(lparam) };
+				instance->ResizeWindow(size);
+			}
+			break;
 	}
 
 	return DefWindowProc(hwnd, msg, wparam, lparam);
@@ -225,7 +251,7 @@ LRESULT DirectXWindowContext::WindowProcApplication(HWND hwnd, UINT msg, WPARAM 
 
 LRESULT DirectXWindowContext::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
-	//auto instance = reinterpret_cast<DirectXWindowContext*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+	auto instance = reinterpret_cast<DirectXWindowContext*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
 
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
@@ -243,6 +269,18 @@ LRESULT DirectXWindowContext::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPA
 		case WM_MOVE:          //!< windowが移動した
 		case WM_DISPLAYCHANGE: //!< displayの設定が変更された
 			//instance->CheckSupportHDR();
+			break;
+
+		case WM_SIZE: //!< windowのサイズが変更された
+			{
+				if (wparam == SIZE_MINIMIZED) {
+					break; //!< 最小化されたときはリサイズ処理を行わない
+				}
+
+				// 新しいサイズを取得
+				Vector2ui size = { LOWORD(lparam), HIWORD(lparam) };
+				instance->ResizeWindow(size);
+			}
 			break;
 
 	}
@@ -336,12 +374,12 @@ void DirectXWindowContext::InitWindow() {
 	// window設定
 	WNDCLASS wc = {};
 	wc.lpszClassName = className_.c_str();
-	wc.hInstance     = hinst_;
-	wc.lpfnWndProc   = GetWindowProc();
+	wc.hInstance = hinst_;
+	wc.lpfnWndProc = GetWindowProc();
 	StreamLogger::AssertA(RegisterClass(&wc));
 
 	rect_ = {};
-	rect_.right  = size_.x;
+	rect_.right = size_.x;
 	rect_.bottom = size_.y;
 
 	// ウィンドウサイズの調整
@@ -351,7 +389,7 @@ void DirectXWindowContext::InitWindow() {
 	hwnd_ = CreateWindow(
 		wc.lpszClassName,
 		name_.c_str(),
-		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX, //!< windowのサイズの固定
+		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME,
 		CW_USEDEFAULT,
 		CW_USEDEFAULT,
 		rect_.right - rect_.left,
@@ -367,7 +405,7 @@ void DirectXWindowContext::InitWindow() {
 	ShowWindow(hwnd_, SW_SHOW);
 
 	// ウィンドウのプロシージャを設定
-	//SetWindowLongPtr(hwnd_, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+	SetWindowLongPtr(hwnd_, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
 }
 
 void DirectXWindowContext::InitDirectXWindow() {

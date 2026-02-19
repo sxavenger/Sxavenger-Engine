@@ -42,8 +42,8 @@ public:
 
 	void Init(
 		Device* device,
-		D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType, bool shaderVisible,
-		uint32_t descriptorCapacity
+		DescriptorType type, bool shaderVisible,
+		uint32_t capacity
 	);
 
 	void Term();
@@ -77,7 +77,7 @@ private:
 	//* descriptorHeap *//
 
 	ComPtr<ID3D12DescriptorHeap> descriptorHeap_;
-	D3D12_DESCRIPTOR_HEAP_TYPE   descriptorHeapType_;
+	DescriptorType               type_;
 	UINT                         descriptorHandleSize_;
 
 	//* descriptorPool *//
@@ -96,7 +96,11 @@ private:
 	// private methods
 	//=========================================================================================
 
-	void CreateDescriptorHeap(ID3D12Device* device);
+	static D3D12_DESCRIPTOR_HEAP_TYPE GetDescriptorHeapType(DescriptorType type);
+
+	void CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type);
+
+	//* helper method *//
 
 	uint32_t GetCurrentDescriptorIndex();
 

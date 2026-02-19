@@ -97,10 +97,6 @@ void FProcessTexture::Create(const Vector2ui& size, DXGI_FORMAT format) {
 
 void FProcessTexture::Term() {
 	resource_.Reset();
-	descriptorSRV_.Delete();
-	for (auto& descriptorUAV : descriptorsUAV_) {
-		descriptorUAV.Delete();
-	}
 }
 
 D3D12_RESOURCE_BARRIER FProcessTexture::TransitionBeginUnordered() const {

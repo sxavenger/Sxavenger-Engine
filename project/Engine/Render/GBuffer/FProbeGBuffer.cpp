@@ -20,8 +20,6 @@ SXAVENGER_ENGINE_USING
 
 FProbeTexture::~FProbeTexture() {
 	resource_.Reset();
-	descriptorSRV_.Delete();
-	descriptorUAV_.Delete();
 }
 
 void FProbeTexture::Create(const Vector3ui& probeCount, const Vector2ui& resolution, DXGI_FORMAT format) {
