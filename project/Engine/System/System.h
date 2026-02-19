@@ -164,7 +164,7 @@ public:
 
 	static void EndImGuiFrame();
 
-	static void RenderImGui(DirectXQueueContext* context = GetDirectQueueContext());
+	static void RenderImGui(const Vector2ui& size = Configuration::GetConfig().resolution, DirectXQueueContext* context = GetDirectQueueContext());
 
 	static ImGuiController* GetImGuiController();
 

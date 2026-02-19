@@ -50,7 +50,7 @@ public:
 	void EndFrame();
 
 	//! @brief ImGuiの描画処理を行う
-	void Render(DirectXQueueContext* context);
+	void Render(const Vector2ui& size, DirectXQueueContext* context);
 
 	//* convert *//
 

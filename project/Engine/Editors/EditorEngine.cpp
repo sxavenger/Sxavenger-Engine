@@ -39,7 +39,7 @@ void EditorEngine::UpdateEditor() {
 }
 
 void EditorEngine::SetNextWindowDocking() const {
-	ImGui::SetNextWindowDockID(dockingId_, ImGuiCond_FirstUseEver);
+	ImGui::SetNextWindowDockID(dockspaceId_, ImGuiCond_FirstUseEver);
 }
 
 EditorEngine* EditorEngine::GetInstance() {
@@ -64,7 +64,36 @@ void EditorEngine::ShowWindow() {
 		return;
 	}
 
-	dockingId_ = ImGui::GetID(kEditorName.c_str());
+	//!< dockspaceの生成
+	dockspaceId_ = ImGui::GetID("Dockspace ## Editor Engine");
+
+	{ //!< 全画面window表示
+		ImGui::SetNextWindowPos({ 0.0f, 0.0f });
+		ImGui::SetNextWindowSize(ImGui::GetMainViewport()->Size);
+
+		ImGuiWindowFlags flags
+			= ImGuiWindowFlags_NoCollapse
+			| ImGuiWindowFlags_NoDocking
+			| ImGuiWindowFlags_NoResize
+			| ImGuiWindowFlags_NoMove
+			| ImGuiWindowFlags_NoBringToFrontOnFocus
+			| ImGuiWindowFlags_NoNavFocus;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+
+		ImGui::Begin("Background ## Editor Engine", nullptr, flags);
+
+		ImGui::DockSpace(
+			dockspaceId_,
+			ImVec2(0.0f, 0.0f),
+			ImGuiDockNodeFlags_PassthruCentralNode
+		);
+
+		ImGui::End();
+
+		ImGui::PopStyleVar(2);
+	}
 
 	for (const auto& editor : editors_ | std::views::values) {
 		if (editor->IsDisplay()) {

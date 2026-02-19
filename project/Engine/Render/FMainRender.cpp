@@ -56,16 +56,16 @@ void FMainRender::Render(const DirectXQueueContext* context, DirectXWindowContex
 
 }
 
-void FMainRender::PresentMain(const DirectXQueueContext* context) {
+void FMainRender::PresentMain(const DirectXQueueContext* context, const Vector2ui& size) {
 	context->BeginEvent(L"Present Main");
 
 	FPresenter::Present(
-		context, Configuration::GetConfig().resolution,
+		context, size,
 		buffer_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV()
 	);
 
 	FPresenter::Present(
-		context, Configuration::GetConfig().resolution,
+		context, size,
 		buffer_->GetGBuffer(FMainGBuffer::Layout::Canvas)->GetGPUHandleSRV()
 	);
 

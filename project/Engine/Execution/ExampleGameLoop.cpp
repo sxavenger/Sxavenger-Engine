@@ -244,8 +244,8 @@ void ExampleGameLoop::RenderSystem() {
 	main_->BeginRenderWindow(System::GetDirectQueueContext());
 	main_->ClearWindow(System::GetDirectQueueContext());
 
-	FMainRender::GetInstance()->PresentMain(System::GetDirectQueueContext());
-	System::RenderImGui();
+	FMainRender::GetInstance()->PresentMain(System::GetDirectQueueContext(), main_->GetSize());
+	System::RenderImGui(main_->GetSize());
 
 	main_->EndRenderWindow(System::GetDirectQueueContext());
 

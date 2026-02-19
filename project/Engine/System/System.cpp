@@ -220,8 +220,8 @@ void System::EndImGuiFrame() {
 	sImGuiController->EndFrame();
 }
 
-void System::RenderImGui(DirectXQueueContext* context) {
-	sImGuiController->Render(context);
+void System::RenderImGui(const Vector2ui& size, DirectXQueueContext* context) {
+	sImGuiController->Render(size, context);
 }
 
 ImGuiController* System::GetImGuiController() {

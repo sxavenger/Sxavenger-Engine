@@ -379,7 +379,7 @@ void DirectXWindowContext::InitWindow() {
 	StreamLogger::AssertA(RegisterClass(&wc));
 
 	rect_ = {};
-	rect_.right = size_.x;
+	rect_.right  = size_.x;
 	rect_.bottom = size_.y;
 
 	// ウィンドウサイズの調整

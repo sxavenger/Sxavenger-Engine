@@ -38,7 +38,7 @@ public:
 
 	void Render(const DirectXQueueContext* context, DirectXWindowContext* window);
 
-	void PresentMain(const DirectXQueueContext* context);
+	void PresentMain(const DirectXQueueContext* context, const Vector2ui& size = Configuration::GetConfig().resolution);
 
 	//* getter *//
 
