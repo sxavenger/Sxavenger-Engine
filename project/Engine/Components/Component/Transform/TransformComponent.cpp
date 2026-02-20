@@ -23,7 +23,14 @@ TransformComponent::TransformComponent(EntityBehaviour* behaviour) : BaseCompone
 }
 
 void TransformComponent::ShowComponentInspector() {
-	transform_.SetImGuiCommand();
+	SxGui::DragVector3("translate", &transform_.translate.x, 0.01f);
+
+	Vector3f e = Quaternion::ToEuler(transform_.rotate);
+	if (SxGui::DragVector3("rotate", &e.x, 0.01f)) {
+		transform_.rotate = Quaternion::ToQuaternion(e);
+	}
+
+	SxGui::DragVector3("scale", &transform_.scale.x, 0.01f);
 	UpdateMatrix();
 }
 

@@ -21,8 +21,6 @@ public:
 	// public methods
 	//=========================================================================================
 
-	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityRotate = 1.0f, float granularityScale = 0.01f);
-
 	Matrix4x4 ToMatrix() const;
 
 	//=========================================================================================
@@ -44,8 +42,6 @@ public:
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-
-	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityRotate = 0.01f, float granularityScale = 0.01f);
 
 	json ParseToJson() const override;
 
@@ -98,8 +94,6 @@ public:
 	// public methods
 	//=========================================================================================
 
-	void SetImGuiCommand(float granularityTranslate = 0.01f, float granularityScale = 0.01f);
-
 	Matrix4x4 ToMatrix() const;
 
 	json ParseToJson() const override;
@@ -126,8 +120,6 @@ public:
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
-
-	void SetImGuiCommand(float granularityTranslate = 0.1f, float granularityScale = 0.1f);
 
 	Matrix4x4 ToMatrixPivot() const;
 

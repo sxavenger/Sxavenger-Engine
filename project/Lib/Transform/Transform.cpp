@@ -3,26 +3,10 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* external
-#include <imgui.h>
-
-//* engine
-#include <Engine/System/UI/SxImGui.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // EulerTransform structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-void EulerTransform::SetImGuiCommand(float granularityTranslate, float granularityRotate, float granularityScale) {
-	ImGui::DragFloat3("translate", &translate.x, granularityTranslate);
-
-	Vector3f deg = rotate * kRadToDeg;
-	if (ImGui::DragFloat3("rotate", &deg.x, granularityRotate, 0.0f, 0.0f, "%.0f deg")) {
-		rotate = deg * kDegToRad;
-	}
-
-	ImGui::DragFloat3("scale", &scale.x, granularityScale);
-}
 
 Matrix4x4 EulerTransform::ToMatrix() const {
 	return Matrix4x4::MakeAffine(scale, rotate, translate);
@@ -31,18 +15,6 @@ Matrix4x4 EulerTransform::ToMatrix() const {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // QuaternionTransform structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-void QuaternionTransform::SetImGuiCommand(float granularityTranslate, float granularityRotate, float granularityScale) {
-	SxImGui::DragVector3("translate", &translate.x, granularityTranslate);
-
-
-	Vector3f e = Quaternion::ToEuler(rotate);
-	if (SxImGui::DragVector3("rotate", &e.x, granularityRotate)) {
-		rotate = Quaternion::ToQuaternion(e);
-	}
-
-	SxImGui::DragVector3("scale", &scale.x, granularityScale);
-}
 
 Matrix4x4 QuaternionTransform::ToMatrix() const {
 	return Matrix4x4::MakeAffine(scale, rotate, translate);
@@ -84,12 +56,6 @@ void TransformationMatrix::Transfer(const Matrix4x4& _mat) {
 // UVTransform structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Transform2d::SetImGuiCommand(float granularityTranslate, float granularityScale) {
-	ImGui::DragFloat2("translate", &translate.x, granularityTranslate);
-	ImGui::SliderAngle("rotate",   &rotate);
-	ImGui::DragFloat2("scale",     &scale.x, granularityScale);
-}
-
 Matrix4x4 Transform2d::ToMatrix() const {
 	return Matrix4x4::MakeAffine({ scale.x, scale.y, 0.0f }, { 0.0f, 0.0f, rotate }, { translate.x, translate.y, 0.0f });
 }
@@ -111,17 +77,6 @@ void Transform2d::InputJson(const json& data) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RectTransform structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-
-void RectTransform::SetImGuiCommand(float granularityTranslate, float granularityScale) {
-	SxImGui::DragVector2("translate", &translate.x, granularityTranslate);
-	ImGui::SliderAngle("rotate",      &rotate);
-	SxImGui::DragVector2("scale",     &scale.x, granularityScale, 0.0f, std::numeric_limits<float>::max());
-
-	ImGui::Separator();
-
-	SxImGui::DragVector2("pivot",  &pivot.x, 0.01f, 0.0f, 1.0f, "%.2f");
-	SxImGui::DragFloat("priority", &priority, 0.01f, 0.0f);
-}
 
 Matrix4x4 RectTransform::ToMatrixPivot() const {
 	Matrix4x4 mat = Matrix4x4::Identity();
