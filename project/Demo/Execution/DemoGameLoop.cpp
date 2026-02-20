@@ -46,7 +46,7 @@ void DemoGameLoop::InitSystem() {
 	main_ = System::CreateMainWindow(
 		Configuration::GetConfig().resolution,
 		L"[Sxavenger Engine / Sxx Engine] Demo Window"
-	).lock();
+	);
 
 	atmosphere_ = std::make_unique<GameObject>();
 	(*atmosphere_)->AddComponent<TransformComponent>();

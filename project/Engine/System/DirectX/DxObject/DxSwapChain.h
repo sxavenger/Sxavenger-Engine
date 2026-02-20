@@ -47,7 +47,7 @@ public:
 		//=========================================================================================
 
 		ComPtr<ID3D12Resource> resource;
-		DxObject::Descriptor   descriptorRTV;
+		DxObject::Descriptor descriptorRTV;
 
 	};
 

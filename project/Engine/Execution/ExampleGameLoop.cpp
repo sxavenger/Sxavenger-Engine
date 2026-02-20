@@ -55,7 +55,8 @@ void ExampleGameLoop::InitSystem() {
 	main_ = System::CreateMainWindow(
 		Configuration::GetConfig().resolution,
 		L"[Sxavenger Engine / Sxx Engine] Example Window"
-	).lock();
+	);
+	main_->SetIcon(kPackagesDirectory / "icon" / "SxavengerEngineIcon.ico", { 32, 32 });
 
 	atmosphere_ = std::make_unique<GameObject>();
 	(*atmosphere_)->AddComponent<TransformComponent>();
@@ -244,8 +245,8 @@ void ExampleGameLoop::RenderSystem() {
 	main_->BeginRenderWindow(System::GetDirectQueueContext());
 	main_->ClearWindow(System::GetDirectQueueContext());
 
-	FMainRender::GetInstance()->PresentMain(System::GetDirectQueueContext(), main_->GetSize());
-	System::RenderImGui(main_->GetSize());
+	FMainRender::GetInstance()->PresentMain(System::GetDirectQueueContext(), main_->GetClient());
+	System::RenderImGui(main_->GetClient());
 
 	main_->EndRenderWindow(System::GetDirectQueueContext());
 

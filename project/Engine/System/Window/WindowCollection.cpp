@@ -20,23 +20,32 @@ SXAVENGER_ENGINE_USING
 // WindowCollection class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-std::weak_ptr<DirectXWindowContext> WindowCollection::CreateMainWindow(const Vector2ui& size, const std::wstring& name, const Color4f& color) {
+std::shared_ptr<DirectXWindowContext> WindowCollection::CreateMainWindow(
+	const Vector2ui& client, const std::wstring& name,
+	Sxl::Flag<DirectXWindowContext::Style> style,
+	const Color4f& color) {
+
 	main_ = std::make_shared<DirectXWindowContext>();
-	main_->Init(size, name, DirectXWindowContext::ProcessCategory::Application, color);
+	main_->Init(client, name, DirectXWindowContext::ProcessCategory::Application, style, color);
 
 	hwnds_.emplace(main_->GetHwnd(), main_.get());
 
 	return main_;
 }
 
-std::weak_ptr<DirectXWindowContext> WindowCollection::CreateSubWindow(const Vector2ui& size, const std::wstring& name, DirectXWindowContext::ProcessCategory category, const Color4f& color) {
+std::shared_ptr<DirectXWindowContext> WindowCollection::CreateSubWindow(
+	const Vector2ui& client, const std::wstring& name,
+	DirectXWindowContext::ProcessCategory category,
+	Sxl::Flag<DirectXWindowContext::Style> style,
+	const Color4f& color) {
+
 	if (windows_.contains(name)) {
 		StreamLogger::EngineLog(L"warning | window with name '" + name + L"' already exists.");
 		return windows_.at(name);
 	}
 
 	auto window = std::make_shared<DirectXWindowContext>();
-	window->Init(size, name, category, color);
+	window->Init(client, name, category, style, color);
 	windows_.emplace(name, window);
 
 	hwnds_.emplace(window->GetHwnd(), window.get());
@@ -127,7 +136,7 @@ void WindowCollection::SystemDebugGui() {
 		ImGui::Text("common info");
 		ImGui::Separator();
 		ImGui::Text("name:     %s",      ToString(main_->GetName()).c_str());
-		ImGui::Text("size:     %u x %u", main_->GetSize().x, main_->GetSize().y);
+		ImGui::Text("size:     %u x %u", main_->GetClient().x, main_->GetClient().y);
 		ImGui::Text("category: %s",      magic_enum::enum_name(main_->GetCategory()).data());
 		ImGui::Dummy({ 0, 4 });
 		

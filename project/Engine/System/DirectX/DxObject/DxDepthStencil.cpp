@@ -2,7 +2,7 @@
 DXOBJECT_USING
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// DepthSteincil class methods
+// DepthStencil class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DepthStencil::Init(
@@ -18,7 +18,7 @@ void DepthStencil::Term() {
 
 void DepthStencil::CreateResource(Device* devices, const Vector2ui& size, DXGI_FORMAT format) {
 
-		// deviceの取得
+	// deviceの取得
 	auto device = devices->GetDevice();
 
 	// propの設定
@@ -59,7 +59,9 @@ void DepthStencil::CreateDSV(Device* devices, DescriptorHeaps* descriptorHeaps, 
 	auto device = devices->GetDevice();
 
 	// handleの取得
-	descriptorDSV_ = descriptorHeaps->GetDescriptor(kDescriptor_DSV);
+	if (!descriptorDSV_.HasHandle()) {
+		descriptorDSV_ = descriptorHeaps->GetDescriptor(kDescriptor_DSV);
+	}
 
 	// descの設定
 	D3D12_DEPTH_STENCIL_VIEW_DESC desc = {};

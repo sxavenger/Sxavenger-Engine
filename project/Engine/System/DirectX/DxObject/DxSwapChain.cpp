@@ -35,7 +35,7 @@ void SwapChain::Init(
 
 void SwapChain::Resize(Device* device, DescriptorHeaps* descriptorHeaps, DXGI_FORMAT format, const Vector2ui& size) {
 	for (uint32_t i = 0; i < kBufferCount; ++i) {
-		buffers_[i].Reset();
+		buffers_[i].resource.Reset();
 	}
 
 	ResizeSwapChain(format, size);
@@ -225,7 +225,9 @@ void SwapChain::CreateBuffer(Device* device, DescriptorHeaps* descriptorHeaps, D
 	desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 	for (uint32_t i = 0; i < kBufferCount; ++i) {
-		buffers_[i].descriptorRTV = descriptorHeaps->GetDescriptor(DescriptorType::kDescriptor_RTV);
+		if (!buffers_[i].descriptorRTV.HasHandle()) {
+			buffers_[i].descriptorRTV = descriptorHeaps->GetDescriptor(DescriptorType::kDescriptor_RTV);
+		}
 
 		device->GetDevice()->CreateRenderTargetView(
 			buffers_[i].resource.Get(),

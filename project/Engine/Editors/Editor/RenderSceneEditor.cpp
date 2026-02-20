@@ -193,7 +193,7 @@ void RenderSceneEditor::Render() {
 	if (!sceneWindow_.expired()) {
 		auto ptr = sceneWindow_.lock();
 		ptr->BeginRenderWindow(context);
-		FPresenter::Present(context, ptr->GetSize(), textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV());
+		FPresenter::Present(context, ptr->GetClient(), textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV());
 		ptr->EndRenderWindow(context);
 	}
 }

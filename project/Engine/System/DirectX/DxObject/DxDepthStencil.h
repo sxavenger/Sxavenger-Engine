@@ -36,6 +36,8 @@ public:
 		const Vector2ui& size, DXGI_FORMAT format = DxObject::kDefaultDepthFormat
 	);
 
+	void Resize(Device* device, const Vector2ui& size, DXGI_FORMAT format = DxObject::kDefaultDepthFormat);
+
 	void Term();
 
 	//* getter *//

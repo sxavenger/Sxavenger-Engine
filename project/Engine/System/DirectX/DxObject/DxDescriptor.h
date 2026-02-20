@@ -93,6 +93,8 @@ public:
 
 	uint32_t GetIndex() const;
 
+	bool HasHandle() const { return handle_.has_value(); }
+
 	//* operator [move] *//
 
 	Descriptor(Descriptor&&) noexcept;
