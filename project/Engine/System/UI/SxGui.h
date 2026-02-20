@@ -44,6 +44,7 @@ namespace SxGui {
 		Stack         = 0xF500,
 		Visibility    = 0xE8F4,
 		VisibilityOff = 0xE8F5,
+		Delete        = 0xE872,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,6 +93,20 @@ namespace SxGui {
 	void LoadStyle(const std::filesystem::path& filepath = kGuiStyleFilepath);
 
 	void SaveStyle(const std::filesystem::path& filepath = kGuiStyleFilepath);
+
+	//=========================================================================================
+	// widget methods
+	//=========================================================================================
+
+	template <ScalerConcept T, int32_t Component>
+	bool DragScalarN(const char* label, T v[Component], float v_speed = 1.0f, const std::optional<T>& v_min = std::nullopt, const std::optional<T>& v_max = std::nullopt, const char* format = GetImGuiFormat<T>(), ImGuiSliderFlags flags = ImGuiSliderFlags_None);
+
+	template <ScalerConcept T>
+	bool DragScalar(const char* label, T* v, float v_speed = 1.0f, const std::optional<T>& v_min = std::nullopt, const std::optional<T>& v_max = std::nullopt, const char* format = GetImGuiFormat<T>(), ImGuiSliderFlags flags = ImGuiSliderFlags_None);
+
+	bool DragVector2(const char* label, float v[2], float v_speed = 1.0f, const std::optional<float>& v_min = std::nullopt, const std::optional<float>& v_max = std::nullopt, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
+
+	bool DragVector3(const char* label, float v[3], float v_speed = 1.0f, const std::optional<float>& v_min = std::nullopt, const std::optional<float>& v_max = std::nullopt, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Hierarchy namespace
@@ -150,6 +165,7 @@ namespace SxGui {
 		void End();
 
 		void NextRow();
+
 		void SetColumnIndex(Column column);
 
 		////////////////////////////////////////////////////////////////////////////////////////////
@@ -160,6 +176,10 @@ namespace SxGui {
 
 		template <ScalerConcept T, int32_t Component>
 		bool DragScalarN(const std::string& label, T v[Component], float v_speed = 1.0f, const std::optional<T>& v_min = std::nullopt, const std::optional<T>& v_max = std::nullopt, const char* format = GetImGuiFormat<T>(), ImGuiSliderFlags flags = ImGuiSliderFlags_None);
+
+		bool DragVector2(const std::string& label, float v[2], float v_speed = 1.0f, const std::optional<float>& v_min = std::nullopt, const std::optional<float>& v_max = std::nullopt, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
+
+		bool DragVector3(const std::string& label, float v[3], float v_speed = 1.0f, const std::optional<float>& v_min = std::nullopt, const std::optional<float>& v_max = std::nullopt, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 
 	}
 }
@@ -209,6 +229,17 @@ constexpr const char* SxGui::GetImGuiFormat() {
 	else if constexpr (std::is_same_v<T, float>)                                                                 return "%.3f";
 	else if constexpr (std::is_same_v<T, double>)                                                                return "%.6f";
 	else static_assert(false, "Unsupported type for ImGui format.");
+}
+
+template <SxGui::ScalerConcept T, int32_t Component>
+bool SxGui::DragScalarN(const char* label, T v[Component], float v_speed, const std::optional<T>& v_min, const std::optional<T>& v_max, const char* format, ImGuiSliderFlags flags) {
+	std::pair<T, T> range = { v_min.value_or(std::numeric_limits<T>::lowest()), v_max.value_or(std::numeric_limits<T>::max()) };
+	return ImGui::DragScalarN(label, SxGui::GetImGuiDataType<T>(), v, Component, v_speed, &range.first, &range.second, format, flags);
+}
+
+template <SxGui::ScalerConcept T>
+bool SxGui::DragScalar(const char* label, T* v, float v_speed, const std::optional<T>& v_min, const std::optional<T>& v_max, const char* format, ImGuiSliderFlags flags) {
+	return SxGui::DragScalarN<T, 1>(label, v, v_speed, v_min, v_max, format, flags);
 }
 
 template <SxGui::ScalerConcept T, int32_t Component>
