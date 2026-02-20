@@ -54,7 +54,6 @@ void ImGuiController::Init(DirectXWindowContext* main) {
 		// descriptorの削除
 		descriptors.remove_if([&](DxObject::Descriptor& descriptor) {
 			if (descriptor.GetCPUHandle().ptr == cpuHandle.ptr) {
-				descriptor.Delete();
 				return true;
 			}
 
@@ -87,10 +86,15 @@ void ImGuiController::EndFrame() {
 	ImGui::Render();
 }
 
-void ImGuiController::Render(DirectXQueueContext* context) {
+void ImGuiController::Render(const Vector2ui& size, DirectXQueueContext* context) {
 	context->RequestQueue(DirectXQueueContext::RenderQueue::Direct);
 #ifdef _DEVELOPMENT
 	context->BeginEvent(L"ImGui Render");
+
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+	viewport->Pos  = { 0.0f, 0.0f };
+	viewport->Size = { static_cast<float>(size.x), static_cast<float>(size.y) };
+
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), context->GetCommandList());
 	context->EndEvent();
 #endif // _DEVELOPMENT

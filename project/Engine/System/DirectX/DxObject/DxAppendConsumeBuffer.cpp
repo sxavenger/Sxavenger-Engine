@@ -15,7 +15,6 @@ void BaseAppendConsumeBuffer::Reset() {
 	if (resource_ != nullptr) {
 		resource_.Reset();
 		counter_.Reset();
-		descriptorUAV_.Delete();
 	}
 
 	size_ = NULL;

@@ -96,12 +96,10 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static inline const std::string kEditorName = "Sxavenger Engine Editor";
-
 	//* imgui *//
 
-	ImGuiID          dockingId_  = NULL;
-	ImGuiWindowFlags windowFlag_ = NULL;
+	ImGuiID          dockspaceId_ = NULL;
+	ImGuiWindowFlags windowFlag_  = NULL;
 
 	//* config *//
 

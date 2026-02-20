@@ -71,12 +71,17 @@ public:
 	// GameWindowCollection option
 	//-----------------------------------------------------------------------------------------
 
-	static const std::weak_ptr<DirectXWindowContext> CreateMainWindow(
-		const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor = DirectXWindowContext::kDefaultClearColor
+	static const std::shared_ptr<DirectXWindowContext> CreateMainWindow(
+		const Vector2ui& client, const std::wstring& name,
+		Sxl::Flag<DirectXWindowContext::Style> style = DirectXWindowContext::Style::Default,
+		const Color4f& color = DirectXWindowContext::kDefaultClearColor
 	);
 
-	static const std::weak_ptr<DirectXWindowContext> CreateSubWindow(
-		const Vector2ui& clientSize, const LPCWSTR& name, DirectXWindowContext::ProcessCategory category, const Color4f& clearColor = DirectXWindowContext::kDefaultClearColor
+	static const std::shared_ptr<DirectXWindowContext> CreateSubWindow(
+		const Vector2ui& client, const std::wstring& name,
+		DirectXWindowContext::ProcessCategory category = DirectXWindowContext::ProcessCategory::Window,
+		Sxl::Flag<DirectXWindowContext::Style> style = DirectXWindowContext::Style::Default,
+		const Color4f& color = DirectXWindowContext::kDefaultClearColor
 	);
 
 	//! @brief メッセージ処理
@@ -164,7 +169,7 @@ public:
 
 	static void EndImGuiFrame();
 
-	static void RenderImGui(DirectXQueueContext* context = GetDirectQueueContext());
+	static void RenderImGui(const Vector2ui& size = Configuration::GetConfig().resolution, DirectXQueueContext* context = GetDirectQueueContext());
 
 	static ImGuiController* GetImGuiController();
 

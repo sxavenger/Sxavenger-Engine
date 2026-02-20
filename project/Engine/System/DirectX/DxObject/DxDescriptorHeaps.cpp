@@ -22,67 +22,89 @@ DXOBJECT_USING
 
 void DescriptorPool::Init(
 	Device* devices,
-	D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType, bool shaderVisible,
-	uint32_t descriptorCapacity) {
+	DescriptorType type, bool shaderVisible,
+	uint32_t capacity) {
 
 	// deviceの取り出し
 	ID3D12Device* device = devices->GetDevice();
 
 	// parameterの保存
-	descriptorHeapType_ = descriptorHeapType;
+	type_               = type;
 	shaderVisible_      = shaderVisible;
 
 	//!< allocatorの初期化
-	allocator_.Capacity(descriptorCapacity);
+	allocator_.Capacity(capacity);
 
-	CreateDescriptorHeap(device);
+	CreateDescriptorHeap(device, DescriptorPool::GetDescriptorHeapType(type));
+	StreamLogger::EngineLog(std::format("[DXOBJECT DescriptorPool] descriptor heap type: {}, visibility: {}, capacity: {}", magic_enum::enum_name(type), shaderVisible, capacity));
 
-	// handleSizeを取得
-	descriptorHandleSize_ = device->GetDescriptorHandleIncrementSize(descriptorHeapType_);
-
-	StreamLogger::EngineLog(std::format("[DXOBJECT DescriptorPool] descriptor heap type: {}, visibility: {}, capacity: {}", magic_enum::enum_name(descriptorHeapType), shaderVisible, descriptorCapacity));
 }
 
 void DescriptorPool::Term() {
 	if (GetUsedDescriptorsCount() != 0) {
-		StreamLogger::EngineLog(std::format("[DXOBJECT DescriptorPool {}] warning: descriptor leak detected. used count: {}.", magic_enum::enum_name(descriptorHeapType_), GetUsedDescriptorsCount()));
+		StreamLogger::EngineLog(std::format("[DXOBJECT DescriptorPool {}] warning: descriptor leak detected. used count: {}.", magic_enum::enum_name(type_), GetUsedDescriptorsCount()));
 	}
 }
 
 Descriptor DescriptorPool::GetDescriptor() {
 	std::unique_lock<std::mutex> lock(mutex_);
 	
-	Descriptor result = {};
+	Descriptor::Handle handle(type_);
 
-	result.index_ = GetCurrentDescriptorIndex();
+	//!< indexの取得
+	handle.index = GetCurrentDescriptorIndex();
 
-	// handleの取得
-	result.handles_.first  = GetCPUDescriptorHandle(result.index_);
-	result.handles_.second = std::nullopt;
+	//!< CPU/GPUハンドルの取得
+	handle.cpu = GetCPUDescriptorHandle(handle.index);
 
 	if (shaderVisible_) {
-		result.handles_.second = GetGPUDescriptorHandle(result.index_);
+		handle.gpu = GetGPUDescriptorHandle(handle.index);
 	}
 
-	result.descriptorPool_ = this;
+	//!< descriptorの作成
+	Descriptor descriptor = {};
+	descriptor.pool_ = this; //!< HACK: 生ptrの保存
+	descriptor.handle_.emplace(std::move(handle));
 
-	StreamLogger::EngineLog(std::format("[DXOBJECT DescriptorPool {}] create descriptor index: {}.", magic_enum::enum_name(descriptorHeapType_), result.index_));
-	return result;
+	StreamLogger::EngineLog(std::format("[DXOBJECT DescriptorPool {}] create descriptor index: {}.", magic_enum::enum_name(handle.type), handle.index));
+	return descriptor;
 }
 
 void DescriptorPool::DeleteDescriptor(Descriptor& descriptor) {
 	std::unique_lock<std::mutex> lock(mutex_);
-	
-	allocator_.Release(descriptor.index_);
-	StreamLogger::EngineLog(std::format("[DXOBJECT DescriptorPool {}] delete descriptor index: {}.", magic_enum::enum_name(descriptorHeapType_), descriptor.index_));
 
-	descriptor.Reset();
+	{
+		const Descriptor::Handle& handle = descriptor.handle_.value();
+
+		//!< indexの解放
+		allocator_.Free(handle.index);
+		StreamLogger::EngineLog(std::format("[DXOBJECT DescriptorPool {}] delete descriptor index: {}.", magic_enum::enum_name(handle.type), handle.index));
+	}
+	
+	//!< descriptorのリセット
+	descriptor.handle_ = std::nullopt;
+	descriptor.pool_   = nullptr;
 }
 
-void DescriptorPool::CreateDescriptorHeap(ID3D12Device* device) {
+D3D12_DESCRIPTOR_HEAP_TYPE DescriptorPool::GetDescriptorHeapType(DescriptorType type) {
+	switch (type) {
+		case kDescriptor_RTV:
+			return D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+
+		case kDescriptor_DSV:
+			return D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+
+		case kDescriptor_CBV_SRV_UAV:
+			return D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	}
+
+	StreamLogger::Exception("type is not a valid value.");
+}
+
+void DescriptorPool::CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type) {
 
 	D3D12_DESCRIPTOR_HEAP_DESC desc = {};
-	desc.Type           = descriptorHeapType_;
+	desc.Type           = type;
 	desc.NumDescriptors = allocator_.GetCapacity();
 	desc.Flags          = shaderVisible_
 		? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
@@ -91,10 +113,13 @@ void DescriptorPool::CreateDescriptorHeap(ID3D12Device* device) {
 		&desc, IID_PPV_ARGS(&descriptorHeap_)
 	);
 	DxObject::Assert(hr, L"descriptor heap create failed.");
+
+	//!< sizeの保存
+	descriptorHandleSize_ = device->GetDescriptorHandleIncrementSize(type);
 }
 
 uint32_t DescriptorPool::GetCurrentDescriptorIndex() {
-	StreamLogger::AssertA(allocator_.CheckAvailable(), std::format("descriptor heap max count over. type: {}", magic_enum::enum_name(descriptorHeapType_).data()));  //!< 作成した分のDescriptorの要素数を超えている
+	StreamLogger::AssertA(allocator_.CheckAvailable(), std::format("descriptor heap max count over. type: {}", magic_enum::enum_name(type_).data()));  //!< 作成した分のDescriptorの要素数を超えている
 	return allocator_.Get();
 }
 
@@ -117,13 +142,13 @@ D3D12_GPU_DESCRIPTOR_HANDLE DescriptorPool::GetGPUDescriptorHandle(uint32_t inde
 void DescriptorHeaps::Init(Device* device) {
 
 	pools_[DescriptorType::kDescriptor_RTV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_RTV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, false, Configuration::GetConfig().descriptorCount_RTV);
+	pools_[DescriptorType::kDescriptor_RTV]->Init(device, DescriptorType::kDescriptor_RTV, false, Configuration::GetConfig().descriptorCount_RTV);
 
 	pools_[DescriptorType::kDescriptor_DSV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_DSV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, false, Configuration::GetConfig().descriptorCount_DSV);
+	pools_[DescriptorType::kDescriptor_DSV]->Init(device, DescriptorType::kDescriptor_DSV, false, Configuration::GetConfig().descriptorCount_DSV);
 
 	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV] = std::make_unique<DescriptorPool>();
-	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, true, Configuration::GetConfig().descriptorCount_SRV_CBV_UAV);
+	pools_[DescriptorType::kDescriptor_CBV_SRV_UAV]->Init(device, DescriptorType::kDescriptor_CBV_SRV_UAV, true, Configuration::GetConfig().descriptorCount_SRV_CBV_UAV);
 
 	StreamLogger::EngineLog("[DXOBJECT DescriptorHeaps] complete initialize.");
 }
@@ -134,16 +159,12 @@ void DescriptorHeaps::Term() {
 
 Descriptor DescriptorHeaps::GetDescriptor(DescriptorType type) {
 	StreamLogger::AssertA(type < DescriptorType::kCountOfDescriptorTypeCount, "type is not a valid value.");
-
-	Descriptor result = pools_.at(type)->GetDescriptor();
-	result.type_      = type;
-
-	return result;
+	return pools_[type]->GetDescriptor();
 }
 
 void DescriptorHeaps::DeleteDescriptor(Descriptor& descriptor) {
-	if (descriptor.type_.has_value()) {
-		pools_.at(descriptor.type_.value())->DeleteDescriptor(descriptor);
+	if (descriptor.handle_.has_value()) {
+		pools_[descriptor.handle_->type]->DeleteDescriptor(descriptor);
 	}
 }
 

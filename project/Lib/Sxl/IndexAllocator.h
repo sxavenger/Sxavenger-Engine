@@ -40,7 +40,7 @@ public:
 
 	//! @brief indexを解放し、再利用可能なindexとしてキューに追加.
 	//! @param index 解放するindex.
-	void Release(T index);
+	void Free(T index);
 
 	//* getter *//
 
@@ -102,7 +102,7 @@ inline T IndexAllocator<T>::Get() {
 }
 
 template <std::integral T>
-inline void IndexAllocator<T>::Release(T index) {
+inline void IndexAllocator<T>::Free(T index) {
 	if (!capacity_.has_value()) {
 		Exception::RuntimeError("capacity is null.");
 	}

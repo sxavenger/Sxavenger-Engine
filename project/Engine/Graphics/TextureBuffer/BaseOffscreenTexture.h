@@ -30,7 +30,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	~BaseOffscreenTexture();
+	~BaseOffscreenTexture() = default;
 
 	//* getter *//
 

@@ -149,9 +149,6 @@ void FBaseTexture::Create(const Option& option) {
 }
 
 void FBaseTexture::Term() {
-	descriptorSRV_.Delete();
-	descriptorRTV_.Delete();
-	descriptorUAV_.Delete();
 	resource_.Reset();
 }
 

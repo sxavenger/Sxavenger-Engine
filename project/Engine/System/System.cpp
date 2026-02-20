@@ -81,21 +81,28 @@ DirectXQueueContext* System::GetDirectQueueContext() {
 	return sDirectQueueContext.get();
 }
 
-const std::weak_ptr<DirectXWindowContext> System::CreateMainWindow(
-	const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor) {
+const std::shared_ptr<DirectXWindowContext> System::CreateMainWindow(
+	const Vector2ui& client, const std::wstring& name,
+	Sxl::Flag<DirectXWindowContext::Style> style,
+	const Color4f& color) {
 
 	// windowの生成
-	auto window = sWindowCollection->CreateMainWindow(clientSize, name, clearColor);
+	auto window = sWindowCollection->CreateMainWindow(client, name, style, color);
 
 	// user system の初期化
-	sInput->Init(window.lock().get());
-	sImGuiController->Init(window.lock().get());
+	sInput->Init(window.get());
+	sImGuiController->Init(window.get());
 
 	return window;
 }
 
-const std::weak_ptr<DirectXWindowContext> System::CreateSubWindow(const Vector2ui& clientSize, const LPCWSTR& name, DirectXWindowContext::ProcessCategory category, const Color4f& clearColor) {
-	return sWindowCollection->CreateSubWindow(clientSize, name, category, clearColor);
+const std::shared_ptr<DirectXWindowContext> System::CreateSubWindow(
+	const Vector2ui& client, const std::wstring& name,
+	DirectXWindowContext::ProcessCategory category,
+	Sxl::Flag<DirectXWindowContext::Style> style,
+	const Color4f& color) {
+
+	return sWindowCollection->CreateSubWindow(client, name, category, style, color);
 }
 
 bool System::ProcessMessage() {
@@ -220,8 +227,8 @@ void System::EndImGuiFrame() {
 	sImGuiController->EndFrame();
 }
 
-void System::RenderImGui(DirectXQueueContext* context) {
-	sImGuiController->Render(context);
+void System::RenderImGui(const Vector2ui& size, DirectXQueueContext* context) {
+	sImGuiController->Render(size, context);
 }
 
 ImGuiController* System::GetImGuiController() {
