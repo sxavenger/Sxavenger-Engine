@@ -32,7 +32,8 @@ public:
 		Normal,
 		MaterialARM,
 		Position, //!< Hack: depthから復元できるように調整
-		Velocity
+		Velocity,
+		Address,
 	};
 
 	static inline const size_t kLayoutCount = magic_enum::enum_count<Layout>();

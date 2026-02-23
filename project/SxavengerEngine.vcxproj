@@ -25,19 +25,19 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v145</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -54,22 +54,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(ProjectDir)..\Generated\outputs\Debug\</OutDir>
-    <IntDir>$(ProjectDir)..\Generated\obj\SxavengerEngine\Debug\</IntDir>
+    <OutDir>$(ProjectDir)..\generated\outputs\Debug\</OutDir>
+    <IntDir>$(ProjectDir)..\generated\obj\SxavengerEngine\Debug\</IntDir>
     <TargetName>SxavengerEngine</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\Generated\outputs\Develop\</OutDir>
-    <IntDir>$(ProjectDir)..\Generated\obj\SxavengerEngine\Develop\</IntDir>
+    <OutDir>$(ProjectDir)..\generated\outputs\Develop\</OutDir>
+    <IntDir>$(ProjectDir)..\generated\obj\SxavengerEngine\Develop\</IntDir>
     <TargetName>SxavengerEngine</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\Generated\outputs\Release\</OutDir>
-    <IntDir>$(ProjectDir)..\Generated\obj\SxavengerEngine\Release\</IntDir>
+    <OutDir>$(ProjectDir)..\generated\outputs\Release\</OutDir>
+    <IntDir>$(ProjectDir)..\generated\obj\SxavengerEngine\Release\</IntDir>
     <TargetName>SxavengerEngine</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>

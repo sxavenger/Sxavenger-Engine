@@ -56,6 +56,7 @@ struct GeometryDeferredOutput {
 	float4 normal      : SV_Target1;
 	float4 materialARM : SV_Target2;
 	float4 position    : SV_Target3;
+	uint2 address      : SV_Target4; //!< [x, y] = [upper 32 bits, lower 32 bits]
 	
 	//=========================================================================================
 	// public methods
@@ -80,6 +81,10 @@ struct GeometryDeferredOutput {
 	
 	void SetPosition(float3 pos) {
 		position = float4(pos, NOT_USED_1);
+	}
+
+	void SetAddress(uint2 sprit) {
+		address = sprit;
 	}
 	
 };

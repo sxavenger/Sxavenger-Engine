@@ -9,7 +9,7 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-//#include <Engine/System/DirectX/DirectXAlignment.h>
+#include <Engine/System/DirectX/DirectXAlignment.h>
 
 //* lib
 #include <Lib/Geometry/Color3.h>
@@ -58,6 +58,8 @@ public:
 		Roughness,
 		Metallic,
 	};
+
+	PUSH_GPU_BUFFER_ALIGNAS
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// UVTransformation structure
@@ -306,6 +308,8 @@ public:
 		SurfaceProperties properties;
 
 	};
+
+	POP_GPU_BUFFER_ALIGNAS
 
 public:
 

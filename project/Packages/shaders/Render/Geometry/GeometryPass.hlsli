@@ -7,6 +7,7 @@
 #include "GeometryRenderTarget.hlsli"
 
 //* library
+#include "../../Library/Address.hlsli"
 #include "../../Library/WeightedBlendedOIT.hlsli" //!< transparency pass
 
 //* content
@@ -55,3 +56,4 @@ ConstantBuffer<CameraComponent> gCamera : register(b0, space2);
 static const float4x4 kViewProj = gCamera.GetViewProj();
 
 ConstantBuffer<TransformComponent> gTransform : register(b1, space2);
+ConstantBuffer<Address> AddressBuffer : register(b2, space2);

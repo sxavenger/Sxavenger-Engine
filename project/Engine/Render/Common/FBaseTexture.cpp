@@ -89,7 +89,9 @@ void FBaseTexture::Create(const Option& option) {
 	if (option.flag.Test(Flag::RenderTarget)) { //!< RTVの生成
 
 		// handleの取得
-		descriptorRTV_ = System::GetDescriptor(kDescriptor_RTV);
+		if (!descriptorRTV_.HasHandle()) {
+			descriptorRTV_ = System::GetDescriptor(kDescriptor_RTV);
+		}
 
 		// descの設定
 		D3D12_RENDER_TARGET_VIEW_DESC desc = {};
@@ -107,7 +109,9 @@ void FBaseTexture::Create(const Option& option) {
 	if (option.flag.Test(Flag::UnorderedAccess)) { //!< UAVの生成
 
 		// handleの取得
-		descriptorUAV_ = System::GetDescriptor(kDescriptor_UAV);
+		if (!descriptorUAV_.HasHandle()) {
+			descriptorUAV_ = System::GetDescriptor(kDescriptor_UAV);
+		}
 
 		// descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
@@ -126,7 +130,9 @@ void FBaseTexture::Create(const Option& option) {
 	{ //!< SRVの生成
 
 		// handleの取得
-		descriptorSRV_ = System::GetDescriptor(kDescriptor_SRV);
+		if (!descriptorSRV_.HasHandle()) {
+			descriptorSRV_ = System::GetDescriptor(kDescriptor_SRV);
+		}
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};

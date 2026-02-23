@@ -20,7 +20,8 @@ const std::array<DXGI_FORMAT, FDeferredGBuffer::kLayoutCount> FDeferredGBuffer::
 	DXGI_FORMAT_R10G10B10A2_UNORM,  //!< Normal
 	DXGI_FORMAT_R8G8B8A8_UNORM,     //!< MaterialARM
 	DXGI_FORMAT_R32G32B32A32_FLOAT, //!< Position
-	DXGI_FORMAT_R16G16B16A16_FLOAT  //!< Velocity
+	DXGI_FORMAT_R16G16B16A16_FLOAT, //!< Velocity
+	DXGI_FORMAT_R32G32_UINT         //!< Address
 };
 
 //- Format
@@ -29,6 +30,7 @@ const std::array<DXGI_FORMAT, FDeferredGBuffer::kLayoutCount> FDeferredGBuffer::
 // MaterialARM: [DXGI_FORMAT_R8G8B8A8_UNORM]     float ambient_occlusion, float roughness, float metallic, float NOT_USED
 // Position:    [DXGI_FORMAT_R32G32B32A32_FLOAT] float3 position, float NOT_USED
 // Velocity:    [DXGI_FORMAT_R16G16B16A16_FLOAT] float2 velocity, float2 NOT_USED
+// Address:     [DXGI_FORMAT_R32G32_UINT]        uint2 address(= uintptr_tと同等[x: upper, y: lower)
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FDeferredGBuffer class methods

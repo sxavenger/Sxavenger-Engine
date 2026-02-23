@@ -10,14 +10,14 @@ os.chdir(_SCRIPT_DIR .. "/../project")
 workspace "SxavengerEngine"
 	configurations { "Debug", "Develop", "Release" }
 	platforms { "x64" }
-	toolset "v145"
+	toolset "v143"
 
 	-- スタートプロジェクトの設定
 	startproject "SxavengerEngine"
 
 	-- 出力先の設定
-	targetdir "%{wks.location}/../Generated/outputs/%{cfg.buildcfg}/"         -- 出力先
-	objdir    "%{wks.location}/../Generated/obj/%{prj.name}/%{cfg.buildcfg}/" -- 中間ファイル
+	targetdir "%{wks.location}/../generated/outputs/%{cfg.buildcfg}/"         -- 出力先
+	objdir    "%{wks.location}/../generated/obj/%{prj.name}/%{cfg.buildcfg}/" -- 中間ファイル
 
 	--- 外部projectの登録 ---
 	-- DirectXTex
