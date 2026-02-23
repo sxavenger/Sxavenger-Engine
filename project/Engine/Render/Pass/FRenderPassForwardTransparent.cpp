@@ -124,7 +124,7 @@ void FRenderPassForwardTransparent::PassStaticMeshOpaque(const DirectXQueueConte
 			return;
 		}
 
-		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
+		parameter.SetAddress("gTransform", transform->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
@@ -168,7 +168,7 @@ void FRenderPassForwardTransparent::PassSkinnedMeshOpaque(const DirectXQueueCont
 		// メッシュの描画
 		component->BindIABuffer(context);
 
-		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
+		parameter.SetAddress("gTransform", transform->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
@@ -207,7 +207,7 @@ void FRenderPassForwardTransparent::PassStaticMeshTransparent(const DirectXQueue
 			return;
 		}
 
-		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
+		parameter.SetAddress("gTransform", transform->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
@@ -251,7 +251,7 @@ void FRenderPassForwardTransparent::PassSkinnedMeshTransparent(const DirectXQueu
 		// メッシュの描画
 		component->BindIABuffer(context);
 
-		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
+		parameter.SetAddress("gTransform", transform->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 

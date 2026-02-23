@@ -47,14 +47,14 @@ void main(
 
 		GeometryPSInput output = (GeometryPSInput)0;
 
-		output.position = mul(gTransforms[instanceIndex].Transform(input.position), kViewProj);
-		output.worldPos = gTransforms[instanceIndex].Transform(input.position).xyz;
+		output.position = mul(gTransform.Transform(input.position), kViewProj);
+		output.worldPos = gTransform.Transform(input.position).xyz;
 		
 		output.texcoord = gMaterials[instanceIndex].transform.Transformation(input.texcoord);
 		
-		output.normal    = normalize(gTransforms[instanceIndex].TransformNormal(input.normal));
-		output.tangent   = normalize(gTransforms[instanceIndex].TransformNormal(input.tangent));
-		output.bitangent = normalize(gTransforms[instanceIndex].TransformNormal(input.bitangent));
+		output.normal    = normalize(gTransform.TransformNormal(input.normal));
+		output.tangent   = normalize(gTransform.TransformNormal(input.tangent));
+		output.bitangent = normalize(gTransform.TransformNormal(input.bitangent));
 
 		output.instanceId = instanceIndex;
 		output.clip       = output.position.z; //!< near分のclip

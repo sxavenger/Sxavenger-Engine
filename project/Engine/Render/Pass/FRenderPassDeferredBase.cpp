@@ -138,7 +138,7 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 			return;
 		}
 
-		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
+		parameter.SetAddress("gTransform", transform->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
@@ -182,7 +182,7 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 		// メッシュの描画
 		component->BindIABuffer(context);
 
-		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
+		parameter.SetAddress("gTransform", transform->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
