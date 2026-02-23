@@ -8,10 +8,9 @@ os.chdir(_SCRIPT_DIR .. "/../project")
 -- main solution
 -------------------------------------------------------------------------------------------
 workspace "SxavengerEngine"
-	location ""
 	configurations { "Debug", "Develop", "Release" }
 	platforms { "x64" }
-	toolset "v143"
+	toolset "v145"
 
 	-- スタートプロジェクトの設定
 	startproject "SxavengerEngine"
@@ -108,16 +107,20 @@ project "SxavengerEngine"
 	-- ビルドオプション(共通)
 	warnings "High"
 	buildoptions { "/utf-8" }
-	flags { "MultiProcessorCompile" } -- 複数コアのでの並列コアコンパイル
+	multiprocessorcompile "On" -- 複数コアのでの並列コアコンパイル
 	staticruntime "On"
 	
 	-- define定義(共通)
 	defines { '_PROFILE="$(Configuration)"', "NOMINMAX" }
 
+	-- 警告の抑制
+	disablewarnings { "4324" }
+
 	-- リンカー設定(共通)
 	linkoptions {
 		"/WX",
-		"/IGNORE:4099"
+		"/IGNORE:4099",
+		"/IGNORE:4099",
 	}
 
 	-- ビルド後イベント(共通)

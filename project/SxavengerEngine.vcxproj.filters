@@ -720,6 +720,9 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxGeometryDimensionBuffer.h">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
@@ -855,6 +858,9 @@
     <ClInclude Include="Lib\Adapter\Random\Random.h">
       <Filter>Lib\Adapter\Random</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\Adapter\Time\LocalTimePoint.h">
+      <Filter>Lib\Adapter\Time</Filter>
+    </ClInclude>
     <ClInclude Include="Lib\Adapter\Time\RunTimeTracker.h">
       <Filter>Lib\Adapter\Time</Filter>
     </ClInclude>
@@ -900,6 +906,9 @@
     <ClInclude Include="Lib\Motion\Motion.h">
       <Filter>Lib\Motion</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\Sxl\Exception.h">
+      <Filter>Lib\Sxl</Filter>
+    </ClInclude>
     <ClInclude Include="Lib\Sxl\Expected.h">
       <Filter>Lib\Sxl</Filter>
     </ClInclude>
@@ -907,6 +916,9 @@
       <Filter>Lib\Sxl</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Sxl\Formatter.h">
+      <Filter>Lib\Sxl</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Sxl\IndexAllocator.h">
       <Filter>Lib\Sxl</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Sxl\OptimizedMap.h">
@@ -933,10 +945,6 @@
     <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
       <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Adapter\Time\LocalTimePoint.h" />
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxGeometryDimensionBuffer.h" />
-    <ClInclude Include="Lib\Sxl\Exception.h" />
-    <ClInclude Include="Lib\Sxl\IndexAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Camera\CameraHandle.cpp">
@@ -1392,6 +1400,9 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxGeometryDimensionBuffer.cpp">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
@@ -1500,6 +1511,9 @@
     <ClCompile Include="Lib\Adapter\Json\JsonHandler.cpp">
       <Filter>Lib\Adapter\Json</Filter>
     </ClCompile>
+    <ClCompile Include="Lib\Adapter\Time\LocalTimePoint.cpp">
+      <Filter>Lib\Adapter\Time</Filter>
+    </ClCompile>
     <ClCompile Include="Lib\Adapter\Time\RunTimeTracker.cpp">
       <Filter>Lib\Adapter\Time</Filter>
     </ClCompile>
@@ -1520,6 +1534,9 @@
     </ClCompile>
     <ClCompile Include="Lib\Motion\Motion.cpp">
       <Filter>Lib\Motion</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Sxl\Exception.cpp">
+      <Filter>Lib\Sxl</Filter>
     </ClCompile>
     <ClCompile Include="Lib\Transform\Transform.cpp">
       <Filter>Lib\Transform</Filter>
@@ -1576,8 +1593,5 @@
       <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Lib\Adapter\Time\LocalTimePoint.cpp" />
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxGeometryDimensionBuffer.cpp" />
-    <ClCompile Include="Lib\Sxl\Exception.cpp" />
   </ItemGroup>
 </Project>
