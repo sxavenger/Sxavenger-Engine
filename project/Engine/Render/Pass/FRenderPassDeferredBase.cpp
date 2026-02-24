@@ -136,6 +136,7 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
+		auto address  = component->GetBehaviourAddress();
 
 		const auto& meshlet = mesh->GetInputMesh().GetMeshlet();
 
@@ -144,6 +145,7 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 			return;
 		}
 
+		parameter.Set32bitConstants("AddressBuffer", 2, &address);
 		parameter.SetAddress("gTransform", transform->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials", material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
@@ -177,8 +179,8 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 		}
 
 		auto transform = component->RequireTransform();
-
-		auto material = component->GetMaterial();
+		auto material  = component->GetMaterial();
+		auto address   = component->GetBehaviourAddress();
 
 		//!< 不透明ジオメトリ描画
 		if (material->GetMode() != AssetMaterial::Mode::Opaque) {
@@ -188,6 +190,7 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 		// メッシュの描画
 		component->BindIABuffer(context);
 
+		parameter.Set32bitConstants("AddressBuffer", 2, &address);
 		parameter.SetAddress("gTransform", transform->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する

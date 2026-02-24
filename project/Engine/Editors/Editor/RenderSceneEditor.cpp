@@ -110,7 +110,22 @@ void RenderSceneEditor::Init() {
 	icons_[static_cast<uint32_t>(Icon::SpotLight)]        = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_spotLight.png")->GetId();
 	icons_[static_cast<uint32_t>(Icon::Camera)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_camera.png")->GetId();
 	
+	{
+		selectLine_.CreateBlob(kPackagesDirectory / L"shaders/render/geometry/line/Line.vs.hlsl", DxObject::GraphicsShaderType::vs);
+		selectLine_.CreateBlob(kPackagesDirectory / L"shaders/render/geometry/line/Line.gs.hlsl", DxObject::GraphicsShaderType::gs);
+		selectLine_.CreateBlob(kPackagesDirectory / L"shaders/render/geometry/line/Line.ps.hlsl", DxObject::GraphicsShaderType::ps);
+		selectLine_.ReflectionRootSignature(System::GetDxDevice());
 
+		DxObject::GraphicsPipelineDesc desc = {};
+		desc.CreateDefaultDesc();
+
+		desc.SetDepthStencil(false);
+
+		desc.SetRTVFormat(0, FMainGBuffer::kColorFormat);
+		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
+
+		selectLine_.CreatePipeline(System::GetDxDevice(), desc);
+	}
 }
 
 void RenderSceneEditor::ShowMainMenu() {
@@ -185,6 +200,9 @@ void RenderSceneEditor::Render() {
 	}
 
 	Graphics::GetDebugPrimitive()->DrawToScene(context, camera->GetGPUVirtualAddress());
+
+	selectLine_.SetPipeline(context->GetDxCommand());
+	RenderInspector(context, ComponentHelper::GetCameraComponent(CameraComponent::Tag::Editor));
 
 	textures_->TransitionEndRenderTargetMainScene(context);
 
@@ -959,6 +977,52 @@ void RenderSceneEditor::ShowCameraInformation(const WindowRect& rect) {
 void RenderSceneEditor::UpdateView() {
 	(*camera_)->GetComponent<TransformComponent>()->UpdateMatrix();
 	(*camera_)->GetComponent<CameraComponent>()->UpdateView();
+}
+
+void RenderSceneEditor::RenderInspector(const DirectXQueueContext* context, const CameraComponent* camera) {
+
+	//!< editorの取得
+	InspectorEditor* editor = GetEditorEngine()->GetEditor<InspectorEditor>();
+
+	if (editor == nullptr) {
+		return; //!< InspectorEditorが存在しない場合は何もしない
+	}
+
+	EntityBehaviour* behaviour = dynamic_cast<EntityBehaviour*>(editor->GetInspector());
+
+	if (behaviour == nullptr) {
+		return; //!< Inspectorの対象がEntityBehaviourでない場合は何もしない
+	}
+
+	TransformComponent* transform = behaviour->GetComponent<TransformComponent>();
+
+	if (transform == nullptr) {
+		return; //!< TransformComponentを持たない場合は何もしない
+	}
+
+	ImColor c = ImGui::GetStyle().Colors[ImGuiCol_CheckMark];
+	std::pair<Color4f, float> parameter = { Color4f{ c.Value.x, c.Value.y, c.Value.z, c.Value.w }, 0.2f};
+
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, &textures_->GetSize());
+	desc.Set32bitConstants("Parameter", 5, &parameter);
+	desc.SetAddress("gCamera",    camera->GetGPUVirtualAddress());
+	desc.SetAddress("gTransform", transform->GetGPUVirtualAddress());
+
+	// rendererの取得
+	if (MeshRendererComponent* renderer = behaviour->GetComponent<MeshRendererComponent>()) {
+		renderer->GetMesh()->BindIABuffer(context);
+		selectLine_.BindGraphicsBuffer(context->GetDxCommand(), desc);
+		renderer->GetMesh()->DrawCall(context);
+	}
+
+	if (SkinnedMeshRendererComponent* renderer = behaviour->GetComponent<SkinnedMeshRendererComponent>()) {
+		renderer->BindIABuffer(context);
+		selectLine_.BindGraphicsBuffer(context->GetDxCommand(), desc);
+		renderer->DrawCall(context);
+	}
+
+
 }
 
 void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {

@@ -200,6 +200,10 @@ private:
 
 	std::weak_ptr<DirectXWindowContext> sceneWindow_;
 
+	//* pipeline *//
+
+	DxObject::ReflectionGraphicsPipelineState selectLine_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -230,6 +234,8 @@ private:
 	void UpdateCamera();
 	void ShowCameraInformation(const WindowRect& rect);
 	void UpdateView();
+
+	void RenderInspector(const DirectXQueueContext* context, const CameraComponent* camera);
 
 	//* helper methods *//
 

@@ -36,14 +36,14 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float3 velocity = -gVelocity.Load(uint3(index, 0)).xyz;
 	velocity   *= 0.5f; //!< uvの範囲に統一
 	
-	float2 uv       = float2(index) / size; // [0.0 ~ 1.0]
+	float2 uv       = float2(index) / dimension; // [0.0 ~ 1.0]
 
 	float2 x           = uv + velocity.xy;
-	uint2 sample_index = uint2(x * size);
+	uint2 sample_index = uint2(x * dimension);
 
 	float4 reservoir_diffuse  = float4(0, 0, 0, 0);
 	float4 reservoir_specular = float4(0, 0, 0, 0);
-	uint3 moment              = uint3(Xorshift::xorshift32(index.x * index.y), 0, 0);
+	uint3 moment              = uint3(Xorshift::xorshift32(dimension.x * dimension.y), 0, 0);
 	//!< x: Hammerselyのoffset y: sample数(diffuse) z: sample数(specular, 継承不可)
 
 	if (all(velocity.xy == 0.0)) {

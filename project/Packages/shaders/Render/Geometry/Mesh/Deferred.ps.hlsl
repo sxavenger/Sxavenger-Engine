@@ -35,7 +35,7 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 		gMaterials[input.instanceId].properties.metallic.GetValue(parameter, 2)
 	);
 
-	//output.SetAddress(AddressBuffer.GetSprit());
+	output.SetAddress(AddressBuffer.GetSprit());
 
 	return output;
 }
