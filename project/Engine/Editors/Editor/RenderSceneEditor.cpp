@@ -126,6 +126,9 @@ void RenderSceneEditor::Init() {
 		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
 
 		selectLine_.CreatePipeline(System::GetDxDevice(), desc);
+
+		picker_.CreateBlob(kPackagesDirectory / L"shaders/editor/Picker.cs.hlsl");
+		picker_.ReflectionPipeline(System::GetDxDevice());
 	}
 }
 
@@ -638,6 +641,8 @@ void RenderSceneEditor::ShowSceneWindow() {
 	ImGui::End();
 	ImGui::PopStyleVar();
 
+	PickMesh(System::GetDirectQueueContext(), sceneRect_);
+
 	//* render scene information *//
 
 	ShowIconScene();
@@ -989,13 +994,13 @@ void RenderSceneEditor::RenderInspector(const DirectXQueueContext* context, cons
 		return; //!< InspectorEditorが存在しない場合は何もしない
 	}
 
-	EntityBehaviour* behaviour = dynamic_cast<EntityBehaviour*>(editor->GetInspector());
+	EntityBehaviour* entity = dynamic_cast<EntityBehaviour*>(editor->GetInspector());
 
-	if (behaviour == nullptr) {
+	if (entity == nullptr) {
 		return; //!< Inspectorの対象がEntityBehaviourでない場合は何もしない
 	}
 
-	BehaviourHelper::ForEachBehaviour(behaviour, [&](EntityBehaviour* behaviour) {
+	BehaviourHelper::ForEachBehaviour(entity, [&](EntityBehaviour* behaviour) {
 
 		TransformComponent* transform = behaviour->GetComponent<TransformComponent>();
 
@@ -1003,8 +1008,10 @@ void RenderSceneEditor::RenderInspector(const DirectXQueueContext* context, cons
 			return; //!< TransformComponentを持たない場合は何もしない
 		}
 
-		ImColor c = ImGui::GetStyle().Colors[ImGuiCol_CheckMark];
-		std::pair<Color4f, float> parameter = { Color4f{ c.Value.x, c.Value.y, c.Value.z, c.Value.w }, 0.1f };
+		ImColor c = ImGui::GetStyle().Colors[ImGuiCol_CheckMark]; //!< Editorのメインカラーとしてチェックマークの色を利用.
+		float thickness = (entity == behaviour ? 0.8f : 0.1f);    //!< 対象のEntityBehaviourがInspectorで選択されている場合は線を太くする
+
+		std::pair<Color4f, float> parameter = { Color4f{ c.Value.x, c.Value.y, c.Value.z, c.Value.w }, thickness };
 
 		DxObject::BindBufferDesc desc = {};
 		desc.Set32bitConstants("Dimension", 2, &textures_->GetSize());
@@ -1188,4 +1195,55 @@ void RenderSceneEditor::RenderTextSceneWindow(ImVec2& position, const std::strin
 	position.y -= size.y;
 
 	sceneWindowDrawer_->AddText(ImVec2(position.x, position.y), color, text.c_str());
+}
+
+void RenderSceneEditor::PickMesh(const DirectXQueueContext* context, const WindowRect& rect) {
+
+	//!< mouseの位置がrectの範囲内にあるか判定
+	Vector2f min = rect.pos;
+	Vector2f max = rect.pos + rect.size;
+
+	if (!SxImGui::IsMouseClickedRect({ min.x, min.y }, { max.x, max.y }, ImGuiMouseButton_Left)) {
+		return; //!< mouseがrectの範囲内にない場合は何もしない
+	}
+
+	Vector2f mouse = {
+		ImGui::GetMousePos().x,
+		ImGui::GetMousePos().y,
+	};
+
+	mouse = Clamp(mouse - rect.pos, Vector2f(0.0f, 0.0f), rect.size);
+	mouse /= rect.size; //!< mouseの位置を0~1に正規化
+
+	Vector2i pixel = Vector2i(static_cast<int32_t>(mouse.x * textures_->GetSize().x), static_cast<int32_t>(mouse.y * textures_->GetSize().y));
+
+	static DxObject::UnorderedDimensionBuffer<uintptr_t> buffer;
+	buffer.Create(System::GetDxDevice(), 1);
+
+	picker_.SetPipeline(context->GetDxCommand());
+
+	DxObject::BindBufferDesc desc = {};
+	desc.SetHandle("gAddress", textures_->GetGBuffer(FDeferredGBuffer::Layout::Address)->GetGPUHandleSRV());
+	desc.SetAddress("gPicker", buffer.GetGPUVirtualAddress());
+	desc.Set32bitConstants("Pixel", 2, &pixel);
+	picker_.BindComputeBuffer(context->GetDxCommand(), desc);
+
+	picker_.Dispatch(context->GetDxCommand(), { 1, 1, 1 });
+
+	static DxObject::ReadbackDimensionBuffer<uintptr_t> readback;
+	readback.Readback(System::GetDxDevice(), context->GetDxCommand(), &buffer);
+
+	context->ExecuteAllAllocators(); //!< readbackの結果を受け取るために、command listをflushする
+
+	uintptr_t value = readback.At(0);
+
+	if (value == 0) {
+		return; //!< ピックした場所にオブジェクトが存在しない場合は何もしない
+	}
+
+	BehaviourAddress address = { readback.At(0), BehaviourAddress::Ownership::Borrowed };
+
+	BaseEditor::GetEditorEngine()->ExecuteEditorFunction<InspectorEditor>([&](InspectorEditor* editor) {
+		editor->SetInspector(address.Get());
+	});
 }

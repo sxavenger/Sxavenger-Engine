@@ -32,5 +32,11 @@ struct Address {
 		address.address = ((uint64_t)sprit.x << 32) | sprit.y; //!< [x, y] = [upper 32 bits, lower 32 bits]
 		return address;
 	}
+
+	static Address Null() {
+		Address address;
+		address.address = 0;
+		return address;
+	}
 	
 };
