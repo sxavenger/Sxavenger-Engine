@@ -21,7 +21,7 @@ DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void SkinnedMeshRendererComponent::InputSkinnedMesh::Create(const DirectXQueueContext* context, const std::shared_ptr<AssetMesh>& mesh) {
-	CreateVetex(mesh);
+	CreateVertex(mesh);
 	CreateBottomLevelAS(context, mesh);
 	isCreateMesh = true;
 }
@@ -31,7 +31,7 @@ void SkinnedMeshRendererComponent::InputSkinnedMesh::UpdateBottomLevelAS(const D
 	bottomLevelAS.Update(context->GetDxCommand());
 }
 
-void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateVetex(const std::shared_ptr<AssetMesh>& mesh) {
+void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateVertex(const std::shared_ptr<AssetMesh>& mesh) {
 	vertex = std::make_unique<VertexUnorderedDimensionBuffer<MeshVertexData>>();
 	vertex->Create(System::GetDxDevice(), mesh->GetInputVertex()->GetSize());
 }

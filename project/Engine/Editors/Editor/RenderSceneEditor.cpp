@@ -23,6 +23,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Components/Component/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Components/Component/ComponentHelper.h>
 #include <Engine/Components/Entity/EntityBehaviour.h>
+#include <Engine/Components/Entity/BehaviourHelper.h>
 #include <Engine/Module/Exporter/TextureExporter.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Render/FRenderCore.h>
@@ -119,7 +120,7 @@ void RenderSceneEditor::Init() {
 		DxObject::GraphicsPipelineDesc desc = {};
 		desc.CreateDefaultDesc();
 
-		desc.SetDepthStencil(false);
+		desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC_LESS_EQUAL);
 
 		desc.SetRTVFormat(0, FMainGBuffer::kColorFormat);
 		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
@@ -994,35 +995,39 @@ void RenderSceneEditor::RenderInspector(const DirectXQueueContext* context, cons
 		return; //!< Inspectorの対象がEntityBehaviourでない場合は何もしない
 	}
 
-	TransformComponent* transform = behaviour->GetComponent<TransformComponent>();
+	BehaviourHelper::ForEachBehaviour(behaviour, [&](EntityBehaviour* behaviour) {
 
-	if (transform == nullptr) {
-		return; //!< TransformComponentを持たない場合は何もしない
-	}
+		TransformComponent* transform = behaviour->GetComponent<TransformComponent>();
 
-	ImColor c = ImGui::GetStyle().Colors[ImGuiCol_CheckMark];
-	std::pair<Color4f, float> parameter = { Color4f{ c.Value.x, c.Value.y, c.Value.z, c.Value.w }, 0.8f };
+		if (transform == nullptr) {
+			return; //!< TransformComponentを持たない場合は何もしない
+		}
 
-	DxObject::BindBufferDesc desc = {};
-	desc.Set32bitConstants("Dimension", 2, &textures_->GetSize());
-	desc.Set32bitConstants("Parameter", 5, &parameter);
-	desc.SetAddress("gCamera",    camera->GetGPUVirtualAddress());
-	desc.SetAddress("gTransform", transform->GetGPUVirtualAddress());
+		ImColor c = ImGui::GetStyle().Colors[ImGuiCol_CheckMark];
+		std::pair<Color4f, float> parameter = { Color4f{ c.Value.x, c.Value.y, c.Value.z, c.Value.w }, 0.1f };
 
-	// rendererの取得
-	if (MeshRendererComponent* renderer = behaviour->GetComponent<MeshRendererComponent>()) {
-		renderer->GetMesh()->BindIABuffer(context);
-		selectLine_.BindGraphicsBuffer(context->GetDxCommand(), desc);
-		renderer->GetMesh()->DrawCall(context);
-	}
+		DxObject::BindBufferDesc desc = {};
+		desc.Set32bitConstants("Dimension", 2, &textures_->GetSize());
+		desc.Set32bitConstants("Parameter", 5, &parameter);
+		desc.SetAddress("gCamera",    camera->GetGPUVirtualAddress());
+		desc.SetAddress("gTransform", transform->GetGPUVirtualAddress());
 
-	if (SkinnedMeshRendererComponent* renderer = behaviour->GetComponent<SkinnedMeshRendererComponent>()) {
-		renderer->BindIABuffer(context);
-		selectLine_.BindGraphicsBuffer(context->GetDxCommand(), desc);
-		renderer->DrawCall(context);
-	}
+		// rendererの取得
+		if (MeshRendererComponent* renderer = behaviour->GetComponent<MeshRendererComponent>()) {
+			renderer->GetMesh()->BindIABuffer(context);
+			selectLine_.BindGraphicsBuffer(context->GetDxCommand(), desc);
+			renderer->GetMesh()->DrawCall(context);
+		}
 
+		if (SkinnedMeshRendererComponent* renderer = behaviour->GetComponent<SkinnedMeshRendererComponent>()) {
+			renderer->BindIABuffer(context);
+			selectLine_.BindGraphicsBuffer(context->GetDxCommand(), desc);
+			renderer->DrawCall(context);
+		}
 
+	});
+
+	
 }
 
 void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {

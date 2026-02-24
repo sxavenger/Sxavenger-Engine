@@ -75,7 +75,7 @@ public:
 		// private variables
 		//=========================================================================================
 
-		//* input mesh blas *//
+		//* input mesh BLAS *//
 
 		DxrObject::BottomLevelAS bottomLevelAS;
 
@@ -87,7 +87,7 @@ public:
 		// private methods
 		//=========================================================================================
 
-		void CreateVetex(const std::shared_ptr<AssetMesh>& mesh);
+		void CreateVertex(const std::shared_ptr<AssetMesh>& mesh);
 
 		void CreateBottomLevelAS(const DirectXQueueContext* context, const std::shared_ptr<AssetMesh>& mesh);
 
