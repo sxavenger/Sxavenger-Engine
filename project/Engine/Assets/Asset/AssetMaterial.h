@@ -9,6 +9,7 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DirectXAlignment.h>
 
 //* lib
 #include <Lib/Geometry/Color3.h>
@@ -56,6 +57,30 @@ public:
 		AmbientOcclusion,
 		Roughness,
 		Metallic,
+	};
+
+	PUSH_GPU_BUFFER_ALIGNAS
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// UVTransformation structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct UVTransformation {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Init();
+
+		void Transfer(const Matrix4x4& _mat);
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		Matrix4x4 mat;
+
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -261,28 +286,6 @@ public:
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// UVTransformation structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct UVTransformation {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
-
-		void Transfer(const Matrix4x4& _mat);
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		Matrix4x4 mat;
-
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
 	// MaterialBuffer structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct MaterialBuffer {
@@ -305,6 +308,8 @@ public:
 		SurfaceProperties properties;
 
 	};
+
+	POP_GPU_BUFFER_ALIGNAS
 
 public:
 
@@ -374,6 +379,8 @@ private:
 	//* helper methods *//
 
 	static std::optional<Uuid> GetTextureId(const aiMaterial* aiMaterial, aiTextureType type, const std::filesystem::path& directory, bool isIntensity = false);
+
+	static Transform2d GetTransform2d(const aiMaterial* aiMaterial);
 
 	void CreateBuffer();
 

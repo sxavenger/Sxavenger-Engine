@@ -49,7 +49,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		return;
 	}
 	
-	float2 scale = (float2)GetInputDimension() / (float2)size;
+	float2 scale = (float2)GetInputDimension() / (float2)dimension;
 
 	float2 position = (float2(index)) * scale;
 

@@ -42,7 +42,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	bool isVisible = false;
 	
 	if (dispatchThreadId.x < meshletCount) {
-		isVisible = VisibleMeshlet(gBounds[dispatchThreadId.x], gTransforms[dispatchThreadId.y]);
+		isVisible = VisibleMeshlet(gBounds[dispatchThreadId.x], gTransform);
 	}
 	
 	if (isVisible) {

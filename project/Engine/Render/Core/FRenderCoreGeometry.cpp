@@ -45,16 +45,11 @@ void FRenderCoreGeometry::CreateDesc() {
 		desc.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Normal));
 		desc.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::MaterialARM));
 		desc.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Position));
+		desc.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Address));
 
 		D3D12_RENDER_TARGET_BLEND_DESC blend = {};
-		blend.BlendEnable           = true;
+		blend.BlendEnable           = false;
 		blend.LogicOpEnable         = false;
-		blend.SrcBlend              = D3D12_BLEND_ONE;
-		blend.DestBlend             = D3D12_BLEND_ZERO;
-		blend.BlendOp               = D3D12_BLEND_OP_ADD;
-		blend.SrcBlendAlpha         = D3D12_BLEND_ONE;
-		blend.DestBlendAlpha        = D3D12_BLEND_ZERO;
-		blend.BlendOpAlpha          = D3D12_BLEND_OP_ADD;
 		blend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
 		desc.SetBlendDesc(0, blend);

@@ -72,6 +72,8 @@ public:
 
 	bool CheckInspector(BaseInspector* target) const { return inspector_ == target; }
 
+	BaseInspector* GetInspector() const { return inspector_; }
+
 private:
 
 	//=========================================================================================

@@ -200,6 +200,11 @@ private:
 
 	std::weak_ptr<DirectXWindowContext> sceneWindow_;
 
+	//* pipeline *//
+
+	DxObject::ReflectionGraphicsPipelineState selectLine_;
+	DxObject::ReflectionComputePipelineState picker_;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
@@ -231,6 +236,8 @@ private:
 	void ShowCameraInformation(const WindowRect& rect);
 	void UpdateView();
 
+	void RenderInspector(const DirectXQueueContext* context, const CameraComponent* camera);
+
 	//* helper methods *//
 
 	void DisplayGBufferTexture(GBuffer buffer);
@@ -238,6 +245,8 @@ private:
 	void RenderIcon(BaseInspector* inspector, Icon icon, const Vector3f& position, const Color4f& color);
 
 	void RenderTextSceneWindow(ImVec2& position, const std::string& text, ImU32 color = ImGui::GetColorU32(ImGuiCol_Text));
+
+	void PickMesh(const DirectXQueueContext* context, const WindowRect& rect);
 
 };
 

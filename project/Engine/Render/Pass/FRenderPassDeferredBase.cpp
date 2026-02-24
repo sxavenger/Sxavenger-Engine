@@ -53,16 +53,19 @@ void FRenderPassDeferredBase::BeginPassRenderTarget(const DirectXQueueContext* c
 
 	auto commandList = context->GetCommandList();
 
-	std::array<FBaseTexture*, 4> buffers = {
+	static const uint32_t kBufferCount = 5;
+
+	std::array<FBaseTexture*, kBufferCount> buffers = {
 		buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo),
 		buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal),
 		buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM),
-		buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)
+		buffer->GetGBuffer(FDeferredGBuffer::Layout::Position),
+		buffer->GetGBuffer(FDeferredGBuffer::Layout::Address)
 	};
 
 	FDepthTexture* depth = buffer->GetDepth();
 
-	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {};
+	std::array<D3D12_RESOURCE_BARRIER, kBufferCount> barriers = {};
 	for (size_t i = 0; i < buffers.size(); ++i) {
 		barriers[i] = buffers[i]->TransitionBeginRenderTarget();
 	}
@@ -71,7 +74,7 @@ void FRenderPassDeferredBase::BeginPassRenderTarget(const DirectXQueueContext* c
 
 	depth->TransitionBeginRasterizer(context);
 
-	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, 4> handles = {};
+	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, kBufferCount> handles = {};
 	for (size_t i = 0; i < buffers.size(); ++i) {
 		handles[i] = buffers[i]->GetCPUHandleRTV();
 	}
@@ -91,18 +94,21 @@ void FRenderPassDeferredBase::EndPassRenderTarget(const DirectXQueueContext* con
 
 	auto commandList = context->GetCommandList();
 
-	std::array<FBaseTexture*, 4> buffers = {
+	static const uint32_t kBufferCount = 5;
+
+	std::array<FBaseTexture*, kBufferCount> buffers = {
 		buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo),
 		buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal),
 		buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM),
-		buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)
+		buffer->GetGBuffer(FDeferredGBuffer::Layout::Position),
+		buffer->GetGBuffer(FDeferredGBuffer::Layout::Address)
 	};
 
 	FDepthTexture* depth = buffer->GetDepth();
 
 	depth->TransitionEndRasterizer(context);
 
-	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {};
+	std::array<D3D12_RESOURCE_BARRIER, kBufferCount> barriers = {};
 	for (size_t i = 0; i < buffers.size(); ++i) {
 		barriers[i] = buffers[i]->TransitionEndRenderTarget();
 	}
@@ -130,6 +136,7 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
+		auto address  = component->GetBehaviourAddress();
 
 		const auto& meshlet = mesh->GetInputMesh().GetMeshlet();
 
@@ -138,8 +145,9 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 			return;
 		}
 
-		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
-		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
+		parameter.Set32bitConstants("AddressBuffer", 2, &address);
+		parameter.SetAddress("gTransform", transform->GetGPUVirtualAddress());
+		parameter.SetAddress("gMaterials", material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
 		parameter.Set32bitConstants("Information", 1, &meshlet.meshletCount);
@@ -171,8 +179,8 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 		}
 
 		auto transform = component->RequireTransform();
-
-		auto material = component->GetMaterial();
+		auto material  = component->GetMaterial();
+		auto address   = component->GetBehaviourAddress();
 
 		//!< 不透明ジオメトリ描画
 		if (material->GetMode() != AssetMaterial::Mode::Opaque) {
@@ -182,7 +190,8 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 		// メッシュの描画
 		component->BindIABuffer(context);
 
-		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
+		parameter.Set32bitConstants("AddressBuffer", 2, &address);
+		parameter.SetAddress("gTransform", transform->GetGPUVirtualAddress());
 		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 

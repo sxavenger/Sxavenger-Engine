@@ -296,6 +296,9 @@ void AssetMaterial::Setup(const aiMaterial* material, const std::filesystem::pat
 		metallic_ = metallic;
 	}
 
+	// transformUVの取得
+	transform_ = GetTransform2d(material);
+
 	// todo: specularFactorの設定
 
 	BaseAsset::Complete();
@@ -352,6 +355,8 @@ void AssetMaterial::Update() {
 		parameter.properties.ao.SetTexture(texture->GetDescriptorSRV().GetIndex());
 	}
 
+	// transform
+	parameter.transformation.Transfer(transform_.ToMatrix());
 }
 
 void AssetMaterial::Copy(const AssetMaterial& material) {
@@ -418,6 +423,20 @@ std::optional<Uuid> AssetMaterial::GetTextureId(const aiMaterial* aiMaterial, ai
 	ContentTexture::Option option = isIntensity ? ContentTexture::Option{ ContentTexture::Encoding::Intensity, true } : ContentTexture::Option{ ContentTexture::Encoding::Lightness, true };
 
 	return sContentStorage->Import<ContentTexture>(filepath, option)->GetId(); //!< UContentStorageからIdを取得して返す
+}
+
+Transform2d AssetMaterial::GetTransform2d(const aiMaterial* aiMaterial) {
+
+	Transform2d transform = {};
+
+	aiUVTransform t;
+	if (aiMaterial->Get(AI_MATKEY_UVTRANSFORM(aiTextureType_DIFFUSE, 0), t) == AI_SUCCESS) {
+		transform.translate = { t.mTranslation.x, t.mTranslation.y };
+		transform.rotate    = t.mRotation;
+		transform.scale     = { t.mScaling.x, t.mScaling.y };
+	}
+
+	return transform;
 }
 
 void AssetMaterial::CreateBuffer() {

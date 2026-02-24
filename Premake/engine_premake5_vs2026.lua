@@ -8,7 +8,6 @@ os.chdir(_SCRIPT_DIR .. "/../project")
 -- main solution
 -------------------------------------------------------------------------------------------
 workspace "SxavengerEngine"
-	location ""
 	configurations { "Debug", "Develop", "Release" }
 	platforms { "x64" }
 	toolset "v143"
@@ -17,8 +16,8 @@ workspace "SxavengerEngine"
 	startproject "SxavengerEngine"
 
 	-- 出力先の設定
-	targetdir "%{wks.location}/../Generated/outputs/%{cfg.buildcfg}/"         -- 出力先
-	objdir    "%{wks.location}/../Generated/obj/%{prj.name}/%{cfg.buildcfg}/" -- 中間ファイル
+	targetdir "%{wks.location}/../generated/outputs/%{cfg.buildcfg}/"         -- 出力先
+	objdir    "%{wks.location}/../generated/obj/%{prj.name}/%{cfg.buildcfg}/" -- 中間ファイル
 
 	--- 外部projectの登録 ---
 	-- DirectXTex
@@ -108,16 +107,20 @@ project "SxavengerEngine"
 	-- ビルドオプション(共通)
 	warnings "High"
 	buildoptions { "/utf-8" }
-	flags { "MultiProcessorCompile" } -- 複数コアのでの並列コアコンパイル
+	multiprocessorcompile "On" -- 複数コアのでの並列コアコンパイル
 	staticruntime "On"
 	
 	-- define定義(共通)
 	defines { '_PROFILE="$(Configuration)"', "NOMINMAX" }
 
+	-- 警告の抑制
+	disablewarnings { "4324" }
+
 	-- リンカー設定(共通)
 	linkoptions {
 		"/WX",
-		"/IGNORE:4099"
+		"/IGNORE:4099",
+		"/IGNORE:4099",
 	}
 
 	-- ビルド後イベント(共通)

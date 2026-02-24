@@ -23,6 +23,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Components/Component/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Components/Component/ComponentHelper.h>
 #include <Engine/Components/Entity/EntityBehaviour.h>
+#include <Engine/Components/Entity/BehaviourHelper.h>
 #include <Engine/Module/Exporter/TextureExporter.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Render/FRenderCore.h>
@@ -110,7 +111,25 @@ void RenderSceneEditor::Init() {
 	icons_[static_cast<uint32_t>(Icon::SpotLight)]        = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_spotLight.png")->GetId();
 	icons_[static_cast<uint32_t>(Icon::Camera)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_camera.png")->GetId();
 	
+	{
+		selectLine_.CreateBlob(kPackagesDirectory / L"shaders/render/geometry/line/Line.vs.hlsl", DxObject::GraphicsShaderType::vs);
+		selectLine_.CreateBlob(kPackagesDirectory / L"shaders/render/geometry/line/Line.gs.hlsl", DxObject::GraphicsShaderType::gs);
+		selectLine_.CreateBlob(kPackagesDirectory / L"shaders/render/geometry/line/Line.ps.hlsl", DxObject::GraphicsShaderType::ps);
+		selectLine_.ReflectionRootSignature(System::GetDxDevice());
 
+		DxObject::GraphicsPipelineDesc desc = {};
+		desc.CreateDefaultDesc();
+
+		desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC_LESS_EQUAL);
+
+		desc.SetRTVFormat(0, FMainGBuffer::kColorFormat);
+		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
+
+		selectLine_.CreatePipeline(System::GetDxDevice(), desc);
+
+		picker_.CreateBlob(kPackagesDirectory / L"shaders/editor/Picker.cs.hlsl");
+		picker_.ReflectionPipeline(System::GetDxDevice());
+	}
 }
 
 void RenderSceneEditor::ShowMainMenu() {
@@ -185,6 +204,9 @@ void RenderSceneEditor::Render() {
 	}
 
 	Graphics::GetDebugPrimitive()->DrawToScene(context, camera->GetGPUVirtualAddress());
+
+	selectLine_.SetPipeline(context->GetDxCommand());
+	RenderInspector(context, ComponentHelper::GetCameraComponent(CameraComponent::Tag::Editor));
 
 	textures_->TransitionEndRenderTargetMainScene(context);
 
@@ -619,6 +641,8 @@ void RenderSceneEditor::ShowSceneWindow() {
 	ImGui::End();
 	ImGui::PopStyleVar();
 
+	PickMesh(System::GetDirectQueueContext(), sceneRect_);
+
 	//* render scene information *//
 
 	ShowIconScene();
@@ -961,6 +985,58 @@ void RenderSceneEditor::UpdateView() {
 	(*camera_)->GetComponent<CameraComponent>()->UpdateView();
 }
 
+void RenderSceneEditor::RenderInspector(const DirectXQueueContext* context, const CameraComponent* camera) {
+
+	//!< editorの取得
+	InspectorEditor* editor = GetEditorEngine()->GetEditor<InspectorEditor>();
+
+	if (editor == nullptr) {
+		return; //!< InspectorEditorが存在しない場合は何もしない
+	}
+
+	EntityBehaviour* entity = dynamic_cast<EntityBehaviour*>(editor->GetInspector());
+
+	if (entity == nullptr) {
+		return; //!< Inspectorの対象がEntityBehaviourでない場合は何もしない
+	}
+
+	BehaviourHelper::ForEachBehaviour(entity, [&](EntityBehaviour* behaviour) {
+
+		TransformComponent* transform = behaviour->GetComponent<TransformComponent>();
+
+		if (transform == nullptr) {
+			return; //!< TransformComponentを持たない場合は何もしない
+		}
+
+		ImColor c = ImGui::GetStyle().Colors[ImGuiCol_CheckMark]; //!< Editorのメインカラーとしてチェックマークの色を利用.
+		float thickness = (entity == behaviour ? 0.8f : 0.1f);    //!< 対象のEntityBehaviourがInspectorで選択されている場合は線を太くする
+
+		std::pair<Color4f, float> parameter = { Color4f{ c.Value.x, c.Value.y, c.Value.z, c.Value.w }, thickness };
+
+		DxObject::BindBufferDesc desc = {};
+		desc.Set32bitConstants("Dimension", 2, &textures_->GetSize());
+		desc.Set32bitConstants("Parameter", 5, &parameter);
+		desc.SetAddress("gCamera",    camera->GetGPUVirtualAddress());
+		desc.SetAddress("gTransform", transform->GetGPUVirtualAddress());
+
+		// rendererの取得
+		if (MeshRendererComponent* renderer = behaviour->GetComponent<MeshRendererComponent>()) {
+			renderer->GetMesh()->BindIABuffer(context);
+			selectLine_.BindGraphicsBuffer(context->GetDxCommand(), desc);
+			renderer->GetMesh()->DrawCall(context);
+		}
+
+		if (SkinnedMeshRendererComponent* renderer = behaviour->GetComponent<SkinnedMeshRendererComponent>()) {
+			renderer->BindIABuffer(context);
+			selectLine_.BindGraphicsBuffer(context->GetDxCommand(), desc);
+			renderer->DrawCall(context);
+		}
+
+	});
+
+	
+}
+
 void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
 	switch (buffer) {
 		case GBuffer::Scene:
@@ -1119,4 +1195,55 @@ void RenderSceneEditor::RenderTextSceneWindow(ImVec2& position, const std::strin
 	position.y -= size.y;
 
 	sceneWindowDrawer_->AddText(ImVec2(position.x, position.y), color, text.c_str());
+}
+
+void RenderSceneEditor::PickMesh(const DirectXQueueContext* context, const WindowRect& rect) {
+
+	//!< mouseの位置がrectの範囲内にあるか判定
+	Vector2f min = rect.pos;
+	Vector2f max = rect.pos + rect.size;
+
+	if (!SxImGui::IsMouseClickedRect({ min.x, min.y }, { max.x, max.y }, ImGuiMouseButton_Left)) {
+		return; //!< mouseがrectの範囲内にない場合は何もしない
+	}
+
+	Vector2f mouse = {
+		ImGui::GetMousePos().x,
+		ImGui::GetMousePos().y,
+	};
+
+	mouse = Clamp(mouse - rect.pos, Vector2f(0.0f, 0.0f), rect.size);
+	mouse /= rect.size; //!< mouseの位置を0~1に正規化
+
+	Vector2i pixel = Vector2i(static_cast<int32_t>(mouse.x * textures_->GetSize().x), static_cast<int32_t>(mouse.y * textures_->GetSize().y));
+
+	static DxObject::UnorderedDimensionBuffer<uintptr_t> buffer;
+	buffer.Create(System::GetDxDevice(), 1);
+
+	picker_.SetPipeline(context->GetDxCommand());
+
+	DxObject::BindBufferDesc desc = {};
+	desc.SetHandle("gAddress", textures_->GetGBuffer(FDeferredGBuffer::Layout::Address)->GetGPUHandleSRV());
+	desc.SetAddress("gPicker", buffer.GetGPUVirtualAddress());
+	desc.Set32bitConstants("Pixel", 2, &pixel);
+	picker_.BindComputeBuffer(context->GetDxCommand(), desc);
+
+	picker_.Dispatch(context->GetDxCommand(), { 1, 1, 1 });
+
+	static DxObject::ReadbackDimensionBuffer<uintptr_t> readback;
+	readback.Readback(System::GetDxDevice(), context->GetDxCommand(), &buffer);
+
+	context->ExecuteAllAllocators(); //!< readbackの結果を受け取るために、command listをflushする
+
+	uintptr_t value = readback.At(0);
+
+	if (value == 0) {
+		return; //!< ピックした場所にオブジェクトが存在しない場合は何もしない
+	}
+
+	BehaviourAddress address = { readback.At(0), BehaviourAddress::Ownership::Borrowed };
+
+	BaseEditor::GetEditorEngine()->ExecuteEditorFunction<InspectorEditor>([&](InspectorEditor* editor) {
+		editor->SetInspector(address.Get());
+	});
 }

@@ -39,9 +39,9 @@
 		},
 		"ImGuiCol_CheckMark": {
 			"a": 255,
-			"b": 10,
-			"g": 80,
-			"r": 200
+			"b": 3,
+			"g": 46,
+			"r": 184
 		},
 		"ImGuiCol_ChildBg": {
 			"a": 255,
