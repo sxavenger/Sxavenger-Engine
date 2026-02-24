@@ -1001,7 +1001,7 @@ void RenderSceneEditor::RenderInspector(const DirectXQueueContext* context, cons
 	}
 
 	ImColor c = ImGui::GetStyle().Colors[ImGuiCol_CheckMark];
-	std::pair<Color4f, float> parameter = { Color4f{ c.Value.x, c.Value.y, c.Value.z, c.Value.w }, 0.2f};
+	std::pair<Color4f, float> parameter = { Color4f{ c.Value.x, c.Value.y, c.Value.z, c.Value.w }, 0.8f };
 
 	DxObject::BindBufferDesc desc = {};
 	desc.Set32bitConstants("Dimension", 2, &textures_->GetSize());
