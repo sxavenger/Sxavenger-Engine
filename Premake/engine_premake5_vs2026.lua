@@ -8,10 +8,13 @@ os.chdir(_SCRIPT_DIR .. "/../project")
 -- main solution
 -------------------------------------------------------------------------------------------
 workspace "SxavengerEngine"
-	configurations { "Debug", "Develop", "Release" }
-	toolset "v143"
-	architecture "x64"
 
+	-- 構成プロパティの定義
+	configurations { "Debug", "Develop", "Release" }
+
+	-- プラットフォームの設定
+	platforms { "x64" }
+	
 	-- スタートプロジェクトの設定
 	startproject "SxavengerEngine"
 
@@ -41,11 +44,15 @@ workspace "SxavengerEngine"
 		configmap {
         	["Develop"] = "Release",
  		}
-	
+
 -------------------------------------------------------------------------------------------
--- main project
+-- main c++ project
 -------------------------------------------------------------------------------------------
 project "SxavengerEngine"
+
+	-- visual studioの設定
+	toolset "v143"
+
 	-- projectの種類
 	kind "WindowedApp"
 
@@ -104,7 +111,7 @@ project "SxavengerEngine"
 	}
 
 	-- 依存プロジェクト
-	dependson { "DirectXTex", "imgui" }
+	dependson { "DirectXTex", "imgui", "Script" }
 	links     { "DirectXTex", "imgui" }
 
 	-- ビルドオプション(共通)
@@ -205,3 +212,34 @@ project "SxavengerEngine"
 			"assimp-vc145-mt",
 			"zlibstatic"
 		}
+
+-------------------------------------------------------------------------------------------
+-- script c# project
+-------------------------------------------------------------------------------------------
+project "Script"
+
+	-- フォルダ指定
+	location "Assets/script"
+
+	-- projectの種類
+	kind "SharedLib"
+
+	-- 言語
+    language "C#"
+	architecture "x64"
+
+	-- 使用する .NET バージョン
+    dotnetframework "net4.8"
+
+    files {
+        "%{prj.location}/*.cs"
+    }
+
+    filter "configurations:Debug"
+        optimize "Off"
+
+	filter "configurations:Develop"
+        optimize "Off"
+
+    filter "configurations:Release"
+        optimize "On"

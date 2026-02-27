@@ -11,8 +11,11 @@
   <Project Path="externals\imgui\imgui.vcxproj" Id="a4d2730b-3b09-47db-9a37-3445e9559de4">
     <BuildType Solution="Develop|*" Project="Release" />
   </Project>
+  <Project Path="Assets\script\Script.csproj" Id="9AFBBAD0-869D-E5A6-6F58-F9FA5B996CF7">
+  </Project>
   <Project Path="SxavengerEngine.vcxproj" Id="0E942451-7A1F-9215-8330-150AEF3AEE15" DefaultStartup="true">
     <BuildDependency Project="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj" />
     <BuildDependency Project="externals\imgui\imgui.vcxproj" />
+    <BuildDependency Project="Assets\script\Script.csproj" />
   </Project>
 </Solution>

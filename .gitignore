@@ -338,6 +338,10 @@ FodyWeavers.xsd
 /project/imgui.ini
 /project/Capture
 
+# Sxavenger Engine Script 関係
+/project/Assets/script/obj
+/project/Assets/script/bin
+
 # 負荷の高いAssets関係
 /project/assets/models/sponza
 /project/assets/models/Bistro
