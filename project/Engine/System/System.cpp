@@ -17,6 +17,7 @@ namespace {
 	static std::unique_ptr<WindowCollection> sWindowCollection  = nullptr; //!< window collection
 	static std::unique_ptr<Input>            sInput             = nullptr; //!< input system
 	static std::unique_ptr<ImGuiController>  sImGuiController   = nullptr; //!< ui system
+	static std::unique_ptr<Mono::Controller> sMonoController    = nullptr; //!< mono system
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +46,8 @@ void System::Init() {
 	sWindowCollection = std::make_unique<WindowCollection>();
 	sInput            = std::make_unique<Input>();
 	sImGuiController  = std::make_unique<ImGuiController>();
+
+	sMonoController = std::make_unique<Mono::Controller>();
 }
 
 void System::Term() {
@@ -233,4 +236,8 @@ void System::RenderImGui(const Vector2ui& size, DirectXQueueContext* context) {
 
 ImGuiController* System::GetImGuiController() {
 	return sImGuiController.get();
+}
+
+Mono::Instance System::CreateMonoInstance(const std::string& _namespace, const std::string& _class) {
+	return sMonoController->CreateInstance(_namespace, _class);
 }

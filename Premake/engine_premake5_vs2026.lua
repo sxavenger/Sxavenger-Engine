@@ -9,8 +9,8 @@ os.chdir(_SCRIPT_DIR .. "/../project")
 -------------------------------------------------------------------------------------------
 workspace "SxavengerEngine"
 	configurations { "Debug", "Develop", "Release" }
-	platforms { "x64" }
 	toolset "v143"
+	architecture "x64"
 
 	-- スタートプロジェクトの設定
 	startproject "SxavengerEngine"
@@ -55,20 +55,22 @@ project "SxavengerEngine"
 
 	-- ファイルの追加
 	files {
-		"*.cpp",
-		"*.h",
+		"%{prj.location}/*.cpp",
+		"%{prj.location}/*.h",
 		
 		-- TODO: 専用のsolutionを作成する
-		"externals/stb/Stb_include.cpp",
-		"externals/meshoptimizer/*.h",
-		"externals/meshoptimizer/*.cpp",
+		"%{prj.location}/Externals/stb/Stb_include.cpp",
+		"%{prj.location}/Externals/meshoptimizer/*.h",
+		"%{prj.location}/Externals/meshoptimizer/*.cpp",
+		"%{prj.location}/Externals/mono/include/**.cpp",
+		"%{prj.location}/Externals/mono/include/**.h",
 
-		"Lib/**.h",
-		"Lib/**.cpp",
-		"Engine/**.h",
-		"Engine/**.cpp",
-		"Demo/**.h",
-		"Demo/**.cpp",
+		"%{prj.location}/Lib/**.h",
+		"%{prj.location}/Lib/**.cpp",
+		"%{prj.location}/Engine/**.h",
+		"%{prj.location}/Engine/**.cpp",
+		"%{prj.location}/Demo/**.h",
+		"%{prj.location}/Demo/**.cpp",
 	}
 
 	-- ファイルの除外(!xxx)
@@ -90,14 +92,15 @@ project "SxavengerEngine"
 	-- 追加include
 	includedirs {
 		"%{prj.location}",
-    	"%{prj.location}/externals/nlohmann", -- [nlohmann json](https://github.com/nlohmann/json.git)
-    	"%{prj.location}/externals/meshoptimizer", -- [meshoptimizer](https://github.com/zeux/meshoptimizer.git)
-    	"%{prj.location}/externals/imgui", -- [ImGui](https://github.com/ocornut/imgui.git)
-    	"%{prj.location}/externals/imgui/imguizmo", -- [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo.git)
-    	"%{prj.location}/externals/DirectXTex", -- [DirectXTex](https://github.com/microsoft/DirectXTex.git)
-    	"%{prj.location}/externals/assimp/include", -- [assimp](https://github.com/assimp/assimp.git)
-    	"%{prj.location}/externals/magic_enum", -- [magic_enum](https://github.com/Neargye/magic_enum.git)
-    	"%{prj.location}/externals/stb", -- [stb](https://github.com/nothings/stb.git)
+    	"%{prj.location}/Externals/nlohmann", -- [nlohmann json](https://github.com/nlohmann/json.git)
+    	"%{prj.location}/Externals/meshoptimizer", -- [meshoptimizer](https://github.com/zeux/meshoptimizer.git)
+    	"%{prj.location}/Externals/imgui", -- [ImGui](https://github.com/ocornut/imgui.git)
+    	"%{prj.location}/Externals/imgui/imguizmo", -- [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo.git)
+    	"%{prj.location}/Externals/DirectXTex", -- [DirectXTex](https://github.com/microsoft/DirectXTex.git)
+    	"%{prj.location}/Externals/assimp/include", -- [assimp](https://github.com/assimp/assimp.git)
+    	"%{prj.location}/Externals/magic_enum", -- [magic_enum](https://github.com/Neargye/magic_enum.git)
+    	"%{prj.location}/Externals/stb", -- [stb](https://github.com/nothings/stb.git)
+		"%{prj.location}/Externals/mono/include", -- [Mono](https://www.mono-project.com/)
 	}
 
 	-- 依存プロジェクト
@@ -123,10 +126,24 @@ project "SxavengerEngine"
 		"/IGNORE:4099",
 	}
 
+	-- リンカー設定(共通)
+		libdirs {
+			"%{prj.location}/Externals/mono/lib"
+		}
+
+	-- 依存ファイル(共通)
+	links {
+		"mono-2.0-sgen.lib"
+	}
+
 	-- ビルド後イベント(共通)
 	postbuildcommands {
+		-- dxcompiler関係
 		'copy "$(WindowsSdkDir)bin\\$(TargetPlatformVersion)\\x64\\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"',
-  		'copy "$(WindowsSdkDir)bin\\$(TargetPlatformVersion)\\x64\\dxil.dll" "$(TargetDir)dxil.dll"'
+  		'copy "$(WindowsSdkDir)bin\\$(TargetPlatformVersion)\\x64\\dxil.dll" "$(TargetDir)dxil.dll"',
+
+		-- mono関係
+		'copy "Externals\\mono\\bin\\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"',
 	}
 
 	--- 構成ごとの設定 ---
@@ -141,7 +158,7 @@ project "SxavengerEngine"
 
 		-- リンカー設定
 		libdirs {
-			"%{prj.location}/externals/assimp/lib/Debug"
+			"%{prj.location}/Externals/assimp/lib/Debug"
 		}
 
 		-- 依存ファイル
@@ -161,7 +178,7 @@ project "SxavengerEngine"
 
 		-- リンカー設定
 		libdirs {
-			"%{prj.location}/externals/assimp/lib/Release"
+			"%{prj.location}/Externals/assimp/lib/Release"
 		}
 
 		-- 依存ファイル
@@ -180,7 +197,7 @@ project "SxavengerEngine"
 
 		-- リンカー設定
 		libdirs {
-			"%{prj.location}/externals/assimp/lib/Release",
+			"%{prj.location}/Externals/assimp/lib/Release",
 		}
 
 		-- 依存ファイル
