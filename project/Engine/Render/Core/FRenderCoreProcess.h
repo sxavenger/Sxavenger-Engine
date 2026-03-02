@@ -36,6 +36,7 @@ public:
 		AutoExposureAverage,
 		AutoExposureApply,
 		LocalExposure,
+		VolumetricFogLuminance,
 		DoF,
 		RadialBlur,
 		MotionBlur,

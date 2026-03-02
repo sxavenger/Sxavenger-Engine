@@ -32,6 +32,7 @@ void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const Co
 	BasePostProcess::ProcessInfo info = {};
 	info.buffer = config.buffer;
 	info.camera = config.camera;
+	info.scene  = config.scene;
 
 	//!< Global PostProcessの処理
 	sComponentStorage->ForEachActive<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {

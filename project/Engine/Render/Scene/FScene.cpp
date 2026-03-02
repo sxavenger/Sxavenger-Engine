@@ -137,6 +137,15 @@ void FScene::SetupLightContainer() {
 	SetupSpotLight();
 }
 
+FScene::LightAddress FScene::GetDirectionalLightAddress() const {
+	LightAddress address = {};
+	address.count      = directionalLightCount_->At();
+	address.transforms = directionalLightTransforms_->GetGPUVirtualAddress();
+	address.parameters = directionalLightParams_->GetGPUVirtualAddress();
+
+	return address;
+}
+
 void FScene::SetupDirectionalLight() {
 
 	uint32_t count = static_cast<uint32_t>(sComponentStorage->GetActiveComponentCount<DirectionalLightComponent>());

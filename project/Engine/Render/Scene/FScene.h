@@ -27,13 +27,31 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 class FScene {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// LightAddress structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct LightAddress {
+	public:
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		uint32_t count;
+		D3D12_GPU_VIRTUAL_ADDRESS transforms;
+		D3D12_GPU_VIRTUAL_ADDRESS parameters;
+
+	};
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
 	void Init();
 
-	//* tlas option *//
+	//* TLAS option *//
 
 	void SetupTopLevelAS(const DirectXQueueContext* context);
 
@@ -47,9 +65,9 @@ public:
 
 	void SetupLightContainer();
 
-	void SetupDirectionalLight();
-	void SetupPointLight();
-	void SetupSpotLight();
+	//* getter *//
+
+	LightAddress GetDirectionalLightAddress() const;
 
 private:
 
@@ -74,6 +92,14 @@ private:
 	std::unique_ptr<DxObject::ConstantBuffer<uint32_t>>                       spotLightCount_;
 	std::unique_ptr<DxObject::DimensionBuffer<TransformationMatrix>>          spotLightTransforms_;
 	std::unique_ptr<DxObject::DimensionBuffer<SpotLightComponent::Parameter>> spotLightParams_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void SetupDirectionalLight();
+	void SetupPointLight();
+	void SetupSpotLight();
 
 	//=========================================================================================
 	// friend class

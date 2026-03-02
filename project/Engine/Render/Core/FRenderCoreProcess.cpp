@@ -25,6 +25,9 @@ void FRenderCoreProcess::Init() {
 	//!< local exposure
 	CreatePipeline(ProcessType::LocalExposure, "PostProcess/Exposure/LocalExposure.cs.hlsl");
 
+	//!< volumetric fog
+	CreatePipeline(ProcessType::VolumetricFogLuminance, "PostProcess/VolumetricFog/VolumetricFogLuminance.cs.hlsl");
+
 	//!< dof
 	CreatePipeline(ProcessType::DoF, "PostProcess/DoF.cs.hlsl");
 

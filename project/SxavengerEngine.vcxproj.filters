@@ -417,37 +417,37 @@
     <ClInclude Include="Engine\Components\Component\MonoScript\MonoScriptComponent.h">
       <Filter>Engine\Components\Component\MonoScript</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\BasePostProcess.h">
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcess\BasePostProcess.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessAutoExposure.h">
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessAutoExposure.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessBloom.h">
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessBloom.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessChromaticAberration.h">
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessChromaticAberration.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessDoF.h">
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessDoF.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessGrayScale.h">
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessGrayScale.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessLUT.h">
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessLUT.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessLayerComponent.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessLocalExposure.h">
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessLocalExposure.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessMotionBlur.h">
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessMotionBlur.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessRadialBlur.h">
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessRadialBlur.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\Transform\RectTransformComponent.h">
@@ -1089,6 +1089,7 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessVolumetricFog.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Camera\CameraHandle.cpp">
@@ -1247,34 +1248,34 @@
     <ClCompile Include="Engine\Components\Component\MonoScript\MonoScriptComponent.cpp">
       <Filter>Engine\Components\Component\MonoScript</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessAutoExposure.cpp">
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessAutoExposure.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessBloom.cpp">
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessBloom.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessChromaticAberration.cpp">
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessChromaticAberration.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessDoF.cpp">
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessDoF.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessGrayScale.cpp">
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessGrayScale.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessLUT.cpp">
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessLUT.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessLayerComponent.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessLocalExposure.cpp">
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessLocalExposure.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessMotionBlur.cpp">
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessMotionBlur.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessRadialBlur.cpp">
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessRadialBlur.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\Transform\RectTransformComponent.cpp">
@@ -1755,5 +1756,6 @@
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcess\PostProcessVolumetricFog.cpp" />
   </ItemGroup>
 </Project>

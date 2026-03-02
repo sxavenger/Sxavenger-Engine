@@ -9,16 +9,17 @@
 #include "../Transform/TransformComponent.h"
 
 //* process
-#include "BasePostProcess.h"
-#include "PostProcessLocalExposure.h"
-#include "PostProcessAutoExposure.h"
-#include "PostProcessBloom.h"
-#include "PostProcessDoF.h"
-#include "PostProcessLUT.h"
-#include "PostProcessGrayScale.h"
-#include "PostProcessRadialBlur.h"
-#include "PostProcessMotionBlur.h"
-#include "PostProcessChromaticAberration.h"
+#include "PostProcess/BasePostProcess.h"
+#include "PostProcess/PostProcessLocalExposure.h"
+#include "PostProcess/PostProcessAutoExposure.h"
+#include "PostProcess/PostProcessBloom.h"
+#include "PostProcess/PostProcessDoF.h"
+#include "PostProcess/PostProcessLUT.h"
+#include "PostProcess/PostProcessGrayScale.h"
+#include "PostProcess/PostProcessRadialBlur.h"
+#include "PostProcess/PostProcessMotionBlur.h"
+#include "PostProcess/PostProcessChromaticAberration.h"
+#include "PostProcess/PostProcessVolumetricFog.h"
 
 //* engine
 #include <Engine/Foundation.h>

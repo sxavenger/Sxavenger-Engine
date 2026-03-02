@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* component
-#include "../Camera/CameraComponent.h"
+#include "../../Camera/CameraComponent.h"
 
 //* engine
 #include <Engine/Foundation.h>
@@ -23,6 +23,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 // forward
 //-----------------------------------------------------------------------------------------
 class FRenderTargetBuffer;
+class FScene;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BasePostProcess class
@@ -47,6 +48,7 @@ public:
 
 		FRenderTargetBuffer* buffer   = nullptr;
 		const CameraComponent* camera = nullptr;
+		const FScene* scene           = nullptr;
 
 		float weight = 1.0f;
 

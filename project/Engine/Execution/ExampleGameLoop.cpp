@@ -75,6 +75,8 @@ void ExampleGameLoop::InitSystem() {
 		exposure->GetParameter().minLogLuminance = -8.0f;
 		exposure->GetParameter().maxLogLuminance = 10.0f;
 		exposure->GetParameter().compensation    = -5.0f;
+
+		layer->AddPostProcess<PostProcessVolumetricFog>();
 	}
 	
 
@@ -118,12 +120,12 @@ void ExampleGameLoop::InitSystem() {
 		text->SetText(t);
 	}
 
-	/*{
+	{
 		json data;
 		if (JsonHandler::LoadFromJson("assets/scene/sponza.scene", data)) {
 			sEntityBehaviourStorage->InputJson(data);
 		}
-	}*/
+	}
 
 	for (size_t i = 0; i < cubes_.size(); ++i) {
 		cubes_[i] = std::make_unique<GameObject>();
