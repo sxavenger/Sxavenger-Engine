@@ -80,7 +80,7 @@
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>4324;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;DEBUG;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;externals\nlohmann;externals\meshoptimizer;externals\imgui;externals\imgui\imguizmo;externals\DirectXTex;externals\assimp\include;externals\magic_enum;externals\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\imguizmo;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -93,15 +93,16 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>assimp-vc145-mtd.lib;zlibstaticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>externals\assimp\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;assimp-vc145-mtd.lib;zlibstaticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Externals\mono\lib;Externals\assimp\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/WX /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
-copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
+copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"
+copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Develop|x64'">
@@ -111,7 +112,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <TreatWarningAsError>true</TreatWarningAsError>
       <DisableSpecificWarnings>4324;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;NDEBUG;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;externals\nlohmann;externals\meshoptimizer;externals\imgui;externals\imgui\imguizmo;externals\DirectXTex;externals\assimp\include;externals\magic_enum;externals\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\imguizmo;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -127,15 +128,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>assimp-vc145-mt.lib;zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>externals\assimp\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;assimp-vc145-mt.lib;zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Externals\mono\lib;Externals\assimp\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/WX /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
-copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
+copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"
+copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,7 +146,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <WarningLevel>Level4</WarningLevel>
       <DisableSpecificWarnings>4324;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;externals\nlohmann;externals\meshoptimizer;externals\imgui;externals\imgui\imguizmo;externals\DirectXTex;externals\assimp\include;externals\magic_enum;externals\stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\imguizmo;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -160,15 +162,16 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>assimp-vc145-mt.lib;zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>externals\assimp\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;assimp-vc145-mt.lib;zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Externals\mono\lib;Externals\assimp\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/WX /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
     </ProjectReference>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
-copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"</Command>
+copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"
+copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -226,6 +229,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\Components\Component\MeshRenderer\MeshRendererComponent.h" />
     <ClInclude Include="Engine\Components\Component\MeshRenderer\PrimitiveRendererComponent.h" />
     <ClInclude Include="Engine\Components\Component\MeshRenderer\SkinnedMeshRendererComponent.h" />
+    <ClInclude Include="Engine\Components\Component\MonoScript\MonoScriptComponent.h" />
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\BasePostProcess.h" />
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessAutoExposure.h" />
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessBloom.h" />
@@ -354,6 +358,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrRootSignature.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrRootSignatureDesc.h" />
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.h" />
+    <ClInclude Include="Engine\System\Mono\MonoAssembly.h" />
+    <ClInclude Include="Engine\System\Mono\MonoCommon.h" />
+    <ClInclude Include="Engine\System\Mono\MonoController.h" />
+    <ClInclude Include="Engine\System\Mono\MonoDomain.h" />
+    <ClInclude Include="Engine\System\Mono\MonoInstance.h" />
     <ClInclude Include="Engine\System\Runtime\Execution\ExecutionContext.h" />
     <ClInclude Include="Engine\System\Runtime\Execution\ExecutionInterface.h" />
     <ClInclude Include="Engine\System\Runtime\Execution\ExecutionPipeline.h" />
@@ -379,6 +388,41 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Engine\System\Utility\StreamLogger.h" />
     <ClInclude Include="Engine\System\WinApp\WinApp.h" />
     <ClInclude Include="Engine\System\Window\WindowCollection.h" />
+    <ClInclude Include="Externals\meshoptimizer\meshoptimizer.h" />
+    <ClInclude Include="Externals\mono\include\mono\jit\jit.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\appdomain.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\assembly.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\attrdefs.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\blob.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\class.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\debug-helpers.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\debug-mono-symfile.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\environment.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\exception.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\image.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\loader.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\metadata.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\mono-config.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\mono-debug.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\mono-gc.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\object-forward.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\object.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\opcodes.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\profiler-events.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\profiler.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\reflection.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\row-indexes.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\sgen-bridge.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\threads.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\tokentype.h" />
+    <ClInclude Include="Externals\mono\include\mono\metadata\verify.h" />
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-counters.h" />
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-dl-fallback.h" />
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-error.h" />
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-forward.h" />
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-jemalloc.h" />
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-logger.h" />
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-publib.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonHandler.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonSerializer.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -410,7 +454,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lib\Sxl\Utility.h" />
     <ClInclude Include="Lib\Traits.h" />
     <ClInclude Include="Lib\Transform\Transform.h" />
-    <ClInclude Include="externals\meshoptimizer\meshoptimizer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Camera\CameraHandle.cpp" />
@@ -464,6 +507,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\Components\Component\MeshRenderer\MeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\MeshRenderer\PrimitiveRendererComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
+    <ClCompile Include="Engine\Components\Component\MonoScript\MonoScriptComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessAutoExposure.cpp" />
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessBloom.cpp" />
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessChromaticAberration.cpp" />
@@ -580,6 +624,11 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrRootSignature.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrRootSignatureDesc.cpp" />
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.cpp" />
+    <ClCompile Include="Engine\System\Mono\MonoAssembly.cpp" />
+    <ClCompile Include="Engine\System\Mono\MonoCommon.cpp" />
+    <ClCompile Include="Engine\System\Mono\MonoController.cpp" />
+    <ClCompile Include="Engine\System\Mono\MonoDomain.cpp" />
+    <ClCompile Include="Engine\System\Mono\MonoInstance.cpp" />
     <ClCompile Include="Engine\System\Runtime\Execution\ExecutionContext.cpp" />
     <ClCompile Include="Engine\System\Runtime\Execution\ExecutionPipeline.cpp" />
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
@@ -600,6 +649,23 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Engine\System\Utility\StreamLogger.cpp" />
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
     <ClCompile Include="Engine\System\Window\WindowCollection.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\allocator.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\clusterizer.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\indexanalyzer.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\indexcodec.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\indexgenerator.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\overdrawoptimizer.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\partition.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\quantization.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\rasterizer.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\simplifier.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\spatialorder.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\stripifier.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\vcacheoptimizer.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\vertexcodec.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\vertexfilter.cpp" />
+    <ClCompile Include="Externals\meshoptimizer\vfetchoptimizer.cpp" />
+    <ClCompile Include="Externals\stb\Stb_include.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonHandler.cpp" />
     <ClCompile Include="Lib\Adapter\Time\LocalTimePoint.cpp" />
     <ClCompile Include="Lib\Adapter\Time\RunTimeTracker.cpp" />
@@ -611,23 +677,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Lib\Motion\Motion.cpp" />
     <ClCompile Include="Lib\Sxl\Exception.cpp" />
     <ClCompile Include="Lib\Transform\Transform.cpp" />
-    <ClCompile Include="externals\meshoptimizer\allocator.cpp" />
-    <ClCompile Include="externals\meshoptimizer\clusterizer.cpp" />
-    <ClCompile Include="externals\meshoptimizer\indexanalyzer.cpp" />
-    <ClCompile Include="externals\meshoptimizer\indexcodec.cpp" />
-    <ClCompile Include="externals\meshoptimizer\indexgenerator.cpp" />
-    <ClCompile Include="externals\meshoptimizer\overdrawoptimizer.cpp" />
-    <ClCompile Include="externals\meshoptimizer\partition.cpp" />
-    <ClCompile Include="externals\meshoptimizer\quantization.cpp" />
-    <ClCompile Include="externals\meshoptimizer\rasterizer.cpp" />
-    <ClCompile Include="externals\meshoptimizer\simplifier.cpp" />
-    <ClCompile Include="externals\meshoptimizer\spatialorder.cpp" />
-    <ClCompile Include="externals\meshoptimizer\stripifier.cpp" />
-    <ClCompile Include="externals\meshoptimizer\vcacheoptimizer.cpp" />
-    <ClCompile Include="externals\meshoptimizer\vertexcodec.cpp" />
-    <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp" />
-    <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp" />
-    <ClCompile Include="externals\stb\Stb_include.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

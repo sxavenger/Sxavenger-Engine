@@ -82,11 +82,11 @@ void TransformComponent::TransferGPU() {
 
 json TransformComponent::ParseToJson() const {
 	json component = json::object();
-	component["transform"] = transform_.ParseToJson();
+	component["transform"] = transform_.Serialize();
 
 	return component;
 }
 
 void TransformComponent::InputJson(const json& data) {
-	transform_.InputJson(data.at("transform"));
+	transform_ = QuaternionTransform::Deserialize(data.at("transform"));
 }

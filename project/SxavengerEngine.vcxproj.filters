@@ -61,6 +61,9 @@
     <Filter Include="Engine\Components\Component\MeshRenderer">
       <UniqueIdentifier>{E5B9FA95-D136-EED8-FAB3-EEECE68F8A6C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Components\Component\MonoScript">
+      <UniqueIdentifier>{AFE386C5-9B35-5EB5-8454-9BC57045779E}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Components\Component\PostProcessLayer">
       <UniqueIdentifier>{A3FE43C3-8F11-441C-38FB-200924EDE069}</UniqueIdentifier>
     </Filter>
@@ -157,6 +160,9 @@
     <Filter Include="Engine\System\DirectX\DxrObject">
       <UniqueIdentifier>{6598DD01-D17B-EC41-DA7E-1A7E46E1B292}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\System\Mono">
+      <UniqueIdentifier>{9707F530-83EB-B586-EC4B-B0D9D84EA008}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\System\Runtime">
       <UniqueIdentifier>{C222E51B-2E8F-A016-F782-387463AEC27E}</UniqueIdentifier>
     </Filter>
@@ -187,6 +193,33 @@
     <Filter Include="Engine\System\Window">
       <UniqueIdentifier>{962C3C59-82BB-C522-2BDA-D91D1748D6C8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Externals">
+      <UniqueIdentifier>{7B3ECCEB-E7A8-8062-30E7-31089C905EB7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\meshoptimizer">
+      <UniqueIdentifier>{9ABDEBA6-06F5-333E-0FFF-97617BB55A37}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\mono">
+      <UniqueIdentifier>{23AF9DED-0F7D-91F3-F810-021AE47D6D58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\mono\include">
+      <UniqueIdentifier>{96496D33-8243-9685-6BB0-2C965749FCF1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\mono\include\mono">
+      <UniqueIdentifier>{1EE39809-8AF0-C6EF-13D7-C2DA7FE392A6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\mono\include\mono\jit">
+      <UniqueIdentifier>{D4D88C23-40BC-9B63-49BF-C99FB52162B4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\mono\include\mono\metadata">
+      <UniqueIdentifier>{AED3C99B-9ABA-8B93-430B-F2B02FD104FA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\mono\include\mono\utils">
+      <UniqueIdentifier>{1E53F33A-8AC1-48BA-D3AA-03BA3F583E56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\stb">
+      <UniqueIdentifier>{53C2885C-BF82-0493-88BD-4D10F43C496F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Lib">
       <UniqueIdentifier>{1C04880B-880D-887C-1189-9E7C7D91937C}</UniqueIdentifier>
     </Filter>
@@ -216,15 +249,6 @@
     </Filter>
     <Filter Include="Lib\Transform">
       <UniqueIdentifier>{E7AE5A7E-536F-D6B4-1CAA-1F3288291B91}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="externals">
-      <UniqueIdentifier>{9B5E5A7B-07C9-0EF2-5007-C097BCB0EC46}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="externals\meshoptimizer">
-      <UniqueIdentifier>{BA959FAD-26CD-E744-2FD7-4B689B8D0E3E}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="externals\stb">
-      <UniqueIdentifier>{73F26948-DFB2-E57E-A8ED-2EFC146D2A5B}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -389,6 +413,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\MeshRenderer\SkinnedMeshRendererComponent.h">
       <Filter>Engine\Components\Component\MeshRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Components\Component\MonoScript\MonoScriptComponent.h">
+      <Filter>Engine\Components\Component\MonoScript</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\BasePostProcess.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
@@ -774,6 +801,21 @@
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.h">
       <Filter>Engine\System\DirectX\DxrObject</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\Mono\MonoAssembly.h">
+      <Filter>Engine\System\Mono</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Mono\MonoCommon.h">
+      <Filter>Engine\System\Mono</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Mono\MonoController.h">
+      <Filter>Engine\System\Mono</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Mono\MonoDomain.h">
+      <Filter>Engine\System\Mono</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Mono\MonoInstance.h">
+      <Filter>Engine\System\Mono</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\Runtime\Execution\ExecutionContext.h">
       <Filter>Engine\System\Runtime\Execution</Filter>
     </ClInclude>
@@ -848,6 +890,111 @@
     </ClInclude>
     <ClInclude Include="Engine\System\Window\WindowCollection.h">
       <Filter>Engine\System\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\meshoptimizer\meshoptimizer.h">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\jit\jit.h">
+      <Filter>Externals\mono\include\mono\jit</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\appdomain.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\assembly.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\attrdefs.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\blob.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\class.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\debug-helpers.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\debug-mono-symfile.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\environment.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\exception.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\image.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\loader.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\metadata.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\mono-config.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\mono-debug.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\mono-gc.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\object-forward.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\object.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\opcodes.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\profiler-events.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\profiler.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\reflection.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\row-indexes.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\sgen-bridge.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\threads.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\tokentype.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\metadata\verify.h">
+      <Filter>Externals\mono\include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-counters.h">
+      <Filter>Externals\mono\include\mono\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-dl-fallback.h">
+      <Filter>Externals\mono\include\mono\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-error.h">
+      <Filter>Externals\mono\include\mono\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-forward.h">
+      <Filter>Externals\mono\include\mono\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-jemalloc.h">
+      <Filter>Externals\mono\include\mono\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-logger.h">
+      <Filter>Externals\mono\include\mono\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Externals\mono\include\mono\utils\mono-publib.h">
+      <Filter>Externals\mono\include\mono\utils</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Adapter\Json\JsonHandler.h">
       <Filter>Lib\Adapter\Json</Filter>
@@ -941,9 +1088,6 @@
     </ClInclude>
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
-    </ClInclude>
-    <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
-      <Filter>externals\meshoptimizer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1099,6 +1243,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\MeshRenderer\SkinnedMeshRendererComponent.cpp">
       <Filter>Engine\Components\Component\MeshRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Components\Component\MonoScript\MonoScriptComponent.cpp">
+      <Filter>Engine\Components\Component\MonoScript</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessAutoExposure.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
@@ -1448,6 +1595,21 @@
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.cpp">
       <Filter>Engine\System\DirectX\DxrObject</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\System\Mono\MonoAssembly.cpp">
+      <Filter>Engine\System\Mono</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Mono\MonoCommon.cpp">
+      <Filter>Engine\System\Mono</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Mono\MonoController.cpp">
+      <Filter>Engine\System\Mono</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Mono\MonoDomain.cpp">
+      <Filter>Engine\System\Mono</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Mono\MonoInstance.cpp">
+      <Filter>Engine\System\Mono</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\Runtime\Execution\ExecutionContext.cpp">
       <Filter>Engine\System\Runtime\Execution</Filter>
     </ClCompile>
@@ -1508,6 +1670,57 @@
     <ClCompile Include="Engine\System\Window\WindowCollection.cpp">
       <Filter>Engine\System\Window</Filter>
     </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\allocator.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\clusterizer.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\indexanalyzer.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\indexcodec.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\indexgenerator.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\overdrawoptimizer.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\partition.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\quantization.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\rasterizer.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\simplifier.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\spatialorder.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\stripifier.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\vcacheoptimizer.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\vertexcodec.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\vertexfilter.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\meshoptimizer\vfetchoptimizer.cpp">
+      <Filter>Externals\meshoptimizer</Filter>
+    </ClCompile>
+    <ClCompile Include="Externals\stb\Stb_include.cpp">
+      <Filter>Externals\stb</Filter>
+    </ClCompile>
     <ClCompile Include="Lib\Adapter\Json\JsonHandler.cpp">
       <Filter>Lib\Adapter\Json</Filter>
     </ClCompile>
@@ -1540,57 +1753,6 @@
     </ClCompile>
     <ClCompile Include="Lib\Transform\Transform.cpp">
       <Filter>Lib\Transform</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\allocator.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\clusterizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\indexanalyzer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\indexcodec.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\indexgenerator.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\overdrawoptimizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\partition.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\quantization.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\rasterizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\simplifier.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\spatialorder.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\stripifier.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vcacheoptimizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vertexcodec.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\stb\Stb_include.cpp">
-      <Filter>externals\stb</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
   </ItemGroup>

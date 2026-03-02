@@ -35,23 +35,24 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // QuaternionTransform structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct QuaternionTransform
-	: public IJsonSerializer {
+struct QuaternionTransform {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	json ParseToJson() const override;
-
-	void InputJson(const json& data) override;
-
 	//* geometry option *//
 
 	Matrix4x4 ToMatrix() const;
 
 	Vector3f GetForward() const;
+
+	//* json option *//
+
+	json Serialize() const;
+
+	static QuaternionTransform Deserialize(const json& data);
 
 	//=========================================================================================
 	// public variables

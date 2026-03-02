@@ -19,9 +19,9 @@
 #include "Runtime/Performance/Performance.h"
 #include "Runtime/Performance/TimestampCpu.h"
 #include "Runtime/Performance/TimestampGpu.h"
-
 #include "Runtime/Thread/AsyncThreadCollection.h"
 #include "UI/ImGuiController.h"
+#include "Mono/MonoController.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -172,6 +172,12 @@ public:
 	static void RenderImGui(const Vector2ui& size = Configuration::GetConfig().resolution, DirectXQueueContext* context = GetDirectQueueContext());
 
 	static ImGuiController* GetImGuiController();
+
+	//-----------------------------------------------------------------------------------------
+	// Mono option
+	//-----------------------------------------------------------------------------------------
+	
+	static Mono::Instance CreateMonoInstance(const std::string& _namespace, const std::string& _class);
 
 };
 
