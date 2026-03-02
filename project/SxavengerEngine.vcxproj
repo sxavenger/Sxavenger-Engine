@@ -229,6 +229,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Components\Component\MeshRenderer\MeshRendererComponent.h" />
     <ClInclude Include="Engine\Components\Component\MeshRenderer\PrimitiveRendererComponent.h" />
     <ClInclude Include="Engine\Components\Component\MeshRenderer\SkinnedMeshRendererComponent.h" />
+    <ClInclude Include="Engine\Components\Component\MonoScript\MonoScriptComponent.h" />
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\BasePostProcess.h" />
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessAutoExposure.h" />
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessBloom.h" />
@@ -506,6 +507,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Components\Component\MeshRenderer\MeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\MeshRenderer\PrimitiveRendererComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\MeshRenderer\SkinnedMeshRendererComponent.cpp" />
+    <ClCompile Include="Engine\Components\Component\MonoScript\MonoScriptComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessAutoExposure.cpp" />
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessBloom.cpp" />
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessChromaticAberration.cpp" />

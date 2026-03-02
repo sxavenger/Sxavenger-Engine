@@ -24,18 +24,24 @@ Vector3f QuaternionTransform::GetForward() const {
 	return Quaternion::RotateVector(kForward3<>, rotate);
 }
 
-json QuaternionTransform::ParseToJson() const {
+json QuaternionTransform::Serialize() const {
 	json data = json::object();
+
 	data["translate"] = JsonSerializeFormatter<Vector3f>::Serialize(translate);
 	data["rotate"]    = JsonSerializeFormatter<Quaternion>::Serialize(rotate);
 	data["scale"]     = JsonSerializeFormatter<Vector3f>::Serialize(scale);
+
 	return data;
 }
 
-void QuaternionTransform::InputJson(const json& data) {
-	translate = JsonSerializeFormatter<Vector3f>::Deserialize(data.at("translate"));
-	rotate    = JsonSerializeFormatter<Quaternion>::Deserialize(data.at("rotate"));
-	scale     = JsonSerializeFormatter<Vector3f>::Deserialize(data.at("scale"));
+QuaternionTransform QuaternionTransform::Deserialize(const json& data) {
+	QuaternionTransform transform = {};
+
+	transform.translate = JsonSerializeFormatter<Vector3f>::Deserialize(data.at("translate"));
+	transform.rotate    = JsonSerializeFormatter<Quaternion>::Deserialize(data.at("rotate"));
+	transform.scale     = JsonSerializeFormatter<Vector3f>::Deserialize(data.at("scale"));
+
+	return transform;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

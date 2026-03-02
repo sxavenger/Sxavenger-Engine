@@ -46,6 +46,10 @@
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mathematic\Vector2.cs" />
+    <Compile Include="Mathematic\Vector3.cs" />
+    <Compile Include="Mathematic\Vector4.cs" />
     <Compile Include="Test.cs" />
+    <Compile Include="Transform\QuaternionTransform.cs" />
   </ItemGroup>
 </Project>

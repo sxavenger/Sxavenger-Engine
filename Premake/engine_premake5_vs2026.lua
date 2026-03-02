@@ -232,7 +232,7 @@ project "Script"
     dotnetframework "net4.8"
 
     files {
-        "%{prj.location}/*.cs"
+        "%{prj.location}/**.cs"
     }
 
     filter "configurations:Debug"
