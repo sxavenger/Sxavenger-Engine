@@ -3,20 +3,18 @@
     <BuildType Name="Debug" />
     <BuildType Name="Develop" />
     <BuildType Name="Release" />
-    <Platform Name="Any CPU" />
     <Platform Name="x64" />
   </Configurations>
+  <Project Path="Assets\script\Script.csproj" Id="9afbbad0-869d-e5a6-6f58-f9fa5b996cf7" />
   <Project Path="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj" Id="371b9fa9-4c90-4ac6-a123-aced756d6c77">
     <BuildType Solution="Develop|*" Project="Release" />
   </Project>
   <Project Path="externals\imgui\imgui.vcxproj" Id="a4d2730b-3b09-47db-9a37-3445e9559de4">
     <BuildType Solution="Develop|*" Project="Release" />
   </Project>
-  <Project Path="Assets\script\Script.csproj" Id="9AFBBAD0-869D-E5A6-6F58-F9FA5B996CF7">
-  </Project>
-  <Project Path="SxavengerEngine.vcxproj" Id="0E942451-7A1F-9215-8330-150AEF3AEE15" DefaultStartup="true">
+  <Project Path="SxavengerEngine.vcxproj" Id="0e942451-7a1f-9215-8330-150aef3aee15">
+    <BuildDependency Project="Assets\script\Script.csproj" />
     <BuildDependency Project="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj" />
     <BuildDependency Project="externals\imgui\imgui.vcxproj" />
-    <BuildDependency Project="Assets\script\Script.csproj" />
   </Project>
 </Solution>

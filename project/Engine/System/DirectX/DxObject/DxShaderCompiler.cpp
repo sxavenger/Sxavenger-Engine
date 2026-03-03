@@ -19,15 +19,51 @@ DXOBJECT_USING
 // static variables
 //=========================================================================================
 
-const std::array<LPCWSTR, static_cast<uint32_t>(CompileProfile::lib) + 1> ShaderCompiler::profiles_ = {
-	L"vs_6_6", //!< vs
-	L"gs_6_6", //!< gs
-	L"ms_6_6", //!< ms
-	L"as_6_6", //!< as
-	L"ps_6_6", //!< ps
-	L"cs_6_6", //!< cs
-	L"lib_6_6" //!< lib
+const std::array<LPCWSTR, static_cast<uint32_t>(CompileProfile::lib) + 1> ShaderCompiler::stages_ = {
+	L"vs", //!< vertex shader
+	L"gs", //!< geometry shader
+	L"ms", //!< mesh shader
+	L"as", //!< amplification shader
+	L"ps", //!< pixel shader
+	L"cs", //!< compute shader
+	L"lib" //!< library (raytracing shader)
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Argument structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void ShaderCompiler::Argument::PushArgument(LPCWSTR argument) {
+	arguments_.emplace_back(argument); //!< 引数を追加
+}
+
+void ShaderCompiler::Argument::PushArgument(const std::wstring& argument) {
+	lifetime_.emplace_back(argument); //!< 引数の寿命を管理するためにリストに追加
+	arguments_.emplace_back(lifetime_.back().c_str());
+}
+
+void ShaderCompiler::Argument::AddFilepath(const std::filesystem::path& filepath) {
+	PushArgument(filepath.generic_wstring()); //!< ファイルパスの引数を追加
+}
+
+void ShaderCompiler::Argument::AddProfile(CompileProfile profile, const std::wstring& tire) {
+	PushArgument(L"-T"); //!< プロフィールの引数を追加
+	PushArgument(GetProfile(profile, tire)); //!< プロフィールの引数を追加
+}
+
+void ShaderCompiler::Argument::AddEntryPoint(const std::wstring& entryPoint) {
+	PushArgument(L"-E");              //!< entry pointの引数を追加
+	PushArgument(entryPoint.c_str());
+}
+
+void ShaderCompiler::Argument::AddDefine(LPCWSTR name) {
+	PushArgument(L"-D"); //!< defineの引数を追加
+	PushArgument(name);
+}
+
+std::wstring ShaderCompiler::Argument::GetProfile(CompileProfile profile, const std::wstring& tire) const {
+	return std::format(L"{}_{}", stages_[static_cast<uint32_t>(profile)], tire);
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ShaderCompiler class methods
@@ -79,46 +115,42 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	shaderSourceBuffer.Size     = shaderSource->GetBufferSize();
 	shaderSourceBuffer.Encoding = DXC_CP_UTF8;
 
-	// 基本情報の設定
-	std::vector<LPCWSTR> arguments = {
-		path.c_str(),                                     //!< コンパイル対象のhlslファイルパス
-		L"-T", profiles_[static_cast<uint32_t>(profile)], //!< ShaderProfileの設定
-		L"-Zpr",                                          //!< メモリレイアウトは行優先
-	};
+	Argument arguments;
+	arguments.AddFilepath(filepath);      //!< コンパイル対象のhlslファイルパス
+	arguments.AddProfile(profile, tire_); //!< プロフィールの引数を追加
+	arguments.PushArgument(L"-Zpr");      //!< メモリレイアウトは行優先
 
 #ifdef _DEVELOPMENT
-	arguments.emplace_back(
+	//!< 最適化の有無を設定
+	arguments.PushArgument(
 		Configuration::GetConfig().enableShaderOptimization ? L"-O3" : L"-Od" //!< 最適化の有無
 	);
 
-	arguments.emplace_back(L"-Zi");
-	arguments.emplace_back(L"-Qembed_debug"); //!< デバッグ情報を埋め込む
+	arguments.PushArgument(L"-Zi");           //!< デバッグ情報を生成
+	arguments.PushArgument(L"-Qembed_debug"); //!< デバッグ情報をシェーダバイナリに埋め込む
 #else
-	// releaseではoption関わらず最適化
-	arguments.emplace_back(L"-O3"); //!< 最適化を最大にする
+	//!< option関わらず最適化
+	arguments.PushArgument(L"-O3"); //!< 最適化を最大にする
 #endif
 
-	if (!entryPoint.empty()) { //!< entry pointがある場合, 設定
-		arguments.emplace_back(L"-E");
-		arguments.emplace_back(entryPoint.c_str());
+	if (!entryPoint.empty()) {
+		arguments.AddEntryPoint(entryPoint); //!< entry pointの引数を追加
 	}
 
-	if (profile == CompileProfile::cs || profile == CompileProfile::lib) { //!< compute shader用のdefineを追加
-		arguments.emplace_back(L"-D");
-		arguments.emplace_back(L"_COMPUTE");
+	if (profile == CompileProfile::cs || profile == CompileProfile::lib) {
+		arguments.AddDefine(L"_COMPUTE_SHADER"); //!< compute shader or library shaderであることをdefineで伝える
 	}
 
-	if (Configuration::GetSupport().isSupportInlineRaytracing) {
-		arguments.emplace_back(L"-D");
-		arguments.emplace_back(L"_INLINE_RAYTRACING");
+	if (isSupportInlineRaytracing_) {
+		arguments.AddDefine(L"_SUPPORT_INLINE_RAYTRACING"); //!< inline raytracingをサポートしていることをdefineで伝える
 	}
 
 	// compile
 	ComPtr<IDxcResult> shaderResult;
 	hr = compiler_->Compile(
 		&shaderSourceBuffer,
-		arguments.data(),
-		static_cast<UINT32>(arguments.size()),
+		arguments.GetData(),
+		arguments.GetCount(),
 		includeHandler_.Get(),
 		IID_PPV_ARGS(&shaderResult)
 	);
@@ -157,7 +189,18 @@ ComPtr<ID3D12ShaderReflection> ShaderCompiler::Reflection(IDxcBlob* blob) {
 	return result;
 }
 
+void ShaderCompiler::SetShaderModelTire(D3D_SHADER_MODEL model) {
+	uint32_t major = (model >> 4) & 0xF; //!< 上位4bitがmajor
+	uint32_t minor = model & 0xF;        //!< 下位4bitがminor
+
+	tire_ = std::format(L"{}_{}", major, minor);
+}
+
 ShaderCompiler* ShaderCompiler::GetInstance() {
 	static ShaderCompiler instance;
 	return &instance;
+}
+
+std::wstring ShaderCompiler::GetProfile(CompileProfile profile) const {
+	return std::format(L"{}_{}", stages_[static_cast<uint32_t>(profile)], tire_);
 }

@@ -17,7 +17,7 @@ struct InlineShadow {
 	//=========================================================================================
 
 	float TraceShadow(RayDesc desc, RaytracingAccelerationStructure scene) {
-#ifdef _INLINE_RAYTRACING
+#ifdef _SUPPORT_INLINE_RAYTRACING
 		if (strength <= 0.0f) {
 			return 1.0f;
 		}

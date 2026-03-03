@@ -65,7 +65,7 @@ public:
 		uint32_t descriptorCount_RTV;
 		uint32_t descriptorCount_DSV;
 
-		//* tiearing
+		//* tearing
 		bool isTearingAllowed;
 
 		//* frame rate lock
@@ -81,6 +81,7 @@ public:
 	// Support structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Support {
+		//!< TODO: 廃止予定. Device側を参照して機能サポートの有無を確認するようにする
 	public:
 
 		//=========================================================================================
@@ -94,7 +95,6 @@ public:
 		//=========================================================================================
 
 		bool isSupportTearing;
-		bool isSupportInlineRaytracing;
 
 	};
 

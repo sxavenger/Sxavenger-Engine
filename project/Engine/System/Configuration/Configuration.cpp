@@ -133,8 +133,7 @@ void Configuration::Config::OutputLog() const {
 void Configuration::Support::OutputLog() const {
 
 	StreamLogger::EngineLog(std::format("[Support] isSupportTearing: {}",          isSupportTearing));
-	StreamLogger::EngineLog(std::format("[Support] isSupportInlineRaytracing: {}", isSupportInlineRaytracing));
-
+	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

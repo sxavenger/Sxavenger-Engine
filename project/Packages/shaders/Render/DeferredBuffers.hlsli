@@ -63,7 +63,7 @@ struct Surface {
 		depth = GetDepth(index);
 		
 		if (depth == 1.0f) {
-#ifndef _COMPUTE
+#ifndef _COMPUTE_SHADER
 			discard; //!< object is not exist.
 #endif
 			return false;

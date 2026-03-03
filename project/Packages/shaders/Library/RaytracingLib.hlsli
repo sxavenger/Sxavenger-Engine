@@ -7,6 +7,12 @@
 // define
 ////////////////////////////////////////////////////////////////////////////////////////////
 
+//* payload
+#define PAYLOAD [raypayload]
+#define READ_QUALIFIER(...) read(__VA_ARGS__)
+#define WRITE_QUALIFIER(...) write(__VA_ARGS__)
+#define QUALIFIRE_DEFAULT READ_QUALIFIER(caller) : WRITE_QUALIFIER(closesthit, miss)
+
 //* shaders
 #define RAYGENERATION [shader("raygeneration")]
 #define ANYHIT        [shader("anyhit")]

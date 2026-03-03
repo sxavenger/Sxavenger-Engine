@@ -17,6 +17,8 @@ void DirectXCommon::Init() {
 	descriptorHeaps_->Init(device_.get());
 
 	ShaderCompiler::GetInstance()->Init();
+	ShaderCompiler::GetInstance()->SetShaderModelTire(device_->GetShaderModelTier());
+	ShaderCompiler::GetInstance()->SetSupportInlineRaytracing(device_->GetRaytracingTier() >= D3D12_RAYTRACING_TIER_1_1);
 }
 
 void DirectXCommon::Term() {
