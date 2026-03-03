@@ -101,7 +101,7 @@ bool IsVisible(float3 p1, float3 p2) {
 	desc.TMin      = kTMin;
 	desc.TMax      = length(p2 - p1) - kTMin;
 	
-#ifdef _INLINE_RAYTRACING
+#ifdef _SUPPORT_INLINE_RAYTRACING
 		RayQuery<0> q;
 
 		q.TraceRayInline(

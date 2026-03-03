@@ -101,17 +101,17 @@ SamplerState gSkySampler : register(s0, space2);
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Payload structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct Payload {
+struct PAYLOAD Payload {
 
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
 
-	uint count;
-	float3 lo;
-	float3 position;
-	uint pad;
-	float3 normal;
+	uint count : QUALIFIRE_DEFAULT;
+	float3 lo : QUALIFIRE_DEFAULT;
+	float3 position : QUALIFIRE_DEFAULT;
+	uint pad : READ_QUALIFIER() : WRITE_QUALIFIER();
+	float3 normal : QUALIFIRE_DEFAULT;
 	
 	//=========================================================================================
 	// public methods

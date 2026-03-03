@@ -51,6 +51,12 @@ public:
 
 	IDXGIAdapter4* GetAdapter() const { return useAdapter_.Get(); }
 
+	//* feature getter *//
+
+	D3D_SHADER_MODEL GetShaderModelTier() const { return shaderModelTier_; }
+
+	D3D12_RAYTRACING_TIER GetRaytracingTier() const { return raytracingTier_; }
+
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,10 +92,11 @@ private:
 
 	ComPtr<ID3D12Device8> device_;
 
-	//* member *//
+	//* feature member *//
 
-	bool isMeshShaderEnabled_;
-	bool isRayTracingEnabled_;
+	D3D_SHADER_MODEL shaderModelTier_;
+	D3D12_RAYTRACING_TIER raytracingTier_;
+	bool isMeshShaderSupport_;
 
 	//=========================================================================================
 	// private methods
@@ -101,9 +108,9 @@ private:
 	void CreateDevice();
 	void CreateInfoQueue();
 
-	bool CheckShaderModel();
-	bool CheckRaytracingEnable();
-	bool CheckMeshShaderEnable();
+	D3D_SHADER_MODEL CheckShaderModelTier() const;
+	D3D12_RAYTRACING_TIER CheckRaytracingTier() const;
+	bool CheckMeshShaderEnable() const;
 
 };
 

@@ -28,15 +28,15 @@ void Device::Init() {
 	CreateDevice();
 	CreateInfoQueue();
 
-	// サポートの確認
-	StreamLogger::AssertA(CheckShaderModel(), "shader model is not over kHighestShaderModel.");
+	//!< 機能レベルの取得
+	shaderModelTier_     = CheckShaderModelTier();
+	raytracingTier_      = CheckRaytracingTier();
+	isMeshShaderSupport_ = CheckMeshShaderEnable();
 
-	isRayTracingEnabled_ = CheckRaytracingEnable();
-	isMeshShaderEnabled_ = CheckMeshShaderEnable();
-
-	// 仮でException::Assertを出しておく
-	StreamLogger::AssertA(isRayTracingEnabled_, "Raytracing version failed.");
-	StreamLogger::AssertA(isMeshShaderEnabled_, "Mesh shader version failed.");
+	//!< エンジン機能要件との確認
+	StreamLogger::AssertA(shaderModelTier_ >= DxObject::kRequireShaderModel, "require shader model is not supported.");
+	StreamLogger::AssertA(raytracingTier_ >= D3D12_RAYTRACING_TIER_1_0, "raytracing is not supported.");
+	StreamLogger::AssertA(isMeshShaderSupport_, "mesh shader is not supported.");
 
 	StreamLogger::EngineLog("[DXOBJECT Device] complete initialize.");
 }
@@ -81,17 +81,17 @@ void Device::CreateFactory() {
 
 	// ティアリングを確認
 	if (Configuration::GetConfig().isTearingAllowed) {
-		BOOL isTearingSupport_ = false;
+		BOOL isTearingSupport = false;
 
-		hr = dxgiFactory_->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &isTearingSupport_, sizeof(BOOL));
+		hr = dxgiFactory_->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &isTearingSupport, sizeof(BOOL));
 		DxObject::Assert(hr, L"check feature support error.");
 
-		if (!isTearingSupport_) {
+		if (!isTearingSupport) {
 			StreamLogger::EngineLog("[DXOBEJCT Device] warning | tearing is not supported.");
 		}
 
 		// 設定を反映
-		Configuration::GetSupport().isSupportTearing = isTearingSupport_;
+		Configuration::GetSupport().isSupportTearing = isTearingSupport;
 	}
 }
 
@@ -173,52 +173,58 @@ void Device::CreateInfoQueue() {
 #endif // _DEVELOPMENT
 }
 
-bool Device::CheckShaderModel() {
-	D3D12_FEATURE_DATA_SHADER_MODEL shaderModel = { DxObject::kHeighestShaderModel };
-	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &shaderModel, sizeof(shaderModel));
+D3D_SHADER_MODEL Device::CheckShaderModelTier() const {
+	//!< Shader Modelのサポートのチェック
 
-	StreamLogger::EngineLog(std::format("[DXOBEJCT Device] feature levels - shader model: {}", magic_enum::enum_name(shaderModel.HighestShaderModel)));
+	D3D12_FEATURE_DATA_SHADER_MODEL model = { D3D_HIGHEST_SHADER_MODEL }; //!< 最大値での確認
+	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_SHADER_MODEL, &model, sizeof(model));
 
-	if (FAILED(hr) || (shaderModel.HighestShaderModel < DxObject::kHeighestShaderModel)) {
-		StreamLogger::EngineLog("[DXOBEJCT Device] warning | Sxavenger Engine is environment shader model 6.6");
-		return false; //!< shader modelが6.6以上をサポートしていない
+	if (FAILED(hr)) {
+		StreamLogger::EngineLog("[DXOBEJCT Device] warning | shader model is not supported.");
+		return D3D_SHADER_MODEL_NONE; //!< Shader Model 5.1がサポートされていない
 	}
 
-	return true;
+	StreamLogger::EngineLog(std::format("[DXOBEJCT Device] feature levels - shader model: {}", magic_enum::enum_name(model.HighestShaderModel)));
+	return model.HighestShaderModel;
 }
 
-bool Device::CheckRaytracingEnable() {
-	// Raytracingのサポートのチェック
+D3D12_RAYTRACING_TIER Device::CheckRaytracingTier() const {
+	//!< Raytracingのサポートのチェック
+	
 	D3D12_FEATURE_DATA_D3D12_OPTIONS5 option = {};
 	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS5, &option, sizeof(option));
 
 	StreamLogger::EngineLog(std::format("[DXOBEJCT Device] feature levels - raytracing tier: {}", magic_enum::enum_name(option.RaytracingTier)));
 
-	if (FAILED(hr) || option.RaytracingTier < D3D12_RAYTRACING_TIER_1_0) {
-		StreamLogger::EngineLog("warning : raytracing is not supported.");
-		return false; //!< Raytracingがサポートされていない
+	if (FAILED(hr)) {
+		StreamLogger::EngineLog("[DXOBEJCT Device] warning | raytracing is not supported.");
+		return D3D12_RAYTRACING_TIER_NOT_SUPPORTED; //!< Raytracingがサポートされていない
+	}
+
+	if (option.RaytracingTier < D3D12_RAYTRACING_TIER_1_0) {
+		StreamLogger::EngineLog("[DXOBEJCT Device] warning | raytracing is not supported.");
 	}
 
 	if (option.RaytracingTier < D3D12_RAYTRACING_TIER_1_1) {
-		StreamLogger::EngineLog("warning : inline raytracing is not supported.");
-		return true;
+		StreamLogger::EngineLog("[DXOBEJCT Device] warning | inline raytracing is not supported.");
 	}
 
-	Configuration::GetSupport().isSupportInlineRaytracing = true;
-	return true;
+	return option.RaytracingTier;
+	
 }
 
-bool Device::CheckMeshShaderEnable() {
-	// メッシュシェーダーのサポートをチェック
+bool Device::CheckMeshShaderEnable() const {
+	//!< Mesh Shaderのサポートのチェック
+
 	D3D12_FEATURE_DATA_D3D12_OPTIONS7 features = {};
 	auto hr = device_->CheckFeatureSupport(D3D12_FEATURE_D3D12_OPTIONS7, &features, sizeof(features));
 
 	StreamLogger::EngineLog(std::format("[DXOBEJCT Device] feature levels - mesh shader tier: {}", magic_enum::enum_name(features.MeshShaderTier)));
 
 	if (FAILED(hr) || (features.MeshShaderTier == D3D12_MESH_SHADER_TIER_NOT_SUPPORTED)) {
-		StreamLogger::EngineLog("warning : mesh shaders aren't supported.");
+		StreamLogger::EngineLog("[DXOBEJCT Device] warning | mesh shaders aren't supported.");
 		return false; //!< mesh shaderがサポートされてない
 	}
-	
+
 	return true;
 }

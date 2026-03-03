@@ -162,8 +162,8 @@ void Assert(HRESULT hr, const std::wstring& label, const std::source_location& l
 // Configs
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr const D3D_SHADER_MODEL kHeighestShaderModel = D3D_SHADER_MODEL_6_6;
-static_assert(kHeighestShaderModel >= D3D_SHADER_MODEL_6_5, "mesh shader is 6.5 or higher");
+constexpr const D3D_SHADER_MODEL kRequireShaderModel = D3D_SHADER_MODEL_6_6;
+static_assert(kRequireShaderModel >= D3D_SHADER_MODEL_6_5, "mesh shader is 6.5 or higher");
 
 constexpr const DXGI_FORMAT kDefaultScreenFormat     = DXGI_FORMAT_R8G8B8A8_UNORM;          //!< スクリーン画面のformat
 constexpr const DXGI_FORMAT kDefaultScreenViewFormat = ConvertToSRGB(kDefaultScreenFormat); //!< 最終的なスクリーン画面のformat

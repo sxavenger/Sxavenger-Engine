@@ -15,7 +15,7 @@ namespace MaterialLib {
 	////////////////////////////////////////////////////////////////////////////////////////////
 
 	float4 SampleTexture(Texture2D<float4> texture, SamplerState sample, float2 texcoord) {
-#ifdef _COMPUTE
+#ifdef _COMPUTE_SHADER
 		return texture.SampleLevel(sample, texcoord, 0);
 #else
 		return texture.Sample(sample, texcoord);
