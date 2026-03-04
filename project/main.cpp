@@ -17,8 +17,6 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<SxxEngine::Execution::Pipeline> pipeline = std::make_unique<SxxEngine::Execution::Pipeline>();
-	pipeline->Push<SxxEngine::FeatureLevelExecution>(); //!< FeatureLevelの確認
-
 	pipeline->Push<SxxEngine::EngineExecution>();
 
 #ifdef _DEVELOPMENT

@@ -89,6 +89,13 @@ void FRenderCoreLight::CreatePipeline() {
 	pipelines_[LightType::Spot]->ReflectionRootSignature(System::GetDxDevice());
 	pipelines_[LightType::Spot]->CreatePipeline(System::GetDxDevice(), desc_front);
 
+	pipelines_[LightType::Rect] = std::make_unique<CustomReflectionGraphicsPipeline>();
+	pipelines_[LightType::Rect]->CreateContent(kDirectory / "LightRender2d.vs.hlsl", GraphicsShaderType::vs);
+	pipelines_[LightType::Rect]->CreateContent(kDirectory / "RectLight.ps.hlsl",     GraphicsShaderType::ps);
+	pipelines_[LightType::Rect]->RegisterBlob();
+	pipelines_[LightType::Rect]->ReflectionRootSignature(System::GetDxDevice());
+	pipelines_[LightType::Rect]->CreatePipeline(System::GetDxDevice(), desc_front);
+
 	{
 		SamplerBindDesc desc = {};
 		desc.SetSamplerLinear("gBRDFSampler", SamplerMode::MODE_CLAMP);

@@ -34,6 +34,9 @@ public:
 		Point,
 		Spot,
 
+		//!< Rect light
+		Rect,
+
 		//!< Sky light
 		SkyLight,
 		SkyLightEnvironment,

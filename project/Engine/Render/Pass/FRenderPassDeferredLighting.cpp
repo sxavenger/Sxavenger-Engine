@@ -11,6 +11,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Components/Component/Light/Punctual/DirectionalLightComponent.h>
 #include <Engine/Components/Component/Light/Punctual/PointLightComponent.h>
 #include <Engine/Components/Component/Light/Punctual/SpotLightComponent.h>
+#include <Engine/Components/Component/Light/Rect/RectLightComponent.h>
 #include <Engine/Components/Component/Light/Environment/SkyLightComponent.h>
 #include <Engine/Components/Component/Light/Environment/SkyAtmosphereComponent.h>
 #include <Engine/Components/Component/ComponentStorage.h>
@@ -42,6 +43,9 @@ void FRenderPassDeferredLighting::Render(const DirectXQueueContext* context, con
 		PassDirectionalLight(context, config);
 		PassPointLight(context, config);
 		PassSpotLight(context, config);
+
+		//!< Rect light
+		PassRectLight(context, config);
 
 		//!< Sky light
 		PassSkyLight(context, config);
@@ -294,6 +298,39 @@ void FRenderPassDeferredLighting::PassSpotLight(const DirectXQueueContext* conte
 
 		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
 			FRenderCoreLight::LightType::Spot, context, parameter
+		);
+
+		FRenderCore::GetInstance()->GetLight()->DrawCall(context, 1);
+
+	});
+
+}
+
+void FRenderPassDeferredLighting::PassRectLight(const DirectXQueueContext* context, const Config& config) {
+
+	FRenderCore::GetInstance()->GetLight()->SetPipeline(
+		FRenderCoreLight::LightType::Rect, context, config.buffer->GetSize()
+	);
+
+	DxObject::BindBufferDesc parameter = {};
+	// common parameter
+	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+	parameter.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
+
+	// deferred parameter
+	parameter.SetHandle("gAlbedo",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal",   config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
+	parameter.SetHandle("gPosition", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
+
+	sComponentStorage->ForEachActive<RectLightComponent>([&](RectLightComponent* component) {
+
+		parameter.SetAddress("gTransforms", component->RequireTransform()->GetGPUVirtualAddress());
+		parameter.SetAddress("gParameters", component->GetGPUVirtualAddress());
+
+		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
+			FRenderCoreLight::LightType::Rect, context, parameter
 		);
 
 		FRenderCore::GetInstance()->GetLight()->DrawCall(context, 1);

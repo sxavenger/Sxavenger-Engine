@@ -31,15 +31,7 @@ struct RectLightComponent {
 	// public methods
 	//=========================================================================================
 
-	static float3 GetPositionFromSurface(float4x4 light_matrix, float3 surface_position) {
-
-		//!< out of scale
-		float4x4 mat = {
-			normalize(light_matrix[0]),
-			normalize(light_matrix[1]),
-			normalize(light_matrix[2]),
-			light_matrix[3]
-		};
+	float3 GetPositionFromSurface(float4x4 light_matrix, float3 surface_position) {
 
 		//!< TODO: matrix scale is not support.
 		float3 light_origin = Mathmatic::GetPosition(light_matrix);
@@ -59,22 +51,38 @@ struct RectLightComponent {
 		return light_origin + right * local.x + up * local.y;
 	}
 
+	float3 GetDirectionFromSurface(float4x4 light_matrix, float3 surface_position) {
+		float3 light_position = GetPositionFromSurface(light_matrix, surface_position);
+		return normalize(light_position - surface_position);
+	}
+
 	float GetLightMask(RaytracingAccelerationStructure scene, float4x4 light_matrix, float3 surface_position) {
 
-		float3 light_position = GetPositionFromSurface(light_matrix, surface_position);
+		float3 light_position = GetPositionFromSurface(light_matrix, surface_position) + Mathmatic::kEpsilon;
 
-		float d = length(light_position - surface_position);
-		float l = normalize(light_position - surface_position);
+		float d  = length(light_position - surface_position);
+		float3 l = normalize(light_position - surface_position);
 
 		float attenuation_distance = Mathmatic::Square(saturate(1.0f - Mathmatic::Square(d / radius))) / (Mathmatic::Square(d) + 1.0f);
 
-		if (attenuation_distance <= 0.0f) {
+		float attenuation_angle = dot(l, -Mathmatic::GetForwardDirection(light_matrix));
+
+		if (attenuation_distance * attenuation_angle <= 0.0f) {
 			return 0.0f;
 		}
 
-		float attenuation_shadow = 1.0f; //!< TODO: shadow attenuation.
+		static const float kTMin = 0.001f;
+		static const float kTMax = 10000.0f;
+
+		RayDesc desc;
+		desc.Origin    = surface_position;
+		desc.Direction = l;
+		desc.TMin      = kTMin;
+		desc.TMax      = d;
 		
-		return attenuation_distance * attenuation_shadow;
+		float attenuation_shadow = shadow.TraceShadow(desc, scene);
+		
+		return attenuation_distance * attenuation_angle * attenuation_shadow;
 
 	}
 

@@ -40,10 +40,10 @@ struct SpotLightComponent {
 
 	float GetLightMask(RaytracingAccelerationStructure scene, float3 light_position, float3 light_direction, float3 surface_position) {
 		
-		float distance = length(light_position - surface_position);
-		float3 l       = GetDirectionFromSurface(light_position, surface_position);
+		float d  = length(light_position - surface_position);
+		float3 l = GetDirectionFromSurface(light_position, surface_position);
 
-		float attenuation_distance = Mathmatic::Square(saturate(1.0f - Mathmatic::Square(distance / radius))) / (Mathmatic::Square(distance) + 1.0f);
+		float attenuation_distance = Mathmatic::Square(saturate(1.0f - Mathmatic::Square(d / radius))) / (Mathmatic::Square(d) + 1.0f);
 
 		float cosInnerCone = cos(coneAngle.x);
 		float cosOuterCone = cos(coneAngle.y);
@@ -61,7 +61,7 @@ struct SpotLightComponent {
 		desc.Origin    = surface_position;
 		desc.Direction = l;
 		desc.TMin      = kTMin;
-		desc.TMax      = distance;
+		desc.TMax      = d;
 		
 		float attenuation_shadow = shadow.TraceShadow(desc, scene);
 
