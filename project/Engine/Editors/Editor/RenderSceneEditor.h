@@ -114,6 +114,7 @@ private:
 		DirectionalLight,
 		PointLight,
 		SpotLight,
+		RectLight,
 		Camera,
 	};
 

@@ -20,6 +20,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Components/Component/Light/Punctual/DirectionalLightComponent.h>
 #include <Engine/Components/Component/Light/Punctual/PointLightComponent.h>
 #include <Engine/Components/Component/Light/Punctual/SpotLightComponent.h>
+#include <Engine/Components/Component/Light/Rect/RectLightComponent.h>
 #include <Engine/Components/Component/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Components/Component/ComponentHelper.h>
 #include <Engine/Components/Entity/EntityBehaviour.h>
@@ -109,6 +110,7 @@ void RenderSceneEditor::Init() {
 	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_directionalLight.png")->GetId();
 	icons_[static_cast<uint32_t>(Icon::PointLight)]       = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_pointLight.png")->GetId();
 	icons_[static_cast<uint32_t>(Icon::SpotLight)]        = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_spotLight.png")->GetId();
+	icons_[static_cast<uint32_t>(Icon::RectLight)]        = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_rectLight.png")->GetId();
 	icons_[static_cast<uint32_t>(Icon::Camera)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_camera.png")->GetId();
 	
 	{
@@ -775,6 +777,14 @@ void RenderSceneEditor::ShowIconScene() {
 			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 
 		RenderIcon(component->GetBehaviour(), Icon::SpotLight, component->RequireTransform()->GetPosition(), color);
+	});
+
+	// Rect Light
+	sComponentStorage->ForEach<RectLightComponent>([&](RectLightComponent* component) {
+		Color4f color = component->IsActive()
+			? Color4f(component->GetParameter().color, 1.0f)
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+		RenderIcon(component->GetBehaviour(), Icon::RectLight, component->RequireTransform()->GetPosition(), color);
 	});
 
 	// Camera
