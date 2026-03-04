@@ -216,8 +216,8 @@ SkyAtmosphereComponent::SkyAtmosphereComponent(EntityBehaviour* behaviour) : Bas
 
 void SkyAtmosphereComponent::ShowComponentInspector() {
 
-	SxImGui::Image(textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorSRV.GetGPUHandle().ptr, ImVec2(256.0f, 64.0f));
-	SxImGui::Image(textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorSRV.GetGPUHandle().ptr, ImVec2(32, 32));
+	SxGui::ImageLabel("transmittance", textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorSRV.GetGPUHandle().ptr, ImVec2(256.0f, 64.0f));
+	SxGui::ImageLabel("multiple scattering", textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorSRV.GetGPUHandle().ptr, ImVec2(32, 32));
 	//SxImGui::Image(skyView_.descriptorSRV.GetGPUHandle().ptr, ImVec2(200.0f, 100.0f));
 
 	atmosphere_->At().Inspector();

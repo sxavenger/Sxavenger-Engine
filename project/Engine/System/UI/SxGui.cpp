@@ -433,6 +433,44 @@ bool SxGui::DragVector3(const char* label, float v[3], float v_speed, const std:
 	return isChanged;
 }
 
+void SxGui::ImageLabel(const char* label, ImTextureRef handle, const ImVec2& size) {
+
+	ImGui::PushID(label);
+	ImGui::BeginGroup();
+
+	ImVec2 region = ImGui::GetContentRegionAvail();
+	region.x *= 0.5f; // 画像は利用可能な幅の半分を占める
+
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
+	float windowAspectRatio = region.x / region.y;
+
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = region;
+
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+
+	ImGui::Image(handle, displayTextureSize);
+
+	// 右側に通常通りラベルを表示
+	const char* label_end = ImGui::FindRenderedTextEnd(label);
+
+	if (label != label_end) {
+		ImGui::SameLine(0, ImGui::GetStyle().ItemInnerSpacing.x);
+		ImGui::TextEx(label, label_end);
+	}
+
+	ImGui::EndGroup();
+	ImGui::PopID();
+
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Hierarchy namespace methods
 ////////////////////////////////////////////////////////////////////////////////////////////

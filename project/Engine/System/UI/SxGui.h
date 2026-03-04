@@ -108,6 +108,8 @@ namespace SxGui {
 
 	bool DragVector3(const char* label, float v[3], float v_speed = 1.0f, const std::optional<float>& v_min = std::nullopt, const std::optional<float>& v_max = std::nullopt, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 
+	void ImageLabel(const char* label, ImTextureRef handle, const ImVec2& size);
+
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Hierarchy namespace
 	////////////////////////////////////////////////////////////////////////////////////////////
