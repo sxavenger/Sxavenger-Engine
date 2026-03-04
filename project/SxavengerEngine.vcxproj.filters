@@ -58,6 +58,9 @@
     <Filter Include="Engine\Components\Component\Light\Punctual">
       <UniqueIdentifier>{142B6A2E-0093-30FC-69FE-4412558547E8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Components\Component\Light\Rect">
+      <UniqueIdentifier>{D6D428BF-C226-00AF-AB45-3DBF97361998}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Components\Component\MeshRenderer">
       <UniqueIdentifier>{E5B9FA95-D136-EED8-FAB3-EEECE68F8A6C}</UniqueIdentifier>
     </Filter>
@@ -401,6 +404,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\Light\Punctual\SpotLightComponent.h">
       <Filter>Engine\Components\Component\Light\Punctual</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Components\Component\Light\Rect\RectLightComponent.h">
+      <Filter>Engine\Components\Component\Light\Rect</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\MeshRenderer\MeshRendererCommon.h">
       <Filter>Engine\Components\Component\MeshRenderer</Filter>
@@ -1089,7 +1095,6 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\Light\Rect\RectLightComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Camera\CameraHandle.cpp">
@@ -1235,6 +1240,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\Light\Punctual\SpotLightComponent.cpp">
       <Filter>Engine\Components\Component\Light\Punctual</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Components\Component\Light\Rect\RectLightComponent.cpp">
+      <Filter>Engine\Components\Component\Light\Rect</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\MeshRenderer\MeshRendererComponent.cpp">
       <Filter>Engine\Components\Component\MeshRenderer</Filter>
@@ -1756,6 +1764,5 @@
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\Components\Component\Light\Rect\RectLightComponent.cpp" />
   </ItemGroup>
 </Project>
