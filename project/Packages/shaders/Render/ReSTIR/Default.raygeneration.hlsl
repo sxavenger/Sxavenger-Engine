@@ -84,7 +84,7 @@ RAYGENERATION void mainRaygeneration() {
 		sample.ns  = payload.normal;
 		sample.pdf = pdf;
 
-		float w = dot(sample.lo, ACES::AP1_RGB2Y) * rcp(max(pdf, kEpsilon));
+		float w = dot(sample.lo, ACES::AP1_RGB2Y) * rcp(max(pdf, Mathmatic::kEpsilon));
 
 		reservoir.Update(sample, w, random.Generate1d());
 		

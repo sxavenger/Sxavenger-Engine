@@ -2,7 +2,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "AutoExposure.hlsli"
-#include "../../../../Library/Math.hlsli"
+#include "../../../../Library/Mathmatic.hlsli"
 #include "../../../../Library/ACES.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -12,7 +12,7 @@
 uint CalculateBin(float3 color) {
 	float luminance = dot(color, ACES::AP1_RGB2Y);
 	
-	if (luminance < kEpsilon) {
+	if (luminance < Mathmatic::kEpsilon) {
 		return 0;
 	}
 

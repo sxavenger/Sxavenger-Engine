@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 #include "RestirPass.hlsli"
 #include "../DeferredBufferIndex.hlsli"
-#include "../../Library/Math.hlsli"
+#include "../../Library/Mathmatic.hlsli"
 #include "../../Library/ACES.hlsli"
 
 //=========================================================================================
@@ -40,11 +40,11 @@ float4 SampleIndirectReservoir(float2 uv, float lod) {
 
 float CalculateExpDepthWeight(float p, float q) {
 	const float sigma_z = 0.1f;
-	return -abs(p - q) / (sigma_z + kEpsilon);
+	return -abs(p - q) / (sigma_z + Mathmatic::kEpsilon);
 }
 
 float CalculateExpPositionWeight(float3 p, float3 q) {
-	return -abs(dot(p - q, p - q)) / (sigma_s + kEpsilon);
+	return -abs(dot(p - q, p - q)) / (sigma_s + Mathmatic::kEpsilon);
 }
 
 float CalculateNormalWeight(float3 n, float3 m) {
@@ -54,7 +54,7 @@ float CalculateNormalWeight(float3 n, float3 m) {
 // ガウシアンカーネルを求める関数
 float Gaussian2D(int2 x, float sigma) {
 	float twoSigma2 = 2.0 * sigma * sigma;
-	float coeff = 1.0 / (kPi * twoSigma2);
+	float coeff = 1.0 / (Mathmatic::kPi * twoSigma2);
 	return coeff * exp(-(x.x * x.x + x.y * x.y) / twoSigma2);
 }
 
@@ -62,7 +62,7 @@ float CalculateExpLuminanceWeight(float3 p, float3 q, float v) {
 	float l_p = dot(p, ACES::AP1_RGB2Y);
 	float l_q = dot(q, ACES::AP1_RGB2Y);
 
-	return -abs(l_p - l_q) / (sigma_l * v * l_p + kEpsilon);
+	return -abs(l_p - l_q) / (sigma_l * v * l_p + Mathmatic::kEpsilon);
 }
 
 float3 CalculateLuminanceRGB(float3 color) {

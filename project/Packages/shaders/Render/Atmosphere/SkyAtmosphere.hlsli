@@ -10,7 +10,7 @@
 #include "AtmosphereIntersection.hlsli"
 
 //* library
-#include "../../Library/Math.hlsli"
+#include "../../Library/Mathmatic.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // define

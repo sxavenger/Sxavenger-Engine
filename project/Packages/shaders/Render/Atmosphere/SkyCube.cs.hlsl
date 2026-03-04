@@ -73,7 +73,7 @@ float3 ComputeWorldDir(float2 uv, float view_height, Atmosphere atmosphere) {
 
 	float v_horizon = sqrt(max(view_height * view_height - atmosphere.bottom_radius * atmosphere.bottom_radius, 0.0));
 	float ground_to_horizon_angle = acos(v_horizon / view_height);
-	float zenith_horizon_angle = kPi - ground_to_horizon_angle;
+	float zenith_horizon_angle = Mathmatic::kPi - ground_to_horizon_angle;
 
 	float cos_view_zenith;
 	if (uv.y < 0.5) {
@@ -115,7 +115,7 @@ float2 TransmittanceParamToUV(Atmosphere atmosphere, float view_height, float co
 }
 
 float CornetteShanksPhase(float cos_theta, float g) {
-	float k = 3.0 / (8.0 * kPi) * (1.0 - g * g) / (2.0 + g * g);
+	float k = 3.0 / (8.0 * Mathmatic::kPi) * (1.0 - g * g) / (2.0 + g * g);
 	return k * (1.0 + cos_theta * cos_theta) / pow(1.0 + g * g - 2.0 * g * -cos_theta, 1.5);
 }
 
@@ -124,7 +124,7 @@ float MiePhase(float cos_theta, float g_or_d) {
 }
 
 float RayleighPhase(float cos_theta) {
-	float factor = 3.0f / (16.0f * kPi);
+	float factor = 3.0f / (16.0f * Mathmatic::kPi);
 	return factor * (1.0f + cos_theta * cos_theta);
 }
 
@@ -235,7 +235,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float3 world_dir      = GetDirection(uv, index);
 
 	float3 zenith  = view_world_pos / view_height;
-	float3 sun_dir = -gTransform.GetDirection();
+	float3 sun_dir = -gTransform.GetForwardDirection();
 
 	SingleScattering ss = IntegrateScatteregLuminance(world_pos, world_dir, sun_dir, gAtmosphere);
 

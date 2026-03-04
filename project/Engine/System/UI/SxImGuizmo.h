@@ -567,6 +567,8 @@ namespace SxImGuizmo {
 
 	IMGUI_API bool IsUsing();
 
+	IMGUI_API bool IsOver();
+
 	// todo: matrix -> objectのsrtに変更
 	IMGUI_API bool Manipulate(const float* view, const float* proj, const float* matrix, GizmoOutput& output, Operation operation, Mode mode);
 

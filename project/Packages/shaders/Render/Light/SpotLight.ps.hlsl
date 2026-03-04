@@ -39,7 +39,7 @@ PSOutput main(PSInput input) {
 
 	//* Lightの影響範囲
 	float3 color_mask = gParameters[input.instanceId].GetColorMask();
-	float light_mask  = gParameters[input.instanceId].GetLightMask(gScene, gTransforms[input.instanceId].GetPosition(), gTransforms[input.instanceId].GetDirection(), surface.position);
+	float light_mask  = gParameters[input.instanceId].GetLightMask(gScene, gTransforms[input.instanceId].GetPosition(), gTransforms[input.instanceId].GetForwardDirection(), surface.position);
 	
 	output.color.rgb = EvaluateBRDF(albedo, context, surface.roughness) * context.NdotL * color_mask * light_mask;
 	// todo: specularFactorを追加

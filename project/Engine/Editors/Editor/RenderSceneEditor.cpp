@@ -641,7 +641,9 @@ void RenderSceneEditor::ShowSceneWindow() {
 	ImGui::End();
 	ImGui::PopStyleVar();
 
-	PickMesh(System::GetDirectQueueContext(), sceneRect_);
+	if (!SxImGuizmo::IsOver()) {
+		PickMesh(System::GetDirectQueueContext(), sceneRect_);
+	}
 
 	//* render scene information *//
 

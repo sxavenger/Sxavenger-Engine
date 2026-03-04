@@ -1462,6 +1462,17 @@ bool IsUsing() {
 	return (sContext.isUsing && (sContext.GetCurrentId() == sContext.editingId)) || sContext.isUsingBounds;
 }
 
+bool IsOver() {
+
+	bool isOver = false;
+	isOver |= (Intersects(sContext.operation.value_or(Operation::NONE), Operation::TRANSLATE) && sContext.GetMoveType(Operation::TRANSLATE) != MT_NONE);
+	isOver |= (Intersects(sContext.operation.value_or(Operation::NONE), Operation::ROTATE) && sContext.GetRotationType(Operation::ROTATE) != MT_NONE);
+	isOver |= (Intersects(sContext.operation.value_or(Operation::NONE), Operation::SCALE) && sContext.GetScaleType(Operation::SCALE) != MT_NONE);
+	isOver |= IsUsing();
+
+	return isOver;
+}
+
 bool Manipulate(const float* view, const float* proj, const float* matrix, GizmoOutput& output, Operation operation, Mode mode) {
 	output = {};
 

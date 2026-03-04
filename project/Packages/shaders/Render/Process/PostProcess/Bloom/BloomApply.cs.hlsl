@@ -3,7 +3,7 @@
 //-----------------------------------------------------------------------------------------
 #include "Bloom.hlsli"
 #include "../../../../Library/ACES.hlsli"
-#include "../../../../Library/Math.hlsli"
+#include "../../../../Library/Mathmatic.hlsli"
 
 //=========================================================================================
 // buffers
@@ -22,7 +22,7 @@ RWTexture2D<float4> gOutput : register(u0);
 
 float Gaussian2d(float2 x, float sigma) {
 	float twoSigma2 = 2.0 * sigma * sigma;
-	float coeff = 1.0 / (kPi * twoSigma2);
+	float coeff = 1.0 / (Mathmatic::kPi * twoSigma2);
 	return coeff * exp(-(x.x * x.x + x.y * x.y) / twoSigma2);
 }
 
@@ -51,7 +51,7 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 		float rad = gParameter.radius * i;
 		float cnt = max(kDensity * i, 1.0f);
 
-		float inc = kTau / cnt;
+		float inc = Mathmatic::kTau / cnt;
 
 		float lod = (float(i) / float(kCount)) * 4.0f;
 
