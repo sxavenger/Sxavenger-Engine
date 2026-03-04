@@ -25,7 +25,7 @@ PSOutput main(PSInput input) {
 	surface.GetSurface(input.position.xy);
 
 	//* Lightの情報を取得
-	float3 l = gParameters[input.instanceId].GetDirectionFromSurface(gTransforms[input.instanceId].GetDirection()); //!< lightの方向ベクトル
+	float3 l = gParameters[input.instanceId].GetDirectionFromSurface(gTransforms[input.instanceId].GetForwardDirection()); //!< lightの方向ベクトル
 
 	//* cameraからの方向ベクトルを取得
 	float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得
@@ -39,7 +39,7 @@ PSOutput main(PSInput input) {
 
 	//* Lightの影響範囲
 	float3 color_mask = gParameters[input.instanceId].GetColorMask();
-	float light_mask  = gParameters[input.instanceId].GetLightMask(gScene, gTransforms[input.instanceId].GetDirection(), surface.position);
+	float light_mask  = gParameters[input.instanceId].GetLightMask(gScene, gTransforms[input.instanceId].GetForwardDirection(), surface.position);
 
 	output.color.rgb = EvaluateBRDF(albedo, context, surface.roughness) * context.NdotL * color_mask * light_mask;
 	// todo: specularFactorを追加

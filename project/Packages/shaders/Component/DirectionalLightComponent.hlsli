@@ -7,7 +7,7 @@
 #include "LightComponentCommon.hlsli"
 
 //* library
-#include "../Library/Math.hlsli"
+#include "../Library/Mathmatic.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectionalLightComponent structure
@@ -50,7 +50,7 @@ struct DirectionalLightComponent {
 	}
 
 	float GetIntensity() {
-		return intensity * kPi;
+		return intensity * Mathmatic::kPi;
 	}
 
 	float GetRadiance() {

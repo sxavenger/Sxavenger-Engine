@@ -225,6 +225,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Components\Component\Light\Punctual\DirectionalLightComponent.h" />
     <ClInclude Include="Engine\Components\Component\Light\Punctual\PointLightComponent.h" />
     <ClInclude Include="Engine\Components\Component\Light\Punctual\SpotLightComponent.h" />
+    <ClInclude Include="Engine\Components\Component\Light\Rect\RectLightComponent.h" />
     <ClInclude Include="Engine\Components\Component\MeshRenderer\MeshRendererCommon.h" />
     <ClInclude Include="Engine\Components\Component\MeshRenderer\MeshRendererComponent.h" />
     <ClInclude Include="Engine\Components\Component\MeshRenderer\PrimitiveRendererComponent.h" />
@@ -504,6 +505,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Components\Component\Light\Punctual\DirectionalLightComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\Light\Punctual\PointLightComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\Light\Punctual\SpotLightComponent.cpp" />
+    <ClCompile Include="Engine\Components\Component\Light\Rect\RectLightComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\MeshRenderer\MeshRendererComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\MeshRenderer\PrimitiveRendererComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\MeshRenderer\SkinnedMeshRendererComponent.cpp" />

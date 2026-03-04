@@ -46,7 +46,7 @@ struct Set {
 
 uint2 GetNeighbor(uint2 p, float radius, float2 r) {
 	// ランダムに円形の近傍をサンプリング
-	float a = kTau * r.x;
+	float a = Mathmatic::kTau * r.x;
 	float d = radius * sqrt(r.y);
 
 	int2 offset = int2(d * cos(a), d * sin(a));

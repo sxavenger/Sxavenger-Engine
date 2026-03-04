@@ -1089,6 +1089,7 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Components\Component\Light\Rect\RectLightComponent.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Demo\Camera\CameraHandle.cpp">
@@ -1755,5 +1756,6 @@
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\Components\Component\Light\Rect\RectLightComponent.cpp" />
   </ItemGroup>
 </Project>

@@ -9,7 +9,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "Math.hlsli"
+#include "Mathmatic.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Weighted Blended OIT namespace
@@ -36,13 +36,13 @@ namespace WeightedBlendedOIT {
 	//! @brief Check if the value is approximately opaque (1.0)
 	//! @param[in] v: value to check
 	bool IsApproximatelyOpacity(float v) {
-		return abs(v - 1.0f) <= max(abs(v), 1.0f) * kEpsilon;
+		return abs(v - 1.0f) <= max(abs(v), 1.0f) * Mathmatic::kEpsilon;
 	}
 
 	//! @brief Calculate the final transparent color from accumulation buffer
 	//! @param[in] accumulation: accumulation buffer value
 	float3 CalculateTransparentColor(float4 accumulation) {
-		return accumulation.rgb / max(accumulation.a, kEpsilon);
+		return accumulation.rgb / max(accumulation.a, Mathmatic::kEpsilon);
 	}
 	
 }

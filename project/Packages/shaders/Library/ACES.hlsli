@@ -10,7 +10,7 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "Math.hlsli"
+#include "Mathmatic.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ACES namespace
@@ -158,7 +158,7 @@ namespace ACES {
 			//hue = FLT_NAN; // RGB triplets where RGB are equal have an undefined hue
 			hue = 0;
 		} else {
-			hue = (180. / kPi) * atan2(sqrt(3.0) * (rgb[1] - rgb[2]), 2 * rgb[0] - rgb[1] - rgb[2]);
+			hue = (180. / Mathmatic::kPi) * atan2(sqrt(3.0) * (rgb[1] - rgb[2]), 2 * rgb[0] - rgb[1] - rgb[2]);
 		}
 
 		if (hue < 0.) {

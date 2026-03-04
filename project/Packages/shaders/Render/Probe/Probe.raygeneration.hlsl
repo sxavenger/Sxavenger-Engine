@@ -38,7 +38,7 @@ RAYGENERATION void mainRaygeneration() {
 		sample.lo  = payload.lo * max(dot(wi, direction), 0.0f);
 		sample.pdf = ImportanceSampleCosineWeightPDF(wi, direction);
 
-		newReservoir.Update(sample, dot(sample.lo, ACES::AP1_RGB2Y) / max(sample.pdf, kEpsilon), random.Generate1d());
+		newReservoir.Update(sample, dot(sample.lo, ACES::AP1_RGB2Y) / max(sample.pdf, Mathmatic::kEpsilon), random.Generate1d());
 	}
 
 	{

@@ -9,20 +9,20 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "Math.hlsli"
+#include "Mathmatic.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 float Gaussian(float x, float sigma) {
-	float a = 1.0f / sqrt(2.0f * kPi * sigma * sigma);
+	float a = 1.0f / sqrt(2.0f * Mathmatic::kPi * sigma * sigma);
 	float b = exp(-(x * x) / (2.0f * sigma * sigma));
 	return a * b;
 }
 
 float Gaussian2d(float2 x, float sigma) {
-	float a = 1.0f / (2.0f * kPi * sigma * sigma);
+	float a = 1.0f / (2.0f * Mathmatic::kPi * sigma * sigma);
 	float b = exp(-(x.x * x.x + x.y * x.y) / (2.0f * sigma * sigma));
 	return a * b;
 }

@@ -4,7 +4,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* library
-#include "Math.hlsli"
+#include "Mathmatic.hlsli"
 #include "BRDF.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,7 +35,7 @@ void TangentSpace(float3 n, out float3 t, out float3 b) {
 float3 ImportanceSampleCosineWeight(float2 xi, float3 n) {
 
 	float r = sqrt(xi.x);
-	float phi = kTau * xi.y;
+	float phi = Mathmatic::kTau * xi.y;
 
 	float3 h;
 	h.x = r * cos(phi);
@@ -49,14 +49,14 @@ float3 ImportanceSampleCosineWeight(float2 xi, float3 n) {
 }
 
 float ImportanceSampleCosineWeightPDF(float3 wi, float3 n) {
-	return max(dot(wi, n), 0) * rcp(kPi);
+	return max(dot(wi, n), 0) * rcp(Mathmatic::kPi);
 }
 
 float3 ImportanceSampleGGX(float2 xi, float roughness, float3 n) {
 	float a = roughness * roughness;
 
-	float phi = kTau * xi.x;
-	float cosTheta = sqrt((1.0f - xi.y) / max(1.0f + (a * a - 1.0f) * xi.y, kEpsilon));
+	float phi = Mathmatic::kTau * xi.x;
+	float cosTheta = sqrt((1.0f - xi.y) / max(1.0f + (a * a - 1.0f) * xi.y, Mathmatic::kEpsilon));
 	float sinTheta = sqrt(1.0f - cosTheta * cosTheta);
 
 	float3 h; //!< 半径1の円周上にサンプリング
@@ -79,7 +79,7 @@ float ImportanceSampleGGXPDF(float3 wi, float roughness, float3 n, float3 v) {
 	
 	float d = D_GGX(context, roughness);
 
-	return (d * context.NdotH) * rcp(4.0f * max(context.VdotH, kEpsilon));
+	return (d * context.NdotH) * rcp(4.0f * max(context.VdotH, Mathmatic::kEpsilon));
 }
 
 float3 FibonacciSpiral(uint i, uint n) {
@@ -89,7 +89,7 @@ float3 FibonacciSpiral(uint i, uint n) {
 
 	static const float kGoldenAngle = 2.399963229728653f; //!< kPi * (3.0f - sqrt(5.0f))
 
-	const float y = 1.0f - (2.0f * i + 1.0f) * rcp(n);
+	const float y = 1.0f - (2.0f * i + 1.0f) / n;
 	const float r = sqrt(1.0f - y * y);
 
 	float phi = i * kGoldenAngle;

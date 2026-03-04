@@ -4,13 +4,13 @@
 #include "LightRender.hlsli"
 
 //* component
-#include "../../Component/SpotLightComponent.hlsli"
+#include "../../Component/RectLightComponent.hlsli"
 
 //=========================================================================================
 // buffers
 //=========================================================================================
 
-StructuredBuffer<SpotLightComponent> gParameters : register(t0);
+StructuredBuffer<RectLightComponent> gParameters : register(t0);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -25,12 +25,12 @@ PSOutput main(PSInput input) {
 	surface.GetSurface(input.position.xy);
 
 	//* Lightの情報を取得
-	float3 l = gParameters[input.instanceId].GetDirectionFromSurface(gTransforms[input.instanceId].GetPosition(), surface.position); //!< lightの方向ベクトル
+	float3 l = gParameters[input.instanceId].GetDirectionFromSurface(gTransforms[input.instanceId].mat, surface.position); //!< lightの方向ベクトル
 
 	//* Cameraの情報を取得
-	float3 v = normalize(gCamera.GetPosition() - surface.position);
+	float3 v = normalize(gCamera.GetPosition() - surface.position); //!< cameraからの方向ベクトルを取得
 
-	BxDFAlbedo albedo = BxDFAlbedo::Create(surface.albedo, surface.metallic);
+	BxDFAlbedo albedo   = BxDFAlbedo::Create(surface.albedo, surface.metallic);
 	BxDFContext context = BxDFContext::Create(surface.normal, v, l);
 
 	if (!context.IsValid()) {
@@ -39,14 +39,13 @@ PSOutput main(PSInput input) {
 
 	//* Lightの影響範囲
 	float3 color_mask = gParameters[input.instanceId].GetColorMask();
-	float light_mask  = gParameters[input.instanceId].GetLightMask(gScene, gTransforms[input.instanceId].GetPosition(), gTransforms[input.instanceId].GetForwardDirection(), surface.position);
-	
+	float light_mask  = gParameters[input.instanceId].GetLightMask(gScene, gTransforms[input.instanceId].mat, surface.position);
+
 	output.color.rgb = EvaluateBRDF(albedo, context, surface.roughness) * context.NdotL * color_mask * light_mask;
 	// todo: specularFactorを追加
 
 	output.color.a = 1.0f;
 	return output;
-	
 	
 }
 
