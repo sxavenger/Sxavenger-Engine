@@ -643,7 +643,7 @@ void RenderSceneEditor::ShowSceneWindow() {
 	ImGui::End();
 	ImGui::PopStyleVar();
 
-	if (!SxImGuizmo::IsOver()) {
+	if (!SxImGuizmo::IsOver() && isFocusSceneWindow_) {
 		PickMesh(System::GetDirectQueueContext(), sceneRect_);
 	}
 
@@ -1189,6 +1189,10 @@ void RenderSceneEditor::RenderIcon(BaseInspector* inspector, Icon icon, const Ve
 
 	if (inspector == nullptr || editor == nullptr) {
 		return; //!< 選択不可能(inspectorが未設定, editorが存在しない)
+	}
+
+	if (SxImGuizmo::IsOver()) {
+		return; //!< gizmo操作中は選択不可
 	}
 
 	// rectの調整

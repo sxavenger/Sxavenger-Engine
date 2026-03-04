@@ -15,13 +15,17 @@ DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessRadialBlur::Parameter::Init() {
-	center   = { 0.0f, 0.0f };
-	intensity = 0.4f;
+	center       = { 0.0f, 0.0f };
+	intensity    = 0.4f;
+	quality      = 8;
+	isStochastic = true;
 }
 
 void PostProcessRadialBlur::Parameter::SetImGuiCommand() {
-	ImGui::DragFloat2("center", &center.x, 0.01f, -1.0f, 1.0f);
-	ImGui::DragFloat("intensity", &intensity, 0.01f, 0.0f, 10.0f);
+	SxGui::DragVector2("center", &center.x, 0.01f, -1.0f, 1.0f);
+	SxGui::DragScalar<float>("intensity", &intensity, 0.01f, 0.0f, 10.0f);
+	SxGui::DragScalar<uint32_t>("quality", &quality, 1.0f, 1, 16);
+	ImGui::CheckboxFlags("stochastic", &isStochastic, 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

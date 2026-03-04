@@ -77,6 +77,8 @@ void ExampleGameLoop::InitSystem() {
 		exposure->GetParameter().minLogLuminance = -8.0f;
 		exposure->GetParameter().maxLogLuminance = 10.0f;
 		exposure->GetParameter().compensation    = -5.0f;
+
+		layer->AddPostProcess<PostProcessRadialBlur>();
 	}
 	
 

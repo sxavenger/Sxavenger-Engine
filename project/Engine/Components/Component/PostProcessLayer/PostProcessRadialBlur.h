@@ -44,6 +44,8 @@ public:
 
 		Vector2f center;
 		float intensity;
+		uint32_t quality;
+		uint32_t isStochastic;
 
 	};
 
