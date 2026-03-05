@@ -25,6 +25,7 @@ void SkyAtmosphereComponent::Atmosphere::Init() {
 	mie_scattering        = Vector3f(0.003996f, 0.003996f, 0.003996f);
 	mie_extinction        = Vector3f(0.0044f, 0.0044f, 0.0044f);
 	mie_density_exp_scale = -9.0f;
+	mie_phase_param = 0.2f; //!< 仮値.
 
 	// absorption
 	absorption_extinction = Vector3f(0.000650f, 0.001881f, 0.000085f);
@@ -59,6 +60,7 @@ void SkyAtmosphereComponent::Atmosphere::Inspector() {
 		ImGui::ColorEdit3("Scattering", &mie_scattering.x);
 		ImGui::ColorEdit3("Extinction", &mie_extinction.x);
 		SxImGui::DragScalar("Density Exp Scale", &mie_density_exp_scale, 0.1f);
+		ImGui::DragFloat("Phase Param", &mie_phase_param, 0.01f);
 		ImGui::TreePop();
 	}
 
@@ -108,26 +110,40 @@ void SkyAtmosphereComponent::Parameter::SetEnvironment(const DxObject::Descripto
 	environment = descriptorSRV.GetIndex();
 }
 
+void SkyAtmosphereComponent::Parameter::SetAerial(const DxObject::Descriptor& descriptorSRV) {
+	flags |= Flag::Aerial;
+	aerial = descriptorSRV.GetIndex();
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SkyAtmosphereComponent::Texture::Create(const Vector2ui& resolution, DXGI_FORMAT format, Dimension dimension) {
+void SkyAtmosphereComponent::Texture::Create(const Vector3ui& resolution, DXGI_FORMAT format, Dimension dimension) {
 
 	auto device = System::GetDxDevice()->GetDevice();
 
 	//!< sizeの設定
-	size = Vector3ui(resolution.x, resolution.y, 1);
+	size = {};
 
-	if (dimension == Dimension::TextureCube) {
-		//!< TextureCubeの場合、zは6にする
-		size.z = 6;
+	switch (dimension) {
+		case Dimension::Texture2D: //!< 2Dテクスチャの場合はzを1にする
+			size = Vector3ui(resolution.x, resolution.y, 1);
+			break;
+
+		case Dimension::TextureCube: //!< キューブマップの場合はzを6にする
+			size = Vector3ui(resolution.x, resolution.y, 6);
+			break;
+
+		case Dimension::Texture3D: //!< 3Dテクスチャの場合はそのまま
+			size = resolution;
+			break;
 	}
 
 	//!< resourceの作成
 	resource = DxObject::Resource::CreateTexture(
 		System::GetDxDevice(),
-		D3D12_RESOURCE_DIMENSION_TEXTURE2D,
+		dimension == Dimension::Texture3D ? D3D12_RESOURCE_DIMENSION_TEXTURE3D : D3D12_RESOURCE_DIMENSION_TEXTURE2D, //!< 3DテクスチャはTEXTURE3D, それ以外はTEXTURE2D
 		size,
 		1,
 		format,
@@ -139,7 +155,9 @@ void SkyAtmosphereComponent::Texture::Create(const Vector2ui& resolution, DXGI_F
 	{ //!< UAVの生成
 
 		//!< handleの取得
-		descriptorUAV = System::GetDescriptor(DxObject::kDescriptor_UAV);
+		if (!descriptorSRV.HasHandle()) {
+			descriptorUAV = System::GetDescriptor(DxObject::kDescriptor_UAV);
+		}
 
 		//!< descの設定
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
@@ -153,6 +171,12 @@ void SkyAtmosphereComponent::Texture::Create(const Vector2ui& resolution, DXGI_F
 			case Dimension::TextureCube:
 				desc.ViewDimension            = D3D12_UAV_DIMENSION_TEXTURE2DARRAY;
 				desc.Texture2DArray.ArraySize = 6;
+				break;
+
+			case Dimension::Texture3D:
+				desc.ViewDimension       = D3D12_UAV_DIMENSION_TEXTURE3D;
+				desc.Texture3D.WSize     = size.z;
+				break;
 		}
 
 		//!< UAVの生成
@@ -167,7 +191,9 @@ void SkyAtmosphereComponent::Texture::Create(const Vector2ui& resolution, DXGI_F
 	{ //!< SRVの生成
 
 		//!< handleの取得
-		descriptorSRV = System::GetDescriptor(DxObject::kDescriptor_SRV);
+		if (!descriptorSRV.HasHandle()) {
+			descriptorSRV = System::GetDescriptor(DxObject::kDescriptor_SRV);
+		}
 
 		//!< descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
@@ -183,6 +209,11 @@ void SkyAtmosphereComponent::Texture::Create(const Vector2ui& resolution, DXGI_F
 			case Dimension::TextureCube:
 				desc.ViewDimension         = D3D12_SRV_DIMENSION_TEXTURECUBE;
 				desc.TextureCube.MipLevels = 1;
+				break;
+
+			case Dimension::Texture3D:
+				desc.ViewDimension       = D3D12_SRV_DIMENSION_TEXTURE3D;
+				desc.Texture3D.MipLevels = 1;
 				break;
 		}
 
@@ -210,8 +241,8 @@ SkyAtmosphereComponent::SkyAtmosphereComponent(EntityBehaviour* behaviour) : Bas
 
 	CreateTransmittance();
 	CreateMultipleScattering();
-	//CreateSkyView();
 	CreateSkyCube();
+	//CreateAerial(); FIXME
 }
 
 void SkyAtmosphereComponent::ShowComponentInspector() {
@@ -231,7 +262,73 @@ void SkyAtmosphereComponent::Update(Mode mode, const DirectXQueueContext* contex
 	}
 
 	UpdateSkyCube(context);
-	//UpdateSkyView(context);
+	//UpdateAerial(context);
+}
+
+void SkyAtmosphereComponent::CreateTransmittance() {
+
+	//!< textureの生成
+	textures_[static_cast<uint8_t>(Type::Transmittance)].Create({ 256, 64, 1 }, DXGI_FORMAT_R11G11B10_FLOAT, Texture::Dimension::Texture2D);
+	textures_[static_cast<uint8_t>(Type::Transmittance)].resource.SetName(L"SkyAtmosphereComponent | Transmittance");
+
+	//!< pipelineの生成
+	pipelines_[static_cast<uint8_t>(Type::Transmittance)].CreateBlob(kPackagesDirectory / "shaders" / "Render" / "Atmosphere" / "Transmittance.cs.hlsl");
+	pipelines_[static_cast<uint8_t>(Type::Transmittance)].ReflectionPipeline(System::GetDxDevice());
+}
+
+void SkyAtmosphereComponent::CreateMultipleScattering() {
+
+	//!< textureの生成
+	textures_[static_cast<uint8_t>(Type::MultipleScattering)].Create({ 32, 32, 1 }, DXGI_FORMAT_R11G11B10_FLOAT, Texture::Dimension::Texture2D);
+	textures_[static_cast<uint8_t>(Type::MultipleScattering)].resource.SetName(L"SkyAtmosphereComponent | MultipleScattering");
+
+	//!< pipelineの生成
+
+	pipelines_[static_cast<uint8_t>(Type::MultipleScattering)].CreateBlob(kPackagesDirectory / "shaders" / "Render" / "Atmosphere" / "MultipleScattering.cs.hlsl");
+
+	DxObject::SamplerBindDesc desc = {};
+	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+
+	pipelines_[static_cast<uint8_t>(Type::MultipleScattering)].ReflectionPipeline(System::GetDxDevice(), desc);
+}
+
+void SkyAtmosphereComponent::CreateSkyCube() {
+
+	//!< textureの生成
+	textures_[static_cast<uint8_t>(Type::SkyCube)].Create({ 128, 128, 6 }, DXGI_FORMAT_R16G16B16A16_FLOAT, Texture::Dimension::TextureCube);
+	textures_[static_cast<uint8_t>(Type::SkyCube)].resource.SetName(L"SkyAtmosphereComponent | SkyCube");
+
+	//!< pipelineの生成
+
+	pipelines_[static_cast<uint8_t>(Type::SkyCube)].CreateBlob(kPackagesDirectory / "shaders" / "render" / "Atmosphere" / "SkyCube.cs.hlsl");
+
+	DxObject::SamplerBindDesc desc = {};
+	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+
+	pipelines_[static_cast<uint8_t>(Type::SkyCube)].ReflectionPipeline(System::GetDxDevice(), desc);
+
+	//!< parameterの更新
+	parameter_->At().SetEnvironment(textures_[static_cast<uint8_t>(Type::SkyCube)].descriptorSRV);
+
+}
+
+void SkyAtmosphereComponent::CreateAerial() {
+
+	//!< textureの生成
+	textures_[static_cast<uint8_t>(Type::Aerial)].Create({ 32, 32, 16 }, DXGI_FORMAT_R16G16B16A16_FLOAT, Texture::Dimension::Texture3D);
+	textures_[static_cast<uint8_t>(Type::Aerial)].resource.SetName(L"SkyAtmosphereComponent | Aerial");
+
+	//!< pipelineの生成
+	
+	pipelines_[static_cast<uint8_t>(Type::Aerial)].CreateBlob(kPackagesDirectory / "shaders" / "render" / "Atmosphere" / "Aerial.cs.hlsl");
+
+	DxObject::SamplerBindDesc desc = {};
+	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+
+	pipelines_[static_cast<uint8_t>(Type::Aerial)].ReflectionPipeline(System::GetDxDevice(), desc);
+
+	//!< parameterの更新
+	parameter_->At().SetAerial(textures_[static_cast<uint8_t>(Type::Aerial)].descriptorSRV);
 }
 
 void SkyAtmosphereComponent::UpdateTransmittance(const DirectXQueueContext* context) {
@@ -241,15 +338,17 @@ void SkyAtmosphereComponent::UpdateTransmittance(const DirectXQueueContext* cont
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
 	);
 
-	pipeline1_.SetPipeline(context->GetDxCommand());
+	pipelines_[static_cast<uint8_t>(Type::Transmittance)].SetPipeline(context->GetDxCommand());
+
+	const Vector3ui& resolution = textures_[static_cast<uint8_t>(Type::Transmittance)].size;
 
 	DxObject::BindBufferDesc desc = {};
-	desc.Set32bitConstants("Dimension", 2, &textures_[static_cast<uint8_t>(Type::Transmittance)].size); //!< BUG!!! FIXME:
+	desc.Set32bitConstants("Dimension", 3, &resolution);
 	desc.SetHandle("gTransmittance",       textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorUAV.GetGPUHandle());
 	desc.SetAddress("gAtmosphere",         atmosphere_->GetGPUVirtualAddress());
 
-	pipeline1_.BindComputeBuffer(context->GetDxCommand(), desc);
-	pipeline1_.Dispatch(context->GetDxCommand(), { DxObject::RoundUp(256, 16), DxObject::RoundUp(64, 16), 1 });
+	pipelines_[static_cast<uint8_t>(Type::Transmittance)].BindComputeBuffer(context->GetDxCommand(), desc);
+	pipelines_[static_cast<uint8_t>(Type::Transmittance)].Dispatch(context->GetDxCommand(), { DxObject::RoundUp(resolution.x, 16), DxObject::RoundUp(resolution.y, 16), 1 });
 
 	textures_[static_cast<uint8_t>(Type::Transmittance)].resource.Transition(
 		context->GetDxCommand(),
@@ -264,45 +363,20 @@ void SkyAtmosphereComponent::UpdateMultipleScattering(const DirectXQueueContext*
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
 	);
 
-	pipeline2_.SetPipeline(context->GetDxCommand());
+	pipelines_[static_cast<uint8_t>(Type::MultipleScattering)].SetPipeline(context->GetDxCommand());
+
+	const Vector3ui& resolution = textures_[static_cast<uint8_t>(Type::MultipleScattering)].size;
 
 	DxObject::BindBufferDesc desc = {};
-	desc.Set32bitConstants("Dimension", 2, &textures_[static_cast<uint8_t>(Type::MultipleScattering)].size);
+	desc.Set32bitConstants("Dimension", 3, &resolution);
 	desc.SetHandle("gTransmittance",       textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorSRV.GetGPUHandle());
 	desc.SetHandle("gMultipleScattering",  textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorUAV.GetGPUHandle());
 	desc.SetAddress("gAtmosphere",         atmosphere_->GetGPUVirtualAddress());
 
-	pipeline2_.BindComputeBuffer(context->GetDxCommand(), desc);
-	pipeline2_.Dispatch(context->GetDxCommand(), { 32, 32, 1 });
+	pipelines_[static_cast<uint8_t>(Type::MultipleScattering)].BindComputeBuffer(context->GetDxCommand(), desc);
+	pipelines_[static_cast<uint8_t>(Type::MultipleScattering)].Dispatch(context->GetDxCommand(), { resolution.x, resolution.y, 1 });
 
 	textures_[static_cast<uint8_t>(Type::MultipleScattering)].resource.Transition(
-		context->GetDxCommand(),
-		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE
-	);
-
-}
-
-void SkyAtmosphereComponent::UpdateSkyView(const DirectXQueueContext* context) {
-
-	textures_[static_cast<uint8_t>(Type::SkyView)].resource.Transition(
-		context->GetDxCommand(),
-		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
-	);
-
-	pipeline3_.SetPipeline(context->GetDxCommand());
-
-	DxObject::BindBufferDesc desc = {};
-	desc.Set32bitConstants("Dimension", 2, &textures_[static_cast<uint8_t>(Type::SkyView)].size);
-	desc.SetHandle("gSkyView",             textures_[static_cast<uint8_t>(Type::SkyView)].descriptorUAV.GetGPUHandle());
-	desc.SetHandle("gTransmittance",       textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorSRV.GetGPUHandle());
-	desc.SetHandle("gMultipleScattering",  textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorSRV.GetGPUHandle());
-	desc.SetAddress("gAtmosphere",         atmosphere_->GetGPUVirtualAddress());
-	desc.SetAddress("gTransform",          RequireTransform()->GetGPUVirtualAddress());
-
-	pipeline3_.BindComputeBuffer(context->GetDxCommand(), desc);
-	pipeline3_.Dispatch(context->GetDxCommand(), { DxObject::RoundUp(200, 16), DxObject::RoundUp(100, 16), 1 });
-
-	textures_[static_cast<uint8_t>(Type::SkyView)].resource.Transition(
 		context->GetDxCommand(),
 		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE
 	);
@@ -316,18 +390,20 @@ void SkyAtmosphereComponent::UpdateSkyCube(const DirectXQueueContext* context) {
 		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
 	);
 
-	pipeline4_.SetPipeline(context->GetDxCommand());
+	pipelines_[static_cast<uint8_t>(Type::SkyCube)].SetPipeline(context->GetDxCommand());
+
+	const Vector3ui& resolution = textures_[static_cast<uint8_t>(Type::SkyCube)].size;
 
 	DxObject::BindBufferDesc desc = {};
-	desc.Set32bitConstants("Dimension", 2, &textures_[static_cast<uint8_t>(Type::SkyCube)].size);
+	desc.Set32bitConstants("Dimension", 3, &resolution);
 	desc.SetHandle("gSkyCube",             textures_[static_cast<uint8_t>(Type::SkyCube)].descriptorUAV.GetGPUHandle());
 	desc.SetHandle("gTransmittance",       textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorSRV.GetGPUHandle());
 	desc.SetHandle("gMultipleScattering",  textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorSRV.GetGPUHandle());
 	desc.SetAddress("gAtmosphere",         atmosphere_->GetGPUVirtualAddress());
 	desc.SetAddress("gTransform",          RequireTransform()->GetGPUVirtualAddress());
 
-	pipeline4_.BindComputeBuffer(context->GetDxCommand(), desc);
-	pipeline4_.Dispatch(context->GetDxCommand(), { DxObject::RoundUp(128, 16), DxObject::RoundUp(128, 16), 6 });
+	pipelines_[static_cast<uint8_t>(Type::SkyCube)].BindComputeBuffer(context->GetDxCommand(), desc);
+	pipelines_[static_cast<uint8_t>(Type::SkyCube)].Dispatch(context->GetDxCommand(), { DxObject::RoundUp(resolution.x, 16), DxObject::RoundUp(resolution.y, 16), resolution.z });
 
 	textures_[static_cast<uint8_t>(Type::SkyCube)].resource.Transition(
 		context->GetDxCommand(),
@@ -336,67 +412,32 @@ void SkyAtmosphereComponent::UpdateSkyCube(const DirectXQueueContext* context) {
 	
 }
 
-void SkyAtmosphereComponent::CreateTransmittance() {
+void SkyAtmosphereComponent::UpdateAerial(const DirectXQueueContext* context) {
 
-	//!< textureの生成
-	textures_[static_cast<uint8_t>(Type::Transmittance)].Create({ 256, 64 }, DXGI_FORMAT_R11G11B10_FLOAT, Texture::Dimension::Texture2D);
-	textures_[static_cast<uint8_t>(Type::Transmittance)].resource.SetName(L"SkyAtmosphereComponent | Transmittance");
+	textures_[static_cast<uint8_t>(Type::Aerial)].resource.Transition(
+		context->GetDxCommand(),
+		D3D12_RESOURCE_STATE_UNORDERED_ACCESS
+	);
 
-	//!< pipelineの生成
-	pipeline1_.CreateBlob(kPackagesDirectory / "shaders" / "Render" / "Atmosphere" / "Transmittance.cs.hlsl");
-	pipeline1_.ReflectionPipeline(System::GetDxDevice());
-}
+	pipelines_[static_cast<uint8_t>(Type::Aerial)].SetPipeline(context->GetDxCommand());
 
-void SkyAtmosphereComponent::CreateMultipleScattering() {
+	const Vector3ui& resolution = textures_[static_cast<uint8_t>(Type::Aerial)].size;
 
-	//!< textureの生成
-	textures_[static_cast<uint8_t>(Type::MultipleScattering)].Create({ 32, 32 }, DXGI_FORMAT_R11G11B10_FLOAT, Texture::Dimension::Texture2D);
-	textures_[static_cast<uint8_t>(Type::MultipleScattering)].resource.SetName(L"SkyAtmosphereComponent | MultipleScattering");
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 3, &resolution);
+	desc.SetHandle("gAerial",              textures_[static_cast<uint8_t>(Type::Aerial)].descriptorUAV.GetGPUHandle());
+	desc.SetHandle("gTransmittance",       textures_[static_cast<uint8_t>(Type::Transmittance)].descriptorSRV.GetGPUHandle());
+	desc.SetHandle("gMultipleScattering",  textures_[static_cast<uint8_t>(Type::MultipleScattering)].descriptorSRV.GetGPUHandle());
+	desc.SetAddress("gAtmosphere",         atmosphere_->GetGPUVirtualAddress());
+	desc.SetAddress("gTransform",          RequireTransform()->GetGPUVirtualAddress());
 
-	//!< pipelineの生成
+	pipelines_[static_cast<uint8_t>(Type::Aerial)].BindComputeBuffer(context->GetDxCommand(), desc);
+	pipelines_[static_cast<uint8_t>(Type::Aerial)].Dispatch(context->GetDxCommand(), { DxObject::RoundUp(resolution.x, 16), DxObject::RoundUp(resolution.y, 16), resolution.z });
 
-	pipeline2_.CreateBlob(kPackagesDirectory / "shaders" / "Render" / "Atmosphere" / "MultipleScattering.cs.hlsl");
-
-	DxObject::SamplerBindDesc desc = {};
-	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
-
-	pipeline2_.ReflectionPipeline(System::GetDxDevice(), desc);
-}
-
-void SkyAtmosphereComponent::CreateSkyView() {
-
-	//!< textureの生成
-	textures_[static_cast<uint8_t>(Type::SkyView)].Create({ 200, 100 }, DXGI_FORMAT_R16G16B16A16_FLOAT, Texture::Dimension::Texture2D);
-	textures_[static_cast<uint8_t>(Type::SkyView)].resource.SetName(L"SkyAtmosphereComponent | SkyView");
-
-	//!< pipelineの生成
-
-	pipeline3_.CreateBlob(kPackagesDirectory / "shaders" / "render" / "Atmosphere" / "SkyView.cs.hlsl");
-
-	DxObject::SamplerBindDesc desc = {};
-	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
-
-	pipeline3_.ReflectionPipeline(System::GetDxDevice(), desc);
-
-}
-
-void SkyAtmosphereComponent::CreateSkyCube() {
-
-	//!< textureの生成
-	textures_[static_cast<uint8_t>(Type::SkyCube)].Create({ 128, 128 }, DXGI_FORMAT_R16G16B16A16_FLOAT, Texture::Dimension::TextureCube);
-	textures_[static_cast<uint8_t>(Type::SkyCube)].resource.SetName(L"SkyAtmosphereComponent | SkyCube");
-
-	//!< pipelineの生成
-
-	pipeline4_.CreateBlob(kPackagesDirectory / "shaders" / "render" / "Atmosphere" / "SkyCube.cs.hlsl");
-
-	DxObject::SamplerBindDesc desc = {};
-	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
-
-	pipeline4_.ReflectionPipeline(System::GetDxDevice(), desc);
-
-	parameter_->At().SetEnvironment(textures_[static_cast<uint8_t>(Type::SkyCube)].descriptorSRV);
-
+	textures_[static_cast<uint8_t>(Type::Aerial)].resource.Transition(
+		context->GetDxCommand(),
+		D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE
+	);
 }
 
 void SkyAtmosphereComponent::SetIntensity(float intensity) {

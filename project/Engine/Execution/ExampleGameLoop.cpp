@@ -79,6 +79,7 @@ void ExampleGameLoop::InitSystem() {
 		exposure->GetParameter().compensation    = -5.0f;
 
 		layer->AddPostProcess<PostProcessRadialBlur>();
+		layer->AddPostProcess<PostProcessBloom>();
 	}
 	
 

@@ -150,13 +150,13 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 pixel = dispatchThreadId.xy;
 
-	if (any(pixel >= dimension)) {
+	if (any(pixel >= dimension.xy)) {
 		return; //!< 範囲外
 	}
 
 	uint direction = dispatchThreadId.z;
 
-	float2 uv = (float2(pixel) + 0.5) / float2(dimension);
+	float2 uv = (float2(pixel) + 0.5) / float2(dimension.xy);
 
 	float cos_sun_zenith = uv.x * 2.0f - 1.0f;
 	float3 sun_dir = float3(0.0, cos_sun_zenith, sqrt(saturate(1.0 - cos_sun_zenith * cos_sun_zenith)));
@@ -181,7 +181,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		GroupMemoryBarrierWithGroupSync();
 	}
 	
-	if (direction > 0) {
+	if (dispatchThreadId.z != 0) {
 		return;
 	}
 

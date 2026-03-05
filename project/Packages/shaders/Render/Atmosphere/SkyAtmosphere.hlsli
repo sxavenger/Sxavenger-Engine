@@ -17,9 +17,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 //* shaders
-#define _NUM_THREAD_X 16
-#define _NUM_THREAD_Y 16
-#define _NUM_THREAD_Z 1
+#define NUM_THREAD_X 16
+#define NUM_THREAD_Y 16
+#define NUM_THREAD_Z 1
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Atmosphere structures
@@ -43,11 +43,13 @@ struct Atmosphere {
 	float3 mie_scattering;
 	float mie_density_exp_scale;
 	float3 mie_extinction;
+	float mie_phase_param;
 
+	float3 ground_albedo;
+	
 	float top_radius;
 	float bottom_radius;
 
-	float3 ground_albedo;
 	float multi_scattering_factor;
 
 	float intensity;
@@ -59,7 +61,7 @@ struct Atmosphere {
 //=========================================================================================
 
 cbuffer Dimension : register(b0, space1) {
-	uint2 dimension;
+	uint3 dimension;
 }
 
 ConstantBuffer<Atmosphere> gAtmosphere : register(b1, space1);

@@ -41,6 +41,7 @@ public:
 		SkyLight,
 		SkyLightEnvironment,
 		SkyAtmosphereEnvironment,
+		SkyAtmosphereAerial,
 	};
 
 public:

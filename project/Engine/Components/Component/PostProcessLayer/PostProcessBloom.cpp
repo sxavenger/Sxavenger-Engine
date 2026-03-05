@@ -19,15 +19,17 @@ DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessBloom::Parameter::Init() {
-	intensity = 0.2f;
-	threshold = 0.0f;
-	radius    = 1.0f;
+	intensity    = 0.2f;
+	threshold    = 0.0f;
+	radius       = 1.0f;
+	isStochastic = true;
 }
 
 void PostProcessBloom::Parameter::SetImGuiCommand() {
 	SxImGui::DragFloat("intensity", &intensity, 0.01f, 0.0f);
 	SxImGui::DragFloat("threshold", &threshold, 0.01f, 0.0f);
 	SxImGui::DragFloat("radius",    &radius,    0.01f, 0.0f);
+	ImGui::CheckboxFlags("stochastic", &isStochastic, 1);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

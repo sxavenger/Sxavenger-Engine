@@ -2,8 +2,11 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "Bloom.hlsli"
+
+//* library
 #include "../../../../Library/ACES.hlsli"
 #include "../../../../Library/Mathmatic.hlsli"
+#include "../../../../Library/RandomLib.hlsli"
 
 //=========================================================================================
 // buffers
@@ -46,6 +49,12 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 	float weight_sum     = 1.0f;
 	float4 luminance_sum = gInput[index] * gLuminance[index];
 
+	float noise = 0.0f;
+
+	if (gParameter.isStochastic) {
+		noise = PseudoRandom(index) * 2.0f - 1.0f;
+	}
+
 	for (uint i = 1; i < kCount; ++i) {
 
 		float rad = gParameter.radius * i;
@@ -59,7 +68,7 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 			float theta   = j * inc;
 			float2 offset = rad * float2(cos(theta), sin(theta));
 
-			float2 uv    = (float2(index) + offset) / float2(size);
+			float2 uv    = (float2(index) + offset * noise) / float2(size);
 			float weight = Gaussian2d(offset, rad);
 
 			luminance_sum += gLuminance.SampleLevel(gSampler, uv, 0) * weight;

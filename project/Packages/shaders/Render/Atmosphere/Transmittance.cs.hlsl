@@ -67,16 +67,16 @@ float3 SampleMediumExtinction(float h, Atmosphere atmosphere) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(_NUM_THREAD_X, _NUM_THREAD_Y, _NUM_THREAD_Z)]
+[numthreads(NUM_THREAD_X, NUM_THREAD_Y, NUM_THREAD_Z)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 pixel = dispatchThreadId.xy;
 
-	if (any(pixel >= dimension)) {
+	if (any(pixel >= dimension.xy)) {
 		return; //!< 範囲外
 	}
 
-	float2 uv = (float2(pixel) + 0.5f) / float2(dimension);
+	float2 uv = (float2(pixel) + 0.5f) / float2(dimension.xy);
 
 	float2 lut_params     = TransmittanceParam(uv, gAtmosphere);
 	float view_height     = lut_params.x;

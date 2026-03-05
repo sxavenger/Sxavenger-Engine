@@ -414,6 +414,12 @@ void FRenderPassDeferredLighting::PassSkyAtmosphere(const DirectXQueueContext* c
 	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
 
+	// deferred parameter
+	parameter.SetHandle("gAlbedo", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV());
+	parameter.SetHandle("gNormal", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV());
+	parameter.SetHandle("gMaterial", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV());
+	parameter.SetHandle("gPosition", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
+
 	//* Environment
 	FRenderCore::GetInstance()->GetLight()->SetPipeline(
 		FRenderCoreLight::LightType::SkyAtmosphereEnvironment, context, config.buffer->GetSize()
@@ -430,6 +436,24 @@ void FRenderPassDeferredLighting::PassSkyAtmosphere(const DirectXQueueContext* c
 
 		FRenderCore::GetInstance()->GetLight()->DrawCall(context);
 
+	});
+
+	//* Aerial
+	FRenderCore::GetInstance()->GetLight()->SetPipeline(
+		FRenderCoreLight::LightType::SkyAtmosphereAerial, context, config.buffer->GetSize()
+	);
+
+	sComponentStorage->ForEachActive<SkyAtmosphereComponent>([&](SkyAtmosphereComponent* component) {
+
+		// sky light parameter
+		parameter.SetAddress("gParameter", component->GetGPUVirtualAddress());
+
+		FRenderCore::GetInstance()->GetLight()->BindGraphicsBuffer(
+			FRenderCoreLight::LightType::SkyAtmosphereAerial, context, parameter
+		);
+
+		//FRenderCore::GetInstance()->GetLight()->DrawCall(context);
+		//!< FIXME!!!
 	});
 
 }

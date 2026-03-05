@@ -41,8 +41,8 @@ void FRenderCoreLight::CreatePipeline() {
 	blend.DestBlend             = D3D12_BLEND_ONE;
 	blend.BlendOp               = D3D12_BLEND_OP_ADD;
 	blend.SrcBlendAlpha         = D3D12_BLEND_ONE;
-	blend.DestBlendAlpha        = D3D12_BLEND_ZERO;
-	blend.BlendOpAlpha          = D3D12_BLEND_OP_ADD;
+	blend.DestBlendAlpha        = D3D12_BLEND_ONE;
+	blend.BlendOpAlpha          = D3D12_BLEND_OP_MAX;
 	blend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
 	GraphicsPipelineDesc desc_front = {};
@@ -60,6 +60,26 @@ void FRenderCoreLight::CreatePipeline() {
 	desc_back.SetRTVFormat(0, FLightingGBuffer::GetFormat(FLightingGBuffer::Layout::Direct));
 	desc_back.SetIndependentBlendEnable(false);
 	desc_back.SetBlendDesc(0, blend);
+
+	blend = {};
+	blend.BlendEnable           = true;
+	blend.LogicOpEnable         = false;
+	blend.SrcBlend              = D3D12_BLEND_ONE;
+	blend.DestBlend             = D3D12_BLEND_INV_SRC_ALPHA;
+	blend.BlendOp               = D3D12_BLEND_OP_ADD;
+	blend.SrcBlendAlpha         = D3D12_BLEND_ONE;
+	blend.DestBlendAlpha        = D3D12_BLEND_ONE;
+	blend.BlendOpAlpha          = D3D12_BLEND_OP_MAX;
+	blend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+
+	GraphicsPipelineDesc desc_aerial = {};
+	desc_aerial.CreateDefaultDesc();
+	desc_aerial.ClearElement();
+	desc_aerial.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC_GREATER); //!< Depthが1.0以外に書き込み
+	desc_aerial.SetRTVFormat(0, FLightingGBuffer::GetFormat(FLightingGBuffer::Layout::Direct));
+	desc_aerial.SetIndependentBlendEnable(false);
+	desc_aerial.SetBlendDesc(0, blend);
+
 
 	pipelines_[LightType::Empty] = std::make_unique<CustomReflectionGraphicsPipeline>();
 	pipelines_[LightType::Empty]->CreateContent(kDirectory / "LightRender2d.vs.hlsl", GraphicsShaderType::vs);
@@ -99,6 +119,7 @@ void FRenderCoreLight::CreatePipeline() {
 	{
 		SamplerBindDesc desc = {};
 		desc.SetSamplerLinear("gBRDFSampler", SamplerMode::MODE_CLAMP);
+		desc.SetSamplerLinear("gAerialSampler", SamplerMode::MODE_CLAMP);
 
 		pipelines_[LightType::SkyLight] = std::make_unique<CustomReflectionGraphicsPipeline>();
 		pipelines_[LightType::SkyLight]->CreateContent(kDirectory / "LightRender2d.vs.hlsl", GraphicsShaderType::vs);
@@ -122,6 +143,12 @@ void FRenderCoreLight::CreatePipeline() {
 		pipelines_[LightType::SkyAtmosphereEnvironment]->ReflectionRootSignature(System::GetDxDevice(), desc);
 		pipelines_[LightType::SkyAtmosphereEnvironment]->CreatePipeline(System::GetDxDevice(), desc_back);
 
+		pipelines_[LightType::SkyAtmosphereAerial] = std::make_unique<CustomReflectionGraphicsPipeline>();
+		pipelines_[LightType::SkyAtmosphereAerial]->CreateContent(kDirectory / "LightRender2d.vs.hlsl",       GraphicsShaderType::vs);
+		pipelines_[LightType::SkyAtmosphereAerial]->CreateContent(kDirectory / "SkyAtmosphereAerial.ps.hlsl", GraphicsShaderType::ps);
+		pipelines_[LightType::SkyAtmosphereAerial]->RegisterBlob();
+		pipelines_[LightType::SkyAtmosphereAerial]->ReflectionRootSignature(System::GetDxDevice(), desc);
+		pipelines_[LightType::SkyAtmosphereAerial]->CreatePipeline(System::GetDxDevice(), desc_aerial);
 
 	}
 	

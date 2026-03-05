@@ -47,6 +47,7 @@ public:
 		float intensity;
 		float threshold;
 		float radius;
+		uint32_t isStochastic;
 
 	};
 
