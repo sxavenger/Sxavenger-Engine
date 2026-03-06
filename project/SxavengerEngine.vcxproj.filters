@@ -255,24 +255,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Demo\Camera\CameraHandle.h">
-      <Filter>Demo\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Demo\Camera\PerspectiveCamera.h">
-      <Filter>Demo\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Demo\Execution\DemoGameLoop.h">
-      <Filter>Demo\Execution</Filter>
-    </ClInclude>
-    <ClInclude Include="Demo\Interact\InteractItem.h">
-      <Filter>Demo\Interact</Filter>
-    </ClInclude>
-    <ClInclude Include="Demo\Player\Player.h">
-      <Filter>Demo\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Demo\Player\PlayerHandle.h">
-      <Filter>Demo\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Assets\Asset\AssetAnimation.h">
       <Filter>Engine\Assets\Asset</Filter>
     </ClInclude>
@@ -1097,24 +1079,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Demo\Camera\CameraHandle.cpp">
-      <Filter>Demo\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Demo\Camera\PerspectiveCamera.cpp">
-      <Filter>Demo\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Demo\Execution\DemoGameLoop.cpp">
-      <Filter>Demo\Execution</Filter>
-    </ClCompile>
-    <ClCompile Include="Demo\Interact\InteractItem.cpp">
-      <Filter>Demo\Interact</Filter>
-    </ClCompile>
-    <ClCompile Include="Demo\Player\Player.cpp">
-      <Filter>Demo\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Demo\Player\PlayerHandle.cpp">
-      <Filter>Demo\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
       <Filter>Engine\Assets\Asset</Filter>
     </ClCompile>
