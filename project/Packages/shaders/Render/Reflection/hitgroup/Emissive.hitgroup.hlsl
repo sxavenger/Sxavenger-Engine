@@ -5,7 +5,7 @@
 #include "HitgroupCommon.hlsli"
 
 //* content
-#include "../../../../Content/Material.hlsli"
+#include "../../../Content/Material.hlsli"
 
 //=========================================================================================
 // local buffers
@@ -55,16 +55,18 @@ struct Surface {
 		ao        = gMaterial[0].properties.ao.GetValue(parameter, 0);
 		roughness = gMaterial[0].properties.roughness.GetValue(parameter, 1);
 		metallic  = gMaterial[0].properties.metallic.GetValue(parameter, 2);
-
-		roughness = max(roughness, 0.02f); //!< 0.0fだと計算が不安定になるので、最低値を設定する
 	}
 	
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // anyhit main entry point
 ////////////////////////////////////////////////////////////////////////////////////////////
-ANYHIT void mainAnyhit(inout Payload payload, in Attribute attribute) {
+ANYHIT void mainEmissiveAnyhit(inout Payload payload, in Attribute attribute) {
 
 	MeshVertex vertex = GetWorldVertex(attribute);
 
@@ -80,16 +82,13 @@ ANYHIT void mainAnyhit(inout Payload payload, in Attribute attribute) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // closesthit main entry point
 ////////////////////////////////////////////////////////////////////////////////////////////
-CLOSESTHIT void mainClosesthit(inout Payload payload, in Attribute attribute) {
+CLOSESTHIT void mainEmissiveClosesthit(inout Payload payload, in Attribute attribute) {
 
 	Surface surface;
 	surface.GetSurface(attribute);
 
-	payload.albedo   = surface.albedo;
-	payload.material = float3(surface.ao, surface.roughness, surface.metallic);
-	payload.normal   = surface.normal;
+	payload.radiance = surface.albedo;
+	payload.isHit    = true;
 	payload.position = surface.position;
-
-	payload.isHit = true;
 	
 }

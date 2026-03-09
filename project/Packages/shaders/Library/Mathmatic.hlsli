@@ -28,6 +28,14 @@ namespace Mathmatic {
 		return value * value;
 	}
 
+	float2 Square(float2 value) {
+		return value * value;
+	}
+
+	float3 Square(float3 value) {
+		return value * value;
+	}
+
 	float3 GetPosition(float4x4 mat) {
 		return mat[3].xyz;
 	}

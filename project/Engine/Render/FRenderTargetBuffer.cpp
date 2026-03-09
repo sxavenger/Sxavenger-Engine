@@ -23,6 +23,7 @@ void FRenderTargetBuffer::Create(const Vector2ui& size) {
 	main_.Init(size_);
 
 	probe_.Init();
+	reflection_.Init(size_);
 
 	depth_ = std::make_unique<FDepthTexture>();
 	depth_->Create(size_);
@@ -114,6 +115,10 @@ FBaseTexture* FRenderTargetBuffer::GetGBuffer(FTransparentGBuffer::Layout layout
 
 FBaseTexture* FRenderTargetBuffer::GetGBuffer(FMainGBuffer::Layout layout) {
 	return main_.GetGBuffer(layout);
+}
+
+FBaseTexture* FRenderTargetBuffer::GetGBuffer(FReflectionGBuffer::Layout layout) {
+	return reflection_.GetGBuffer(layout);
 }
 
 const D3D12_GPU_VIRTUAL_ADDRESS FRenderTargetBuffer::GetIndexBufferAddress() const {

@@ -15,7 +15,6 @@
 //* component
 #include "../../Component/CameraComponent.hlsli"
 #include "../../Component/TransformComponent.hlsli"
-#include "../../Component/LightComponentCommon.hlsli"
 #include "../../Component/DirectionalLightComponent.hlsli"
 #include "../../Component/PointLightComponent.hlsli"
 #include "../../Component/SpotLightComponent.hlsli"

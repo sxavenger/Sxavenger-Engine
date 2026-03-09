@@ -3,10 +3,14 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "../ReflectionCommon.hlsli"
+//* common
+#include "../RaytracingCommon.hlsli"
 
 //* content
-#include "../../../../Content/Mesh.hlsli"
+#include "../../../Content/Mesh.hlsli"
+
+//* lib
+#include "../../../Library/BRDF.hlsli"
 
 //=========================================================================================
 // local buffers
