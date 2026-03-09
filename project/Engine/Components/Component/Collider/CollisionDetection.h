@@ -7,6 +7,7 @@
 #include <Engine/Foundation.h>
 
 //* lib
+#include <Lib/CXXAttribute.h>
 #include <Lib/Geometry/Vector3.h>
 #include <Lib/Geometry/Matrix4x4.h>
 #include <Lib/Geometry/VectorComparision.h>
@@ -22,7 +23,7 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// CollisionBoundings namespace
+// CollisionPoundings namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
 //! @brief 衝突判定用境界構造体.
 namespace CollisionBoundings {
@@ -100,16 +101,50 @@ public:
 		//=========================================================================================
 
 		Vector3f direction = {};   //!< 押し戻し方向(正規化)
-		float    distance  = 0.0f; //!< めり込み量
+		float distance     = 0.0f; //!< めり込み量
 
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// using
+	// Detection structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	using Detection = std::optional<Penetration>; //!< 衝突検出結果
-	// std::nullopt: 衝突なし
-	// Penetration:  衝突あり
+	struct Detection {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		Detection() = default;
+
+		//* detection option *//
+
+		Detection Inverse() const;
+
+		bool HasPenetration() const { return penetration.has_value(); }
+
+		const Penetration& GetPenetration() const;
+
+		//* operator [assignment] *//
+
+		Detection(const Detection&) noexcept            = default;
+		Detection& operator=(const Detection&) noexcept = default;
+
+		Detection(const Penetration& _penetration) noexcept : penetration(_penetration) {}
+		Detection& operator=(const Penetration& _penetration) { penetration = _penetration; return *this; }
+
+		Detection(std::nullopt_t) noexcept : penetration(std::nullopt) {}
+		Detection& operator=(std::nullopt_t) noexcept { penetration = std::nullopt; return *this; }
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		std::optional<Penetration> penetration; //!< 衝突検出結果
+		// std::nullopt: 衝突なし
+		// Penetration:  衝突あり
+
+	};
 
 public:
 
@@ -117,215 +152,119 @@ public:
 	// public methods
 	//=========================================================================================
 
-	static bool CheckCollision(
+	static Detection CheckCollision(
 		const Vector3f& positionA, const CollisionBoundings::Boundings& boundingA,
 		const Vector3f& positionB, const CollisionBoundings::Boundings& boundingB
 	);
 
-	// TODO: 押し戻し量, 衝突点, 法線ベクトルの算出
-
 private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Visitor structure
+	// DetectionFunction structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Visitor {
+	struct DetectionFunction {
+	public:
 
-		//* member *//
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
 
-		Vector3f positionA = {};
-		Vector3f positionB = {};
+		Vector3f positionA;
+		Vector3f positionB;
 
-		//* sphere To T *//
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
 
-		bool operator()(
-			const CollisionBoundings::Sphere& sphereA,
-			const CollisionBoundings::Sphere& sphereB) {
-			return SphereTo(
-				positionA, sphereA, positionB, sphereB
-			);
-		}
+		//* [sphere to xxx]
 
-		bool operator()(
-			const CollisionBoundings::Sphere& sphereA,
-			const CollisionBoundings::Capsule& capsuleB) {
-			return SphereToCapsule(
-				positionA, sphereA, positionB, capsuleB
-			);
-		}
+		Detection operator()(const CollisionBoundings::Sphere& sphereA, const CollisionBoundings::Sphere& sphereB) const;
+		Detection operator()(const CollisionBoundings::Sphere& sphereA, const CollisionBoundings::Capsule& capsuleB) const;
+		Detection operator()(const CollisionBoundings::Sphere& sphereA, const CollisionBoundings::AABB& aabbB) const;
+		Detection operator()(const CollisionBoundings::Sphere& sphereA, const CollisionBoundings::OBB& obbB) const;
 
-		bool operator()(
-			const CollisionBoundings::Sphere& sphereA,
-			const CollisionBoundings::AABB& aabbB) {
-			return SphereToAABB(
-				positionA, sphereA, positionB, aabbB
-			);
-		}
+		//* [capsule to xxx]
 
-		bool operator()(
-			const CollisionBoundings::Sphere& sphereA,
-			const CollisionBoundings::OBB& obbB) {
-			return SphereToOBB(
-				positionA, sphereA, positionB, obbB
-			);
-		}
+		Detection operator()(const CollisionBoundings::Capsule& capsuleA, const CollisionBoundings::Sphere& sphereB) const;
+		Detection operator()(const CollisionBoundings::Capsule& capsuleA, const CollisionBoundings::Capsule& capsuleB) const;
+		Detection operator()(const CollisionBoundings::Capsule& capsuleA, const CollisionBoundings::AABB& aabbB) const;
+		Detection operator()(const CollisionBoundings::Capsule& capsuleA, const CollisionBoundings::OBB& obbB) const;
 
-		//* capsule To T *//
 
-		bool operator()(
-			const CollisionBoundings::Capsule& capsuleA,
-			const CollisionBoundings::Sphere& sphereB) {
-			return SphereToCapsule(
-				positionB, sphereB, positionA, capsuleA
-			);
-		}
+		//* [AABB to xxx]
 
-		bool operator()(
-			const CollisionBoundings::Capsule& capsuleA,
-			const CollisionBoundings::Capsule& capsuleB) {
-			return CapsuleTo(
-				positionA, capsuleA, positionB, capsuleB
-			);
-		}
+		Detection operator()(const CollisionBoundings::AABB& aabbA, const CollisionBoundings::Sphere& sphereB) const;
+		Detection operator()(const CollisionBoundings::AABB& aabbA, const CollisionBoundings::Capsule& capsuleB) const;
+		Detection operator()(const CollisionBoundings::AABB& aabbA, const CollisionBoundings::AABB& aabbB) const;
+		Detection operator()(const CollisionBoundings::AABB& aabbA, const CollisionBoundings::OBB& obbB) const;
 
-		bool operator()(
-			const CollisionBoundings::Capsule& capsuleA,
-			const CollisionBoundings::AABB& aabbB) {
-			capsuleA, aabbB;
-			return ExceptionUnimplement();
-		}
+		//* [OBB to xxx]
 
-		bool operator()(
-			const CollisionBoundings::Capsule& capsuleA,
-			const CollisionBoundings::OBB& obbB) {
-			capsuleA, obbB;
-			return ExceptionUnimplement();
-		}
+		Detection operator()(const CollisionBoundings::OBB& obbA, const CollisionBoundings::Sphere& sphereB) const;
+		Detection operator()(const CollisionBoundings::OBB& obbA, const CollisionBoundings::Capsule& capsuleB) const;
+		Detection operator()(const CollisionBoundings::OBB& obbA, const CollisionBoundings::AABB& aabbB) const;
+		Detection operator()(const CollisionBoundings::OBB& obbA, const CollisionBoundings::OBB& obbB) const;
 
-		//* aabb To T *//
-
-		bool operator()(
-			const CollisionBoundings::AABB& aabbA,
-			const CollisionBoundings::Sphere& sphereB) {
-			return SphereToAABB(
-				positionB, sphereB, positionA, aabbA
-			);
-		}
-
-		bool operator()(
-			const CollisionBoundings::AABB& aabbA,
-			const CollisionBoundings::Capsule& capsuleB) {
-			aabbA, capsuleB;
-			return ExceptionUnimplement();
-		}
-
-		bool operator()(
-			const CollisionBoundings::AABB& aabbA,
-			const CollisionBoundings::AABB& aabbB) {
-			return AABBTo(
-				positionA, aabbA, positionB, aabbB
-			);
-		}
-
-		bool operator()(
-			const CollisionBoundings::AABB& aabbA,
-			const CollisionBoundings::OBB& obbB) {
-			return AABBToOBB(
-				positionA, aabbA, positionB, obbB
-			);
-		}
-
-		//* obb To T *//
-
-		bool operator()(
-			const CollisionBoundings::OBB& obbA,
-			const CollisionBoundings::Sphere& sphereB) {
-			return SphereToOBB(
-				positionB, sphereB, positionA, obbA
-			);
-		}
-
-		bool operator()(
-			const CollisionBoundings::OBB& obbA,
-			const CollisionBoundings::Capsule& capsuleB) {
-			obbA, capsuleB;
-			return ExceptionUnimplement();
-		}
-
-		bool operator()(
-			const CollisionBoundings::OBB& obbA,
-			const CollisionBoundings::AABB& aabbB) {
-			return AABBToOBB(
-				positionB, aabbB, positionA, obbA
-			);
-		}
-
-		bool operator()(
-			const CollisionBoundings::OBB& obbA,
-			const CollisionBoundings::OBB& obbB) {
-			return OBBTo(
-				positionA, obbA, positionB, obbB
-			);
-		}
 	};
+
+
+private:
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	//* Sphere to *//
+	//* [sphere to xxx]
 
-	static bool SphereTo(
+	static Detection SphereToSphere(
 		const Vector3f& positionA, const CollisionBoundings::Sphere& sphereA,
 		const Vector3f& positionB, const CollisionBoundings::Sphere& sphereB
 	);
 
-	static bool SphereToCapsule(
+	static Detection SphereToCapsule(
 		const Vector3f& positionA, const CollisionBoundings::Sphere& sphereA,
 		const Vector3f& positionB, const CollisionBoundings::Capsule& capsuleB
 	);
 
-	static bool SphereToAABB(
+	static Detection SphereToAABB(
 		const Vector3f& positionA, const CollisionBoundings::Sphere& sphereA,
 		const Vector3f& positionB, const CollisionBoundings::AABB& aabbB
 	);
 
-	static bool SphereToOBB(
+	static Detection SphereToOBB(
 		const Vector3f& positionA, const CollisionBoundings::Sphere& sphereA,
 		const Vector3f& positionB, const CollisionBoundings::OBB& obbB
 	);
 
-	//* Capsule to *//
+	//* [capsule to xxx]
 
-	static bool CapsuleTo(
+	static Detection CapsuleToCapsule(
 		const Vector3f& positionA, const CollisionBoundings::Capsule& capsuleA,
 		const Vector3f& positionB, const CollisionBoundings::Capsule& capsuleB
 	);
 
-	//* AABB to *//
+	//* [AABB to xxx]
 
-	static bool AABBTo(
+	static Detection AABBToAABB(
 		const Vector3f& positionA, const CollisionBoundings::AABB& aabbA,
 		const Vector3f& positionB, const CollisionBoundings::AABB& aabbB
 	);
 
-	static bool AABBToOBB(
+	static Detection AABBToOBB(
 		const Vector3f& positionA, const CollisionBoundings::AABB& aabbA,
 		const Vector3f& positionB, const CollisionBoundings::OBB& obbB
 	);
 
-	//* OBB to *//
+	//* [OBB to xxx]
 
-	static bool OBBTo(
+	static Detection OBBToOBB(
 		const Vector3f& positionA, const CollisionBoundings::OBB& obbA,
 		const Vector3f& positionB, const CollisionBoundings::OBB& obbB
 	);
 
-	//=========================================================================================
-	// private exception methods
-	//=========================================================================================
+	//* exception method *//
 
-	static bool ExceptionUnimplement();
+	NORETURN static void ExceptionUnimplemented();
 
 };
 

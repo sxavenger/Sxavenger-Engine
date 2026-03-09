@@ -209,7 +209,6 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Components\Component\Collider\ColliderComponent.h" />
     <ClInclude Include="Engine\Components\Component\Collider\CollisionCallbackCollection.h" />
     <ClInclude Include="Engine\Components\Component\Collider\CollisionDetection.h" />
-    <ClInclude Include="Engine\Components\Component\Collider\CollisionHelper.h" />
     <ClInclude Include="Engine\Components\Component\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Components\Component\ComponentHelper.h" />
     <ClInclude Include="Engine\Components\Component\ComponentStorage.h" />
@@ -428,7 +427,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Lib\Adapter\Time\RunTimeTracker.h" />
     <ClInclude Include="Lib\Adapter\Time\TimePoint.h" />
     <ClInclude Include="Lib\Adapter\Uuid\Uuid.h" />
-    <ClInclude Include="Lib\CXXAttributeConfig.h" />
+    <ClInclude Include="Lib\CXXAttribute.h" />
     <ClInclude Include="Lib\Easing.h" />
     <ClInclude Include="Lib\Geometry\Color3.h" />
     <ClInclude Include="Lib\Geometry\Color4.h" />
@@ -486,7 +485,6 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Components\Component\Collider\ColliderComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\Collider\CollisionCallbackCollection.cpp" />
     <ClCompile Include="Engine\Components\Component\Collider\CollisionDetection.cpp" />
-    <ClCompile Include="Engine\Components\Component\Collider\CollisionHelper.cpp" />
     <ClCompile Include="Engine\Components\Component\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Components\Component\ComponentHelper.cpp" />
     <ClCompile Include="Engine\Components\Component\ComponentStorage.cpp" />

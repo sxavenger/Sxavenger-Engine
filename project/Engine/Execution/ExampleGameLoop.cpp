@@ -14,6 +14,8 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Components/Component/Transform/RectTransformComponent.h>
 #include <Engine/Components/Component/CanvasRenderer/TextRendererComponent.h>
 #include <Engine/Components/Component/PostProcessLayer/PostProcessLayerComponent.h>
+#include <Engine/Components/Component/Collider/ColliderComponent.h>
+#include <Engine/Components/Component/Collider/CollisionManager.h>
 #include <Engine/Components/Component/ComponentHelper.h>
 #include <Engine/Components/Entity/BehaviourHelper.h>
 #include <Engine/Components/Entity/EntityBehaviourStorage.h>
@@ -70,6 +72,7 @@ void ExampleGameLoop::InitSystem() {
 
 	{
 		camera_ = std::make_unique<PerspectiveCameraActor>();
+
 		auto layer = (*camera_)->AddComponent<PostProcessLayerComponent>();
 		layer->SetTag(PostProcessLayerComponent::Tag::Local);
 
@@ -80,6 +83,9 @@ void ExampleGameLoop::InitSystem() {
 
 		layer->AddPostProcess<PostProcessRadialBlur>();
 		layer->AddPostProcess<PostProcessBloom>();
+
+		auto collider = (*camera_)->AddComponent<ColliderComponent>();
+		collider->SetTag("camera");
 	}
 	
 
@@ -123,12 +129,12 @@ void ExampleGameLoop::InitSystem() {
 		text->SetText(t);
 	}
 
-	{
+	/*{
 		json data;
 		if (JsonHandler::LoadFromJson("assets/scene/sponza.scene", data)) {
 			sEntityBehaviourStorage->InputJson(data);
 		}
-	}
+	}*/
 
 	for (size_t i = 0; i < cubes_.size(); ++i) {
 		cubes_[i] = std::make_unique<GameObject>();
@@ -157,17 +163,19 @@ void ExampleGameLoop::InitSystem() {
 			});
 		});
 
+		auto collider = (*cubes_[i])->AddComponent<ColliderComponent>();
+		collider->SetTag("cube");
+		//collider->SetBoundingCapsule();
+		collider->SetBoundingAABB({ .min = { -0.5f, -0.5f, -0.5f }, .max = { 0.5f, 0.5f, 0.5f } });
+
 	}
 
-	test_ = std::make_unique<GameObject>();
-	(*test_)->SetName("rect");
-	(*test_)->AddComponent<TransformComponent>();
-	(*test_)->AddComponent<RectLightComponent>();
+	sCollisionManager->SetOnCollisionFunctionEnter("camera", "cube",
+		[](MAYBE_UNUSED ColliderComponent* const camera, MAYBE_UNUSED ColliderComponent* const cube, const CollisionDetection::Penetration& penetration) {
 
-	(*test_)->SetInspectable([&]() {
-		SxGui::DragVector2("source", &source_.x, 0.1f);
+		camera->GetBehaviour()->GetComponent<TransformComponent>()->GetTransform().translate += penetration.direction * penetration.distance;
+		camera->SetCollisionState(cube, ColliderComponent::History::Current, std::nullopt);
 	});
-
 }
 
 void ExampleGameLoop::TermSystem() {
@@ -179,7 +187,7 @@ void ExampleGameLoop::UpdateSystem() {
 	// Update
 	//-----------------------------------------------------------------------------------------
 
-	camera_->Update();
+	//camera_->Update();
 
 	auto keyboard = System::GetKeyboardInput();
 
@@ -205,6 +213,8 @@ void ExampleGameLoop::UpdateSystem() {
 	ComponentHelper::UpdateTransform();
 	// todo: engine側のgameloopに移動.
 
+	ComponentHelper::UpdateCollider();
+
 	//-----------------------------------------------------------------------------------------
 	// LateUpdate
 	//-----------------------------------------------------------------------------------------
@@ -220,60 +230,6 @@ void ExampleGameLoop::UpdateSystem() {
 	// todo: engine側のgameloopに移動.
 
 	ComponentHelper::UpdateAudio3d();
-
-	//* test update *//
-
-	//{
-	//	auto transform = (*test_)->GetComponent<TransformComponent>();
-
-	//	Vector2f half = source_ * 0.5f;
-
-	//	Vector3f rect[4] = {};
-	//	rect[0] = Matrix4x4::Transform(Vector3f{ -half.x,  half.y, 0.0f }, transform->GetMatrix());
-	//	rect[1] = Matrix4x4::Transform(Vector3f{  half.x,  half.y, 0.0f }, transform->GetMatrix());
-	//	rect[2] = Matrix4x4::Transform(Vector3f{  half.x, -half.y, 0.0f }, transform->GetMatrix());
-	//	rect[3] = Matrix4x4::Transform(Vector3f{ -half.x, -half.y, 0.0f }, transform->GetMatrix());
-
-	//	for (size_t i = 0; i < 4; ++i) {
-	//		Graphics::PushLine(rect[i], rect[(i + 1) % 4], kRed4<float>, 1.0f);
-	//	}
-
-	//	std::function<Vector3f(const Vector3f&)> func = [&](const Vector3f& point) -> Vector3f {
-
-	//		/*Matrix4x4 matrix  = transform->GetMatrix();
-	//		Matrix4x4 inverse = matrix.Inverse();
-
-	//		Vector3f local = Matrix4x4::Transform(point, inverse);
-
-	//		Vector2f half = source_ * 0.5f;
-
-	//		local.x = std::clamp(local.x, -half.x, half.x);
-	//		local.y = std::clamp(local.y, -half.y, half.y);
-	//		local.z = 0.0f;
-
-	//		return Matrix4x4::Transform(local, matrix);*/
-
-	//		Vector3f position = transform->GetPosition();
-	//		Vector3f right    = Matrix4x4::TransformNormal(Vector3f{ 1.0f, 0.0f, 0.0f }, transform->GetMatrix());
-	//		Vector3f up       = Matrix4x4::TransformNormal(Vector3f{ 0.0f, 1.0f, 0.0f }, transform->GetMatrix());
-
-	//		Vector2f half = source_ * 0.5f;
-
-	//		Vector2f local = {
-	//			Vector3f::Dot(point - position, right),
-	//			Vector3f::Dot(point - position, up)
-	//		};
-
-	//		local = Vector2f::Clamp(local, -half, half);
-
-	//		return position + right * local.x + up * local.y;
-	//	};
-
-	//	Vector3f point = { 1.0f, 1.0f, 1.0f };
-	//	Vector3f closest = func(point);
-
-	//	Graphics::PushLine(point, closest, kGreen4<float>, 1.0f);
-	//}
 }
 
 void ExampleGameLoop::RenderSystem() {

@@ -357,9 +357,6 @@
     <ClInclude Include="Engine\Components\Component\Collider\CollisionDetection.h">
       <Filter>Engine\Components\Component\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\Collider\CollisionHelper.h">
-      <Filter>Engine\Components\Component\Collider</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Components\Component\Collider\CollisionManager.h">
       <Filter>Engine\Components\Component\Collider</Filter>
     </ClInclude>
@@ -1005,7 +1002,7 @@
     <ClInclude Include="Lib\Adapter\Uuid\Uuid.h">
       <Filter>Lib\Adapter\Uuid</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\CXXAttributeConfig.h">
+    <ClInclude Include="Lib\CXXAttribute.h">
       <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Easing.h">
@@ -1176,9 +1173,6 @@
       <Filter>Engine\Components\Component\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\Collider\CollisionDetection.cpp">
-      <Filter>Engine\Components\Component\Collider</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Components\Component\Collider\CollisionHelper.cpp">
       <Filter>Engine\Components\Component\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\Collider\CollisionManager.cpp">

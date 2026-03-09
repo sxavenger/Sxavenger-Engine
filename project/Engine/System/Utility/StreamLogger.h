@@ -7,7 +7,7 @@
 #include <Engine/Foundation.h>
 
 //* lib
-#include <Lib/CXXAttributeConfig.h>
+#include <Lib/CXXAttribute.h>
 
 //* c++
 #include <mutex>

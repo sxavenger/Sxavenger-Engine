@@ -27,10 +27,6 @@ public:
 	//=========================================================================================
 
 	constexpr FlagMask() : mask_(NULL) {}
-	constexpr FlagMask(_Mask mask) : mask_(mask) {}
-	constexpr FlagMask(_Bit bit) : mask_(static_cast<_Mask>(bit)) {}
-
-	~FlagMask() = default;
 
 	//* check mask option  *//
 
@@ -48,39 +44,52 @@ public:
 	constexpr void Inverse(_Mask mask) { mask_ ^= mask; }
 	constexpr void Inverse(_Bit bit) { Inverse(static_cast<_Mask>(bit)); }
 
+	//* operator [assign] *//
+
+	constexpr FlagMask(const FlagMask&) noexcept            = default;
+	constexpr FlagMask& operator=(const FlagMask&) noexcept = default;
+
+	constexpr FlagMask(_Mask mask) noexcept : mask_(mask) {}
+	constexpr FlagMask& operator=(_Mask mask) noexcept { mask_ = mask; return *this; }
+
+	constexpr FlagMask(_Bit bit) noexcept : mask_(static_cast<_Mask>(bit)) {}
+	constexpr FlagMask& operator=(_Bit bit) noexcept { mask_ = static_cast<_Mask>(bit); return *this; }
+
+	//* operator [or] *//
+
+	constexpr FlagMask operator|(_Mask mask) const noexcept { return FlagMask(mask_ | mask); }
+	constexpr FlagMask operator|(_Bit bit) const noexcept { return FlagMask(mask_ | static_cast<_Mask>(bit)); }
+
+	constexpr FlagMask& operator|=(_Mask mask) noexcept { mask_ |= mask; return *this; }
+	constexpr FlagMask& operator|=(_Bit bit) noexcept { mask_ |= static_cast<_Mask>(bit); return *this; }
+
+	//* operator [and] *//
+
+	constexpr FlagMask operator&(_Mask mask) const noexcept { return FlagMask(mask_ & mask); }
+	constexpr FlagMask operator&(_Bit bit) const noexcept { return FlagMask(mask_ & static_cast<_Mask>(bit)); }
+
+	constexpr FlagMask& operator&=(_Mask mask) noexcept { mask_ &= mask; return *this; }
+	constexpr FlagMask& operator&=(_Bit bit) noexcept { mask_ &= static_cast<_Mask>(bit); return *this; }
+
+	//* operator [xor] *//
+
+	constexpr FlagMask operator^(_Mask mask) const noexcept { return FlagMask(mask_ ^ mask); }
+	constexpr FlagMask operator^(_Bit bit) const noexcept { return FlagMask(mask_ ^ static_cast<_Mask>(bit)); }
+
+	constexpr FlagMask& operator^=(_Mask mask) noexcept { mask_ ^= mask; return *this; }
+	constexpr FlagMask& operator^=(_Bit bit) noexcept { mask_ ^= static_cast<_Mask>(bit); return *this; }
+
+	//* operator [cast] *//
+
+	constexpr explicit operator _Mask() const { return mask_; }
+	constexpr explicit operator _Bit() const { return static_cast<_Bit>(mask_); }
+
 	//* getter *//
 
 	constexpr _Mask Get() const { return mask_; }
 	constexpr _Mask& Get() { return mask_; }
 
-	//=========================================================================================
-	// public operator
-	//=========================================================================================
-
-	constexpr FlagMask& operator=(_Mask mask) { mask_ = mask; return *this; }
-	constexpr FlagMask& operator=(_Bit bit) { return operator=(static_cast<_Mask>(bit)); }
-
-	constexpr FlagMask& operator|=(_Mask mask) { mask_ |= mask; return *this; }
-	constexpr FlagMask& operator|=(_Bit bit) { return operator|=(static_cast<_Mask>(bit)); }
-
-	constexpr FlagMask& operator&=(_Mask mask) { mask_ &= mask; return *this; }
-	constexpr FlagMask& operator&=(_Bit bit) { return operator&=(static_cast<_Mask>(bit)); }
-
-	constexpr FlagMask& operator^=(_Mask mask) { mask_ ^= mask; return *this; }
-	constexpr FlagMask& operator^=(_Bit bit) { return operator^=(static_cast<_Mask>(bit)); }
-
-	constexpr FlagMask operator|(_Mask mask) const { return FlagMask(mask_ | mask); }
-	constexpr FlagMask operator|(_Bit bit) const { return operator|(static_cast<_Mask>(bit)); }
-
-	constexpr FlagMask operator&(_Mask mask) const { return FlagMask(mask_ & mask); }
-	constexpr FlagMask operator&(_Bit bit) const { return operator&(static_cast<_Mask>(bit)); }
-
-	constexpr FlagMask operator^(_Mask mask) const { return FlagMask(mask_ ^ mask); }
-	constexpr FlagMask operator^(_Bit bit) const { return operator^(static_cast<_Mask>(bit)); }
-
-	constexpr const _Mask& operator&() const { return mask_; }
-	constexpr _Mask& operator&() { return mask_; }
-
+	
 private:
 
 	//=========================================================================================
