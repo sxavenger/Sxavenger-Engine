@@ -5,6 +5,7 @@
 
 //* library
 #include "../../Library/BRDF.hlsli"
+#include "../../Library/ImportanceSample.hlsli"
 
 //* component
 #include "../../Component/CameraComponent.hlsli"
@@ -53,9 +54,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		return; //!< 取得失敗
 	}
 
-	// TODO: Spatial Reuse で, 近傍のピクセルから反射光をサンプリングする
-
-	// (HACK)
+	// TODO: Spatialで, 近傍のピクセルから反射光をサンプリングする
 
 	float3 radiance = gReflectionRadiance.Load(uint3(pixel, 0)).rgb;
 
@@ -75,6 +74,8 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	}
 
 	float3 color = EvaluateSpecular(albedo, context, surface.roughness) * radiance;
+	// FIXME: Unreal Engineとの結果の差異が大きい. 何かがおかしい.
+	// -> Roughnessを考慮した反射ベクトルではない...
 
 	gReflection[pixel] = float4(color, 1.0f);
 }
