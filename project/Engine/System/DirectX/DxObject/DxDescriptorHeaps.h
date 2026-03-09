@@ -12,7 +12,7 @@
 #include <Engine/System/UI/ISystemDebugGui.h>
 
 //* lib
-#include <Lib/CXXAttributeConfig.h>
+#include <Lib/CXXAttribute.h>
 #include <Lib/Sxl/IndexAllocator.h>
 
 // c++

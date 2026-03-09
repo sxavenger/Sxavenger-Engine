@@ -19,6 +19,56 @@ SXAVENGER_ENGINE_USING
 #include <magic_enum.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// State structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void ColliderComponent::State::Update() {
+	//!< 現在の衝突検出結果を1frame前の衝突検出結果にコピーして、現在の衝突検出結果をリセットする
+	At(History::Previous) = At(History::Current);
+	At(History::Current)  = std::nullopt;
+}
+
+Sxl::Flag<ColliderComponent::History> ColliderComponent::State::GetBit() const {
+
+	Sxl::Flag<History> bit = History::None;
+
+	if (At(History::Current).HasPenetration()) {
+		bit |= History::Current;
+	}
+
+	if (At(History::Previous).HasPenetration()) {
+		bit |= History::Previous;
+	}
+
+	return bit;
+}
+
+void ColliderComponent::State::Set(History history, const CollisionDetection::Detection& detection) {
+	StreamLogger::AssertA(history == History::Current || history == History::Previous, "History is not a valid index.");
+	At(history) = detection;
+}
+
+CollisionDetection::Detection& ColliderComponent::State::operator[](History history) {
+	StreamLogger::AssertA(history == History::Current || history == History::Previous, "History is not a valid index.");
+	return detections[static_cast<uint8_t>(history) - 1];
+}
+
+const CollisionDetection::Detection& ColliderComponent::State::operator[](History history) const {
+	StreamLogger::AssertA(history == History::Current || history == History::Previous, "History is not a valid index.");
+	return detections[static_cast<uint8_t>(history) - 1];
+}
+
+CollisionDetection::Detection& ColliderComponent::State::At(History history) {
+	StreamLogger::AssertA(history == History::Current || history == History::Previous, "History is not a valid index.");
+	return detections[static_cast<uint8_t>(history) - 1];
+}
+
+const CollisionDetection::Detection& ColliderComponent::State::At(History history) const {
+	StreamLogger::AssertA(history == History::Current || history == History::Previous, "History is not a valid index.");
+	return detections[static_cast<uint8_t>(history) - 1];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // BoundingPrimitiveLine structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -129,21 +179,21 @@ void ColliderComponent::ShowComponentInspector() {
 
 	SxImGui::InputText("tag", tag_);
 
-	if (ImGui::BeginCombo("bounding", magic_enum::enum_name(static_cast<CollisionBoundings::BoundingType>(bounding_.index())).data())) {
+	if (ImGui::BeginCombo("bounding", magic_enum::enum_name(GetBoundingType()).data())) {
 		for (const auto& [value, name] : magic_enum::enum_entries<CollisionBoundings::BoundingType>()) {
-			if (ImGui::Selectable(name.data(), bounding_.index() == static_cast<size_t>(value))) {
+			if (ImGui::Selectable(name.data(), GetBoundingType() == value)) {
 				switch (value) {
 					case CollisionBoundings::BoundingType::Sphere:
-						SetColliderBoundingSphere();
+						SetBoundingSphere();
 						break;
 					case CollisionBoundings::BoundingType::Capsule:
-						SetColliderBoundingCapsule();
+						SetBoundingCapsule();
 						break;
 					case CollisionBoundings::BoundingType::AABB:
-						SetColliderBoundingAABB();
+						SetBoundingAABB();
 						break;
 					case CollisionBoundings::BoundingType::OBB:
-						SetColliderBoundingOBB();
+						SetBoundingOBB();
 						break;
 				}
 			}
@@ -210,71 +260,68 @@ void ColliderComponent::ShowComponentInspector() {
 	PushBoundingLine();
 }
 
-void ColliderComponent::SetColliderBoundingSphere(const CollisionBoundings::Sphere& sphere) {
+void ColliderComponent::Update() {
+	for (auto& state : states_ | std::views::values) {
+		state.Update(); //!< 衝突検出結果の履歴を更新
+	}
+}
+
+void ColliderComponent::SetBoundingSphere(const CollisionBoundings::Sphere& sphere) {
 	bounding_ = sphere;
 }
 
-void ColliderComponent::SetColliderBoundingCapsule(const CollisionBoundings::Capsule& capsule) {
+void ColliderComponent::SetBoundingCapsule(const CollisionBoundings::Capsule& capsule) {
 	bounding_ = capsule;
 }
 
-void ColliderComponent::SetColliderBoundingAABB(const CollisionBoundings::AABB& aabb) {
+void ColliderComponent::SetBoundingAABB(const CollisionBoundings::AABB& aabb) {
 	bounding_ = aabb;
 }
 
-void ColliderComponent::SetColliderBoundingOBB(const CollisionBoundings::OBB& obb) {
+void ColliderComponent::SetBoundingOBB(const CollisionBoundings::OBB& obb) {
 	bounding_ = obb;
 }
 
-void ColliderComponent::UpdateColliderState() {
-	//!< 次フレームの準備
-	for (auto& state : states_ | std::views::values) {
-		state <<= 1; //!< current情報をprevにシフト
-	}
+void ColliderComponent::OnCollision(ColliderComponent* other, const CollisionDetection::Detection& detection) {
+	states_[other].Set(History::Current, detection); //!< 現在frameの衝突検出結果を保存
 }
 
 void ColliderComponent::CallbackOnCollision(const CollisionCallbackCollection* collection) {
+
 	for (auto it = states_.begin(); it != states_.end();) {
-		switch (it->second.to_ulong()) {
-			case 0b00: //!< prev 0, current 0
+
+		switch (static_cast<History>(it->second.GetBit())) {
+			case History::None: //!< prev 0, current 0
 				it = states_.erase(it);
+				//!< 衝突履歴がないものは削除.
 				continue;
 
-			case 0b01: //!< prev 0, current 1
-				collection->CallbackOnCollisionEnter(this, it->first);
+			case History::Current:
+				collection->CallbackOnCollisionEnter(this, it->first, it->second[History::Current].GetPenetration());
 				break;
 
-			case 0b10: //!< prev 1, current 0
-				collection->CallbackOnCollisionExit(this, it->first);
+			case History::Previous:
+				collection->CallbackOnCollisionExit(this, it->first, it->second[History::Previous].GetPenetration());
 				break;
 
-			case 0b11: //!< prev 1, current 1
-				collection->CallbackOnCollisionStay(this, it->first);
+			case History::All:
+				collection->CallbackOnCollisionStay(this, it->first, it->second[History::Current].GetPenetration());
+				//!< penetrationは最新情報を渡す.
 				break;
 		};
 
-		++it;
+		it++;
 	}
-}
-
-void ColliderComponent::OnCollision(ColliderComponent* other) {
-	states_[other].set(static_cast<bool>(CollisionState::kCurrent)); //!< 現在frameで当たった
 }
 
 void ColliderComponent::SetCollisionState(
 	ColliderComponent* const other,
-	const std::optional<bool>& isHitCurrent, const std::optional<bool>& isHitPrev) {
+	History history, const CollisionDetection::Detection& detection) {
 
-	auto& state = states_[other];
+	//!< historyはCurrentかPreviousのどちらかでなければならない
+	StreamLogger::AssertA(history == History::Current || history == History::Previous, "History is not a valid index.");
 
-	if (isHitCurrent.has_value()) {
-		state.set(static_cast<bool>(CollisionState::kCurrent), isHitCurrent.value());
-	}
-
-	if (isHitPrev.has_value()) {
-		state.set(static_cast<bool>(CollisionState::kPrev), isHitPrev.value());
-	}
-
+	states_[other].Set(history, detection);
 }
 
 TransformComponent* ColliderComponent::RequireTransform() const {
@@ -289,7 +336,7 @@ json ColliderComponent::ParseToJson() const {
 
 	json& bounding = data["bounding"] = json::object();
 
-	bounding["type"] = magic_enum::enum_name(static_cast<CollisionBoundings::BoundingType>(bounding_.index()));
+	bounding["type"] = magic_enum::enum_name(GetBoundingType());
 
 	switch (bounding_.index()) {
 		case static_cast<size_t>(CollisionBoundings::BoundingType::Sphere):
@@ -345,7 +392,7 @@ void ColliderComponent::InputJson(const json& data) {
 				CollisionBoundings::Sphere sphere = {};
 				sphere.radius = JsonSerializeFormatter<float>::Deserialize(bounding["radius"]);
 
-				SetColliderBounding(sphere);
+				SetBounding(sphere);
 			}
 			break;
 
@@ -356,7 +403,7 @@ void ColliderComponent::InputJson(const json& data) {
 				capsule.radius    = JsonSerializeFormatter<float>::Deserialize(bounding["radius"]);
 				capsule.length    = JsonSerializeFormatter<float>::Deserialize(bounding["length"]);
 
-				SetColliderBounding(capsule);
+				SetBounding(capsule);
 			}
 			break;
 
@@ -366,7 +413,7 @@ void ColliderComponent::InputJson(const json& data) {
 				aabb.min = JsonSerializeFormatter<Vector3f>::Deserialize(bounding["min"]);
 				aabb.max = JsonSerializeFormatter<Vector3f>::Deserialize(bounding["max"]);
 
-				SetColliderBounding(aabb);
+				SetBounding(aabb);
 			}
 			break;
 
@@ -376,7 +423,7 @@ void ColliderComponent::InputJson(const json& data) {
 				obb.orientation = JsonSerializeFormatter<Quaternion>::Deserialize(bounding["orientation"]);
 				obb.size        = JsonSerializeFormatter<Vector3f>::Deserialize(bounding["size"]);
 
-				SetColliderBounding(obb);
+				SetBounding(obb);
 			}
 			break;
 	}

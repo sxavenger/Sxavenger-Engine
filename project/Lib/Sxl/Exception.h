@@ -7,7 +7,7 @@
 #include "SxavengerLibrary.h"
 
 //* lib
-#include <Lib/CXXAttributeConfig.h>
+#include <Lib/CXXAttribute.h>
 
 //* c++
 #include <string>

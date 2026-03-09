@@ -33,6 +33,8 @@ public:
 
 	static void UpdateTransform();
 
+	static void UpdateCollider();
+
 	static void UpdateSkinning();
 
 	static void UpdateParticle();

@@ -76,3 +76,12 @@ constexpr Vector2<T> Saturate(const Vector2<T>& x) { return Clamp(x, kOrigin2<T>
 
 template <class T>
 constexpr Vector3<T> Saturate(const Vector3<T>& x) { return Clamp(x, kOrigin3<T>, kUnit3<T>); }
+
+template <class T>
+constexpr T Square(T x) { return x * x; }
+
+template <class T>
+constexpr Vector2<T> Square(const Vector2<T>& x) { return { Square(x.x), Square(x.y) }; }
+
+template <class T>
+constexpr Vector3<T> Square(const Vector3<T>& x) { return { Square(x.x), Square(x.y), Square(x.z) }; }

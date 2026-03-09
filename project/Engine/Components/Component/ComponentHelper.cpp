@@ -19,6 +19,7 @@ SXAVENGER_ENGINE_USING
 #include "Light/Punctual/SpotLightComponent.h"
 #include "Light/Environment/SkyLightComponent.h"
 #include "Collider/ColliderComponent.h"
+#include "Collider/CollisionManager.h"
 #include "Audio/Audio3dListenerComponent.h"
 #include "Audio/Audio3dSourceComponent.h"
 
@@ -53,6 +54,10 @@ void ComponentHelper::UpdateTransform() {
 			component->UpdateMatrix();
 		}
 	});
+}
+
+void ComponentHelper::UpdateCollider() {
+	sCollisionManager->CheckCollision();
 }
 
 void ComponentHelper::UpdateSkinning() {

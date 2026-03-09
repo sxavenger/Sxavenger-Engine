@@ -58,11 +58,6 @@ private:
 
 	std::array<std::unique_ptr<GameObject>, 4> cubes_;
 
-	//* test *//
-
-	std::unique_ptr<GameObject> test_;
-	Vector2f source_ = { 2.0f, 2.0f };
-
 
 	//=========================================================================================
 	// private methods

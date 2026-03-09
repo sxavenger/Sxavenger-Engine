@@ -153,6 +153,10 @@ public:
 		return std::sqrt(x * x + y * y + z * z);
 	}
 
+	_Ty constexpr LengthSquare() const {
+		return x * x + y * y + z * z;
+	}
+
 	Vector3 constexpr Normalize() const {
 		return Length() != 0 ? *this / Length() : Vector3();
 	}
@@ -169,6 +173,10 @@ public:
 
 	static constexpr _Ty Distance(const Vector3& lhs, const Vector3& rhs) {
 		return (lhs - rhs).Length();
+	}
+
+	static constexpr _Ty DistanceSquare(const Vector3& lhs, const Vector3& rhs) {
+		return (lhs - rhs).LengthSquare();
 	}
 
 	static constexpr Vector3 Cross(const Vector3& lhs, const Vector3& rhs) {
