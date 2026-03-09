@@ -8,6 +8,7 @@
 #include "Core/FRenderCoreLight.h"
 #include "Core/FRenderCoreRestir.h"
 #include "Core/FRenderCoreProbe.h"
+#include "Core/FRenderCoreReflection.h"
 #include "Core/FRenderCoreCanvas.h"
 #include "Core/FRenderCoreProcess.h"
 #include "Core/FRenderCoreTransition.h"
@@ -49,6 +50,8 @@ public:
 
 	FRenderCoreProbe* GetProbe() { return probe_.get(); }
 
+	FRenderCoreReflection* GetReflection() { return reflection_.get(); }
+
 	FRenderCoreCanvas* GetCanvas() { return canvas_.get(); }
 
 	FRenderCoreProcess* GetProcess() { return process_.get(); }
@@ -75,6 +78,7 @@ private:
 	std::unique_ptr<FRenderCoreLight>       light_;
 	std::unique_ptr<FRenderCoreRestir>      restir_;
 	std::unique_ptr<FRenderCoreProbe>       probe_;
+	std::unique_ptr<FRenderCoreReflection>  reflection_;
 	std::unique_ptr<FRenderCoreCanvas>      canvas_;
 	std::unique_ptr<FRenderCoreProcess>     process_;
 	std::unique_ptr<FRenderCoreTransition>  transition_;

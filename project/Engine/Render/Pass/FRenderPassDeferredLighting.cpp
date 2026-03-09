@@ -501,19 +501,22 @@ void FRenderPassDeferredLighting::PassIndirectReservoirInitialize(const DirectXQ
 
 	//* light
 	// Directional Light
-	commandList->SetComputeRootConstantBufferView(7, config.scene->directionalLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(8, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(9, config.scene->directionalLightParams_->GetGPUVirtualAddress());
+	FScene::LightAddress directionalLightAddress = config.scene->GetDirectionalLightAddress();
+	commandList->SetComputeRoot32BitConstants(7, 1, &directionalLightAddress.count, 0);
+	commandList->SetComputeRootShaderResourceView(8, directionalLightAddress.transforms);
+	commandList->SetComputeRootShaderResourceView(9, directionalLightAddress.parameters);
 
 	// Point Light
-	commandList->SetComputeRootConstantBufferView(10, config.scene->pointLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(11, config.scene->pointLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(12, config.scene->pointLightParams_->GetGPUVirtualAddress());
+	FScene::LightAddress pointLightAddress = config.scene->GetPointLightAddress();
+	commandList->SetComputeRoot32BitConstants(10, 1, &pointLightAddress.count, 0);
+	commandList->SetComputeRootShaderResourceView(11, pointLightAddress.transforms);
+	commandList->SetComputeRootShaderResourceView(12, pointLightAddress.parameters);
 
 	// Spot Light
-	commandList->SetComputeRootConstantBufferView(13, config.scene->spotLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(14, config.scene->spotLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(15, config.scene->spotLightParams_->GetGPUVirtualAddress());
+	FScene::LightAddress spotLightAddress = config.scene->GetSpotLightAddress();
+	commandList->SetComputeRoot32BitConstants(13, 1, &spotLightAddress.count, 0);
+	commandList->SetComputeRootShaderResourceView(14, spotLightAddress.transforms);
+	commandList->SetComputeRootShaderResourceView(15, spotLightAddress.parameters);
 
 	// Sky Light
 	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {
@@ -613,19 +616,22 @@ void FRenderPassDeferredLighting::PassProbeReservoir(const DirectXQueueContext* 
 
 	//* light
 	// Directional Light
-	commandList->SetComputeRootConstantBufferView(7, config.scene->directionalLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(8, config.scene->directionalLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(9, config.scene->directionalLightParams_->GetGPUVirtualAddress());
+	FScene::LightAddress directionalLightAddress = config.scene->GetDirectionalLightAddress();
+	commandList->SetComputeRoot32BitConstants(7, 1, &directionalLightAddress.count, 0);
+	commandList->SetComputeRootShaderResourceView(8, directionalLightAddress.transforms);
+	commandList->SetComputeRootShaderResourceView(9, directionalLightAddress.parameters);
 
 	// Point Light
-	commandList->SetComputeRootConstantBufferView(10, config.scene->pointLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(11, config.scene->pointLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(12, config.scene->pointLightParams_->GetGPUVirtualAddress());
+	FScene::LightAddress pointLightAddress = config.scene->GetPointLightAddress();
+	commandList->SetComputeRoot32BitConstants(10, 1, &pointLightAddress.count, 0);
+	commandList->SetComputeRootShaderResourceView(11, pointLightAddress.transforms);
+	commandList->SetComputeRootShaderResourceView(12, pointLightAddress.parameters);
 
 	// Spot Light
-	commandList->SetComputeRootConstantBufferView(13, config.scene->spotLightCount_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(14, config.scene->spotLightTransforms_->GetGPUVirtualAddress());
-	commandList->SetComputeRootShaderResourceView(15, config.scene->spotLightParams_->GetGPUVirtualAddress());
+	FScene::LightAddress spotLightAddress = config.scene->GetSpotLightAddress();
+	commandList->SetComputeRoot32BitConstants(13, 1, &spotLightAddress.count, 0);
+	commandList->SetComputeRootShaderResourceView(14, spotLightAddress.transforms);
+	commandList->SetComputeRootShaderResourceView(15, spotLightAddress.parameters);
 
 	// Sky Light
 	sComponentStorage->ForEachActive<SkyLightComponent>([&](SkyLightComponent* component) {

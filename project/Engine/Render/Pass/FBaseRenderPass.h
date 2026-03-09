@@ -57,10 +57,11 @@ public:
 		////////////////////////////////////////////////////////////////////////////////////////////
 		enum class Option : size_t {
 			IndirectLighting = 1 << 0,
-			PostProcess      = 1 << 1,
-			Tonemap          = 1 << 2,
+			Reflection       = 1 << 1,
+			PostProcess      = 1 << 2,
+			Tonemap          = 1 << 3,
 
-			Preview = 1 << 3,
+			Preview = 1 << 4,
 
 			Default = PostProcess | Tonemap,
 		};

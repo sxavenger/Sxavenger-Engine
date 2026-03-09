@@ -31,6 +31,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Transition : uint8_t {
 		LightingTransition,
+		ReflectionTransition,
 		MipmapTransition,
 		VelocityTransition,
 		TransparentTransition,

@@ -16,7 +16,6 @@
 
 //* c++
 #include <array>
-#include <type_traits>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -24,75 +23,38 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderCoreRestir class
+// FRenderCoreReflection class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCoreRestir {
+class FRenderCoreReflection {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// RaygenerationExportType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class RaygenerationExportType : uint32_t {
+	enum class RaygenerationExportType : uint8_t {
 		Default,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// MissExportType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class MissExportType : uint32_t {
+	enum class MissExportType : uint8_t {
 		Default,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// HitgroupExportType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class HitgroupExportType : uint32_t {
+	enum class HitgroupExportType : uint8_t {
 		Mesh,
 		Emissive,
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Config structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Config {
-	public:
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		uint32_t maxSampleCount  = 1024; //!< 合計sample数
-		uint32_t samplesPerFrame = 1;    //!< frameごとのsample数
-	};
-
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Reservoir structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	template <size_t N>
-	struct Reservoir {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		std::array<float, N> data;
-		float weight;
-		float w;
-		uint32_t m;
-
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Process enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Process : uint8_t {
-		Reset,
-		Temporal,
-		Spatial,
-		Texture,
-		EdgeStopping,
+		Calculate,
 	};
 
 public:
@@ -123,19 +85,20 @@ public:
 
 	void Dispatch(const DirectXQueueContext* context, const Vector2ui& size) const;
 
+
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
 
+	static inline const std::filesystem::path kDirectory = kPackagesDirectory / "shaders" / "render" / "Reflection";
+
 	//* export groups *//
 
 	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, magic_enum::enum_count<RaygenerationExportType>()> raygenerationExportGroups_;
 	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, magic_enum::enum_count<MissExportType>()>          missExportGroups_;
 	std::array<std::pair<DxrObject::RaytracingBlob, DxrObject::ExportGroup>, magic_enum::enum_count<HitgroupExportType>()>      hitgroupExportGroups_;
-
-	static inline const std::filesystem::path kDirectory = kPackagesDirectory / "shaders" / "render" / "ReSTIR";
 
 	//* context *//
 
@@ -152,11 +115,15 @@ private:
 	//=========================================================================================
 
 	void CreateRaygeneration();
+
 	void CreateMiss();
+
 	void CreateHitgroup();
+
 	void CreateContext();
 
-	void CreatePipeline();
+	//* helper method *//
+
 	void CreateComputePipeline(Process process, const std::filesystem::path& filepath);
 
 };

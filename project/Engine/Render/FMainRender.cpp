@@ -7,6 +7,7 @@ SXAVENGER_ENGINE_USING
 //* render
 #include "Pass/FRenderPassDeferredBase.h"
 #include "Pass/FRenderPassDeferredLighting.h"
+#include "Pass/FRenderPassReflection.h"
 #include "Pass/FRenderPassAntiAliasing.h"
 #include "Pass/FRenderPassForwardTransparent.h"
 #include "Pass/FRenderPassPostProcess.h"
@@ -30,6 +31,7 @@ void FMainRender::Init() {
 	context_ = std::make_unique<FRenderPassContext>();
 	context_->Add<FRenderPassDeferredBase>();
 	context_->Add<FRenderPassDeferredLighting>();
+	context_->Add<FRenderPassReflection>();
 	context_->Add<FRenderPassForwardTransparent>();
 	context_->Add<FRenderPassAntiAliasing>();
 	context_->Add<FRenderPassPostProcess>();

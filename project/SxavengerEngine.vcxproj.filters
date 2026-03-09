@@ -1077,6 +1077,9 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreReflection.h" />
+    <ClInclude Include="Engine\Render\GBuffer\FReflectionGBuffer.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassReflection.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1728,5 +1731,8 @@
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreReflection.cpp" />
+    <ClCompile Include="Engine\Render\GBuffer\FReflectionGBuffer.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassReflection.cpp" />
   </ItemGroup>
 </Project>

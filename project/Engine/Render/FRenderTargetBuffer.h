@@ -11,6 +11,7 @@
 #include "GBuffer/FLightingGBuffer.h"
 #include "GBuffer/FTransparentGBuffer.h"
 #include "GBuffer/FProbeGBuffer.h"
+#include "GBuffer/FReflectionGBuffer.h"
 #include "GBuffer/FMainGBuffer.h"
 
 //* engine
@@ -70,6 +71,7 @@ public:
 	FBaseTexture* GetGBuffer(FLightingGBuffer::Layout layout);
 	FBaseTexture* GetGBuffer(FTransparentGBuffer::Layout layout);
 	FBaseTexture* GetGBuffer(FMainGBuffer::Layout layout);
+	FBaseTexture* GetGBuffer(FReflectionGBuffer::Layout layout);
 
 	FDeferredGBuffer& GetDeferredGBuffer() { return deferred_; }
 
@@ -109,6 +111,7 @@ private:
 	FMainGBuffer        main_;
 
 	FProbeGBuffer probe_;
+	FReflectionGBuffer reflection_;
 
 	//* depth stencil parameter *//
 

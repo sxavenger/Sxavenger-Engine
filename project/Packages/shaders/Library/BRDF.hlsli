@@ -165,6 +165,19 @@ float3 Specular_BRDF(float3 f, float v, float d) {
 	return f * v * d;
 }
 
+//! @brief EvaluateSpecular
+//! @param albedo: BxDFAlbedo
+//! @param context: BxDFContext
+//! @param roughness: surface - roughness
+float3 EvaluateSpecular(BxDFAlbedo albedo, BxDFContext context, float roughness) {
+
+	float3 f = F_SphericalGaussian(context, albedo);
+	float v  = V_HeightCorrelated(context, roughness);
+	float d  = D_GGX(context, roughness);
+	
+	return Specular_BRDF(f, v, d);
+}
+
 //! @brief EvaluateBRDF
 //! @param albedo: BxDFAlbedo
 //! @param context: BxDFContext

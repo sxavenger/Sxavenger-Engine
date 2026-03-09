@@ -26,6 +26,9 @@ void FRenderCore::Init() {
 	probe_ = std::make_unique<FRenderCoreProbe>();
 	probe_->Init();
 
+	reflection_ = std::make_unique<FRenderCoreReflection>();
+	reflection_->Init();
+
 	canvas_ = std::make_unique<FRenderCoreCanvas>();
 	canvas_->Init();
 
