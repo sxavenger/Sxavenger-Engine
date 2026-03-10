@@ -5,42 +5,26 @@ SXAVENGER_ENGINE_USING
 // RuntimeLogger class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-RuntimeLogger::Data::Data(Type _type, const std::string& _category, const std::string& _label)
-	: type(_type), category(_category), label(_label) {
+RuntimeLogger::Data::Data(Level _level , const std::string& _category, const std::string& _label)
+	: level(_level), category(_category), label(_label) {
 	count = 1;
 	Timestamp();
 }
 
 void RuntimeLogger::Data::Timestamp() {
-	auto current = std::chrono::system_clock::now();
-	timestamp = std::chrono::zoned_time{
-		std::chrono::current_zone(),
-		std::chrono::floor<std::chrono::seconds>(current)
-	};
+	timestamp = LocalTimePoint::Now();
 }
 
 bool RuntimeLogger::Data::Compare(const Data& data) const {
-	return type == data.type && category == data.category && label == data.label;
+	return level == data.level && category == data.category && label == data.label;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // RuntimeLogger class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void RuntimeLogger::Log(Type type, const std::string& category, const std::string& label) {
-	RuntimeLogger::Push({ type, category, label });
-}
-
-void RuntimeLogger::LogComment(const std::string& category, const std::string& label) {
-	RuntimeLogger::Log(Type::Comment, category, label);
-}
-
-void RuntimeLogger::LogWarning(const std::string& category, const std::string& label) {
-	RuntimeLogger::Log(Type::Warning, category, label);
-}
-
-void RuntimeLogger::LogError(const std::string& category, const std::string& label) {
-	RuntimeLogger::Log(Type::Error, category, label);
+void RuntimeLogger::Log(Level level, const std::string& category, const std::string& label) {
+	RuntimeLogger::Push({ level, category, label });
 }
 
 void RuntimeLogger::Push(const Data& data) {

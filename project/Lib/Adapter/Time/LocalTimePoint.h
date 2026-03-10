@@ -39,7 +39,7 @@ public:
 
 		//* serialize / deserialize *//
 
-		std::string Serialize();
+		std::string Serialize() const;
 
 		static Date Deserialize(const std::string& s);
 
@@ -77,7 +77,7 @@ public:
 
 		//* serialize / deserialize *//
 
-		std::string Serialize();
+		std::string Serialize() const;
 
 		static Time Deserialize(const std::string& s);
 
@@ -115,7 +115,7 @@ public:
 
 	//* serialize / deserialize *//
 
-	std::string Serialize();
+	std::string Serialize() const;
 
 	static LocalTimePoint Deserialize(const std::string& s);
 

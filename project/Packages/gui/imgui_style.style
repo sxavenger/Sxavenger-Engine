@@ -285,9 +285,9 @@
 		},
 		"ImGuiCol_TableBorderLight": {
 			"a": 255,
-			"b": 5,
-			"g": 5,
-			"r": 5
+			"b": 8,
+			"g": 8,
+			"r": 8
 		},
 		"ImGuiCol_TableBorderStrong": {
 			"a": 255,

@@ -24,7 +24,7 @@ void AsyncTask::Execute(const AsyncThread* thread) {
 
 void AsyncTask::Wait(Status status) const {
 	while (status_ != status) {
-		RuntimeLogger::LogComment("[AsyncTask]", "waiting for task... tag: " + tag_);
+		RuntimeLogger::LogDebug("[AsyncTask]", "waiting for task... tag: " + tag_);
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 }

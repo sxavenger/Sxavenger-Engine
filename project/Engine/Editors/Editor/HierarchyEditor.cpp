@@ -103,9 +103,9 @@ void HierarchyEditor::ShowSceneMenu() {
 			if (filepath.has_value()) {
 				sEntityBehaviourStorage->ClearStaticBehaviours();
 				sEntityBehaviourStorage->InputJson(JsonHandler::LoadFromJson(filepath.value()));
-			}
 
-			RuntimeLogger::LogComment("[HierarchyEditor]", "load scene.");
+				RuntimeLogger::LogInformation("[HierarchyEditor]", "load scene. filepath: " + (*filepath).generic_string());
+			}
 		}
 
 		ImGui::SameLine();
@@ -124,14 +124,14 @@ void HierarchyEditor::ShowSceneMenu() {
 					filepath.value(),
 					sEntityBehaviourStorage->ParseToJson()
 				);
-			}
 
-			RuntimeLogger::LogComment("[HierarchyEditor]", "save scene.");
+				RuntimeLogger::LogInformation("[HierarchyEditor]", "save scene. filepath: " + (*filepath).generic_string());
+			}
 		}
 
 		if (ImGui::Button("clear")) {
 			sEntityBehaviourStorage->ClearStaticBehaviours();
-			RuntimeLogger::LogComment("[HierarchyEditor]", "clear scene.");
+			RuntimeLogger::LogInformation("[HierarchyEditor]", "clear scene.");
 		}
 
 		ImGui::EndMenu();

@@ -24,7 +24,7 @@ void ContentStorage::Emplace(const std::type_info* type, const std::shared_ptr<B
 
 void ContentStorage::TryEmplace(const std::type_info* type, const std::shared_ptr<BaseContent>& content) {
 	if (Contains(type, content->GetFilepath())) {
-		RuntimeLogger::LogComment("[UAssetStorage]", "content is already registered in storage. \n filepath: " + content->GetFilepath().generic_string());
+		RuntimeLogger::LogDebug("[AssetStorage]", "content is already registered in storage. \n filepath: " + content->GetFilepath().generic_string());
 		return;
 	}
 

@@ -25,7 +25,7 @@ void BaseContent::Execute(const AsyncThread* thread) {
 void BaseContent::WaitComplete() const {
 	while (!IsComplete()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		RuntimeLogger::LogComment("[BaseContent]", "waiting for content to complete loading... filepath: " + filepath_.generic_string());
+		RuntimeLogger::LogDebug("[BaseContent]", "waiting for content to complete loading... filepath: " + filepath_.generic_string());
 	}
 }
 

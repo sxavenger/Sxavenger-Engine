@@ -41,10 +41,21 @@ namespace SxGui {
 		Folder        = 0xE2C7,
 		Terminal      = 0xEB8E,
 		Timer         = 0xE425,
+		Schedule      = 0xE8B5,
 		Stack         = 0xF500,
 		Visibility    = 0xE8F4,
 		VisibilityOff = 0xE8F5,
 		Delete        = 0xE872,
+		Equal         = 0xF77B,
+		Nearby        = 0xE6B7,
+		NearbyError   = 0xF03B,
+		Dialog        = 0xE99F,
+		ShortText     = 0xE261,
+
+		/* 以下は使えない
+		Warning       = 0xE002,
+		Error         = 0xE000,
+		*/
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -109,6 +120,8 @@ namespace SxGui {
 	bool DragVector3(const char* label, float v[3], float v_speed = 1.0f, const std::optional<float>& v_min = std::nullopt, const std::optional<float>& v_max = std::nullopt, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 
 	void ImageLabel(const char* label, ImTextureRef handle, const ImVec2& size);
+
+	void DummySpace(const ImVec2& size);
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Hierarchy namespace

@@ -57,7 +57,7 @@ void DevelopEditor::BreakPoint(const std::source_location& location) {
 	locate += std::to_string(location.line());
 	locate += "\n";
 
-	RuntimeLogger::LogComment("[DevelopEditor]" , "break point called. \n locate: " + locate);
+	RuntimeLogger::LogInformation("[DevelopEditor]" , "break point called. \n locate: " + locate);
 }
 
 void DevelopEditor::ShowConfigMenu() {
@@ -289,61 +289,74 @@ void DevelopEditor::ShowConsole() {
 	BaseEditor::SetNextWindowDocking();
 	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag());
 
-	//* console option *//
+	//* constant variables *//
 
-	static std::pair<const char*, ImColor> kStyles[magic_enum::enum_count<RuntimeLogger::Type>()] = {
-		{ "-", ImGui::GetStyle().Colors[ImGuiCol_Text] },
-		{ "●", ImVec4(0.80f, 0.80f, 0.80f, 1.0f) },
-		{ "!", ImVec4(1.00f, 0.80f, 0.20f, 1.0f) },
-		{ "x", ImVec4(1.00f, 0.30f, 0.30f, 1.0f) },
+	static const std::pair<SxGui::Icon, ImColor> kLogLevelStyle[magic_enum::enum_count<RuntimeLogger::Level>()] = {
+		{ SxGui::Icon::Dialog,      ImGui::GetStyle().Colors[ImGuiCol_Text] }, //!< Level::Information
+		{ SxGui::Icon::Dialog,      ImColor(0.80f, 0.80f, 0.80f) },            //!< Level::Debug
+		{ SxGui::Icon::Nearby,      ImColor(1.00f, 0.80f, 0.10f) },            //!< Level::Warning
+		{ SxGui::Icon::NearbyError, ImColor(1.00f, 0.10f, 0.10f) },            //!< Level::Error
 	};
 
-	if (ImGui::BeginTable("## console table", 2, ImGuiTableFlags_ScrollY | ImGuiTableFlags_ScrollX | ImGuiTableFlags_BordersH)) {
+	//* console option *//
 
-		ImGui::TableSetupColumn("Log");
-		ImGui::TableHeadersRow();
+	ImGuiTableFlags flags
+		= ImGuiTableFlags_ScrollY
+		| ImGuiTableFlags_ScrollX
+		| ImGuiTableFlags_BordersInnerH
+		| ImGuiTableFlags_SizingFixedFit;
 
-		for (const auto& log : RuntimeLogger::GetLogs()) {
+	if (ImGui::BeginTable("## console table", static_cast<int32_t>(ConsoleTable::Count) + 1, flags)) {
 
-			const auto& style = kStyles[static_cast<uint32_t>(log.type)];
-
+		for (const auto& log : RuntimeLogger::GetLogs() | std::views::reverse) {
 			ImGui::TableNextRow();
-			ImGui::TableNextColumn();
 
-			ImGui::PushID(&log);
+			const auto& [level, color] = kLogLevelStyle[static_cast<uint8_t>(log.level)];
 
-			// 行全体を Selectable にする
-			ImGui::Selectable(
-				"##log_row",
-				false,
-				ImGuiSelectableFlags_SpanAllColumns
-			);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(color));
 
-			ImGui::SameLine();
+			{ //!< Message
+				ImGui::TableSetColumnIndex(static_cast<int32_t>(ConsoleTable::Message));
+				SxGui::DummySpace(ImVec2(640.0f, 0.0f));
 
-			// アイコン
-			ImGui::TextColored(style.second, "%s", style.first);
-			ImGui::SameLine();
+				std::string text = std::format("{}", log.label);
+				ImGui::TextWrapped(text.c_str());
+			}
 
-			// メインログテキスト
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(style.second));
-			ImGui::TextWrapped("%s", log.label.c_str());
+			{ //!< Level
+				ImGui::TableSetColumnIndex(static_cast<int32_t>(ConsoleTable::Level));
+
+				std::string text = std::format("{}", level);
+				ImGui::Text(text.c_str());
+			}
+			
+			{ //!< Timestamp
+				ImGui::TableSetColumnIndex(static_cast<int32_t>(ConsoleTable::Timestamp));
+
+				std::string text = std::format("{}", log.timestamp.Serialize());
+				ImGui::Text(text.c_str());
+			}
+
+			{ //!< Category
+				ImGui::TableSetColumnIndex(static_cast<int32_t>(ConsoleTable::Category));
+
+				std::string text = std::format("{}", log.category);
+				ImGui::Text(text.c_str());
+			}
+
+			{ //!< Count
+				ImGui::TableSetColumnIndex(static_cast<int32_t>(ConsoleTable::Count));
+
+				std::string text = "";
+
+				if (log.count > 1) {
+					text = std::format("{} x{}", SxGui::Icon::ShortText, log.count);
+				}
+
+				ImGui::Text(text.c_str());
+			}
+
 			ImGui::PopStyleColor();
-
-			// 補助情報（薄く）
-			ImGui::SameLine(0.0f, 12.0f);
-			ImGui::PushStyleColor(
-				ImGuiCol_Text,
-				ImVec4(0.55f, 0.55f, 0.55f, 1.0f)
-			);
-			ImGui::Text(
-				"[%s] x%u",
-				log.category.c_str(),
-				log.count
-			);
-			ImGui::PopStyleColor();
-
-			ImGui::PopID();
 		}
 
 		ImGui::EndTable();

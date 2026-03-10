@@ -139,7 +139,7 @@ void SxGui::Setting() {
 		config.GlyphOffset = ImVec2(2.0f, 4.0f);
 
 		static const ImWchar ranges[] = {
-			0xE000, 0xF8FF, //!< Private Use Area
+			0xE003, 0xF8FF, //!< Private Use Area
 			0
 		};
 		
@@ -469,6 +469,12 @@ void SxGui::ImageLabel(const char* label, ImTextureRef handle, const ImVec2& siz
 	ImGui::EndGroup();
 	ImGui::PopID();
 
+}
+
+void SxGui::DummySpace(const ImVec2& size) {
+	ImVec2 position = ImGui::GetCursorPos();
+	ImGui::Dummy(size);
+	ImGui::SetCursorPos(position);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

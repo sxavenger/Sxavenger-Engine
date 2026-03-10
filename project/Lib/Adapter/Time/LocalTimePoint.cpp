@@ -26,7 +26,7 @@ bool LocalTimePoint::Date::operator==(const Date& rhs) const {
 	);
 }
 
-std::string LocalTimePoint::Date::Serialize() {
+std::string LocalTimePoint::Date::Serialize() const {
 	return std::format(
 		"{:04}-{:02}-{:02}",
 		year, month, day
@@ -65,7 +65,7 @@ bool LocalTimePoint::Time::operator==(const Time& rhs) const {
 	);
 }
 
-std::string LocalTimePoint::Time::Serialize() {
+std::string LocalTimePoint::Time::Serialize() const {
 	return std::format(
 		"{:02}:{:02}:{:02}",
 		hour, minute, second
@@ -107,7 +107,7 @@ bool LocalTimePoint::operator==(const LocalTimePoint& rhs) const {
 	);
 }
 
-std::string LocalTimePoint::Serialize() {
+std::string LocalTimePoint::Serialize() const {
 
 	return std::format(
 		"{} {}",
