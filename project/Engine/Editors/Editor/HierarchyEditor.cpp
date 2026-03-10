@@ -285,12 +285,12 @@ void HierarchyEditor::HierarchySelectable(EntityBehaviour* behaviour, const std:
 	}
 
 	//!< 選択処理
-	if (ImGui::IsItemClicked()) {
+	if (SxGui::Hierarchy::IsClicked()) {
 		behaviour->SetInspector();
 		isInspector = true;
 	}
 
-	if (isInspector && SxImGui::IsDoubleClickItem()) {
+	if (isInspector && SxGui::Hierarchy::IsDoubleClicked()) {
 		SetSelectedView(behaviour);
 	}
 

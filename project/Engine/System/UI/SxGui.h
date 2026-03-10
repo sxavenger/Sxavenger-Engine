@@ -39,6 +39,7 @@ namespace SxGui {
 		Layers        = 0xE53B,
 		Window        = 0xF088,
 		Folder        = 0xE2C7,
+		Files         = 0xEA85,
 		Terminal      = 0xEB8E,
 		Timer         = 0xE425,
 		Schedule      = 0xE8B5,
@@ -143,6 +144,10 @@ namespace SxGui {
 		bool TreeNode(const std::string& label, bool isSelect, bool isLeaf, ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_None, int32_t column = 0);
 
 		void TreePop();
+
+		bool IsClicked();
+
+		bool IsDoubleClicked();
 
 		//=========================================================================================
 		// internal methods

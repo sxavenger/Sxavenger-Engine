@@ -98,8 +98,11 @@ void AssetEditor::ShowAssetWindow() {
 	ImVec2 context = ImGui::GetContentRegionAvail();
 
 	ImGui::BeginChild("## asset directory", { 160, context.y }, ImGuiChildFlags_ResizeX | ImGuiChildFlags_Borders);
-	ShowAssetDirectoryTable(kAssetsDirectory);
-	ShowAssetDirectoryTable(kPackagesDirectory);
+	if (SxGui::Hierarchy::Begin()) {
+		ShowAssetDirectoryTable(kAssetsDirectory);
+		ShowAssetDirectoryTable(kPackagesDirectory);
+		SxGui::Hierarchy::End();
+	}
 	ImGui::EndChild();
 
 	ImGui::SameLine();
@@ -165,33 +168,15 @@ void AssetEditor::ForEachDirectory(const std::filesystem::path& path, const std:
 
 void AssetEditor::ShowAssetDirectoryTable(const std::filesystem::path& path) {
 
-	bool isDirectory   = std::filesystem::is_directory(path);
-	std::u8string name = path.filename().generic_u8string();
-	bool isSelected    = selectedDirectory_.has_value() && selectedDirectory_.value() == path;
+	bool isDirectory = std::filesystem::is_directory(path);
+	bool isSelect    = selectedDirectory_.has_value() && selectedDirectory_.value() == path;
 
-	ImGuiTreeNodeFlags flags
-		= ImGuiTreeNodeFlags_OpenOnDoubleClick
-		| ImGuiTreeNodeFlags_OpenOnArrow
-		| ImGuiTreeNodeFlags_FramePadding
-		| ImGuiTreeNodeFlags_SpanAllColumns
-		| ImGuiTreeNodeFlags_DrawLinesToNodes;
+	SxGui::Icon icon = isDirectory ? SxGui::Icon::Folder : SxGui::Icon::Files;
+	std::string label = std::format("{} {}", icon, ConvertStr(path.filename()));
 
-	if (isSelected) {
-		flags |= ImGuiTreeNodeFlags_Selected;
-	}
+	bool isOpen = SxGui::Hierarchy::TreeNode(label.c_str(), isSelect, !isDirectory);
 
-	if (!isDirectory) {
-		flags |= ImGuiTreeNodeFlags_Leaf;
-		ImGui::Unindent();
-	}
-
-	bool isOpen = ImGui::TreeNodeEx(ConvertStr(path.filename()).c_str(), flags);
-
-	if (!isDirectory) {
-		ImGui::Indent();
-	}
-
-	if (ImGui::IsItemClicked() && isDirectory) {
+	if (SxGui::Hierarchy::IsClicked() && isDirectory) {
 		selectedDirectory_ = path;
 	}
 
@@ -203,7 +188,7 @@ void AssetEditor::ShowAssetDirectoryTable(const std::filesystem::path& path) {
 			);
 		}
 
-		ImGui::TreePop();
+		SxGui::Hierarchy::TreePop();
 	}
 }
 

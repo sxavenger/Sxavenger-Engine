@@ -543,6 +543,14 @@ void SxGui::Hierarchy::TreePop() {
 	ImGui::TreePop();
 }
 
+bool SxGui::Hierarchy::IsClicked() {
+	return ImGui::IsItemClicked();
+}
+
+bool SxGui::Hierarchy::IsDoubleClicked() {
+	return ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left);
+}
+
 void SxGui::Hierarchy::TreeNodeStoreStackData(ImGuiTreeNodeFlags flags, float x1) {
 	ImGuiContext& g = *GImGui;
 	ImGuiWindow* window = g.CurrentWindow;
