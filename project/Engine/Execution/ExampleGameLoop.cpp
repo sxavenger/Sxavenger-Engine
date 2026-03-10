@@ -129,12 +129,14 @@ void ExampleGameLoop::InitSystem() {
 		text->SetText(t);
 	}
 
-	/*{
+#ifndef _DEBUG //!< デバッグビルドでは、シーンのロードに時間がかかるため、ロードしない.
+	{
 		json data;
 		if (JsonHandler::LoadFromJson("assets/scene/sponza.scene", data)) {
 			sEntityBehaviourStorage->InputJson(data);
 		}
-	}*/
+	}
+#endif
 
 	for (size_t i = 0; i < cubes_.size(); ++i) {
 		cubes_[i] = std::make_unique<GameObject>();
