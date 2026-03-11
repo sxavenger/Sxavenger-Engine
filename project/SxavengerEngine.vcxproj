@@ -54,22 +54,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(ProjectDir)..\generated\outputs\Debug\</OutDir>
-    <IntDir>$(ProjectDir)..\generated\obj\SxavengerEngine\Debug\</IntDir>
+    <OutDir>$(ProjectDir)..\Generated\outputs\Debug\</OutDir>
+    <IntDir>$(ProjectDir)..\Generated\obj\SxavengerEngine\Debug\</IntDir>
     <TargetName>SxavengerEngine</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Develop|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\generated\outputs\Develop\</OutDir>
-    <IntDir>$(ProjectDir)..\generated\obj\SxavengerEngine\Develop\</IntDir>
+    <OutDir>$(ProjectDir)..\Generated\outputs\Develop\</OutDir>
+    <IntDir>$(ProjectDir)..\Generated\obj\SxavengerEngine\Develop\</IntDir>
     <TargetName>SxavengerEngine</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\generated\outputs\Release\</OutDir>
-    <IntDir>$(ProjectDir)..\generated\obj\SxavengerEngine\Release\</IntDir>
+    <OutDir>$(ProjectDir)..\Generated\outputs\Release\</OutDir>
+    <IntDir>$(ProjectDir)..\Generated\obj\SxavengerEngine\Release\</IntDir>
     <TargetName>SxavengerEngine</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
@@ -78,9 +78,8 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <DisableSpecificWarnings>4324;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;DEBUG;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\imguizmo;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\backends;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -110,9 +109,8 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <DisableSpecificWarnings>4324;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;NDEBUG;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\imguizmo;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\backends;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -144,9 +142,8 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <DisableSpecificWarnings>4324;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\imguizmo;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\backends;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -385,41 +382,6 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\System\Utility\StreamLogger.h" />
     <ClInclude Include="Engine\System\WinApp\WinApp.h" />
     <ClInclude Include="Engine\System\Window\WindowCollection.h" />
-    <ClInclude Include="Externals\meshoptimizer\meshoptimizer.h" />
-    <ClInclude Include="Externals\mono\include\mono\jit\jit.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\appdomain.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\assembly.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\attrdefs.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\blob.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\class.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\debug-helpers.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\debug-mono-symfile.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\environment.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\exception.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\image.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\loader.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\metadata.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\mono-config.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\mono-debug.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\mono-gc.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\object-forward.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\object.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\opcodes.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\profiler-events.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\profiler.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\reflection.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\row-indexes.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\sgen-bridge.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\threads.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\tokentype.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\verify.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-counters.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-dl-fallback.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-error.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-forward.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-jemalloc.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-logger.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-publib.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonHandler.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonSerializer.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -643,22 +605,6 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\System\Utility\StreamLogger.cpp" />
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
     <ClCompile Include="Engine\System\Window\WindowCollection.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\allocator.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\clusterizer.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\indexanalyzer.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\indexcodec.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\indexgenerator.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\overdrawoptimizer.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\partition.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\quantization.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\rasterizer.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\simplifier.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\spatialorder.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\stripifier.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\vcacheoptimizer.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\vertexcodec.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\vertexfilter.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\vfetchoptimizer.cpp" />
     <ClCompile Include="Externals\stb\Stb_include.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonHandler.cpp" />
     <ClCompile Include="Lib\Adapter\Time\LocalTimePoint.cpp" />
@@ -674,11 +620,14 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="externals\DirectXTex\DirectXTex_Desktop_2022_Win10.vcxproj">
+    <ProjectReference Include="Externals\DirectXTex\DirectXTex.vcxproj">
       <Project>{A90EE592-95C6-26E0-FECD-FF3BEAA4C1D0}</Project>
     </ProjectReference>
-    <ProjectReference Include="externals\imgui\imgui.vcxproj">
-      <Project>{0098A80F-6CAC-D0C0-352E-7420A101CDF1}</Project>
+    <ProjectReference Include="Externals\imgui\ImGui-Docking.vcxproj">
+      <Project>{0CE07B87-78A0-F7BD-41DB-403BAD5A3C9A}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Externals\meshoptimizer\meshoptimizer.vcxproj">
+      <Project>{75046AD2-E1C4-E508-AAFF-2E86167F2AE5}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

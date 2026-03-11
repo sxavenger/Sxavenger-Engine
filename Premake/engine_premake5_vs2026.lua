@@ -19,31 +19,236 @@ workspace "SxavengerEngine"
 	startproject "SxavengerEngine"
 
 	-- 出力先の設定
-	targetdir "%{wks.location}/../generated/outputs/%{cfg.buildcfg}/"         -- 出力先
-	objdir    "%{wks.location}/../generated/obj/%{prj.name}/%{cfg.buildcfg}/" -- 中間ファイル
+	objdir "%{wks.location}/../Generated/obj/%{prj.name}/%{cfg.buildcfg}/" -- 中間ファイル
 
-	--- 外部projectの登録 ---
-	-- DirectXTex
-	externalproject "DirectXTex"
-		location "externals/DirectXTex"
-		filename "DirectXTex_Desktop_2022_Win10"
-		kind "StaticLib"
-		language "C++"
+	filter "kind:ConsoleApp or kind:WindowedApp"
+		targetdir "%{wks.location}/../Generated/outputs/%{cfg.buildcfg}/" -- 出力先(ConsoleまたはWindowsApplicationの場合)
 
-		configmap {
-        	["Develop"] = "Release",
- 		}
+	filter "kind:StaticLib or kind:SharedLib"
+    	targetdir "%{wks.location}/../Generated/bin/%{prj.name}/%{cfg.buildcfg}/" -- 出力先(StaticLibの場合)
+
+-------------------------------------------------------------------------------------------
+-- [DirectXTex] project
+-------------------------------------------------------------------------------------------
+project "DirectXTex"
+	-- [DirectXTex](https://github.com/microsoft/DirectXTex.git)
+	-- DirectXTex_Desktop_2022_Win10.vcxprojを参照して作成.
+
+	-- 構成プロパティの修正(DevelopをReleaseと同等に)
+	removeconfigurations { "Develop" }
+    configmap { ["Develop"] = "Release" }
 	
-	-- imgui
-	externalproject "imgui"
-		location "externals/imgui"
-		filename "imgui"
-		kind "StaticLib"
-		language "C++"
+	-- フォルダ指定
+	location "Externals/DirectXTex"
+
+	-- visual studioの設定
+	toolset "v143"
+
+	-- projectの種類
+	kind "StaticLib"
+
+	-- 言語
+	language "c++"
+	cppdialect "c++20"
+
+	-- ファイルの追加
+	files {
+		"%{prj.location}/*.cpp",
+		"%{prj.location}/*.h",
+
+		-- "%{prj.location}/Shaders/**.hlsl",
+		-- "%{prj.location}/Shaders/**.cmd",
+	}
+
+	-- 追加include
+	includedirs {
+		"%{prj.location}",
+		"%{prj.location}/Shaders/Compiled",
+	}
+
+	-- ビルドオプション(共通)
+	warnings "High"
+	multiprocessorcompile "On" -- 複数コアのでの並列コアコンパイル
+	staticruntime "On"
+	floatingpoint "Fast"
+
+	buildoptions {
+		"/Zc:__cplusplus",
+    	"/Zc:twoPhase-",
+		"/utf-8",
+	}
+
+	-- define定義(共通)
+	defines {
+		"_UNICODE",
+		"UNICODE",
+		"WIN32",
+		"_LIB",
+		"_WIN32_WINNT=0x0A00",
+		"_CRT_STDIO_ARBITRARY_WIDE_SPECIFIERS"
+	}
+
+	-- ShaderCompile起動
+	prebuildcommands {
+        "{ECHO} Compiling shaders...",
+        "cd %{prj.location}/Shaders",
+        "CompileShaders.cmd"
+    }
+
+	cleancommands {
+        "del /Q %{prj.location}/Shaders/Compiled\\*.inc",
+        "del /Q %{prj.location}/Shaders/Compiled\\*.pdb"
+    }
+
+	--- 構成ごとの設定 ---
+	filter "configurations:Debug"
+		-- ビルドオプション
+			symbols "On"
+			fatalwarnings { "All" }
 		
-		configmap {
-        	["Develop"] = "Release",
- 		}
+	filter "configurations:Release"
+		-- ビルドオプション
+		optimize "On"
+
+-------------------------------------------------------------------------------------------
+-- [ImGui] project
+-------------------------------------------------------------------------------------------
+project "ImGui-Docking"
+	-- [ImGui](https://github.com/ocornut/imgui.git)
+	-- [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo.git)
+
+
+	-- 構成プロパティの修正(DevelopをReleaseと同等に)
+	removeconfigurations { "Develop" }
+    configmap { ["Develop"] = "Release" }
+	
+	-- フォルダ指定
+	location "Externals/imgui"
+
+	-- visual studioの設定
+	toolset "v143"
+
+	-- projectの種類
+	kind "StaticLib"
+
+	-- 言語
+	language "c++"
+	cppdialect "c++20"
+
+	-- ファイルの追加
+	files {
+		"%{prj.location}/*.cpp",
+		"%{prj.location}/*.h",
+		
+		-- Win32, DirectX12を使用
+		"%{prj.location}/Backends/imgui_impl_dx12.cpp",
+		"%{prj.location}/Backends/imgui_impl_dx12.h",
+		"%{prj.location}/Backends/imgui_impl_win32.cpp",
+		"%{prj.location}/Backends/imgui_impl_win32.h",
+	}
+
+	-- 追加include
+	includedirs {
+		"%{prj.location}",
+		"%{prj.location}/Backends",
+	}
+
+	-- ビルドオプション(共通)
+	warnings "High"
+	multiprocessorcompile "On" -- 複数コアのでの並列コアコンパイル
+	staticruntime "On"
+	buildoptions { "/utf-8" }
+
+	--- 構成ごとの設定 ---
+	filter "configurations:Debug"
+		-- ビルドオプション
+			symbols "On"
+			fatalwarnings { "All" }
+		
+	filter "configurations:Release"
+		-- ビルドオプション
+		optimize "On"
+
+-------------------------------------------------------------------------------------------
+-- [meshoptimizer] project
+-------------------------------------------------------------------------------------------
+project "meshoptimizer"
+	-- [meshoptimizer](https://github.com/zeux/meshoptimizer.git)
+
+	-- 構成プロパティの修正(DevelopをReleaseと同等に)
+	removeconfigurations { "Develop" }
+    configmap { ["Develop"] = "Release" }
+	
+	-- フォルダ指定
+	location "Externals/meshoptimizer"
+
+	-- visual studioの設定
+	toolset "v143"
+
+	-- projectの種類
+	kind "StaticLib"
+
+	-- 言語
+	language "c++"
+	cppdialect "c++20"
+
+	-- ファイルの追加
+	files {
+		"%{prj.location}/**.cpp",
+		"%{prj.location}/**.h",
+	}
+
+	-- 追加include
+	includedirs {
+		"%{prj.location}",
+	}
+
+	-- ビルドオプション(共通)
+	warnings "High"
+	multiprocessorcompile "On" -- 複数コアのでの並列コアコンパイル
+	staticruntime "On"
+	buildoptions { "/utf-8" }
+
+	--- 構成ごとの設定 ---
+	filter "configurations:Debug"
+		-- ビルドオプション
+			symbols "On"
+			fatalwarnings { "All" }
+		
+	filter "configurations:Release"
+		-- ビルドオプション
+		optimize "On"
+
+-------------------------------------------------------------------------------------------
+-- Script c# project
+-------------------------------------------------------------------------------------------
+project "Script"
+
+	-- フォルダ指定
+	location "Assets/script"
+
+	-- projectの種類
+	kind "SharedLib"
+
+	-- 言語
+    language "C#"
+	architecture "x64"
+
+	-- 使用する .NET バージョン
+    dotnetframework "net4.8"
+
+    files {
+        "%{prj.location}/**.cs"
+    }
+
+    filter "configurations:Debug"
+        optimize "Off"
+		
+	filter "configurations:Develop"
+        optimize "Off"
+
+    filter "configurations:Release"
+        optimize "On"
 
 -------------------------------------------------------------------------------------------
 -- main c++ project
@@ -67,17 +272,11 @@ project "SxavengerEngine"
 		
 		-- TODO: 専用のsolutionを作成する
 		"%{prj.location}/Externals/stb/Stb_include.cpp",
-		"%{prj.location}/Externals/meshoptimizer/*.h",
-		"%{prj.location}/Externals/meshoptimizer/*.cpp",
-		"%{prj.location}/Externals/mono/include/**.cpp",
-		"%{prj.location}/Externals/mono/include/**.h",
 
 		"%{prj.location}/Lib/**.h",
 		"%{prj.location}/Lib/**.cpp",
 		"%{prj.location}/Engine/**.h",
 		"%{prj.location}/Engine/**.cpp",
-		"%{prj.location}/Demo/**.h",
-		"%{prj.location}/Demo/**.cpp",
 	}
 
 	-- ファイルの除外(!xxx)
@@ -102,7 +301,7 @@ project "SxavengerEngine"
     	"%{prj.location}/Externals/nlohmann", -- [nlohmann json](https://github.com/nlohmann/json.git)
     	"%{prj.location}/Externals/meshoptimizer", -- [meshoptimizer](https://github.com/zeux/meshoptimizer.git)
     	"%{prj.location}/Externals/imgui", -- [ImGui](https://github.com/ocornut/imgui.git)
-    	"%{prj.location}/Externals/imgui/imguizmo", -- [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo.git)
+		"%{prj.location}/Externals/imgui/backends",
     	"%{prj.location}/Externals/DirectXTex", -- [DirectXTex](https://github.com/microsoft/DirectXTex.git)
     	"%{prj.location}/Externals/assimp/include", -- [assimp](https://github.com/assimp/assimp.git)
     	"%{prj.location}/Externals/magic_enum", -- [magic_enum](https://github.com/Neargye/magic_enum.git)
@@ -111,32 +310,38 @@ project "SxavengerEngine"
 	}
 
 	-- 依存プロジェクト
-	dependson { "DirectXTex", "imgui", "Script" }
-	links     { "DirectXTex", "imgui" }
+	dependson {
+		"DirectXTex",
+		"ImGui-Docking",
+		"meshoptimizer",
+		"Script"
+	}
+
+	links {
+		"DirectXTex",
+		"ImGui-Docking",
+		"meshoptimizer",
+	}
 
 	-- ビルドオプション(共通)
 	warnings "High"
-	buildoptions { "/utf-8" }
 	multiprocessorcompile "On" -- 複数コアのでの並列コアコンパイル
 	staticruntime "On"
+	buildoptions { "/utf-8" }
 	
 	-- define定義(共通)
 	defines { '_PROFILE="$(Configuration)"', "NOMINMAX" }
 
-	-- 警告の抑制
-	disablewarnings { "4324" }
-
 	-- リンカー設定(共通)
 	linkoptions {
 		"/WX",
-		"/IGNORE:4099",
-		"/IGNORE:4099",
+		"/IGNORE:4099", -- .pdb関係のエラー
 	}
 
 	-- リンカー設定(共通)
-		libdirs {
-			"%{prj.location}/Externals/mono/lib"
-		}
+	libdirs {
+		"%{prj.location}/Externals/mono/lib"
+	}
 
 	-- 依存ファイル(共通)
 	links {
@@ -161,7 +366,7 @@ project "SxavengerEngine"
 		fatalwarnings { "All" }
 		
 		-- define定義
-		defines { "DEBUG", "_DEVELOPMENT" }
+		defines { "_DEVELOPMENT" }
 
 		-- リンカー設定
 		libdirs {
@@ -181,7 +386,7 @@ project "SxavengerEngine"
 		fatalwarnings { "All" }
 		
 		-- define定義
-		defines { "NDEBUG", "_DEVELOPMENT" }
+		defines { "_DEVELOPMENT" }
 
 		-- リンカー設定
 		libdirs {
@@ -198,9 +403,6 @@ project "SxavengerEngine"
 	filter "configurations:Release"
 		-- ビルドオプション
 		optimize "On"
-		
-		-- define定義
-		defines { "NDEBUG" }
 
 		-- リンカー設定
 		libdirs {
@@ -212,34 +414,3 @@ project "SxavengerEngine"
 			"assimp-vc145-mt",
 			"zlibstatic"
 		}
-
--------------------------------------------------------------------------------------------
--- script c# project
--------------------------------------------------------------------------------------------
-project "Script"
-
-	-- フォルダ指定
-	location "Assets/script"
-
-	-- projectの種類
-	kind "SharedLib"
-
-	-- 言語
-    language "C#"
-	architecture "x64"
-
-	-- 使用する .NET バージョン
-    dotnetframework "net4.8"
-
-    files {
-        "%{prj.location}/**.cs"
-    }
-
-    filter "configurations:Debug"
-        optimize "Off"
-
-	filter "configurations:Develop"
-        optimize "Off"
-
-    filter "configurations:Release"
-        optimize "On"
