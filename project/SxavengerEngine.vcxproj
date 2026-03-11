@@ -382,41 +382,6 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\System\Utility\StreamLogger.h" />
     <ClInclude Include="Engine\System\WinApp\WinApp.h" />
     <ClInclude Include="Engine\System\Window\WindowCollection.h" />
-    <ClInclude Include="Externals\meshoptimizer\meshoptimizer.h" />
-    <ClInclude Include="Externals\mono\include\mono\jit\jit.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\appdomain.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\assembly.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\attrdefs.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\blob.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\class.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\debug-helpers.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\debug-mono-symfile.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\environment.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\exception.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\image.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\loader.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\metadata.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\mono-config.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\mono-debug.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\mono-gc.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\object-forward.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\object.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\opcodes.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\profiler-events.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\profiler.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\reflection.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\row-indexes.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\sgen-bridge.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\threads.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\tokentype.h" />
-    <ClInclude Include="Externals\mono\include\mono\metadata\verify.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-counters.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-dl-fallback.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-error.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-forward.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-jemalloc.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-logger.h" />
-    <ClInclude Include="Externals\mono\include\mono\utils\mono-publib.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonHandler.h" />
     <ClInclude Include="Lib\Adapter\Json\JsonSerializer.h" />
     <ClInclude Include="Lib\Adapter\Random\Random.h" />
@@ -640,22 +605,6 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\System\Utility\StreamLogger.cpp" />
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />
     <ClCompile Include="Engine\System\Window\WindowCollection.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\allocator.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\clusterizer.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\indexanalyzer.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\indexcodec.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\indexgenerator.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\overdrawoptimizer.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\partition.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\quantization.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\rasterizer.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\simplifier.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\spatialorder.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\stripifier.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\vcacheoptimizer.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\vertexcodec.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\vertexfilter.cpp" />
-    <ClCompile Include="Externals\meshoptimizer\vfetchoptimizer.cpp" />
     <ClCompile Include="Externals\stb\Stb_include.cpp" />
     <ClCompile Include="Lib\Adapter\Json\JsonHandler.cpp" />
     <ClCompile Include="Lib\Adapter\Time\LocalTimePoint.cpp" />
@@ -676,6 +625,9 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     </ProjectReference>
     <ProjectReference Include="Externals\imgui\ImGui-Docking.vcxproj">
       <Project>{0CE07B87-78A0-F7BD-41DB-403BAD5A3C9A}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Externals\meshoptimizer\meshoptimizer.vcxproj">
+      <Project>{75046AD2-E1C4-E508-AAFF-2E86167F2AE5}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

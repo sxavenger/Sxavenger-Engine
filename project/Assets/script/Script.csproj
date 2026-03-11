@@ -3,7 +3,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <TargetFramework>net4.8</TargetFramework>
-    <Configurations>Debug;Release</Configurations>
+    <Configurations>Debug;Develop;Release</Configurations>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
@@ -13,6 +13,17 @@
     <Optimize>false</Optimize>
     <OutputPath>..\..\..\Generated\bin\Script\Debug\</OutputPath>
     <IntermediateOutputPath>..\..\..\Generated\obj\Script\Debug\</IntermediateOutputPath>
+    <DefineConstants></DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Develop|x64' ">
+    <PlatformTarget>x64</PlatformTarget>
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\..\Generated\bin\Script\Develop\</OutputPath>
+    <IntermediateOutputPath>..\..\..\Generated\obj\Script\Develop\</IntermediateOutputPath>
     <DefineConstants></DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -30,6 +41,8 @@
   </PropertyGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
   </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Develop|x64' ">
+  </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
   </ItemGroup>
   <ItemGroup>
@@ -38,7 +51,5 @@
     <Compile Include="Mathematic\Vector4.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="Transform\QuaternionTransform.cs" />
-    <Compile Include="obj\Debug\net4.8\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
-    <Compile Include="obj\Debug\net4.8\Script.AssemblyInfo.cs" />
   </ItemGroup>
 </Project>

@@ -170,16 +170,62 @@ project "ImGui-Docking"
 		optimize "On"
 
 -------------------------------------------------------------------------------------------
+-- [meshoptimizer] project
+-------------------------------------------------------------------------------------------
+project "meshoptimizer"
+	-- [meshoptimizer](https://github.com/zeux/meshoptimizer.git)
+
+	-- 構成プロパティの修正(DevelopをReleaseと同等に)
+	removeconfigurations { "Develop" }
+    configmap { ["Develop"] = "Release" }
+	
+	-- フォルダ指定
+	location "Externals/meshoptimizer"
+
+	-- visual studioの設定
+	toolset "v143"
+
+	-- projectの種類
+	kind "StaticLib"
+
+	-- 言語
+	language "c++"
+	cppdialect "c++20"
+
+	-- ファイルの追加
+	files {
+		"%{prj.location}/**.cpp",
+		"%{prj.location}/**.h",
+	}
+
+	-- 追加include
+	includedirs {
+		"%{prj.location}",
+	}
+
+	-- ビルドオプション(共通)
+	warnings "High"
+	multiprocessorcompile "On" -- 複数コアのでの並列コアコンパイル
+	staticruntime "On"
+	buildoptions { "/utf-8" }
+
+	--- 構成ごとの設定 ---
+	filter "configurations:Debug"
+		-- ビルドオプション
+			symbols "On"
+			fatalwarnings { "All" }
+		
+	filter "configurations:Release"
+		-- ビルドオプション
+		optimize "On"
+
+-------------------------------------------------------------------------------------------
 -- Script c# project
 -------------------------------------------------------------------------------------------
 project "Script"
 
 	-- フォルダ指定
 	location "Assets/script"
-
-	-- 構成プロパティの修正(DevelopをDebugと同等に)
-	removeconfigurations { "Develop" }
-    configmap { ["Develop"] = "Debug" }
 
 	-- projectの種類
 	kind "SharedLib"
@@ -196,6 +242,9 @@ project "Script"
     }
 
     filter "configurations:Debug"
+        optimize "Off"
+		
+	filter "configurations:Develop"
         optimize "Off"
 
     filter "configurations:Release"
@@ -223,10 +272,6 @@ project "SxavengerEngine"
 		
 		-- TODO: 専用のsolutionを作成する
 		"%{prj.location}/Externals/stb/Stb_include.cpp",
-		"%{prj.location}/Externals/meshoptimizer/*.h",
-		"%{prj.location}/Externals/meshoptimizer/*.cpp",
-		"%{prj.location}/Externals/mono/include/**.cpp",
-		"%{prj.location}/Externals/mono/include/**.h",
 
 		"%{prj.location}/Lib/**.h",
 		"%{prj.location}/Lib/**.cpp",
@@ -268,12 +313,14 @@ project "SxavengerEngine"
 	dependson {
 		"DirectXTex",
 		"ImGui-Docking",
+		"meshoptimizer",
 		"Script"
 	}
 
 	links {
 		"DirectXTex",
-		"ImGui-Docking"
+		"ImGui-Docking",
+		"meshoptimizer",
 	}
 
 	-- ビルドオプション(共通)
