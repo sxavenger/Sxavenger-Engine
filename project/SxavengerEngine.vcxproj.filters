@@ -1,21 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Demo">
-      <UniqueIdentifier>{6A15847C-564C-850D-FF38-6B10EB4E010F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Demo\Camera">
-      <UniqueIdentifier>{A22E10BF-0EE4-88B4-97D8-828B038D7FB8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Demo\Execution">
-      <UniqueIdentifier>{6D904BF5-595E-3FFB-42F2-AF212E5F1B60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Demo\Interact">
-      <UniqueIdentifier>{D39B6A46-3F5C-E67C-0897-2FFA74162B59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Demo\Player">
-      <UniqueIdentifier>{460B24DE-B2C0-9CD3-3BB5-96AAA76993D7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{DBC7D3B0-C769-FE86-B024-12DB9C6585D7}</UniqueIdentifier>
     </Filter>
@@ -621,6 +606,9 @@
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreReflection.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreRestir.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
@@ -651,6 +639,9 @@
     <ClInclude Include="Engine\Render\GBuffer\FProbeGBuffer.h">
       <Filter>Engine\Render\GBuffer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\GBuffer\FReflectionGBuffer.h">
+      <Filter>Engine\Render\GBuffer</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Render\GBuffer\FTransparentGBuffer.h">
       <Filter>Engine\Render\GBuffer</Filter>
     </ClInclude>
@@ -676,6 +667,9 @@
       <Filter>Engine\Render\Pass</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassPostProcess.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassReflection.h">
       <Filter>Engine\Render\Pass</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassTonemap.h">
@@ -1074,9 +1068,6 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Core\FRenderCoreReflection.h" />
-    <ClInclude Include="Engine\Render\GBuffer\FReflectionGBuffer.h" />
-    <ClInclude Include="Engine\Render\Pass\FRenderPassReflection.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1409,6 +1400,9 @@
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreReflection.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreRestir.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
@@ -1439,6 +1433,9 @@
     <ClCompile Include="Engine\Render\GBuffer\FProbeGBuffer.cpp">
       <Filter>Engine\Render\GBuffer</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Render\GBuffer\FReflectionGBuffer.cpp">
+      <Filter>Engine\Render\GBuffer</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Render\GBuffer\FTransparentGBuffer.cpp">
       <Filter>Engine\Render\GBuffer</Filter>
     </ClCompile>
@@ -1464,6 +1461,9 @@
       <Filter>Engine\Render\Pass</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FRenderPassPostProcess.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassReflection.cpp">
       <Filter>Engine\Render\Pass</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FRenderPassTonemap.cpp">
@@ -1725,8 +1725,5 @@
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCoreReflection.cpp" />
-    <ClCompile Include="Engine\Render\GBuffer\FReflectionGBuffer.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassReflection.cpp" />
   </ItemGroup>
 </Project>
