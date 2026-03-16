@@ -59,15 +59,28 @@ bool GeometricSimilarity(DeferredSurface s1, DeferredSurface s2) {
 		return false;
 	}
 
-	//if (abs(s1.depth - s2.depth) > 0.05 * s1.depth) {
+	//if (abs(s1.depth - s2.depth) >= 0.1 * s1.depth) {
 	//	return false;
 	//}
 
-	if (s1.roughness != s2.roughness || s1.metallic != s2.metallic) {
-		return false;
-	}
+	//if (s1.roughness != s2.roughness || s1.metallic != s2.metallic) {
+	//	return false;
+	//}
+
+	//float3 dp = s2.position - s1.position;
+	//float planeDist = abs(dot(s1.normal, dp));
+
+	//return planeDist < 0.01 * length(dp);
 
 	return true;
+}
+
+bool PlaneTest(DeferredSurface s1, DeferredSurface s2) {
+	float3 dp = s2.position - s1.position;
+
+	float planeDist = abs(dot(s1.normal, dp));
+
+	return planeDist < 0.01 * length(dp);
 }
 
 float ComputeJacobian(Reservoir rn, DeferredSurface q, DeferredSurface n) {
@@ -99,7 +112,7 @@ bool IsVisible(float3 p1, float3 p2) {
 	desc.Origin    = p1;
 	desc.Direction = normalize(p2 - p1);
 	desc.TMin      = kTMin;
-	desc.TMax      = length(p2 - p1) - kTMin;
+	desc.TMax      = length(p2 - p1);
 	
 #ifdef _SUPPORT_INLINE_RAYTRACING
 		RayQuery<0> q;
@@ -143,7 +156,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	Random random;
 	random.seed = seed * uint3(pixel + 1, 1);
 
-	uint iteration = (rs.m < kSpatialMaxMCount / 2) ? 9 : 3;
+	uint iteration = 1;
 	//!< 初期段階では多くの近傍を探索し, ある程度サンプルが集まったら少ない近傍で更新
 
 	//!< mergeされた隣接ピクセルのindexを保存する配列
@@ -175,7 +188,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		float p_hat = dot(rn.sample.lo, ACES::AP1_RGB2Y);
 		float p_q   = j > 0.0f ? p_hat * rcp(j) : 0.0f;
 
-		if (!IsVisible(rs.sample.xv, rn.sample.xs)) {
+		if (!IsVisible(surface.position, rn.sample.xs)) {
 			p_q = 0.0f;
 		}
 

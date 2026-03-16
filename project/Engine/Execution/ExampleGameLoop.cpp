@@ -82,7 +82,6 @@ void ExampleGameLoop::InitSystem() {
 		exposure->GetParameter().compensation    = -5.0f;
 
 		layer->AddPostProcess<PostProcessRadialBlur>();
-		layer->AddPostProcess<PostProcessBloom>();
 
 		auto collider = (*camera_)->AddComponent<ColliderComponent>();
 		collider->SetTag("camera");
@@ -189,7 +188,7 @@ void ExampleGameLoop::UpdateSystem() {
 	// Update
 	//-----------------------------------------------------------------------------------------
 
-	//camera_->Update();
+	camera_->Update();
 
 	auto keyboard = System::GetKeyboardInput();
 
