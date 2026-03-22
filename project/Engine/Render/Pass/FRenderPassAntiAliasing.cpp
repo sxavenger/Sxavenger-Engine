@@ -107,6 +107,7 @@ void FRenderPassAntiAliasing::PassAntiAliasingFXAA(const DirectXQueueContext* co
 void FRenderPassAntiAliasing::PassAntiAliasingSMAA(const DirectXQueueContext* context, const FRenderConfig& config) {
 
 	FProcessBuffer* process = config.buffer->GetProcess(); //!< Process Bufferの確保
+	FMainBuffer* main       = config.buffer->GetBuffer<FMainBuffer>();
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreProcess>();
 
@@ -162,8 +163,9 @@ void FRenderPassAntiAliasing::PassAntiAliasingSMAA(const DirectXQueueContext* co
 		process->GetCurrentTexture().TransitionUnorderedAccess(context);
 
 		core->SetPipeline(FRenderCoreProcess::CompositeProcess::SMAA_NeighborhoodBlending, context);
+
 		//!< Bufferの設定
-		desc.SetHandle("gScene",  process->GetPreviousTexture(2).GetGPUHandleSRV());
+		desc.SetHandle("gScene",  main->GetBuffer(FMainBuffer::Layout::Scene).GetGPUHandleSRV());
 		desc.SetHandle("gBlend",  process->GetPreviousTexture().GetGPUHandleSRV());
 		desc.SetHandle("gOutput", process->GetCurrentTexture().GetGPUHandleUAV());
 

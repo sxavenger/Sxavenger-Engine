@@ -26,6 +26,11 @@ void FRenderPassForwardTransparent::Render(const DirectXQueueContext* context, c
 		return; //!< configが不適格
 	}
 
+	if (!config.buffer->EnsureBuffer<FMainBuffer>()) {
+		RuntimeLogger::LogError("[FRenderPass - Forward Transparent]", "MainBuffer is requires.");
+		return; //!< MainBufferが確保できない場合は処理しない
+	}
+
 	config.buffer->EnsureBuffer<FTransparentBuffer>(); //!< Bufferの確保
 	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreGeometry>(); //!< RenderCoreの確保
 
@@ -197,7 +202,7 @@ void FRenderPassForwardTransparent::TransitionTransparentPass(const DirectXQueue
 
 	main->GetBuffer(FMainBuffer::Layout::Scene).TransitionUnorderedAccess(context);
 
-	{ //!< Transparent Transition Pass
+	{ //!< Transition Transparent Pass
 
 		//!< parameterの設定
 		DxObject::BindBufferDesc desc = {};

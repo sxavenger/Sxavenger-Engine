@@ -859,6 +859,7 @@
     <ClInclude Include="Engine\Render\FMainRender.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliasing.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassPostProcess.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassLightingComposite.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1382,5 +1383,6 @@
     <ClCompile Include="Engine\Render\FMainRender.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliasing.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassPostProcess.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassLightingComposite.cpp" />
   </ItemGroup>
 </Project>

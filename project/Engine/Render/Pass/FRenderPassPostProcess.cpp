@@ -30,13 +30,13 @@ void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const FR
 	}
 
 	if (!config.buffer->EnsureBuffer<FMainBuffer>()) {
-		RuntimeLogger::LogError("[FRenderPassPostProcess]", "MainBuffer is requires.");
+		RuntimeLogger::LogError("[FRenderPass - Post-Process]", "MainBuffer is requires.");
 		return; //!< MainBufferが確保できない場合は処理しない
 	}
 
 	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreProcess>(); //!< RenderCoreの確保
 
-	FBaseRenderPass::BeginRenderPass(context, "Post Process", config);
+	FBaseRenderPass::BeginRenderPass(context, "Post-Process", config);
 
 	{ //!< Post Process Pass
 
