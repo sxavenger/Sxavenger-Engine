@@ -50,7 +50,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	std::array<std::optional<ContentObserver<ContentBlob>>, static_cast<uint8_t>(DxObject::GraphicsShaderType::ps) + 1> contents_;
+	std::array<std::optional<ContentObserver<ContentBlob>>, static_cast<uint8_t>(DxObject::GraphicsShaderType::Pixel) + 1> contents_;
 
 	//=========================================================================================
 	// protected methods

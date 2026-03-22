@@ -29,7 +29,7 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispathThreadId.xy;
 	
-	if (CheckOverTexture(index)) {
+	if (CheckOverDimension(index)) {
 		return;
 	}
 

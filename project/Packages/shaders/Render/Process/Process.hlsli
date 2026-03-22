@@ -17,14 +17,14 @@
 //=========================================================================================
 
 cbuffer Dimension : register(b10) {
-	uint2 size;
+	uint2 dimension;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // common methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-bool CheckOverTexture(uint2 index) {
-	return any(index >= size);
+bool CheckOverDimension(uint2 index) {
+	return any(index >= dimension);
 }
 

@@ -4,6 +4,11 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* render
+#include "../Buffer/FMainBuffer.h"
+#include "../Core/FRenderCore.h"
+#include "../Core/FRenderCoreProcess.h"
+
 //* engine
 #include <Engine/System/Utility/RuntimeLogger.h>
 #include <Engine/Components/Component/PostProcessLayer/PostProcessLayerComponent.h>
@@ -14,26 +19,68 @@ SXAVENGER_ENGINE_USING
 // FRenderPassPostProcess class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const Config& config) {
+void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	if (!config.option.Test(FBaseRenderPass::Config::Option::PostProcess)) {
-		return;
+	if (!config.option.Test(FRenderConfig::OptionFlag::PostProcess)) {
+		return; //!< PostProcessが無効な場合は処理しない
 	}
 
-	if (config.CheckStatus(FBaseRenderPass::Config::Status::Geometry_Warning)) {
-		return;
+	if (config.HasIssue(FRenderConfig::IssueFlag::Warning_Geometry)) {
+		return; //!< Geometryに問題がある場合は処理しない
 	}
 
-	context->BeginEvent(L"RenderPass - Post Process");
-	System::BeginRecordGpu(std::format("[{}] RenderPass - Post Process", magic_enum::enum_name(config.tag)));
+	if (!config.buffer->EnsureBuffer<FMainBuffer>()) {
+		RuntimeLogger::LogError("[FRenderPassPostProcess]", "MainBuffer is requires.");
+		return; //!< MainBufferが確保できない場合は処理しない
+	}
 
-	config.buffer->BeginPostProcess(context);
+	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreProcess>(); //!< RenderCoreの確保
+
+	FBaseRenderPass::BeginRenderPass(context, "Post Process", config);
+
+	{ //!< Post Process Pass
+
+		BeginPostProcessPass(context, config.buffer);
+
+		PostProcessGlobal(context, config);
+
+		PostProcessVolume(context, config);
+
+		PostProcessLocal(context, config);
+
+		EndPostProcessPass(context, config.buffer);
+	}
+
+	FBaseRenderPass::EndRenderPass(context);
+
+}
+
+void FRenderPassPostProcess::BeginPostProcessPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	FMainBuffer* main       = buffer->GetBuffer<FMainBuffer>();
+	FProcessBuffer* process = buffer->GetProcess();
+
+	process->Import(context, &main->GetBuffer(FMainBuffer::Layout::Scene));
+	//!< Scene BufferをProcess処理用に使用状態にする.
+
+}
+
+void FRenderPassPostProcess::EndPostProcessPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	FMainBuffer* main       = buffer->GetBuffer<FMainBuffer>();
+	FProcessBuffer* process = buffer->GetProcess();
+
+	process->Export(context, &main->GetBuffer(FMainBuffer::Layout::Scene));
+	//!< Process処理が完了したScene BufferをScene Bufferに戻す.
+}
+
+void FRenderPassPostProcess::PostProcessGlobal(const DirectXQueueContext* context, const FRenderConfig& config) {
 
 	BasePostProcess::ProcessInfo info = {};
 	info.buffer = config.buffer;
 	info.camera = config.camera;
+	info.weight = 1.0f;
 
-	//!< Global PostProcessの処理
 	sComponentStorage->ForEachActive<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
 		if (component->GetTag() != PostProcessLayerComponent::Tag::Global) {
 			return; //!< Global以外のPostProcessLayerComponentは処理しない
@@ -42,40 +89,48 @@ void FRenderPassPostProcess::Render(const DirectXQueueContext* context, const Co
 		component->Process(context, info);
 	});
 
-	// Volume PostProcessの処理
+}
+
+void FRenderPassPostProcess::PostProcessVolume(const DirectXQueueContext* context, const FRenderConfig& config) {
+
+	BasePostProcess::ProcessInfo info = {};
+	info.buffer = config.buffer;
+	info.camera = config.camera;
+
 	sComponentStorage->ForEachActive<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
 		if (component->GetTag() != PostProcessLayerComponent::Tag::Volume) {
-			return; //!< Global以外のPostProcessLayerComponentは処理しない
+			return; //!< Volume以外のPostProcessLayerComponentは処理しない
 		}
 
 		auto transform = component->GetTransform();
-
 		if (transform == nullptr) {
 			RuntimeLogger::LogWarning("[FRenderPassPostProcess]", "PostProcessLayerComponent [Volume] has no transform.");
 			return; //!< Transformがない場合は処理しない
 		}
 
+		//!< Volume内の重みを計算する
 		BasePostProcess::ProcessInfo parameter = info;
 		parameter.weight = component->CalculateVolumeWeight(config.camera->GetPosition());
-
-		if (parameter.weight <= 0.0f) {
+		
+		if (info.weight <= 0.0f) {
 			return; //!< 重みが0以下の場合は処理しない
 		}
 
-		component->Process(context, parameter);
+		component->Process(context, info);
 	});
 
-	//!< Local Post Processの処理
+}
+
+void FRenderPassPostProcess::PostProcessLocal(const DirectXQueueContext* context, const FRenderConfig& config) {
+
+	BasePostProcess::ProcessInfo info = {};
+	info.buffer = config.buffer;
+	info.camera = config.camera;
+
 	if (auto component = config.camera->GetBehaviour()->GetComponent<PostProcessLayerComponent>()) {
 		if (component->GetTag() == PostProcessLayerComponent::Tag::Local) {
 			component->Process(context, info);
 		}
 	}
-
-
-	config.buffer->EndPostProcess(context);
-
-	System::EndRecordGpu();
-	context->EndEvent();
 
 }

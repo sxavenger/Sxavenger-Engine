@@ -5,8 +5,10 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Utility/Convert.h>
 #include <Engine/System/Utility/StreamLogger.h>
+
+//* lib
+#include <Lib/Adapter/String/EncodedString.h>
 
 //* external
 #include <magic_enum.hpp>
@@ -77,7 +79,7 @@ bool FeatureLevelExecution::CheckAdapter() {
 		}
 
 		if (!(desc.Flags & DXGI_ADAPTER_FLAG3_SOFTWARE)) {
-			StreamLogger::Log(std::format("[FeatureLevelExecution] >> [IDXGIAdapter4] Adapter Name: {}", ToString(desc.Description)));
+			StreamLogger::Log(std::format("[FeatureLevelExecution] >> [IDXGIAdapter4] Adapter Name: {}", EncodedString::Convert(desc.Description)));
 			return true;
 		}
 	}

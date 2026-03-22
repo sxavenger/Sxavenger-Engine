@@ -54,7 +54,7 @@ public:
 
 	//* asset option *//
 
-	void BindIABuffer(const DirectXQueueContext* context) const;
+	void BindInputAssembler(const DirectXQueueContext* context) const;
 
 	void DrawCall(const DirectXQueueContext* context, UINT instanceCount = 1) const;
 

@@ -118,7 +118,7 @@ public:
 
 	//* option *//
 
-	void BindIABuffer(const DirectXQueueContext* context) const;
+	void BindInputAssembler(const DirectXQueueContext* context) const;
 
 	void DrawCall(const DirectXQueueContext* context, uint32_t instanceCount = 1) const;
 

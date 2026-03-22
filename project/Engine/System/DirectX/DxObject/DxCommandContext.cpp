@@ -42,9 +42,7 @@ void CommandContext::SetName(const std::wstring& name) const {
 }
 
 void CommandContext::TransitionAllocator() {
-
 	Close();
-
 	Signal();
 
 	uint32_t nextIndex = (currentIndex_ + 1) % allocatorCount_;
@@ -53,11 +51,8 @@ void CommandContext::TransitionAllocator() {
 }
 
 void CommandContext::ExecuteAllAllocators() {
-
 	Close();
-
 	Signal();
-
 	Reset(currentIndex_);
 }
 
@@ -71,6 +66,14 @@ void CommandContext::TransitionResourceState(ID3D12Resource* resource, D3D12_RES
 	barrier.Transition.StateAfter  = after;
 
 	commandList_->ResourceBarrier(1, &barrier);
+}
+
+void CommandContext::ResourceBarrier(const std::vector<D3D12_RESOURCE_BARRIER>& barriers) {
+	if (barriers.empty()) {
+		return; //!< バリアがない場合は何もしない
+	}
+
+	commandList_->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 }
 
 void CommandContext::CreateCommandAllocator(ID3D12Device* device, D3D12_COMMAND_LIST_TYPE type) {
@@ -149,7 +152,7 @@ void CommandContext::WaitGPU(uint32_t index) {
 	uint64_t fenceValue = allocatorFenceValues_[index];
 
 	if (fence_->GetCompletedValue() < fenceValue) {
-		// 指定したSiganlにたどり着いていないので, たどり着くまで待つようにイベントを設定
+		// 指定したSignalにたどり着いていないので, たどり着くまで待つようにイベントを設定
 		fence_->SetEventOnCompletion(fenceValue, fenceEvent_);
 		// イベントを待機
 		WaitForSingleObject(fenceEvent_, INFINITE);

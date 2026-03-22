@@ -28,7 +28,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispatchThreadId.xy;
 	
-	if (CheckOverTexture(index)) {
+	if (CheckOverDimension(index)) {
 		return; //!< texture size over
 	}
 

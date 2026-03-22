@@ -44,11 +44,11 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispathThreadId.xy;
 
-	if (CheckOverTexture(index.xy)) {
+	if (CheckOverDimension(index.xy)) {
 		return;
 	}
 
-	float2 uv = float2(index) / size; // [0.0 ~ 1.0]
+	float2 uv = float2(index) / dimension; // [0.0 ~ 1.0]
 
 	float2 velocity = -gVelocity.Load(uint3(index, 0)).xy;
 	velocity *= 0.5f;  //!< uvの範囲に統一

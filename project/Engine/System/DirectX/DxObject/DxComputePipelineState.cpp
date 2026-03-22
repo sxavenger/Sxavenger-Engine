@@ -21,7 +21,7 @@ void ComputePipelineState::SetBlob(const ShaderBlob& blob) {
 
 void ComputePipelineState::CreateBlob(const std::filesystem::path& filepath) {
 	std::unique_ptr<ShaderBlob> blob = std::make_unique<ShaderBlob>();
-	blob->Create(filepath, CompileProfile::cs);
+	blob->Create(filepath, CompileProfile::Compute);
 
 	SetBlob(*blob.get());
 }
@@ -94,7 +94,7 @@ void ReflectionComputePipelineState::ReflectionPipeline(Device* device, const Sa
 }
 
 
-void ReflectionComputePipelineState::BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc) {
+void ReflectionComputePipelineState::BindComputeBuffer(const CommandContext* context, const BindBufferDesc& desc) const {
 	table_.BindComputeBuffer(context, desc);
 }
 

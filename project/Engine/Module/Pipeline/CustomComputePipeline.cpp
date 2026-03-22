@@ -18,7 +18,7 @@ void BaseCustomComputePipeline::SetContent(const std::shared_ptr<ContentBlob>& b
 }
 
 void BaseCustomComputePipeline::CreateContent(const std::filesystem::path& filepath) {
-	std::shared_ptr<ContentBlob> blob = sContentStorage->Import<ContentBlob>(filepath, CompileProfile::cs);
+	std::shared_ptr<ContentBlob> blob = sContentStorage->Import<ContentBlob>(filepath, CompileProfile::Compute);
 	SetContent(blob);
 }
 

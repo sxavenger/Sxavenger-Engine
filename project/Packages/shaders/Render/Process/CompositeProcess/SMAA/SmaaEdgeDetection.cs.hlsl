@@ -19,11 +19,11 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispatchThreadId.xy;
 
-	if (CheckOverTexture(index)) {
+	if (CheckOverDimension(index)) {
 		return;
 	}
 
-	float2 texcoord = (float2)index / (float2)size;
+	float2 texcoord = ((float2)index + 0.5f) / dimension;
 
 	float4 offset[3];
 	SMAAEdgeDetectionVS(texcoord, offset);

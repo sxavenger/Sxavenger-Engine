@@ -39,15 +39,6 @@ void Resource::Reset() {
 	}
 }
 
-void Resource::Transition(DxObject::CommandContext* context, D3D12_RESOURCE_STATES state) {
-	if (current_ == state) {
-		return; //!< stateが同じ場合は遷移しない.
-	}
-
-	context->TransitionResourceState(resource_.Get(), current_, state);
-	current_ = state;
-}
-
 void Resource::SetName(const std::wstring& name) const {
 	if (resource_ == nullptr) {
 		StreamLogger::EngineLog(L"[DXOBJECT Resource] warning | resource is null. cannot set name. name: " + name);
@@ -65,6 +56,41 @@ void Resource::Map(void** data, const std::optional<D3D12_RANGE>& range) {
 void Resource::Unmap(const std::optional<D3D12_RANGE>& range) {
 	StreamLogger::AssertA(resource_ != nullptr, "resource is null.");
 	resource_->Unmap(0, range.has_value() ? &range.value() : nullptr);
+}
+
+std::optional<D3D12_RESOURCE_BARRIER> Resource::GetTransition(D3D12_RESOURCE_STATES state) {
+	if (current_ == state) {
+		return std::nullopt; //!< stateが同じ場合は遷移しない.
+	}
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource   = resource_.Get();
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier.Transition.StateBefore = current_;
+	barrier.Transition.StateAfter  = state;
+
+	current_ = state; //!< stateの更新
+
+	return barrier;
+}
+
+void Resource::SetTransition(std::vector<D3D12_RESOURCE_BARRIER>& barriers, D3D12_RESOURCE_STATES state) {
+	std::optional<D3D12_RESOURCE_BARRIER> barrier = GetTransition(state);
+
+	if (barrier.has_value()) {
+		barriers.push_back(barrier.value());
+	}
+}
+
+void Resource::Transition(DxObject::CommandContext* context, D3D12_RESOURCE_STATES state) {
+
+	std::optional<D3D12_RESOURCE_BARRIER> barrier = GetTransition(state);
+
+	if (barrier.has_value()) {
+		context->GetCommandList()->ResourceBarrier(1, &barrier.value());
+	}
 }
 
 D3D12_GPU_VIRTUAL_ADDRESS Resource::GetGPUVirtualAddress() const {

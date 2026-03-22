@@ -51,6 +51,9 @@ public:
 
 	void TransitionResourceState(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after);
 
+	void ResourceBarrier(const std::vector<D3D12_RESOURCE_BARRIER>& barriers);
+
+
 private:
 
 	//=========================================================================================

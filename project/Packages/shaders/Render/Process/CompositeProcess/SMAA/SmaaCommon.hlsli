@@ -12,7 +12,7 @@ SamplerState gPointSampler : register(s1);
 #define SMAAPOINTSAMPLER gPointSampler
 #define SMAA_HLSL_4_1
 #define SMAA_PRESET_ULTRA
-#define SMAA_RT_METRICS float4(1.0f / size.x, 1.0f / size.y, size.x, size.y)
+#define SMAA_RT_METRICS float4(1.0f / dimension.x, 1.0f / dimension.y, dimension.x, dimension.y)
 #include "SMAA.hlsli"
 
 Texture2D<float4> gAreaTexture  : register(t10);

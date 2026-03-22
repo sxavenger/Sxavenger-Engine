@@ -95,24 +95,7 @@ Vector3ui DXOBJECT RoundUp(const Vector3ui& round, const Vector3ui& thread) {
 }
 
 DXOBJECT CompileProfile DXOBJECT ToProfile(GraphicsShaderType type) {
-	switch (type) {
-		case GraphicsShaderType::vs:
-			return CompileProfile::vs;
-
-		case GraphicsShaderType::gs:
-			return CompileProfile::gs;
-
-		case GraphicsShaderType::ms:
-			return CompileProfile::ms;
-			
-		case GraphicsShaderType::as:
-			return CompileProfile::as;
-
-		case GraphicsShaderType::ps:
-			return CompileProfile::ps;
-	}
-
-	StreamLogger::Exception("Graphics Shader Type is undefine.");
+	return static_cast<CompileProfile>(type);
 }
 
 void DXOBJECT Assert(HRESULT hr, const std::wstring& label, const std::source_location& location) {

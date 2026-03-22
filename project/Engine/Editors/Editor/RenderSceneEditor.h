@@ -12,8 +12,8 @@
 #include <Engine/Assets/Asset/AssetTexture.h>
 #include <Engine/Assets/Asset/AssetParameter.h>
 #include <Engine/Module/Actor/PerspectiveCameraActor.h>
-#include <Engine/Render/FRenderTargetBuffer.h>
-#include <Engine/Render/Pass/FBaseRenderPass.h>
+#include <Engine/Render/Buffer/FRenderTargetBuffer.h>
+#include <Engine/Render/Pass/FRenderConfig.h>
 
 //* lib
 #include <Lib/Geometry/Vector2.h>
@@ -119,17 +119,22 @@ private:
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// GBuffer enum class
+	// DisplayBuffer enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class GBuffer : uint32_t {
+	enum class DisplayBuffer : uint32_t {
+		//* FMainBuffer *//
 		Scene,
-		Deferred_GBuffer,
+
+		//* FGBuffer *//
+		GBuffer,
 		Albedo,
 		Normal,
 		MaterialARM,
 		Position,
-		Velocity,
-		Lighting_GBuffer,
+		MotionVector,
+
+		//* FLightAccumulationBuffer *//
+		LightAccumulation,
 		Direct,
 		Indirect,
 	};
@@ -157,10 +162,10 @@ private:
 
 	bool isRender_ = true;
 
-	std::unique_ptr<FRenderTargetBuffer>    textures_; //!< debug textures
+	std::unique_ptr<FRenderTargetBuffer>    buffer_; //!< scene buffer
 	std::unique_ptr<PerspectiveCameraActor> camera_;   //!< scene camera
 
-	FBaseRenderPass::Config config_ = {};
+	FRenderConfig config_ = {};
 	bool isDebugCulling_ = false;
 
 	bool isFocusGameWindow_  = false;
@@ -168,7 +173,7 @@ private:
 
 	//* parameter *//
 
-	GBuffer buffer_ = GBuffer::Scene;
+	DisplayBuffer displayBuffer_ = DisplayBuffer::Scene;
 
 	//* camera *//
 
@@ -231,7 +236,7 @@ private:
 	WindowRect SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) const;
 
 	void SetImGuiImageFullWindowEnable(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size, bool isEnable);
-	void SetImGuiImagesFullWindowEnable(const std::vector<std::pair<D3D12_GPU_DESCRIPTOR_HANDLE, GBuffer>>& handles, const Vector2ui& size, bool isEnable);
+	void SetImGuiImagesFullWindowEnable(const std::vector<std::pair<D3D12_GPU_DESCRIPTOR_HANDLE, DisplayBuffer>>& handles, const Vector2ui& size, bool isEnable);
 
 	void UpdateCamera();
 	void ShowCameraInformation(const WindowRect& rect);
@@ -241,7 +246,7 @@ private:
 
 	//* helper methods *//
 
-	void DisplayGBufferTexture(GBuffer buffer);
+	void ShowDisplayBuffer(DisplayBuffer buffer);
 
 	void RenderIcon(BaseInspector* inspector, Icon icon, const Vector3f& position, const Color4f& color);
 

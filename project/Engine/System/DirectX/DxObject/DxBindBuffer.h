@@ -131,15 +131,21 @@ public:
 	SamplerBindDesc()  = default;
 	~SamplerBindDesc() = default;
 
-	void SetSamplerLinear(const std::string& name, SamplerMode mode);
-
-	void SetSamplerAnisotropic(const std::string& name, SamplerMode mode, uint32_t anisotropic);
-
-	void SetSamplerPoint(const std::string& name, SamplerMode mode);
+	//* sampler option *//
 
 	void SetSamplerDesc(const std::string& name, const D3D12_STATIC_SAMPLER_DESC& desc);
 
+	void SetSamplerFilter(const std::string& name, SamplerFilter filter, SamplerMode mode, uint32_t anisotropic);
+
+	void SetSamplerLinear(const std::string& name, SamplerMode mode);
+	void SetSamplerPoint(const std::string& name, SamplerMode mode);
+	void SetSamplerAnisotropic(const std::string& name, SamplerMode mode, uint32_t anisotropic);
+
+	//* container option *//
+
 	bool Contains(const std::string& name) const;
+
+	//* getter *//
 
 	D3D12_STATIC_SAMPLER_DESC GetSampler(const std::string& name, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace = 0) const;
 
@@ -208,8 +214,8 @@ public:
 
 	void Reset();
 
-	void BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc);
-	void BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc);
+	void BindGraphicsBuffer(const CommandContext* context, const BindBufferDesc& desc) const;
+	void BindComputeBuffer(const CommandContext* context, const BindBufferDesc& desc) const;
 
 private:
 

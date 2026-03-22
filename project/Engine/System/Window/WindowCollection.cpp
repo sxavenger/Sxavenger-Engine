@@ -5,9 +5,11 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Utility/Convert.h>
 #include <Engine/System/Utility/StreamLogger.h>
 #include <Engine/System/UI/SxImGui.h>
+
+//* lib
+#include <Lib/Adapter/String/EncodedString.h>
 
 //* external
 #include <imgui.h>
@@ -127,7 +129,7 @@ void WindowCollection::SystemDebugGui() {
 	DirectXWindowContext* current = GetFocusWindow();
 
 	ImGui::SeparatorText("main window");
-	if (ImGui::Selectable(ToString(main_->GetName()).c_str(), main_.get() == current)) {
+	if (ImGui::Selectable(EncodedString::Convert(main_->GetName()).c_str(), main_.get() == current)) {
 		SetForegroundWindow(main_->GetHwnd());
 	}
 
@@ -135,7 +137,7 @@ void WindowCollection::SystemDebugGui() {
 
 		ImGui::Text("common info");
 		ImGui::Separator();
-		ImGui::Text("name:     %s",      ToString(main_->GetName()).c_str());
+		ImGui::Text("name:     %s",      EncodedString::Convert(main_->GetName()).c_str());
 		ImGui::Text("size:     %u x %u", main_->GetClient().x, main_->GetClient().y);
 		ImGui::Text("category: %s",      magic_enum::enum_name(main_->GetCategory()).data());
 		ImGui::Dummy({ 0, 4 });
@@ -155,7 +157,7 @@ void WindowCollection::SystemDebugGui() {
 
 	ImGui::SeparatorText("sub window");
 	for (const auto& window : windows_ | std::views::values) {
-		if (ImGui::Selectable(ToString(window->GetName()).c_str(), window.get() == current)) {
+		if (ImGui::Selectable(EncodedString::Convert(window->GetName()).c_str(), window.get() == current)) {
 			SetForegroundWindow(window->GetHwnd());
 		}
 	}

@@ -128,8 +128,8 @@ void AssetMesh::ShowInspector() {
 	ImGui::Text("index count:  %u", input_.GetIndex()->GetSize());
 }
 
-void AssetMesh::BindIABuffer(const DirectXQueueContext* context) const {
-	input_.BindIABuffer(context);
+void AssetMesh::BindInputAssembler(const DirectXQueueContext* context) const {
+	input_.BindInputAssembler(context);
 }
 
 void AssetMesh::DrawCall(const DirectXQueueContext* context, UINT instanceCount) const {

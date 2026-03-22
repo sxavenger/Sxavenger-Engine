@@ -3,16 +3,24 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* render
+#include "FBaseRenderCore.h"
+
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/Configuration/Configuration.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
+
+//* lib
+#include <Lib/Geometry/Vector2.h>
 
 //* external
 #include <magic_enum.hpp>
 
 //* c++
 #include <array>
+#include <filesystem>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -22,39 +30,42 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreProcess class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCoreProcess {
+class FRenderCoreProcess final
+	: public FBaseRenderCore {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// ProcessType enum class
+	// CompositeProcess enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class ProcessType : uint32_t {
-		GrayScale,
-		BloomLuminance,
-		BloomApply,
-		AutoExposureLuminance,
-		AutoExposureAverage,
-		AutoExposureApply,
-		LocalExposure,
-		DoF,
-		RadialBlur,
-		MotionBlur,
-		ChromaticAberration,
-		Vignette,
-		ConvertLUTTexture,
-		LUT
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// CompositeType enum class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class CompositeType : uint32_t {
+	enum class CompositeProcess : uint8_t {
 		Tonemap,
 		FXAA,
 		SMAA_EdgeDetection,
 		SMAA_BlendWeight,
 		SMAA_NeighborhoodBlending,
 	};
+	static const size_t	kCompositeProcessCount = magic_enum::enum_count<CompositeProcess>();
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// PostProcess enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class PostProcess : uint32_t {
+		GrayScale,
+		Bloom_Luminance,
+		Bloom_Apply,
+		AutoExposure_Luminance,
+		AutoExposure_Average,
+		AutoExposure_Apply,
+		LocalExposure,
+		DepthOfField,
+		RadialBlur,
+		MotionBlur,
+		ChromaticAberration,
+		Vignette,
+		LUT_Convert,
+		LUT,
+	};
+	static const size_t kPostProcessCount = magic_enum::enum_count<PostProcess>();
 
 public:
 
@@ -62,25 +73,23 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FRenderCoreProcess()  = default;
-	~FRenderCoreProcess() = default;
-
-	void Init();
-
-	void Dispatch(const DirectXQueueContext* context, const Vector2ui& size) const;
+	void Init() override;
 
 	//* process option *//
 
-	void SetPipeline(ProcessType type, const DirectXQueueContext* context);
+	void Dispatch(const DirectXQueueContext* context, const Vector2ui& resolution) const;
 
-	void BindComputeBuffer(ProcessType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc);
+	//* post process option *//
 
-	//* composite option *//
+	void SetPipeline(PostProcess process, const DirectXQueueContext* context) const;
 
-	void SetPipeline(CompositeType type, const DirectXQueueContext* context);
+	void BindComputeBuffer(PostProcess process, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
 
-	void BindComputeBuffer(CompositeType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc);
+	//* composite process option *//
 
+	void SetPipeline(CompositeProcess process, const DirectXQueueContext* context) const;
+
+	void BindComputeBuffer(CompositeProcess process, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
 
 private:
 
@@ -88,24 +97,31 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::array<std::unique_ptr<CustomReflectionComputePipeline>, magic_enum::enum_count<ProcessType>()> processes_;
-	std::array<std::unique_ptr<CustomReflectionComputePipeline>, magic_enum::enum_count<CompositeType>()> composites_;
+	//* process pipelines *//
 
-	static inline const Vector2ui kNumThreadSize_ = { 16, 16 };
+	std::array<CustomReflectionComputePipeline, kPostProcessCount> post_;
+	std::array<CustomReflectionComputePipeline, kCompositeProcessCount> composite_;
 
-	static inline const std::filesystem::path kDirectory = kPackagesDirectory / "shaders" / "Render" / "Process";
+	// TODO: Shader Script への移行
 
+	//* process constants *//
 
+	static inline const std::filesystem::path kDirectory = kPackagesDirectory / "shaders" / "render" / "Process";
+	static inline const Vector2ui kNumthreads = { 16, 16 };
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void CreatePipeline(ProcessType type, const std::filesystem::path& filepath);
-	void CreatePipeline(ProcessType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc);
+	void CreatePipeline();
 
-	void CreatePipeline(CompositeType type, const std::filesystem::path& filepath);
-	void CreatePipeline(CompositeType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc);
+	//* helper methods *//
+
+	void CreatePipeline(PostProcess process, const std::filesystem::path& filepath);
+	void CreatePipeline(PostProcess process, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc);
+
+	void CreatePipeline(CompositeProcess process, const std::filesystem::path& filepath);
+	void CreatePipeline(CompositeProcess process, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc);
 
 };
 

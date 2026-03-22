@@ -84,6 +84,9 @@ protected:
 
 	//* helper create methods *//
 
+	static D3D12_RESOURCE_STATES GetDefaultState(Category category);
+	static D3D12_RESOURCE_FLAGS GetResourceFlags(Category category);
+
 	void CreateBuffer(DxObject::Device* device, uint32_t size, Category category);
 
 };
@@ -279,5 +282,3 @@ inline const T& DimensionBuffer<T>::At(size_t index) const {
 }
 
 DXOBJECT_NAMESPACE_END
-
-

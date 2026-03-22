@@ -139,7 +139,7 @@ public:
 	//* setting pipeline *//
 
 	void SetPipeline(CommandContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) const;
-	void SetPipeline(CommandContext* context, const Vector2ui& windowSize = SXAVENGER_ENGINE Configuration::GetConfig().resolution) const;
+	void SetPipeline(CommandContext* context, const Vector2ui& resolution = SXAVENGER_ENGINE Configuration::GetConfig().resolution) const;
 
 protected:
 
@@ -149,7 +149,7 @@ protected:
 
 	//* blob *//
 
-	std::array<std::optional<ShaderBlob>, static_cast<uint8_t>(GraphicsShaderType::ps) + 1> blobs_;
+	std::array<std::optional<ShaderBlob>, static_cast<uint8_t>(GraphicsShaderType::Pixel) + 1> blobs_;
 
 	//* rootSignature *//
 
@@ -205,7 +205,7 @@ public:
 	void ReflectionRootSignature(Device* device, const SamplerBindDesc& desc);
 	void ReflectionRootSignature(Device* device, D3D12_ROOT_SIGNATURE_FLAGS flag);
 
-	void BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc);
+	void BindGraphicsBuffer(const CommandContext* context, const BindBufferDesc& desc) const;
 
 private:
 

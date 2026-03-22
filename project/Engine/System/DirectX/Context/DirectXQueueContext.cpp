@@ -6,9 +6,11 @@ DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Utility/Convert.h>
 #include <Engine/System/Utility/StreamLogger.h>
 #include <Engine/System/System.h>
+
+//* lib
+#include <Lib/Adapter/String/EncodedString.h>
 
 //* windows
 #include <pix.h>
@@ -33,7 +35,7 @@ void DirectXQueueContext::Init(uint32_t allocator, RenderQueue type) {
 }
 
 void DirectXQueueContext::SetName(const std::wstring& name) const {
-	context_->SetName(std::format(L"{} | {}", name, ToWString(magic_enum::enum_name(type_))));
+	context_->SetName(std::format(L"{} | {}", name, EncodedString::Convert(magic_enum::enum_name(type_))));
 }
 
 void DirectXQueueContext::TransitionAllocator() const {

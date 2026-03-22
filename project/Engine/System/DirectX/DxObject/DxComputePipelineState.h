@@ -106,7 +106,7 @@ public:
 
 	void ReflectionPipeline(Device* device, const SamplerBindDesc& desc);
 
-	void BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc);
+	void BindComputeBuffer(const CommandContext* context, const BindBufferDesc& desc) const;
 
 private:
 

@@ -39,20 +39,20 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispathThreadId.xy;
 
-	if (CheckOverTexture(index.xy)) {
+	if (CheckOverDimension(index.xy)) {
 		return;
 	}
 
-	float2 uv        = float2(index) / size * 2.0f - 1.0f; // [-1.0 ~ 1.0]
-	float2 direction = normalize(uv) * gParameter.GetIntensity() * blendWeight;
+	float2 texcoord  = (float2(index) + 0.5f) / dimension * 2.0f - 1.0f; // [-1.0 ~ 1.0]
+	float2 direction = normalize(texcoord) * gParameter.GetIntensity() * blendWeight;
 
-	float distance = saturate(length(uv));
+	float distance = saturate(length(texcoord));
 
 	float4 color = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-	color.r = gInput.SampleLevel(gSampler, (uv - direction * distance + 1.0f) * 0.5f, 0).r;
-	color.g = gInput.SampleLevel(gSampler, (uv + 1.0f) * 0.5f, 0).g;
-	color.b = gInput.SampleLevel(gSampler, (uv + direction * distance + 1.0f) * 0.5f, 0).b;
+	color.r = gInput.SampleLevel(gSampler, (texcoord - direction * distance + 1.0f) * 0.5f, 0).r;
+	color.g = gInput.SampleLevel(gSampler, (texcoord + 1.0f) * 0.5f, 0).g;
+	color.b = gInput.SampleLevel(gSampler, (texcoord + direction * distance + 1.0f) * 0.5f, 0).b;
 	color.a = gInput[index].a;
 	
 	gOutput[index] = color;

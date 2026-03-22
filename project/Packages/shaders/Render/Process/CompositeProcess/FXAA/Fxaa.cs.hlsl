@@ -31,22 +31,22 @@ static const float kNone = 0.0f;
 [numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
-	uint2 index = dispatchThreadId.xy;
+	uint2 pixel = dispatchThreadId.xy;
 	
-	if (CheckOverTexture(index)) {
-		return; //!< texture size over
+	if (CheckOverDimension(pixel)) {
+		return; //!< texture dimension check
 	}
 
-	float2 texcoord = (float2)index / (float2)size;
+	float2 texcoord = (float2(pixel) + 0.5f) / dimension;
 
 	FxaaTex fxaaTex;
 	fxaaTex.tex      = gInput;
 	fxaaTex.smpl     = gSampler;
 	fxaaTex.UVMinMax = float4(0.0f, 0.0f, 1.0f, 1.0f);
 
-	float2 rcp = float2(1.0f / size.x, 1.0f / size.y);
+	float2 rcp = float2(1.0f / dimension.x, 1.0f / dimension.y);
 
-	gOutput[index] = FxaaPixelShader(
+	gOutput[pixel] = FxaaPixelShader(
 		texcoord,
 		kNone,
 		fxaaTex,

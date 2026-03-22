@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxResource.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 #include <Engine/Assets/Asset/AssetTexture.h>
@@ -62,7 +62,7 @@ private:
 
 	//* 3d texture *//
 
-	ComPtr<ID3D12Resource> resource_;
+	DxObject::Resource resource_;
 	DxObject::Descriptor descriptorSRV_;
 	DxObject::Descriptor descriptorUAV_;
 
@@ -71,6 +71,7 @@ private:
 	//=========================================================================================
 
 	void CreateResource(const Vector2ui& size, const Vector2ui& tile);
+	void CreateDescriptor(const Vector2ui& size, const Vector2ui& tile);
 
 };
 

@@ -9,11 +9,13 @@ SXAVENGER_ENGINE_USING
 
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/Utility/Convert.h>
 #include <Engine/System/Utility/RuntimeLogger.h>
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/Assets/Content/ContentStorage.h>
 #include <Engine/Assets/Asset/AssetStorage.h>
+
+//* lib
+#include <Lib/Adapter/String/EncodedString.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TextRendererComponent class methods
@@ -38,8 +40,8 @@ TextRendererComponent::TextRendererComponent(EntityBehaviour* behaviour)
 }
 
 void TextRendererComponent::ShowComponentInspector() {
-	SxImGui::InputTextFunc("## Text Box", ToString(text_), [this](const std::string& str) {
-		SetText(ToWString(str));
+	SxImGui::InputTextFunc("## Text Box", EncodedString::Convert(text_), [this](const std::string& str) {
+		SetText(EncodedString::Convert(str));
 	});
 	// TODO: MultilineInputTextFuncを使用する
 
@@ -154,8 +156,8 @@ void TextRendererComponent::ParseText() {
 
 }
 
-void TextRendererComponent::BindIABuffer(const DirectXQueueContext* context) {
-	input_.BindIABuffer(context);
+void TextRendererComponent::BindInputAssembler(const DirectXQueueContext* context) {
+	input_.BindInputAssembler(context);
 }
 
 void TextRendererComponent::DrawCall(const DirectXQueueContext* context) {
@@ -172,7 +174,7 @@ const RectTransformComponent* TextRendererComponent::GetRectTransform() const {
 
 json TextRendererComponent::ParseToJson() const {
 	json component = json::object();
-	component["text"]  = ToString(text_);
+	component["text"]  = EncodedString::Convert(text_);
 	component["font"]  = font_.Serialize();
 	component["color"] = JsonSerializeFormatter<Color4f>::Serialize(color_);
 	component["size"]  = size_;
@@ -182,7 +184,7 @@ json TextRendererComponent::ParseToJson() const {
 
 void TextRendererComponent::InputJson(const json& data) {
 	if (!data["text"].is_null()) {
-		text_ = ToWString(data["text"].get<std::string>());
+		text_ = EncodedString::Convert(data["text"].get<std::string>());
 	}
 
 	Uuid font = Uuid::Deserialize(data["font"].get<std::string>());
