@@ -61,6 +61,9 @@ void PostProcessAutoExposure::Process(const DirectXQueueContext* context, const 
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreProcess>(); //!< RenderCoreの確保.
 
+	process->Next();
+	process->GetCurrentTexture().TransitionUnorderedAccess(context);
+
 	//!< parameterの設定
 	DxObject::BindBufferDesc desc = {};
 
@@ -77,9 +80,6 @@ void PostProcessAutoExposure::Process(const DirectXQueueContext* context, const 
 	desc.SetAddress("gHistogramShared",  histogramShared_->GetGPUVirtualAddress());
 	desc.SetAddress("gAverageLuminance", averageLuminance_->GetGPUVirtualAddress());
 	desc.SetAddress("gParameter",        parameter_->GetGPUVirtualAddress());
-
-	process->Next();
-	process->GetCurrentTexture().TransitionUnorderedAccess(context);
 
 	{ //!< Luminance
 		core->SetPipeline(FRenderCoreProcess::PostProcess::AutoExposure_Luminance, context);

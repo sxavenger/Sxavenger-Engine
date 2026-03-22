@@ -77,12 +77,12 @@ void ExampleGameLoop::InitSystem() {
 		auto layer = (*camera_)->AddComponent<PostProcessLayerComponent>();
 		layer->SetTag(PostProcessLayerComponent::Tag::Local);
 
-		auto exposure = layer->AddPostProcess<PostProcessAutoExposure>();
+		auto exposure = layer->AddPostProcess<PostProcessAutoExposure>(false);
 		exposure->GetParameter().minLogLuminance = -8.0f;
 		exposure->GetParameter().maxLogLuminance = 10.0f;
 		exposure->GetParameter().compensation    = -5.0f;
 
-		layer->AddPostProcess<PostProcessRadialBlur>();
+		layer->AddPostProcess<PostProcessRadialBlur>(false);
 
 		auto collider = (*camera_)->AddComponent<ColliderComponent>();
 		collider->SetTag("camera");

@@ -389,7 +389,7 @@ void FRenderPassDeferredDirectLighting::PassSkyAtmosphere(const DirectXQueueCont
 		sComponentStorage->ForEachActive<SkyAtmosphereComponent>([&](SkyAtmosphereComponent* component) {
 
 			//!< componentのparameterの設定
-			desc.SetAddress("gParameters", component->GetGPUVirtualAddress());
+			desc.SetAddress("gParameter", component->GetGPUVirtualAddress());
 
 			core->BindGraphicsBuffer(FRenderCoreDirectLight::Type::SkyAtmosphereEnvironment, context, desc);
 			core->DrawCall(context, 1);
@@ -404,7 +404,7 @@ void FRenderPassDeferredDirectLighting::PassSkyAtmosphere(const DirectXQueueCont
 		sComponentStorage->ForEachActive<SkyAtmosphereComponent>([&](SkyAtmosphereComponent* component) {
 
 			//!< componentのparameterの設定
-			desc.SetAddress("gParameters", component->GetGPUVirtualAddress());
+			desc.SetAddress("gParameter", component->GetGPUVirtualAddress());
 
 			core->BindGraphicsBuffer(FRenderCoreDirectLight::Type::SkyAtmosphereAerial, context, desc);
 			//core->DrawCall(context, 1);

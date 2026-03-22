@@ -61,6 +61,10 @@ private:
 
 	void EndTransparentMeshRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
+	//* transition transparent pass *//
+
+	void TransitionTransparentPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
 	//* mesh render helper methods *//
 
 	void RenderStaticMesh(const DirectXQueueContext* context, const FRenderConfig& config, Pass pass);

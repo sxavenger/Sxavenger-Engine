@@ -7,13 +7,19 @@ SXAVENGER_ENGINE_USING
 //* editor
 #include "../EditorEngine.h"
 
-//* engine
+//* engine [system]
 #include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/UI/SxImGuizmo.h>
+
+//* engine [graphics]
 #include <Engine/Graphics/Graphics.h>
+
+//* engine [assets]
 #include <Engine/Assets/Asset/AssetStorage.h>
 #include <Engine/Assets/Content/ContentStorage.h>
+
+//* engine [components]
 #include <Engine/Components/Component/Transform/TransformComponent.h> 
 #include <Engine/Components/Component/Transform/RectTransformComponent.h>
 #include <Engine/Components/Component/Camera/CameraComponent.h>
@@ -25,10 +31,15 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Components/Component/ComponentHelper.h>
 #include <Engine/Components/Entity/EntityBehaviour.h>
 #include <Engine/Components/Entity/BehaviourHelper.h>
+
+//* engine [module]
 #include <Engine/Module/Exporter/TextureExporter.h>
+
+//* engine [render]
 #include <Engine/Render/Buffer/FMainBuffer.h>
 #include <Engine/Render/Buffer/FGBuffer.h>
 #include <Engine/Render/Buffer/FLightAccumulationBuffer.h>
+#include <Engine/Render/Buffer/FTransparentBuffer.h>
 #include <Engine/Render/Core/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Render/FPresenter.h>
@@ -846,6 +857,10 @@ void RenderSceneEditor::UpdateKeyShortcut() {
 		displayBuffer_ = DisplayBuffer::LightAccumulation;
 	}
 
+	if (System::IsPressKey(KeyId::KEY_LALT) && System::IsTriggerKey(KeyId::KEY_4)) { //!< [LALT] + [4]
+		displayBuffer_ = DisplayBuffer::Transparent;
+	}
+
 }
 
 RenderSceneEditor::WindowRect RenderSceneEditor::SetImGuiImageFullWindow(const D3D12_GPU_DESCRIPTOR_HANDLE& handle, const Vector2ui& size) const {
@@ -1225,6 +1240,57 @@ void RenderSceneEditor::ShowDisplayBuffer(DisplayBuffer buffer) {
 
 				SetImGuiImageFullWindowEnable(
 					lightAccumulationBuffer->GetBuffer(FLightAccumulationBuffer::Layout::Indirect).GetGPUHandleSRV(),
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
+
+		case DisplayBuffer::Transparent:
+			{
+				if (!buffer_->HasBuffer<FTransparentBuffer>()) {
+					return;
+				}
+
+				FTransparentBuffer* transparent = buffer_->GetBuffer<FTransparentBuffer>();
+
+				SetImGuiImagesFullWindowEnable(
+					{
+						{ transparent->GetBuffer(FTransparentBuffer::Layout::Accumulate).GetGPUHandleSRV(), DisplayBuffer::Accumulate },
+						{ transparent->GetBuffer(FTransparentBuffer::Layout::Revealage).GetGPUHandleSRV(),  DisplayBuffer::Revealage },
+					},
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
+
+		case DisplayBuffer::Accumulate:
+			{
+				if (!buffer_->HasBuffer<FTransparentBuffer>()) {
+					return;
+				}
+
+				FTransparentBuffer* transparent = buffer_->GetBuffer<FTransparentBuffer>();
+
+				SetImGuiImageFullWindowEnable(
+					transparent->GetBuffer(FTransparentBuffer::Layout::Accumulate).GetGPUHandleSRV(),
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
+
+		case DisplayBuffer::Revealage:
+			{
+				if (!buffer_->HasBuffer<FTransparentBuffer>()) {
+					return;
+				}
+
+				FTransparentBuffer* transparent = buffer_->GetBuffer<FTransparentBuffer>();
+
+				SetImGuiImageFullWindowEnable(
+					transparent->GetBuffer(FTransparentBuffer::Layout::Revealage).GetGPUHandleSRV(),
 					buffer_->GetResolution(),
 					isRender_
 				);

@@ -137,6 +137,11 @@ private:
 		LightAccumulation,
 		Direct,
 		Indirect,
+
+		//* FTransparentBuffer *//
+		Transparent,
+		Accumulate,
+		Revealage,
 	};
 
 private:

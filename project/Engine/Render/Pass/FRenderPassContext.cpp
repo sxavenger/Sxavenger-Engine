@@ -59,10 +59,10 @@ FRenderConfig FRenderPassContext::ResolveConfig(const FRenderConfig& config) {
 
 #ifdef _DEVELOPMENT
 	if (resolved.cullCamera == nullptr) { //!< culling用cameraが設定されていない場合, 同じものを使用する
-		resolved.cullCamera = config.camera;
+		resolved.cullCamera = resolved.camera;
 	}
 #else
-	resolved.cullCamera = config.camera; //!< 同じものを使用する
+	resolved.cullCamera = resolved.camera; //!< 同じものを使用する
 #endif
 
 	if (resolved.scene == nullptr) { //!< sceneが設定されていない場合, main renderから取得

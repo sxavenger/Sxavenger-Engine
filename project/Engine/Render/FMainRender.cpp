@@ -52,7 +52,7 @@ void FMainRender::Init() {
 	config_.camera = nullptr;
 	config_.tag    = CameraComponent::Tag::Game; //!< GameCameraをデフォルトで描画する
 
-	config_.option      = FRenderConfig::OptionFlag::Default;
+	config_.option       = FRenderConfig::OptionFlag::Default;
 	config_.antiAliasing = FRenderConfig::AntiAliasing::FXAA;
 
 }

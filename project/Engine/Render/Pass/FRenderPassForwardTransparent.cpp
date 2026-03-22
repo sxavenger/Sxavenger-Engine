@@ -6,6 +6,7 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../Buffer/FTransparentBuffer.h"
+#include "../Buffer/FMainBuffer.h"
 #include "../Core/FRenderCore.h"
 #include "../Core/FRenderCoreGeometry.h"
 #include "../Core/FRenderCoreTransition.h"
@@ -60,7 +61,7 @@ void FRenderPassForwardTransparent::Render(const DirectXQueueContext* context, c
 		FBaseRenderPass::EndEvent(context);
 	}
 
-	// TODO: Main Bufferに転送するPass
+	TransitionTransparentPass(context, config.buffer);
 
 	FBaseRenderPass::EndRenderPass(context);
 
@@ -184,6 +185,36 @@ void FRenderPassForwardTransparent::EndTransparentMeshRenderPass(const DirectXQu
 		context->GetDxCommand()->ResourceBarrier(barriers);
 	}
 
+}
+
+void FRenderPassForwardTransparent::TransitionTransparentPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	FTransparentBuffer* transparent = buffer->GetBuffer<FTransparentBuffer>();
+	FMainBuffer* main               = buffer->GetBuffer<FMainBuffer>();
+
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreTransition>(); //!< RenderCoreの確保
+	core->SetPipeline(FRenderCoreTransition::Transition::TransparentTransition, context); //!< pipelineの設定
+
+	main->GetBuffer(FMainBuffer::Layout::Scene).TransitionUnorderedAccess(context);
+
+	{ //!< Transparent Transition Pass
+
+		//!< parameterの設定
+		DxObject::BindBufferDesc desc = {};
+
+		//!< 共通parameterの設定
+		desc.Set32bitConstants("Dimension", 2, &buffer->GetResolution());
+
+		//!< Bufferの設定
+		desc.SetHandle("gAccumulate", transparent->GetBuffer(FTransparentBuffer::Layout::Accumulate).GetGPUHandleSRV());
+		desc.SetHandle("gRevealage",  transparent->GetBuffer(FTransparentBuffer::Layout::Revealage).GetGPUHandleSRV());
+		desc.SetHandle("gOutput",     main->GetBuffer(FMainBuffer::Layout::Scene).GetGPUHandleUAV());
+
+		core->BindComputeBuffer(FRenderCoreTransition::Transition::TransparentTransition, context, desc);
+		core->Dispatch(context, buffer->GetResolution());
+	}
+
+	main->GetBuffer(FMainBuffer::Layout::Scene).TransitionDefaultState(context);
 }
 
 void FRenderPassForwardTransparent::RenderStaticMesh(const DirectXQueueContext* context, const FRenderConfig& config, Pass pass) {
