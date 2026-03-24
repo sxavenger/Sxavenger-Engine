@@ -20,7 +20,7 @@ cbuffer Parameter : register(b0) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)] //!< input texture size dispatch.
+[numthreads(NUM_THREADS_X, NUM_THREADS_Y, 1)] //!< input texture size dispatch.
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispatchThreadId.xy;

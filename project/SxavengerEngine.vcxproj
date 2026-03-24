@@ -304,6 +304,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\FPresenter.h" />
     <ClInclude Include="Engine\Render\Pass\FBaseRenderPass.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderConfig.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassAmbientOcclusion.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliasing.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassCanvas.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassContext.h" />
@@ -529,6 +530,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Render\FPresenter.cpp" />
     <ClCompile Include="Engine\Render\Pass\FBaseRenderPass.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderConfig.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassAmbientOcclusion.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliasing.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassCanvas.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassContext.cpp" />

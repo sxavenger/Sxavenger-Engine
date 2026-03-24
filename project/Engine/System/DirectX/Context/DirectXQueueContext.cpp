@@ -12,9 +12,6 @@ DXOBJECT_USING
 //* lib
 #include <Lib/Adapter/String/EncodedString.h>
 
-//* windows
-#include <pix.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXQueueContext class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,7 +58,7 @@ void DirectXQueueContext::BeginEvent(const std::wstring& name) const {
 		return;
 	}
 
-	PIXBeginEvent(context_->GetCommandList(), 0, name.c_str());
+	context_->BeginEvent(name);
 }
 
 void DirectXQueueContext::EndEvent() const {
@@ -69,7 +66,7 @@ void DirectXQueueContext::EndEvent() const {
 		return;
 	}
 
-	PIXEndEvent(context_->GetCommandList());
+	context_->EndEvent();
 }
 
 bool DirectXQueueContext::IsSupportQueue(RenderQueue type) const {

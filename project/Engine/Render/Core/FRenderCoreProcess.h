@@ -43,6 +43,11 @@ public:
 		SMAA_EdgeDetection,
 		SMAA_BlendWeight,
 		SMAA_NeighborhoodBlending,
+		XeGTAO_PrefilterDepth,
+		XeGTAO_Main,
+		XeGTAO_DenoiseFirst,
+		XeGTAO_DenoiseLast,
+		XeGTAO_Resolve,
 	};
 	static const size_t	kCompositeProcessCount = magic_enum::enum_count<CompositeProcess>();
 

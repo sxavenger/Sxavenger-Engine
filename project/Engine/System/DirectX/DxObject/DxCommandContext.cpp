@@ -8,6 +8,9 @@ DXOBJECT_USING
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
 
+//* windows
+#include <pix.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CommandContext class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,6 +57,24 @@ void CommandContext::ExecuteAllAllocators() {
 	Close();
 	Signal();
 	Reset(currentIndex_);
+}
+
+void CommandContext::BeginEvent(const std::wstring& name) {
+	if (commandList_ == nullptr) {
+		return; //!< コマンドリストがない場合は何もしない
+	}
+
+	StreamLogger::AssertA(eventIndent_ < std::numeric_limits<uint8_t>::max(), "event indent is over flow.");
+	PIXBeginEvent(commandList_.Get(), PIX_COLOR_INDEX(eventIndent_++), name.c_str());
+}
+
+void CommandContext::EndEvent() {
+	if (commandList_ == nullptr) {
+		return; //!< コマンドリストがない場合は何もしない
+	}
+
+	StreamLogger::AssertA(eventIndent_-- > 0, "event indent is not begin.");
+	PIXEndEvent(commandList_.Get());
 }
 
 void CommandContext::TransitionResourceState(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after) {

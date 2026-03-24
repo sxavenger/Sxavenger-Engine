@@ -64,6 +64,8 @@ public:
 
 	void Create(const Argument& argument);
 
+	void SetName(const std::wstring& name) const;
+
 	//* transition option *//
 
 	NODISCARD std::optional<D3D12_RESOURCE_BARRIER> GetTransitionState(D3D12_RESOURCE_STATES state);

@@ -41,6 +41,12 @@ public:
 
 	void ExecuteAllAllocators();
 
+	//* event option *//
+
+	void BeginEvent(const std::wstring& name);
+
+	void EndEvent();
+
 	//* getter *//
 
 	ID3D12GraphicsCommandList6* GetCommandList() const { return commandList_.Get(); }
@@ -80,6 +86,8 @@ private:
 	uint32_t currentIndex_;
 
 	//* event *//
+
+	uint8_t eventIndent_ = 0;
 
 	//=========================================================================================
 	// private methods

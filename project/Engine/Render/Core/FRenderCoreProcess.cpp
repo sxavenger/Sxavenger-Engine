@@ -88,13 +88,19 @@ void FRenderCoreProcess::CreatePipeline() {
 		CreatePipeline(CompositeProcess::Tonemap, "Tonemap.cs.hlsl");
 
 		//!< FXAA
-		CreatePipeline(CompositeProcess::FXAA, "FXAA/Fxaa.cs.hlsl", desc);
+		CreatePipeline(CompositeProcess::FXAA, "FXAA/Main.cs.hlsl", desc);
 
 		//!< SMAA
-		CreatePipeline(CompositeProcess::SMAA_EdgeDetection,        "SMAA/SmaaEdgeDetection.cs.hlsl",        desc);
-		CreatePipeline(CompositeProcess::SMAA_BlendWeight,          "SMAA/SmaaBlendWeight.cs.hlsl",          desc);
-		CreatePipeline(CompositeProcess::SMAA_NeighborhoodBlending, "SMAA/SmaaNeighborhoodBlending.cs.hlsl", desc);
+		CreatePipeline(CompositeProcess::SMAA_EdgeDetection,        "SMAA/EdgeDetection.cs.hlsl",        desc);
+		CreatePipeline(CompositeProcess::SMAA_BlendWeight,          "SMAA/BlendWeight.cs.hlsl",          desc);
+		CreatePipeline(CompositeProcess::SMAA_NeighborhoodBlending, "SMAA/NeighborhoodBlending.cs.hlsl", desc);
 
+		//!< XeGTAO
+		CreatePipeline(CompositeProcess::XeGTAO_PrefilterDepth, "XeGTAO/PrefilterDepth.cs.hlsl", desc);
+		CreatePipeline(CompositeProcess::XeGTAO_Main,           "XeGTAO/Main.cs.hlsl",           desc);
+		CreatePipeline(CompositeProcess::XeGTAO_DenoiseFirst,   "XeGTAO/DenoiseFirst.cs.hlsl",   desc);
+		CreatePipeline(CompositeProcess::XeGTAO_DenoiseLast,    "XeGTAO/DenoiseLast.cs.hlsl",    desc);
+		CreatePipeline(CompositeProcess::XeGTAO_Resolve,        "XeGTAO/Resolve.cs.hlsl",        desc);
 	}
 
 }

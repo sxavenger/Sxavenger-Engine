@@ -9,7 +9,7 @@
 	"descriptorCount": {
 		"RTV": 32,
 		"DSV": 8,
-		"SRV_CBV_UAV": 512
+		"SRV_CBV_UAV": 1024
 	},
 	"isTearingAllowed": true,
 	"isLockFrameRate": true,

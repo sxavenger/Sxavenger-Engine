@@ -12,9 +12,17 @@ SXAVENGER_ENGINE_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void FProcessBuffer::Create(uint8_t size, const FProcessTexture::Argument& argument) {
-	textures_.resize(size);
+	
 	for (auto& texture : textures_) {
 		texture.Create(argument);
+	}
+
+	textures_.resize(size);
+	for (uint8_t i = 0; i < textures_.size(); ++i) {
+		textures_[i].Create(argument);
+
+		std::wstring name = std::format(L"FProcessBuffer | [{}]", i);
+		textures_[i].SetName(name);
 	}
 }
 
@@ -28,7 +36,7 @@ void FProcessBuffer::Export(const DirectXQueueContext* context, FRenderTexture* 
 }
 
 void FProcessBuffer::Next(uint8_t count) {
-	uint8_t next = (count) % textures_.size();
+	uint8_t next = (currentIndex_ + count) % textures_.size();
 	currentIndex_ = next;
 }
 

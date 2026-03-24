@@ -425,7 +425,9 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("process option");
 		ImGui::Separator();
 
-		SxImGui::ComboEnum("anti-aliasing", &config_.antiAliasing);
+		SxImGui::ComboEnum("anti-aliasing",       &config_.antiAliasing);
+		SxImGui::ComboEnum("ambient-occlusion",   &config_.ambientOcclusion);
+		SxImGui::ComboEnum("global-illumination", &config_.globalIllumination);
 
 		for (const auto& [value, name] : magic_enum::enum_entries<FRenderConfig::OptionFlag>()) {
 			if (value == FRenderConfig::OptionFlag::Default) {

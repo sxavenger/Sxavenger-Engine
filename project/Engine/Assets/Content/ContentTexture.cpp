@@ -53,7 +53,7 @@ void ContentTexture::ShowInspector() {
 
 void ContentTexture::Load(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option) {
 
-#ifdef _DEVELOPMENT
+#if 0
 	//!< Textureの圧縮処理
 	if (option.isCompress && CheckCompress(filepath)) {
 		StreamLogger::EngineThreadLog("[ContentTexture] compress texture. filepath: " + filepath.generic_string());

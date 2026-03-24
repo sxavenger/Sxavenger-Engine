@@ -1,21 +1,19 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "SmaaCommon.hlsli"
+#include "Common.hlsli"
 
 //=========================================================================================
 // buffers
 //=========================================================================================
 
-Texture2D<float4> gScene : register(t0);
-Texture2D<float4> gBlend : register(t1);
-
-RWTexture2D<float4> gOutput : register(u0);
+Texture2D<float4> gEdge : register(t0);
+RWTexture2D<float4> gOutput : register(u0); //!< BlendingWeight
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)]
+[numthreads(NUM_THREADS_X, NUM_THREADS_Y, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispatchThreadId.xy;
@@ -26,10 +24,11 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	float2 texcoord = ((float2)index + 0.5f) / dimension;
 
-	float4 offset;
-	SMAANeighborhoodBlendingVS(texcoord, offset);
+	float2 pixcoord;
+	float4 offset[3];
+	SMAABlendingWeightCalculationVS(texcoord, pixcoord, offset);
 
-	float4 color = SMAANeighborhoodBlendingPS(texcoord, offset, gScene, gBlend);
-	gOutput[index] = color;
+	float4 weights = SMAABlendingWeightCalculationPS(texcoord, pixcoord, offset, gEdge, gAreaTexture, gSearchTexture, 0.0f);
+	gOutput[index] = weights;
 	
 }

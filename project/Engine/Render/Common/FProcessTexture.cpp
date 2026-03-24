@@ -58,6 +58,10 @@ void FProcessTexture::Create(const Argument& argument) {
 
 }
 
+void FProcessTexture::SetName(const std::wstring& name) const {
+	resource_.SetName(name);
+}
+
 std::optional<D3D12_RESOURCE_BARRIER> FProcessTexture::GetTransitionState(D3D12_RESOURCE_STATES state) {
 	return resource_.GetTransition(state);
 }

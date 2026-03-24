@@ -7,6 +7,7 @@ SXAVENGER_ENGINE_USING
 //* render
 #include "Buffer/FMainBuffer.h"
 #include "Pass/FRenderPassDeferredBase.h"
+#include "Pass/FRenderPassAmbientOcclusion.h"
 #include "Pass/FRenderPassDeferredDirectLighting.h"
 #include "Pass/FRenderPassLightingComposite.h"
 #include "Pass/FRenderPassForwardTransparent.h"
@@ -27,6 +28,7 @@ void FMainRender::Init() {
 
 	//!< contextの設定
 	context_.Insert<FRenderPassDeferredBase>();
+	context_.Insert<FRenderPassAmbientOcclusion>();
 	context_.Insert<FRenderPassDeferredDirectLighting>();
 	context_.Insert<FRenderPassLightingComposite>();
 	context_.Insert<FRenderPassForwardTransparent>();
