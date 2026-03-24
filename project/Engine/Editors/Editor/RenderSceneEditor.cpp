@@ -749,9 +749,11 @@ void RenderSceneEditor::ShowInfoTextScene() {
 
 	ImVec2 position = { sceneRect_.pos.x + kPadding.x, sceneRect_.pos.y + sceneRect_.size.y - kPadding.y };
 
-	RenderTextSceneWindow(position, std::format(" Tonemap:          {}", config_.option.Test(FRenderConfig::OptionFlag::Tonemap)));
-	RenderTextSceneWindow(position, std::format(" PostProcess:      {}", config_.option.Test(FRenderConfig::OptionFlag::PostProcess)));
-	RenderTextSceneWindow(position, std::format(" Anti-Aliasing:    {}", magic_enum::enum_name(config_.antiAliasing)));
+	RenderTextSceneWindow(position, std::format(" Tonemap:            {}", config_.option.Test(FRenderConfig::OptionFlag::Tonemap)));
+	RenderTextSceneWindow(position, std::format(" PostProcess:        {}", config_.option.Test(FRenderConfig::OptionFlag::PostProcess)));
+	RenderTextSceneWindow(position, std::format(" Anti-Aliasing:      {}", magic_enum::enum_name(config_.antiAliasing)));
+	RenderTextSceneWindow(position, std::format(" GlobalIllumination: {}", magic_enum::enum_name(config_.globalIllumination)));
+	RenderTextSceneWindow(position, std::format(" Ambient-Occlusion:  {}", magic_enum::enum_name(config_.ambientOcclusion)));
 	RenderTextSceneWindow(position, std::format("> Config"));
 	RenderTextSceneWindow(position, std::format("Display Buffer | {}", magic_enum::enum_name(displayBuffer_)));
 

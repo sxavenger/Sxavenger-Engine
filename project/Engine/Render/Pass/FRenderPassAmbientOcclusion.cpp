@@ -22,6 +22,10 @@ void FRenderPassAmbientOcclusion::Render(const DirectXQueueContext* context, con
 		return; //!< Ambient-Occlusionが無効
 	}
 
+	if (config.HasIssue(FRenderConfig::IssueFlag::Warning_Geometry)) {
+		return; //!< configが不適格.
+	}
+
 	if (!config.buffer->HasBuffer<FGBuffer>()) {
 		RuntimeLogger::LogError("[FRenderPass - Ambient-Occlusion]", "FGBuffer is required."); //!< Bufferがない
 		return; //!< Bufferが不適格
