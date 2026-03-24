@@ -112,23 +112,20 @@
     <Filter Include="Engine\Render">
       <UniqueIdentifier>{EAE1D856-56A2-548D-1FDD-9D0A8B5C9969}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Render\Buffer">
+      <UniqueIdentifier>{93D882C8-7F67-0C92-2886-208D14F41C38}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Render\Common">
       <UniqueIdentifier>{E2636FCA-CEF2-F893-7711-0D8F637F093A}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Render\Core">
       <UniqueIdentifier>{82C8DD5B-6EAC-9EB1-D70C-9904C30F8933}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Render\GBuffer">
-      <UniqueIdentifier>{3A75D9E3-A6E1-94DE-6FD5-2C3CDB00B746}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Render\Pass">
       <UniqueIdentifier>{10AEE45B-FC91-A5B1-65F2-9F0451F58F33}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Render\Scene">
       <UniqueIdentifier>{8796B1D8-F3F7-8EE6-7C65-D598E8C5C5A5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Render\Scene\ColorGrading">
-      <UniqueIdentifier>{F1626C9C-DDB3-57DE-0618-46A0F2C7EA47}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\System">
       <UniqueIdentifier>{8FF69A5A-FBB6-1691-C4F1-5F0E30715B6D}</UniqueIdentifier>
@@ -198,6 +195,9 @@
     </Filter>
     <Filter Include="Lib\Adapter\Random">
       <UniqueIdentifier>{BC77C5C7-A85B-861D-11BC-8070FDBE709F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Adapter\String">
+      <UniqueIdentifier>{92B874CB-7E9C-3521-E7FC-2F74D3FF1FA3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Lib\Adapter\Time">
       <UniqueIdentifier>{AA635815-965C-7767-BF8E-5CECABE65673}</UniqueIdentifier>
@@ -546,6 +546,108 @@
     <ClInclude Include="Engine\Module\Scene\SceneFactory.h">
       <Filter>Engine\Module\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FBaseBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FGBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FLightAccumulationBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FMainBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FProcessBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FRenderTargetBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FTransparentBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Common\FDepthStencilTexture.h">
+      <Filter>Engine\Render\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Common\FLUTTexture.h">
+      <Filter>Engine\Render\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Common\FPriorityTexture.h">
+      <Filter>Engine\Render\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Common\FProcessTexture.h">
+      <Filter>Engine\Render\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Common\FRenderTexture.h">
+      <Filter>Engine\Render\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FBaseRenderCore.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCore.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreCanvas.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreDirectLight.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\FMainRender.h">
+      <Filter>Engine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\FPresenter.h">
+      <Filter>Engine\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FBaseRenderPass.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderConfig.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassAmbientOcclusion.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliasing.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassCanvas.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassContext.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredBase.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassForwardTransparent.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassLightingComposite.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassPostProcess.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassTonemap.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Scene\FScene.h">
+      <Filter>Engine\Render\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\Configuration\Configuration.h">
       <Filter>Engine\System\Configuration</Filter>
     </ClInclude>
@@ -741,6 +843,9 @@
     <ClInclude Include="Lib\Adapter\Random\Random.h">
       <Filter>Lib\Adapter\Random</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\Adapter\String\EncodedString.h">
+      <Filter>Lib\Adapter\String</Filter>
+    </ClInclude>
     <ClInclude Include="Lib\Adapter\Time\LocalTimePoint.h">
       <Filter>Lib\Adapter\Time</Filter>
     </ClInclude>
@@ -813,6 +918,9 @@
     <ClInclude Include="Lib\Sxl\OptimizedPathSet.h">
       <Filter>Lib\Sxl</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\Sxl\SubclassRegistry.h">
+      <Filter>Lib\Sxl</Filter>
+    </ClInclude>
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h">
       <Filter>Lib\Sxl</Filter>
     </ClInclude>
@@ -825,42 +933,6 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Common\FRenderTexture.h" />
-    <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
-    <ClInclude Include="Engine\Render\Common\FDepthStencilTexture.h" />
-    <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
-    <ClInclude Include="Engine\Render\Common\FPriorityTexture.h" />
-    <ClInclude Include="Engine\Render\Buffer\FMainBuffer.h" />
-    <ClInclude Include="Engine\Render\Buffer\FTransparentBuffer.h" />
-    <ClInclude Include="Engine\Render\Buffer\FGBuffer.h" />
-    <ClInclude Include="Engine\Render\Buffer\FLightAccumulationBuffer.h" />
-    <ClInclude Include="Engine\Render\Buffer\FRenderTargetBuffer.h" />
-    <ClInclude Include="Engine\Render\Buffer\FBaseBuffer.h" />
-    <ClInclude Include="Lib\Sxl\SubclassRegistry.h" />
-    <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h" />
-    <ClInclude Include="Engine\Render\Core\FRenderCore.h" />
-    <ClInclude Include="Engine\Render\Core\FBaseRenderCore.h" />
-    <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h" />
-    <ClInclude Include="Engine\Render\Scene\FScene.h" />
-    <ClInclude Include="Engine\Render\Pass\FRenderConfig.h" />
-    <ClInclude Include="Engine\Render\Pass\FBaseRenderPass.h" />
-    <ClInclude Include="Engine\Render\Pass\FRenderPassContext.h" />
-    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredBase.h" />
-    <ClInclude Include="Lib\Adapter\String\EncodedString.h" />
-    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.h" />
-    <ClInclude Include="Engine\Render\Core\FRenderCoreDirectLight.h" />
-    <ClInclude Include="Engine\Render\Pass\FRenderPassForwardTransparent.h" />
-    <ClInclude Include="Engine\Render\Buffer\FProcessBuffer.h" />
-    <ClInclude Include="Engine\Render\Pass\FRenderPassTonemap.h" />
-    <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h" />
-    <ClInclude Include="Engine\Render\Core\FRenderCoreCanvas.h" />
-    <ClInclude Include="Engine\Render\Pass\FRenderPassCanvas.h" />
-    <ClInclude Include="Engine\Render\FPresenter.h" />
-    <ClInclude Include="Engine\Render\FMainRender.h" />
-    <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliasing.h" />
-    <ClInclude Include="Engine\Render\Pass\FRenderPassPostProcess.h" />
-    <ClInclude Include="Engine\Render\Pass\FRenderPassLightingComposite.h" />
-    <ClInclude Include="Engine\Render\Pass\FRenderPassAmbientOcclusion.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1154,6 +1226,102 @@
     <ClCompile Include="Engine\Module\Scene\SceneFactory.cpp">
       <Filter>Engine\Module\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FGBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FLightAccumulationBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FMainBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FProcessBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FRenderTargetBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FTransparentBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Common\FDepthStencilTexture.cpp">
+      <Filter>Engine\Render\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp">
+      <Filter>Engine\Render\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Common\FPriorityTexture.cpp">
+      <Filter>Engine\Render\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp">
+      <Filter>Engine\Render\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Common\FRenderTexture.cpp">
+      <Filter>Engine\Render\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCore.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreCanvas.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreDirectLight.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\FMainRender.cpp">
+      <Filter>Engine\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\FPresenter.cpp">
+      <Filter>Engine\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FBaseRenderPass.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderConfig.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassAmbientOcclusion.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliasing.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassCanvas.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassContext.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredBase.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassForwardTransparent.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassLightingComposite.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassPostProcess.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassTonemap.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Scene\FScene.cpp">
+      <Filter>Engine\Render\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\Configuration\Configuration.cpp">
       <Filter>Engine\System\Configuration</Filter>
     </ClCompile>
@@ -1322,6 +1490,9 @@
     <ClCompile Include="Lib\Adapter\Json\JsonHandler.cpp">
       <Filter>Lib\Adapter\Json</Filter>
     </ClCompile>
+    <ClCompile Include="Lib\Adapter\String\EncodedString.cpp">
+      <Filter>Lib\Adapter\String</Filter>
+    </ClCompile>
     <ClCompile Include="Lib\Adapter\Time\LocalTimePoint.cpp">
       <Filter>Lib\Adapter\Time</Filter>
     </ClCompile>
@@ -1353,38 +1524,5 @@
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\Render\Common\FRenderTexture.cpp" />
-    <ClCompile Include="Engine\Render\Common\FDepthStencilTexture.cpp" />
-    <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
-    <ClCompile Include="Engine\Render\Common\FPriorityTexture.cpp" />
-    <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
-    <ClCompile Include="Engine\Render\Buffer\FMainBuffer.cpp" />
-    <ClCompile Include="Engine\Render\Buffer\FTransparentBuffer.cpp" />
-    <ClCompile Include="Engine\Render\Buffer\FGBuffer.cpp" />
-    <ClCompile Include="Engine\Render\Buffer\FLightAccumulationBuffer.cpp" />
-    <ClCompile Include="Engine\Render\Buffer\FRenderTargetBuffer.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCore.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp" />
-    <ClCompile Include="Engine\Render\Scene\FScene.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderConfig.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassContext.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredBase.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FBaseRenderPass.cpp" />
-    <ClCompile Include="Lib\Adapter\String\EncodedString.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCoreDirectLight.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassForwardTransparent.cpp" />
-    <ClCompile Include="Engine\Render\Buffer\FProcessBuffer.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassTonemap.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCoreCanvas.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassCanvas.cpp" />
-    <ClCompile Include="Engine\Render\FPresenter.cpp" />
-    <ClCompile Include="Engine\Render\FMainRender.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliasing.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassPostProcess.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassLightingComposite.cpp" />
-    <ClCompile Include="Engine\Render\Pass\FRenderPassAmbientOcclusion.cpp" />
   </ItemGroup>
 </Project>
