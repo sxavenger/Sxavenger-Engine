@@ -110,6 +110,10 @@ namespace SxGui {
 	// widget methods
 	//=========================================================================================
 
+	//-----------------------------------------------------------------------------------------
+	// [DragScalar]
+	//-----------------------------------------------------------------------------------------
+
 	template <ScalerConcept T, int32_t Component>
 	bool DragScalarN(const char* label, T v[Component], float v_speed = 1.0f, const std::optional<T>& v_min = std::nullopt, const std::optional<T>& v_max = std::nullopt, const char* format = GetImGuiFormat<T>(), ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 
@@ -120,9 +124,43 @@ namespace SxGui {
 
 	bool DragVector3(const char* label, float v[3], float v_speed = 1.0f, const std::optional<float>& v_min = std::nullopt, const std::optional<float>& v_max = std::nullopt, const char* format = "%.3f", ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 
-	void ImageLabel(const char* label, ImTextureRef handle, const ImVec2& size);
+	//-----------------------------------------------------------------------------------------
+	// [SliderScalar]
+	//-----------------------------------------------------------------------------------------
+
+	template <ScalerConcept T, int32_t Component>
+	void SliderScalarN(const char* label, T v[Component], const T v_min, const T v_max, const char* format = GetImGuiFormat<T>(), ImGuiSliderFlags flags = ImGuiSliderFlags_None);
+
+	template <ScalerConcept T>
+	void SliderScalar(const char* label, T* v, const T v_min, const T v_max, const char* format = GetImGuiFormat<T>(), ImGuiSliderFlags flags = ImGuiSliderFlags_None);
+
+	//-----------------------------------------------------------------------------------------
+	// [Image]
+	//-----------------------------------------------------------------------------------------
+
+	void Image(ImTextureRef handle, const ImVec2& resolution);
+
+	void ImageLabel(const char* label, ImTextureRef handle, const ImVec2& resolution);
+
+	//-----------------------------------------------------------------------------------------
+	// [Dummy]
+	//-----------------------------------------------------------------------------------------
 
 	void DummySpace(const ImVec2& size);
+
+	//-----------------------------------------------------------------------------------------
+	// [Selectable]
+	//-----------------------------------------------------------------------------------------
+
+	bool Selectable(const char* label, bool isSelect, ImGuiSelectableFlags flags = ImGuiSelectableFlags_None);
+
+
+	//-----------------------------------------------------------------------------------------
+	// [ComboEnum]
+	//-----------------------------------------------------------------------------------------
+
+	template <typename T> requires std::is_enum_v<T>
+	bool ComboEnum(const char* label, T* v, ImGuiComboFlags flags = ImGuiComboFlags_None);
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Hierarchy namespace
@@ -260,6 +298,33 @@ bool SxGui::DragScalarN(const char* label, T v[Component], float v_speed, const 
 template <SxGui::ScalerConcept T>
 bool SxGui::DragScalar(const char* label, T* v, float v_speed, const std::optional<T>& v_min, const std::optional<T>& v_max, const char* format, ImGuiSliderFlags flags) {
 	return SxGui::DragScalarN<T, 1>(label, v, v_speed, v_min, v_max, format, flags);
+}
+
+template <SxGui::ScalerConcept T, int32_t Component>
+void SxGui::SliderScalarN(const char* label, T v[Component], const T v_min, const T v_max, const char* format, ImGuiSliderFlags flags) {
+	return ImGui::SliderScalarN(label, SxGui::GetImGuiDataType<T>(), v, Component, &v_min, &v_max, format, flags);
+}
+
+template <SxGui::ScalerConcept T>
+void SxGui::SliderScalar(const char* label, T* v, const T v_min, const T v_max, const char* format, ImGuiSliderFlags flags) {
+	return SxGui::SliderScalarN<T, 1>(label, v, v_min, v_max, format, flags);
+}
+
+template <typename T> requires std::is_enum_v<T>
+bool SxGui::ComboEnum(const char* label, T* v, ImGuiComboFlags flags) {
+	bool changed = false;
+
+	if (ImGui::BeginCombo(label, magic_enum::enum_name(*v).data(), flags)) {
+		for (const auto& [value, name] : magic_enum::enum_entries<T>()) {
+			if (SxGui::Selectable(name.data(), *v == value)) {
+				*v = value;
+				changed |= true;
+			}
+		}
+		ImGui::EndCombo();
+	}
+
+	return changed;
 }
 
 template <SxGui::ScalerConcept T, int32_t Component>

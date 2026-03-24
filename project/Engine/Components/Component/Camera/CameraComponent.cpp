@@ -93,7 +93,7 @@ CameraComponent::CameraComponent(EntityBehaviour* behaviour)
 
 void CameraComponent::ShowComponentInspector() {
 
-	SxImGui::ComboEnum("tag", &tag_);
+	SxGui::ComboEnum("tag", &tag_);
 
 	if (ImGui::TreeNodeEx("projection", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
 		ImGui::DragFloat2("sensor", &projection_.sensor.x, 0.01f);

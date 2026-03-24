@@ -433,7 +433,29 @@ bool SxGui::DragVector3(const char* label, float v[3], float v_speed, const std:
 	return isChanged;
 }
 
-void SxGui::ImageLabel(const char* label, ImTextureRef handle, const ImVec2& size) {
+void SxGui::Image(ImTextureRef handle, const ImVec2& resolution) {
+
+	ImVec2 region = ImGui::GetContentRegionAvail();
+
+	// 画像アス比と分割したWindowアス比の計算
+	float textureAspectRatio = static_cast<float>(resolution.x) / static_cast<float>(resolution.y);
+	float windowAspectRatio = region.x / region.y;
+
+	// 出力する画像サイズの設定
+	ImVec2 displayTextureSize = region;
+
+	// 画像サイズの調整
+	if (textureAspectRatio <= windowAspectRatio) {
+		displayTextureSize.x *= textureAspectRatio / windowAspectRatio;
+
+	} else {
+		displayTextureSize.y *= windowAspectRatio / textureAspectRatio;
+	}
+
+	ImGui::Image(handle, displayTextureSize);
+}
+
+void SxGui::ImageLabel(const char* label, ImTextureRef handle, const ImVec2& resolution) {
 
 	ImGui::PushID(label);
 	ImGui::BeginGroup();
@@ -442,8 +464,8 @@ void SxGui::ImageLabel(const char* label, ImTextureRef handle, const ImVec2& siz
 	region.x *= 0.5f; // 画像は利用可能な幅の半分を占める
 
 	// 画像アス比と分割したWindowアス比の計算
-	float textureAspectRatio = static_cast<float>(size.x) / static_cast<float>(size.y);
-	float windowAspectRatio = region.x / region.y;
+	float textureAspectRatio = static_cast<float>(resolution.x) / static_cast<float>(resolution.y);
+	float windowAspectRatio  = region.x / region.y;
 
 	// 出力する画像サイズの設定
 	ImVec2 displayTextureSize = region;
@@ -475,6 +497,14 @@ void SxGui::DummySpace(const ImVec2& size) {
 	ImVec2 position = ImGui::GetCursorPos();
 	ImGui::Dummy(size);
 	ImGui::SetCursorPos(position);
+}
+
+bool SxGui::Selectable(const char* label, bool isSelect, ImGuiSelectableFlags flags) {
+	ImGui::PushStyleColor(ImGuiCol_Header, ImGui::GetStyleColorVec4(ImGuiCol_TabSelectedOverline));
+	bool changed = ImGui::Selectable(label, isSelect, flags);
+	ImGui::PopStyleColor();
+
+	return changed;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

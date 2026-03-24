@@ -25,7 +25,7 @@ PerspectiveCameraActor::PerspectiveCameraActor()
 }
 
 void PerspectiveCameraActor::Inspectable() {
-	if (SxImGui::ComboEnum("perspective", &perspective_)) {
+	if (SxGui::ComboEnum("perspective", &perspective_)) {
 		SetPerspective(perspective_);
 	}
 

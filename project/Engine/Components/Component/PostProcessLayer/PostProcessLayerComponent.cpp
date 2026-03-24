@@ -8,7 +8,7 @@ SXAVENGER_ENGINE_USING
 #include "../../Entity/EntityBehaviour.h"
 
 //* engine
-#include <Engine/System/UI/SxImGui.h>
+#include <Engine/System/UI/SxGui.h>
 #include <Engine/Graphics/Graphics.h>
 
 //* lib
@@ -24,7 +24,7 @@ SXAVENGER_ENGINE_USING
 
 void PostProcessLayerComponent::ShowComponentInspector() {
 
-	SxImGui::ComboEnum("tag", &tag_);
+	SxGui::ComboEnum("tag", &tag_);
 
 	if (ImGui::TreeNodeEx("process layer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
 

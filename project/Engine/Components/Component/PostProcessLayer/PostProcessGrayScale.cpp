@@ -22,7 +22,7 @@ void PostProcessGrayScale::Parameter::Init() {
 }
 
 void PostProcessGrayScale::Parameter::SetImGuiCommand() {
-	SxImGui::ComboEnum("Type", &type);
+	SxGui::ComboEnum("Type", &type);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

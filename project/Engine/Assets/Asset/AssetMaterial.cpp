@@ -8,7 +8,7 @@ DXOBJECT_USING
 //* asset
 #include "AssetStorage.h"
 
-//* ucontent
+//* content
 #include "../Content/ContentStorage.h"
 
 //* engine
@@ -391,7 +391,7 @@ void AssetMaterial::ShowInspector() {
 		return;
 	}
 
-	SxImGui::ComboEnum("mode", &mode_);
+	SxGui::ComboEnum("mode", &mode_);
 
 }
 

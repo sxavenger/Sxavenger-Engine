@@ -415,7 +415,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("layout");
 		ImGui::Separator();
 
-		SxImGui::ComboEnum("Display Buffer", &displayBuffer_);
+		SxGui::ComboEnum("Display Buffer", &displayBuffer_);
 
 		SxImGui::HelpMarker("(!)", "[alt] + [up] || [down]");
 
@@ -425,9 +425,9 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("process option");
 		ImGui::Separator();
 
-		SxImGui::ComboEnum("anti-aliasing",       &config_.antiAliasing);
-		SxImGui::ComboEnum("ambient-occlusion",   &config_.ambientOcclusion);
-		SxImGui::ComboEnum("global-illumination", &config_.globalIllumination);
+		SxGui::ComboEnum("anti-aliasing",       &config_.antiAliasing);
+		SxGui::ComboEnum("ambient-occlusion",   &config_.ambientOcclusion);
+		SxGui::ComboEnum("global-illumination", &config_.globalIllumination);
 
 		for (const auto& [value, name] : magic_enum::enum_entries<FRenderConfig::OptionFlag>()) {
 			if (value == FRenderConfig::OptionFlag::Default) {
@@ -475,7 +475,9 @@ void RenderSceneEditor::ShowGameMenu() {
 		ImGui::Text("process");
 		ImGui::Separator();
 
-		SxImGui::ComboEnum("anti-aliasing", &config.antiAliasing);
+		SxGui::ComboEnum("anti-aliasing",       &config.antiAliasing);
+		SxGui::ComboEnum("ambient-occlusion",   &config.ambientOcclusion);
+		SxGui::ComboEnum("global-illumination", &config.globalIllumination);
 
 		for (const auto& [value, name] : magic_enum::enum_entries<FRenderConfig::OptionFlag>()) {
 			if (value == FRenderConfig::OptionFlag::Default) {
