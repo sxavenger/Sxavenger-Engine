@@ -48,7 +48,7 @@ using GPUBuffer = std::variant<D3D12_GPU_VIRTUAL_ADDRESS, D3D12_GPU_DESCRIPTOR_H
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ShaderVisibility enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum class ShaderVisibility {
+enum class ShaderVisibility : uint32_t {
 	VISIBILITY_ALL           = D3D12_SHADER_VISIBILITY_ALL,
 	VISIBILITY_VERTEX        = D3D12_SHADER_VISIBILITY_VERTEX,
 	VISIBILITY_HULL          = D3D12_SHADER_VISIBILITY_HULL,
@@ -60,14 +60,23 @@ enum class ShaderVisibility {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// SamplerFilter enum class
+////////////////////////////////////////////////////////////////////////////////////////////
+enum class SamplerFilter : uint32_t {
+	Linear      = D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+	Point       = D3D12_FILTER_MIN_MAG_MIP_POINT,
+	Anisotropic = D3D12_FILTER_ANISOTROPIC
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // SamplerMode enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum SamplerMode {
-	MODE_WRAP        = D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-	MODE_MIRROR      = D3D12_TEXTURE_ADDRESS_MODE_MIRROR,
-	MODE_CLAMP       = D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-	MODE_BORDER      = D3D12_TEXTURE_ADDRESS_MODE_BORDER,
-	MODE_MIRROR_ONCE = D3D12_TEXTURE_ADDRESS_MODE_MIRROR_ONCE
+enum class SamplerMode : uint32_t {
+	Wrap       = D3D12_TEXTURE_ADDRESS_MODE_WRAP,
+	Mirror     = D3D12_TEXTURE_ADDRESS_MODE_MIRROR,
+	Clamp      = D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+	Border     = D3D12_TEXTURE_ADDRESS_MODE_BORDER,
+	MirrorOnce = D3D12_TEXTURE_ADDRESS_MODE_MIRROR_ONCE
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,25 +95,25 @@ enum DescriptorType : uint32_t {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CompileProfile enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum class CompileProfile : uint8_t {
-	vs,
-	gs,
-	ms,
-	as,
-	ps,
-	cs,
-	lib,
+enum class CompileProfile : uint8_t { //!< Graphics -> Compute -> Lib の順で並べる
+	Vertex,
+	Geometry,
+	Mesh,
+	Amplification,
+	Pixel,
+	Compute,
+	Lib,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsShaderType enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class GraphicsShaderType : uint8_t {
-	vs,
-	gs,
-	ms,
-	as,
-	ps
+	Vertex        = CompileProfile::Vertex,
+	Geometry      = CompileProfile::Geometry,
+	Mesh          = CompileProfile::Mesh,
+	Amplification = CompileProfile::Amplification,
+	Pixel         = CompileProfile::Pixel
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

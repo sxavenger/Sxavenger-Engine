@@ -347,9 +347,9 @@ void DebugPrimitive::CreatePipeline() {
 	{
 		auto& pipeline = pipelines_[static_cast<uint32_t>(PipelineType::Line)];
 		pipeline = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.vs.hlsl", DxObject::GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.gs.hlsl", DxObject::GraphicsShaderType::gs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.ps.hlsl", DxObject::GraphicsShaderType::ps);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.vs.hlsl", DxObject::GraphicsShaderType::Vertex);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.gs.hlsl", DxObject::GraphicsShaderType::Geometry);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.ps.hlsl", DxObject::GraphicsShaderType::Pixel);
 
 		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
@@ -375,9 +375,9 @@ void DebugPrimitive::CreatePipeline() {
 	{
 		auto& pipeline = pipelines_[static_cast<uint32_t>(PipelineType::LineOverlay)];
 		pipeline = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.vs.hlsl", DxObject::GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.gs.hlsl", DxObject::GraphicsShaderType::gs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.ps.hlsl", DxObject::GraphicsShaderType::ps);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.vs.hlsl", DxObject::GraphicsShaderType::Vertex);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.gs.hlsl", DxObject::GraphicsShaderType::Geometry);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.ps.hlsl", DxObject::GraphicsShaderType::Pixel);
 
 		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
@@ -403,9 +403,9 @@ void DebugPrimitive::CreatePipeline() {
 	{
 		auto& pipeline = pipelines_[static_cast<uint32_t>(PipelineType::Point)];
 		pipeline = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.vs.hlsl", DxObject::GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.gs.hlsl", DxObject::GraphicsShaderType::gs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.ps.hlsl", DxObject::GraphicsShaderType::ps);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.vs.hlsl", DxObject::GraphicsShaderType::Vertex);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.gs.hlsl", DxObject::GraphicsShaderType::Geometry);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.ps.hlsl", DxObject::GraphicsShaderType::Pixel);
 
 		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
@@ -431,9 +431,9 @@ void DebugPrimitive::CreatePipeline() {
 	{
 		auto& pipeline = pipelines_[static_cast<uint32_t>(PipelineType::PointOverlay)];
 		pipeline = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.vs.hlsl", DxObject::GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.gs.hlsl", DxObject::GraphicsShaderType::gs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.ps.hlsl", DxObject::GraphicsShaderType::ps);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.vs.hlsl", DxObject::GraphicsShaderType::Vertex);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.gs.hlsl", DxObject::GraphicsShaderType::Geometry);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.ps.hlsl", DxObject::GraphicsShaderType::Pixel);
 
 		pipeline->ReflectionRootSignature(System::GetDxDevice());
 

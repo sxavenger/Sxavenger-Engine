@@ -97,7 +97,7 @@ void SkinnedMeshRendererComponent::Update(const DirectXQueueContext* context) {
 	mesh_.UpdateBottomLevelAS(context);
 }
 
-void SkinnedMeshRendererComponent::BindIABuffer(const DirectXQueueContext* context) const {
+void SkinnedMeshRendererComponent::BindInputAssembler(const DirectXQueueContext* context) const {
 	auto commandList = context->GetCommandList();
 
 	D3D12_VERTEX_BUFFER_VIEW vbv = mesh_.vertex->GetVertexBufferView();

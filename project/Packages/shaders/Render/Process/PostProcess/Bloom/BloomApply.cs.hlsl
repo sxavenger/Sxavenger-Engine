@@ -32,12 +32,12 @@ float Gaussian2d(float2 x, float sigma) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)]
+[numthreads(NUM_THREADS_X, NUM_THREADS_Y, 1)]
 void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispathThreadId.xy;
 	
-	if (CheckOverTexture(index)) {
+	if (CheckOverDimension(index)) {
 		return;
 	}
 
@@ -68,7 +68,7 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 			float theta   = j * inc;
 			float2 offset = rad * float2(cos(theta), sin(theta));
 
-			float2 uv    = (float2(index) + offset * noise) / float2(size);
+			float2 uv    = (float2(index) + offset * noise) / float2(dimension);
 			float weight = Gaussian2d(offset, rad);
 
 			luminance_sum += gLuminance.SampleLevel(gSampler, uv, 0) * weight;

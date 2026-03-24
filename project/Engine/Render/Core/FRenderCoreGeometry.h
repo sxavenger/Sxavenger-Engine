@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* render
+#include "FBaseRenderCore.h"
+
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/Configuration/Configuration.h>
@@ -15,6 +18,10 @@
 //* external
 #include <magic_enum.hpp>
 
+//* c++
+#include <array>
+#include <filesystem>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,31 +30,32 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreGeometry class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCoreGeometry {
+class FRenderCoreGeometry final
+	: public FBaseRenderCore {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Type enum class
+	// Pipeline enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class Type : uint32_t {
-		ForwardOpaque_MeshVS,
-		ForwardOpaque_MeshMS,
+	enum class Pipeline : uint32_t {
+		ForwardPrepass_MeshVS,
+		ForwardPrepass_MeshMS,
 		ForwardTransparent_MeshVS,
 		ForwardTransparent_MeshMS,
 		Deferred_MeshVS,
 		Deferred_MeshMS,
-		//Forward_CPUParticleVS,
-		//Forward_GPUParticleVS,
 	};
+	static inline const size_t kPipelineCount = magic_enum::enum_count<Pipeline>();
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Desc enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Desc : uint8_t {
 		Deferred,
-		ForwardOpaque,
+		ForwardPrepass,
 		ForwardTransparent,
 	};
+	static inline const size_t kDescCount = magic_enum::enum_count<Desc>();
 
 public:
 
@@ -55,13 +63,13 @@ public:
 	// public methods
 	//=========================================================================================
 
-	void Init();
+	void Init() override;
 
 	//* pipeline option *//
 
-	void SetPipeline(Type type, const DirectXQueueContext* context, const Vector2ui& size);
+	void SetPipeline(Pipeline pipeline, const DirectXQueueContext* context, const Vector2ui& resolution) const;
 
-	void BindGraphicsBuffer(Type type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc);
+	void BindGraphicsBuffer(Pipeline pipeline, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
 
 private:
 
@@ -71,13 +79,14 @@ private:
 
 	//* graphics pipeline *//
 
-	std::array<std::unique_ptr<CustomReflectionGraphicsPipeline>, magic_enum::enum_count<Type>()> pipelines_;
+	std::array<CustomReflectionGraphicsPipeline, kPipelineCount> pipelines_;
+	std::array<DxObject::GraphicsPipelineDesc, kDescCount> descs_ = {};
 
-	std::array<DxObject::GraphicsPipelineDesc, magic_enum::enum_count<Desc>()> descs_ = {};
+	// TODO: Shader Script への移行
 
 	//* directory *//
 
-	static inline const std::filesystem::path kDirectory = kPackagesDirectory / "shaders" / "render";
+	static inline const std::filesystem::path kDirectory = kPackagesDirectory / "shaders" / "render" / "Geometry";
 
 	//=========================================================================================
 	// private methods

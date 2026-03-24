@@ -72,7 +72,7 @@ public:
 
 	//* render option *//
 
-	void BindAIBuffer(const DirectXQueueContext* context);
+	void BindInputAssembler(const DirectXQueueContext* context);
 
 	void DrawCall(const DirectXQueueContext* context);
 

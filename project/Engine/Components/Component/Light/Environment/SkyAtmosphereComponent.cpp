@@ -287,7 +287,7 @@ void SkyAtmosphereComponent::CreateMultipleScattering() {
 	pipelines_[static_cast<uint8_t>(Type::MultipleScattering)].CreateBlob(kPackagesDirectory / "shaders" / "Render" / "Atmosphere" / "MultipleScattering.cs.hlsl");
 
 	DxObject::SamplerBindDesc desc = {};
-	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::Clamp);
 
 	pipelines_[static_cast<uint8_t>(Type::MultipleScattering)].ReflectionPipeline(System::GetDxDevice(), desc);
 }
@@ -303,7 +303,7 @@ void SkyAtmosphereComponent::CreateSkyCube() {
 	pipelines_[static_cast<uint8_t>(Type::SkyCube)].CreateBlob(kPackagesDirectory / "shaders" / "render" / "Atmosphere" / "SkyCube.cs.hlsl");
 
 	DxObject::SamplerBindDesc desc = {};
-	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::Clamp);
 
 	pipelines_[static_cast<uint8_t>(Type::SkyCube)].ReflectionPipeline(System::GetDxDevice(), desc);
 
@@ -323,7 +323,7 @@ void SkyAtmosphereComponent::CreateAerial() {
 	pipelines_[static_cast<uint8_t>(Type::Aerial)].CreateBlob(kPackagesDirectory / "shaders" / "render" / "Atmosphere" / "Aerial.cs.hlsl");
 
 	DxObject::SamplerBindDesc desc = {};
-	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+	desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::Clamp);
 
 	pipelines_[static_cast<uint8_t>(Type::Aerial)].ReflectionPipeline(System::GetDxDevice(), desc);
 

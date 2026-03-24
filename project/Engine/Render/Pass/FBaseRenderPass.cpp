@@ -5,33 +5,29 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Utility/RuntimeLogger.h>
+#include <Engine/System/System.h>
+
+//* lib
+#include <Lib/Adapter/String/EncodedString.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Config structure methods
+// FBaseRenderPass class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FBaseRenderPass::Config::AttachStatus() {
-
-	status = Status::Success;
-
-	if (buffer == nullptr) {
-		status |= Status::Error_GBuffer;
-		RuntimeLogger::LogWarning("[FBaseRenderPass]", "buffer is not set.");
-	}
-
-	if (scene == nullptr) {
-		status |= Status::Warning_Scene;
-		RuntimeLogger::LogWarning("[FBaseRenderPass]", "scene is not set.");
-	}
-
-	if (camera == nullptr || cullCamera == nullptr) {
-		status |= Status::Warning_Camera;
-		RuntimeLogger::LogWarning("[FBaseRenderPass]", "camera is not set.");
-	}
-
+void FBaseRenderPass::BeginRenderPass(const DirectXQueueContext* context, const std::string& pass, const FRenderConfig& config) {
+	context->BeginEvent(EncodedString::Convert(pass));
+	System::BeginRecordGpu(std::format("[{}] FRenderPass - {}", config.name, pass));
 }
 
-bool FBaseRenderPass::Config::CheckStatus(Status _status) const {
-	return status.Any(_status);
+void FBaseRenderPass::EndRenderPass(const DirectXQueueContext* context) {
+	System::EndRecordGpu();
+	context->EndEvent();
+}
+
+void FBaseRenderPass::BeginEvent(const DirectXQueueContext* context, const std::string& event) {
+	context->BeginEvent(EncodedString::Convert(event));
+}
+
+void FBaseRenderPass::EndEvent(const DirectXQueueContext* context) {
+	context->EndEvent();
 }

@@ -5,133 +5,174 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "../FRenderCore.h"
+#include "../Buffer/FMainBuffer.h"
+#include "../Core/FRenderCore.h"
+#include "../Core/FRenderCoreProcess.h"
+
+//* engine
+#include <Engine/System/Utility/RuntimeLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassAntiAliasing class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FRenderPassAntiAliasing::Render(const DirectXQueueContext* context, const Config& config) {
+void FRenderPassAntiAliasing::Render(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	if (config.antiAliasing == Config::AntiAliasing::None) {
-		return;
+	if (config.antiAliasing == FRenderConfig::AntiAliasing::None) {
+		return; //!< anti-aliasingが無効
 	}
 
-	context->BeginEvent(L"RenderPass - Anti Aliasing");
-	System::BeginRecordGpu(std::format("[{}] RenderPass - Anti Aliasing", magic_enum::enum_name(config.tag)));
-
-	BeginProcessAntiAliasing(context, config.buffer);
-
-	switch (config.antiAliasing) {
-		case Config::AntiAliasing::FXAA:
-			ProcessFXAA(context, config.buffer);
-			break;
-
-		case Config::AntiAliasing::SMAA_1x:
-			ProcessSMAA(context, config.buffer);
-			break;
+	if (!config.buffer->HasBuffer<FMainBuffer>()) {
+		RuntimeLogger::LogError("[RenderPass - Anti-Aliasing]", "FMainBuffer is required."); 
+		return; //!< bufferが不適格
 	}
 
-	EndProcessAntiAliasing(context, config.buffer);
+	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreProcess>(); //!< RenderCoreの確保
 
-	System::EndRecordGpu();
-	context->EndEvent();
+	FBaseRenderPass::BeginRenderPass(context, "Anti-Aliasing", config);
 
+	{ //!< Anti-Aliasing Pass
+
+		BeginAntiAliasingPass(context, config.buffer);
+
+		switch (config.antiAliasing) {
+			case FRenderConfig::AntiAliasing::FXAA:
+				PassAntiAliasingFXAA(context, config);
+				break;
+
+			case FRenderConfig::AntiAliasing::SMAA_1x:
+				PassAntiAliasingSMAA(context, config);
+				break;
+		}
+
+		EndAntiAliasingPass(context, config.buffer);
+	}
+
+	FBaseRenderPass::EndRenderPass(context);
 }
 
-void FRenderPassAntiAliasing::BeginProcessAntiAliasing(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
-	buffer->GetProcessTextures()->BeginProcess(context, buffer->GetGBuffer(FMainGBuffer::Layout::Scene));
+void FRenderPassAntiAliasing::BeginAntiAliasingPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	FMainBuffer* main       = buffer->GetBuffer<FMainBuffer>();
+	FProcessBuffer* process = buffer->GetProcess();
+
+	process->Import(context, &main->GetBuffer(FMainBuffer::Layout::Scene));
+	//!< Scene BufferをProcess処理用に使用状態にする.
 }
 
-void FRenderPassAntiAliasing::EndProcessAntiAliasing(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
-	buffer->GetProcessTextures()->EndProcess(context, buffer->GetGBuffer(FMainGBuffer::Layout::Scene));
+void FRenderPassAntiAliasing::EndAntiAliasingPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	FMainBuffer* main       = buffer->GetBuffer<FMainBuffer>();
+	FProcessBuffer* process = buffer->GetProcess();
+
+	process->Export(context, &main->GetBuffer(FMainBuffer::Layout::Scene));
+	//!< Process処理が完了したScene BufferをScene Bufferに戻す.
 }
 
-void FRenderPassAntiAliasing::ProcessFXAA(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+void FRenderPassAntiAliasing::PassAntiAliasingFXAA(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	auto core = FRenderCore::GetInstance()->GetProcess();
+	FProcessBuffer* process = config.buffer->GetProcess(); //!< Process Bufferの確保
 
-	auto process = buffer->GetProcessTextures();
-	process->NextProcess();
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreProcess>();
 
-	process->GetCurrentTexture()->TransitionBeginUnordered(context);
-
-	core->SetPipeline(FRenderCoreProcess::CompositeType::FXAA, context);
-
+	//!< parameterの設定
 	DxObject::BindBufferDesc desc = {};
-	desc.Set32bitConstants("Dimension", 2, &buffer->GetSize());
-	desc.SetHandle("gInput",  process->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput", process->GetCurrentTexture()->GetGPUHandleUAV());
 
-	static const Vector3f kParameter = { 0.75f, 0.125f, 0.0833f };
-	//!< todo: parameterを変更可能に
+	//!< 共通parameterの設定
+	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
+ 
+	{ //!< FXAA処理
 
-	desc.Set32bitConstants("Parameter", 3, &kParameter);
+		//!< Process Bufferの準備
+		process->Next();
+		process->GetCurrentTexture().TransitionUnorderedAccess(context);
 
-	core->BindComputeBuffer(FRenderCoreProcess::CompositeType::FXAA, context, desc);
-	core->Dispatch(context, buffer->GetSize());
+		core->SetPipeline(FRenderCoreProcess::CompositeProcess::FXAA, context);
 
-	process->GetCurrentTexture()->TransitionEndUnordered(context);
+		//!< Bufferの設定
+		desc.SetHandle("gInput",  process->GetPreviousTexture().GetGPUHandleSRV());
+		desc.SetHandle("gOutput", process->GetCurrentTexture().GetGPUHandleUAV());
 
+		//!< FXAAのparameterの設定 (x: subpixel, y: edge threshold, z: edge threshold min)
+		static const Vector3f kParameter = { 0.75f, 0.125f, 0.0833f }; // TODO: parameterを変更可能に
+		desc.Set32bitConstants("Parameter", 3, &kParameter);
+
+		core->BindComputeBuffer(FRenderCoreProcess::CompositeProcess::FXAA, context, desc);
+		core->Dispatch(context, config.buffer->GetResolution());
+
+		process->GetCurrentTexture().TransitionDefaultState(context);
+	}
 }
 
-void FRenderPassAntiAliasing::ProcessSMAA(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+void FRenderPassAntiAliasing::PassAntiAliasingSMAA(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	auto core = FRenderCore::GetInstance()->GetProcess();
+	FProcessBuffer* process = config.buffer->GetProcess(); //!< Process Bufferの確保
+	FMainBuffer* main       = config.buffer->GetBuffer<FMainBuffer>();
 
-	auto process = buffer->GetProcessTextures();
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreProcess>();
 
-	{ //!< Edge Detection Pass
-		process->NextProcess();
-		process->GetCurrentTexture()->TransitionBeginUnordered(context);
+	//!< parameterの設定
+	DxObject::BindBufferDesc desc = {};
 
-		core->SetPipeline(FRenderCoreProcess::CompositeType::SMAA_EdgeDetection, context);
+	//!< 共通parameterの設定
+	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 
-		DxObject::BindBufferDesc desc = {};
-		desc.Set32bitConstants("Dimension", 2, &buffer->GetSize());
-		desc.SetHandle("gInput",  process->GetPrevTexture()->GetGPUHandleSRV());
-		desc.SetHandle("gOutput", process->GetCurrentTexture()->GetGPUHandleUAV());
+	//!< SMAAのTextureの設定
+	desc.SetHandle("gAreaTexture",   FRenderCore::GetInstance()->GetSMAAAreaTexture());
+	desc.SetHandle("gSearchTexture", FRenderCore::GetInstance()->GetSMAASearchTexture());
 
-		core->BindComputeBuffer(FRenderCoreProcess::CompositeType::SMAA_EdgeDetection, context, desc);
-		core->Dispatch(context, buffer->GetSize());
+	{ //!< Edge Detection
 
-		process->GetCurrentTexture()->TransitionEndUnordered(context);
+		//!< Process Bufferの準備
+		process->Next();
+		process->GetCurrentTexture().TransitionUnorderedAccess(context);
+
+		core->SetPipeline(FRenderCoreProcess::CompositeProcess::SMAA_EdgeDetection, context);
+
+		//!< Bufferの設定
+		desc.SetHandle("gInput",  process->GetPreviousTexture().GetGPUHandleSRV());
+		desc.SetHandle("gOutput", process->GetCurrentTexture().GetGPUHandleUAV());
+
+		core->BindComputeBuffer(FRenderCoreProcess::CompositeProcess::SMAA_EdgeDetection, context, desc);
+		core->Dispatch(context, config.buffer->GetResolution());
+
+		process->GetCurrentTexture().TransitionDefaultState(context);
 	}
 
-	{ //!< Blend Weight Calculation Pass
-		process->NextProcess();
-		process->GetCurrentTexture()->TransitionBeginUnordered(context);
+	{ //!< Blend Weight Calculation
 
-		core->SetPipeline(FRenderCoreProcess::CompositeType::SMAA_BlendWeight, context);
+		//!< Process Bufferの準備
+		process->Next();
+		process->GetCurrentTexture().TransitionUnorderedAccess(context);
 
-		DxObject::BindBufferDesc desc = {};
-		desc.Set32bitConstants("Dimension", 2, &buffer->GetSize());
-		desc.SetHandle("gEdge",          process->GetPrevTexture()->GetGPUHandleSRV());
-		desc.SetHandle("gOutput",        process->GetCurrentTexture()->GetGPUHandleUAV());
-		desc.SetHandle("gAreaTexture",   FRenderCore::GetInstance()->GetSMAAAreaTexture());
-		desc.SetHandle("gSearchTexture", FRenderCore::GetInstance()->GetSMAASearchTexture());
+		core->SetPipeline(FRenderCoreProcess::CompositeProcess::SMAA_BlendWeight, context);
 
-		core->BindComputeBuffer(FRenderCoreProcess::CompositeType::SMAA_BlendWeight, context, desc);
-		core->Dispatch(context, buffer->GetSize());
+		//!< Bufferの設定
+		desc.SetHandle("gEdge",   process->GetPreviousTexture().GetGPUHandleSRV());
+		desc.SetHandle("gOutput", process->GetCurrentTexture().GetGPUHandleUAV());
 
-		process->GetCurrentTexture()->TransitionEndUnordered(context);
+		core->BindComputeBuffer(FRenderCoreProcess::CompositeProcess::SMAA_BlendWeight, context, desc);
+		core->Dispatch(context, config.buffer->GetResolution());
+
+		process->GetCurrentTexture().TransitionDefaultState(context);
 	}
 
-	{ //!< Neighborhood Blending Pass
-		process->NextProcess();
-		process->GetCurrentTexture()->TransitionBeginUnordered(context);
+	{ //!< Neighborhood Blending
+		//!< Process Bufferの準備
+		process->Next();
+		process->GetCurrentTexture().TransitionUnorderedAccess(context);
 
-		core->SetPipeline(FRenderCoreProcess::CompositeType::SMAA_NeighborhoodBlending, context);
+		core->SetPipeline(FRenderCoreProcess::CompositeProcess::SMAA_NeighborhoodBlending, context);
 
-		DxObject::BindBufferDesc desc = {};
-		desc.Set32bitConstants("Dimension", 2, &buffer->GetSize());
-		desc.SetHandle("gInput",       buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV());
-		desc.SetHandle("gBlendWeight", process->GetPrevTexture()->GetGPUHandleSRV());
-		desc.SetHandle("gOutput",      process->GetCurrentTexture()->GetGPUHandleUAV());
+		//!< Bufferの設定
+		desc.SetHandle("gScene",  main->GetBuffer(FMainBuffer::Layout::Scene).GetGPUHandleSRV());
+		desc.SetHandle("gBlend",  process->GetPreviousTexture().GetGPUHandleSRV());
+		desc.SetHandle("gOutput", process->GetCurrentTexture().GetGPUHandleUAV());
 
-		core->BindComputeBuffer(FRenderCoreProcess::CompositeType::SMAA_NeighborhoodBlending, context, desc);
-		core->Dispatch(context, buffer->GetSize());
+		core->BindComputeBuffer(FRenderCoreProcess::CompositeProcess::SMAA_NeighborhoodBlending, context, desc);
+		core->Dispatch(context, config.buffer->GetResolution());
 
-		process->GetCurrentTexture()->TransitionEndUnordered(context);
+		process->GetCurrentTexture().TransitionDefaultState(context);
 	}
+
 }

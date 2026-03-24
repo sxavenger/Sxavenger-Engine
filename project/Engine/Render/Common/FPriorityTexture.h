@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxObjectCommon.h>
+#include <Engine/System/DirectX/DxObject/DxResource.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
@@ -23,22 +23,50 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 class FPriorityTexture {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Option structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Option {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		bool Compatible(const Option& other) const;
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		Vector2ui resolution = {};
+
+		float clearDepth     = 1.0f;
+		uint8_t clearStencil = 0;
+
+	};
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
 	FPriorityTexture() = default;
-	~FPriorityTexture() { Term(); }
+	FPriorityTexture(const Vector2ui& resolution) { Create({ .resolution = resolution }); }
 
-	void Create(const Vector2ui& size);
+	void Create(const Option& option);
 
-	void Term();
+	//* transition option *//
 
-	void ClearDepth(const DirectXQueueContext* context) const;
+	void ClearDepthStencil(const DirectXQueueContext* context);
 
 	//* getter *//
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleDSV() const { return descriptorDSV_.GetCPUHandle(); }
+	ID3D12Resource* GetResource() const { return resource_.Get(); }
+
+	const DxObject::Descriptor& GetDescriptorDSV() const;
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleDSV() const;
 
 private:
 
@@ -46,8 +74,26 @@ private:
 	// private variables
 	//=========================================================================================
 
-	ComPtr<ID3D12Resource> resource_;
+	//* DirectX12 *//
+
+	DxObject::Resource resource_;
+	
 	DxObject::Descriptor descriptorDSV_;
+
+	//* option *//
+
+	Option option_;
+
+	//* default state *//
+
+	static inline constexpr D3D12_RESOURCE_STATES kDefaultState = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CreateResource(const Option& option);
+	void CreateDescriptor();
 
 };
 

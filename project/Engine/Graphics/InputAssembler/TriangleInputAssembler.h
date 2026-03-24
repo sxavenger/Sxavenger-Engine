@@ -45,9 +45,9 @@ public:
 
 	void Term();
 
-	//* bind *//
+	//* input assembler option *//
 
-	void BindIABuffer(const DirectXQueueContext* context) const;
+	void BindInputAssembler(const DirectXQueueContext* context) const;
 
 	void DrawCall(const DirectXQueueContext* context, UINT instanceCount = 1) const;
 
@@ -93,7 +93,7 @@ inline void TriangleInputAssembler<_Vertex>::Term() {
 }
 
 template <class _Vertex>
-inline void TriangleInputAssembler<_Vertex>::BindIABuffer(const DirectXQueueContext* context) const {
+inline void TriangleInputAssembler<_Vertex>::BindInputAssembler(const DirectXQueueContext* context) const {
 	auto commandList = context->GetCommandList();
 
 	D3D12_VERTEX_BUFFER_VIEW vbv = vertex_->GetVertexBufferView();

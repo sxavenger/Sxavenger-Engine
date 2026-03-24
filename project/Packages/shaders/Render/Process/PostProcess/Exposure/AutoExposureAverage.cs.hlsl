@@ -7,12 +7,12 @@
 // constant
 //=========================================================================================
 
-static const uint kPixelNum = size.x * size.y;
+static const uint kPixelNum = dimension.x * dimension.y;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(_GROUP_SIZE, 1, 1)]
+[numthreads(GROUP_SIZE, 1, 1)]
 void main(uint3 groupThreadId : SV_GroupThreadID) {
 
 	gHistogram[groupThreadId.x] = gHistogramShared[groupThreadId.x];
@@ -25,7 +25,7 @@ void main(uint3 groupThreadId : SV_GroupThreadID) {
 	GroupMemoryBarrierWithGroupSync();
 
 	[unroll]
-	for (uint cutoff = (_GROUP_SIZE >> 1); cutoff > 0; cutoff >>= 1) {
+	for (uint cutoff = (GROUP_SIZE >> 1); cutoff > 0; cutoff >>= 1) {
 		if (groupThreadId.x < cutoff) {
 			gHistogramShared[groupThreadId.x] += gHistogramShared[groupThreadId.x + cutoff];
 		}

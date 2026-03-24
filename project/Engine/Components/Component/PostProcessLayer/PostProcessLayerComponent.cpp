@@ -12,7 +12,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Graphics/Graphics.h>
 
 //* lib
-#include <Lib/Geometry/VectorComparision.h>
+#include <Lib/Geometry/VectorComparison.h>
 
 //* external
 #include <imgui.h>
@@ -136,7 +136,7 @@ float PostProcessLayerComponent::CalculateVolumeWeight(const Vector3f& position)
 
 	const auto& [min, max] = volume.value();
 
-	if (All(position >= min) && All(position <= max)) { //!< volume内にある場合
+	if (Comparison::All(position >= min) && Comparison::All(position <= max)) { //!< volume内にある場合
 		return 1.0f;
 	}
 
@@ -191,5 +191,5 @@ bool PostProcessLayerComponent::IsInsideVolume(const Vector3f& position) const {
 		}
 	}
 
-	return All(position >= min) && All(position <= max);
+	return Comparison::All(position >= min) && Comparison::All(position <= max);
 }

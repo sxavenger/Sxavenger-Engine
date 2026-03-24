@@ -9,11 +9,12 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/System.h>
 #include <Engine/Graphics/Graphics.h>
+#include <Engine/Assets/Content/ContentStorage.h>
 #include <Engine/Assets/Asset/AssetStorage.h>
 #include <Engine/Components/Component/Audio/AudioController.h>
 #include <Engine/Components/Component/ComponentHelper.h>
 #include <Engine/Components/Entity/EntityBehaviourStorage.h>
-#include <Engine/Render/FRenderCore.h>
+#include <Engine/Render/Core/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
 
 //* c++

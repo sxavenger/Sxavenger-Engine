@@ -5,7 +5,7 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "../FRenderCore.h"
+#include "../Core/FRenderCore.h"
 
 //* engine
 #include <Engine/System/Utility/RuntimeLogger.h>
@@ -102,9 +102,9 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 
 void FScene::SetupStateObject() {
 	// TopLevelASに設定
-	FRenderCore::GetInstance()->GetRestir()->UpdateShaderTable(&topLevelAS_);
-	FRenderCore::GetInstance()->GetProbe()->UpdateShaderTable(&topLevelAS_); //!< HACK
-	FRenderCore::GetInstance()->GetReflection()->UpdateShaderTable(&topLevelAS_); //!< HACK
+	//FRenderCore::GetInstance()->GetRestir()->UpdateShaderTable(&topLevelAS_);
+	//FRenderCore::GetInstance()->GetProbe()->UpdateShaderTable(&topLevelAS_); //!< HACK
+	//FRenderCore::GetInstance()->GetReflection()->UpdateShaderTable(&topLevelAS_); //!< HACK
 }
 
 void FScene::SetupLightContainer() {

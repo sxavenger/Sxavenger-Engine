@@ -55,29 +55,45 @@ public:
 	constexpr FlagMask(_Bit bit) noexcept : mask_(static_cast<_Mask>(bit)) {}
 	constexpr FlagMask& operator=(_Bit bit) noexcept { mask_ = static_cast<_Mask>(bit); return *this; }
 
+	//* operator [equal] *//
+
+	constexpr bool operator==(_Mask mask) const noexcept { return mask_ == mask; }
+	constexpr bool operator==(_Bit bit) const noexcept { return mask_ == static_cast<_Mask>(bit); }
+	constexpr bool operator==(FlagMask other) const noexcept { return mask_ == other.mask_; }
+
+	constexpr bool operator!=(_Mask mask) const noexcept { return mask_ != mask; }
+	constexpr bool operator!=(_Bit bit) const noexcept { return mask_ != static_cast<_Mask>(bit); }
+	constexpr bool operator!=(FlagMask other) const noexcept { return mask_ != other.mask_; }
+
 	//* operator [or] *//
 
 	constexpr FlagMask operator|(_Mask mask) const noexcept { return FlagMask(mask_ | mask); }
 	constexpr FlagMask operator|(_Bit bit) const noexcept { return FlagMask(mask_ | static_cast<_Mask>(bit)); }
+	constexpr FlagMask operator|(FlagMask other) const noexcept { return FlagMask(mask_ | other.mask_); }
 
 	constexpr FlagMask& operator|=(_Mask mask) noexcept { mask_ |= mask; return *this; }
 	constexpr FlagMask& operator|=(_Bit bit) noexcept { mask_ |= static_cast<_Mask>(bit); return *this; }
+	constexpr FlagMask& operator|=(FlagMask other) noexcept { mask_ |= other.mask_; return *this; }
 
 	//* operator [and] *//
 
 	constexpr FlagMask operator&(_Mask mask) const noexcept { return FlagMask(mask_ & mask); }
 	constexpr FlagMask operator&(_Bit bit) const noexcept { return FlagMask(mask_ & static_cast<_Mask>(bit)); }
+	constexpr FlagMask operator&(FlagMask other) const noexcept { return FlagMask(mask_ & other.mask_); }
 
 	constexpr FlagMask& operator&=(_Mask mask) noexcept { mask_ &= mask; return *this; }
 	constexpr FlagMask& operator&=(_Bit bit) noexcept { mask_ &= static_cast<_Mask>(bit); return *this; }
+	constexpr FlagMask& operator&=(FlagMask other) noexcept { mask_ &= other.mask_; return *this; }
 
 	//* operator [xor] *//
 
 	constexpr FlagMask operator^(_Mask mask) const noexcept { return FlagMask(mask_ ^ mask); }
 	constexpr FlagMask operator^(_Bit bit) const noexcept { return FlagMask(mask_ ^ static_cast<_Mask>(bit)); }
+	constexpr FlagMask operator^(FlagMask other) const noexcept { return FlagMask(mask_ ^ other.mask_); }
 
 	constexpr FlagMask& operator^=(_Mask mask) noexcept { mask_ ^= mask; return *this; }
 	constexpr FlagMask& operator^=(_Bit bit) noexcept { mask_ ^= static_cast<_Mask>(bit); return *this; }
+	constexpr FlagMask& operator^=(FlagMask other) noexcept { mask_ ^= other.mask_; return *this; }
 
 	//* operator [cast] *//
 
@@ -103,20 +119,8 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Flag class
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <class _Bit>
-class Flag
-	: public FlagMask<_Bit, std::underlying_type_t<_Bit>> {
-	//* enum classを指定してフラグを管理するクラス
-public:
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	constexpr Flag() : FlagMask<_Bit, std::underlying_type_t<_Bit>>() {}
-	constexpr Flag(_Bit bit) : FlagMask<_Bit, std::underlying_type_t<_Bit>>(bit) {}
-
-};
+template <class _Bit> requires std::is_enum_v<_Bit>
+using Flag = FlagMask<_Bit, std::underlying_type_t<_Bit>>;
 
 #define _ENUM_FLAG_OPERATORS(T) \
 	inline constexpr T operator|(T a, T b) { \

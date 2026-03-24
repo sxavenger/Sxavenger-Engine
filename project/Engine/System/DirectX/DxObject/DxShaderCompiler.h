@@ -6,6 +6,9 @@
 //* DXOBJECT
 #include "DxObjectCommon.h"
 
+//* lib
+#include <Lib/Sxl/Expected.h>
+
 //* DirectX12
 #include <dxcapi.h>
 #include <d3d12shader.h>
@@ -31,6 +34,43 @@ DXOBJECT_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 class ShaderCompiler {
 public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	void Init();
+
+	void Term();
+
+	//* compiler option *//
+
+	ComPtr<IDxcBlob> Compile(
+		const std::filesystem::path& filepath,
+		CompileProfile profile,
+		const std::wstring& entryPoint = L""
+	);
+
+	ComPtr<IDxcBlob> Compile(
+		const std::filesystem::path& filepath,
+		const std::string& code,
+		CompileProfile profile,
+		const std::wstring& entryPoint = L""
+	);
+
+	ComPtr<ID3D12ShaderReflection> Reflection(IDxcBlob* blob);
+
+	//* setter *//
+
+	void SetShaderModelTire(D3D_SHADER_MODEL model);
+
+	void SetSupportInlineRaytracing(bool isSupport) { isSupportInlineRaytracing_ = isSupport; }
+
+	//* singleton *//
+
+	static ShaderCompiler* GetInstance();
+
+private:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Argument structure
@@ -78,36 +118,6 @@ public:
 
 	};
 
-public:
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	void Init();
-
-	void Term();
-
-	//* compiler option *//
-
-	ComPtr<IDxcBlob> Compile(
-		const std::filesystem::path& filepath,
-		CompileProfile profile,
-		const std::wstring& entryPoint = L""
-	);
-
-	ComPtr<ID3D12ShaderReflection> Reflection(IDxcBlob* blob);
-
-	//* setter *//
-
-	void SetShaderModelTire(D3D_SHADER_MODEL model);
-
-	void SetSupportInlineRaytracing(bool isSupport) { isSupportInlineRaytracing_ = isSupport; }
-
-	//* singleton *//
-
-	static ShaderCompiler* GetInstance();
-
 private:
 
 	//=========================================================================================
@@ -122,7 +132,7 @@ private:
 
 	//* shader stage *//
 
-	static const std::array<LPCWSTR, static_cast<uint8_t>(CompileProfile::lib) + 1> stages_;
+	static const std::array<LPCWSTR, static_cast<uint8_t>(CompileProfile::Lib) + 1> stages_;
 
 	//* compiler features *//
 
@@ -135,6 +145,13 @@ private:
 	//=========================================================================================
 
 	std::wstring GetProfile(CompileProfile profile) const;
+
+	Sxl::Expected<ComPtr<IDxcBlob>, std::string> Compile(
+		const std::filesystem::path& filepath,
+		IDxcBlobEncoding* source,
+		CompileProfile profile,
+		std::wstring entryPoint = L""
+	);
 
 };
 

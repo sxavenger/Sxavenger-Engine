@@ -323,8 +323,8 @@ CollisionDetection::Detection CollisionDetection::AABBToAABB(
 	const Vector3f& positionB, const CollisionBoundings::AABB& aabbB) {
 
 	bool isCollision
-		= All(aabbA.min + positionA <= aabbB.max + positionB)
-		&& All(aabbA.max + positionA >= aabbB.min + positionB);
+		= Comparison::All(aabbA.min + positionA <= aabbB.max + positionB)
+		&& Comparison::All(aabbA.max + positionA >= aabbB.min + positionB);
 
 	if (!isCollision) {
 		return std::nullopt; //!< 衝突なし

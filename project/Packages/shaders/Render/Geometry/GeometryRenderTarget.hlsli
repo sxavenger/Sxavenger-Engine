@@ -67,8 +67,8 @@ struct GeometryDeferredOutput {
 		normal = float4(map, NOT_USED_1);
 	}
 	
-	void SetMaterial(float ao, float roughness, float metallic) {
-		materialARM.r = ao;
+	void SetMaterial(float roughness, float metallic) {
+		materialARM.r = 1.0f;
 		materialARM.g = max(roughness, 0.02f);
 		materialARM.b = metallic;
 		materialARM.a = NOT_USED_1;

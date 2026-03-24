@@ -6,8 +6,10 @@ DXROBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Utility/Convert.h>
 #include <Engine/System/Utility/StreamLogger.h>
+
+//* lib
+#include <Lib/Adapter/String/EncodedString.h>
 
 //* c++
 #include <ranges>
@@ -18,7 +20,7 @@ DXROBJECT_USING
 
 void StateObjectDesc::AddExport(const DxrObject::ExportGroup* expt) {
 	ExportType type = expt->GetType();
-	exports_[static_cast<size_t>(type)].emplace(ToString(expt->GetName()), expt);
+	exports_[static_cast<size_t>(type)].emplace(EncodedString::Convert(expt->GetName()), expt);
 	strides_[static_cast<size_t>(type)] = std::max(strides_[static_cast<size_t>(type)], expt->GetBufferStride());
 }
 

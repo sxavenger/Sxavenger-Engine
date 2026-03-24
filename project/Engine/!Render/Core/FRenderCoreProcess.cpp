@@ -1,0 +1,144 @@
+#include "FRenderCoreProcess.h"
+SXAVENGER_ENGINE_USING
+
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* engine
+#include <Engine/System/System.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// FRenderCoreProcess class
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void FRenderCoreProcess::Init() {
+
+	//* process *//
+
+	//!< grayscale
+	CreatePipeline(ProcessType::GrayScale, "PostProcess/GrayScale.cs.hlsl");
+
+	//!< auto exposure
+	CreatePipeline(ProcessType::AutoExposureLuminance, "PostProcess/Exposure/AutoExposureLuminance.cs.hlsl");
+	CreatePipeline(ProcessType::AutoExposureAverage,   "PostProcess/Exposure/AutoExposureAverage.cs.hlsl");
+	CreatePipeline(ProcessType::AutoExposureApply,     "PostProcess/Exposure/AutoExposureApply.cs.hlsl");
+	//!< local exposure
+	CreatePipeline(ProcessType::LocalExposure, "PostProcess/Exposure/LocalExposure.cs.hlsl");
+
+	//!< dof
+	CreatePipeline(ProcessType::DoF, "PostProcess/DoF.cs.hlsl");
+
+	
+	{
+		DxObject::SamplerBindDesc desc = {};
+		desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+
+		//!< bloom
+		CreatePipeline(ProcessType::BloomLuminance, "PostProcess/Bloom/BloomLuminance.cs.hlsl", desc);
+		CreatePipeline(ProcessType::BloomApply,     "PostProcess/Bloom/BloomApply.cs.hlsl",     desc);
+
+		//!< radial blur
+		CreatePipeline(ProcessType::RadialBlur, "PostProcess/RadialBlur.cs.hlsl", desc);
+
+		//!< motion blur
+		CreatePipeline(ProcessType::MotionBlur, "PostProcess/MotionBlur.cs.hlsl", desc);
+
+		//!< chromatic aberration
+		CreatePipeline(ProcessType::ChromaticAberration, "PostProcess/ChromaticAberration.cs.hlsl", desc);
+	}
+	
+
+	//!< vignette
+	CreatePipeline(ProcessType::Vignette, "PostProcess/Vignette.cs.hlsl");
+
+	//!< convert lut texture
+	CreatePipeline(ProcessType::ConvertLUTTexture, "PostProcess/ConvertLUTTexture.cs.hlsl");
+
+	//!< lut
+	{
+		DxObject::SamplerBindDesc desc = {};
+		desc.SetSamplerLinear("gLUTSampler", DxObject::SamplerMode::MODE_CLAMP);
+
+		CreatePipeline(ProcessType::LUT, "PostProcess/LUT.cs.hlsl", desc);
+	}
+
+	//* composite *//
+
+	//!< tonemap
+	CreatePipeline(CompositeType::Tonemap, "CompositeProcess/Tonemap.cs.hlsl");
+
+	{
+		DxObject::SamplerBindDesc desc = {};
+		desc.SetSamplerLinear("gSampler", DxObject::SamplerMode::MODE_CLAMP);
+
+		//!< fxaa
+		CreatePipeline(CompositeType::FXAA, "CompositeProcess/FXAA/Fxaa.cs.hlsl", desc);
+	}
+	
+	{
+		DxObject::SamplerBindDesc desc = {};
+		desc.SetSamplerLinear("gLinearSampler", DxObject::SamplerMode::MODE_CLAMP);
+		desc.SetSamplerPoint("gPointSampler",   DxObject::SamplerMode::MODE_CLAMP);
+
+		//!< smaa
+		CreatePipeline(CompositeType::SMAA_EdgeDetection,        "CompositeProcess/SMAA/SmaaEdgeDetection.cs.hlsl",        desc);
+		CreatePipeline(CompositeType::SMAA_BlendWeight,          "CompositeProcess/SMAA/SmaaBlendWeight.cs.hlsl",          desc);
+		CreatePipeline(CompositeType::SMAA_NeighborhoodBlending, "CompositeProcess/SMAA/SmaaNeighborhoodBlending.cs.hlsl", desc);
+	}
+}
+
+void FRenderCoreProcess::SetPipeline(ProcessType type, const DirectXQueueContext* context) {
+	processes_[static_cast<uint32_t>(type)]->SetPipeline(context->GetDxCommand());
+}
+
+void FRenderCoreProcess::BindComputeBuffer(ProcessType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) {
+	processes_[static_cast<uint32_t>(type)]->BindComputeBuffer(context->GetDxCommand(), desc);
+}
+
+void FRenderCoreProcess::SetPipeline(CompositeType type, const DirectXQueueContext* context) {
+	composites_[static_cast<uint32_t>(type)]->SetPipeline(context->GetDxCommand());
+}
+
+void FRenderCoreProcess::BindComputeBuffer(CompositeType type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) {
+	composites_[static_cast<uint32_t>(type)]->BindComputeBuffer(context->GetDxCommand(), desc);
+}
+
+void FRenderCoreProcess::Dispatch(const DirectXQueueContext* context, const Vector2ui& size) const {
+	context->GetCommandList()->Dispatch(DxObject::RoundUp(size.x, kNumThreadSize_.x), DxObject::RoundUp(size.y, kNumThreadSize_.y), 1);
+}
+
+void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem::path& filepath) {
+	auto process = std::make_unique<CustomReflectionComputePipeline>();
+	process->CreateContent(kDirectory / filepath);
+	process->RegisterBlob();
+	process->ReflectionPipeline(System::GetDxDevice());
+
+	processes_[static_cast<uint32_t>(type)] = std::move(process);
+}
+
+void FRenderCoreProcess::CreatePipeline(ProcessType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc) {
+	auto process = std::make_unique<CustomReflectionComputePipeline>();
+	process->CreateContent(kDirectory / filepath);
+	process->RegisterBlob();
+	process->ReflectionPipeline(System::GetDxDevice(), desc);
+
+	processes_[static_cast<uint32_t>(type)] = std::move(process);
+}
+
+void FRenderCoreProcess::CreatePipeline(CompositeType type, const std::filesystem::path& filepath) {
+	auto process = std::make_unique<CustomReflectionComputePipeline>();
+	process->CreateContent(kDirectory / filepath);
+	process->RegisterBlob();
+	process->ReflectionPipeline(System::GetDxDevice());
+
+	composites_[static_cast<uint32_t>(type)] = std::move(process);
+}
+
+void FRenderCoreProcess::CreatePipeline(CompositeType type, const std::filesystem::path& filepath, const DxObject::SamplerBindDesc& desc) {
+	auto process = std::make_unique<CustomReflectionComputePipeline>();
+	process->CreateContent(kDirectory / filepath);
+	process->RegisterBlob();
+	process->ReflectionPipeline(System::GetDxDevice(), desc);
+
+	composites_[static_cast<uint32_t>(type)] = std::move(process);
+}

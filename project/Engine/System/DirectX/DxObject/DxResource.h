@@ -9,8 +9,12 @@
 #include "DxCommandContext.h"
 #include "DxDescriptor.h"
 
+//* lib
+#include <Lib/CXXAttribute.h>
+
 //* c++
 #include <optional>
+#include <vector>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -39,16 +43,22 @@ public:
 
 	void Reset();
 
-	void Transition(
-		DxObject::CommandContext* context,
-		D3D12_RESOURCE_STATES state
-	);
-
 	void SetName(const std::wstring& name) const;
 
 	void Map(void** data, const std::optional<D3D12_RANGE>& range = std::nullopt);
 
 	void Unmap(const std::optional<D3D12_RANGE>& range = std::nullopt);
+
+	//* transition options *//
+
+	NODISCARD std::optional<D3D12_RESOURCE_BARRIER> GetTransition(D3D12_RESOURCE_STATES state);
+
+	void SetTransition(std::vector<D3D12_RESOURCE_BARRIER>& barriers, D3D12_RESOURCE_STATES state);
+
+	void Transition(
+		DxObject::CommandContext* context,
+		D3D12_RESOURCE_STATES state
+	);
 
 	//* getter *//
 

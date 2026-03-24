@@ -90,7 +90,7 @@ void SpriteRendererComponent::SetColor(const Color4f& color) {
 	}
 }
 
-void SpriteRendererComponent::BindAIBuffer(const DirectXQueueContext* context) {
+void SpriteRendererComponent::BindInputAssembler(const DirectXQueueContext* context) {
 
 	// 頂点の更新
 	TransferPosition();
@@ -100,7 +100,7 @@ void SpriteRendererComponent::BindAIBuffer(const DirectXQueueContext* context) {
 	// uv変換行列を更新
 	bufferUV_->At() = transformUV_.ToMatrix();
 	
-	input_.BindIABuffer(context);
+	input_.BindInputAssembler(context);
 }
 
 void SpriteRendererComponent::DrawCall(const DirectXQueueContext* context) {

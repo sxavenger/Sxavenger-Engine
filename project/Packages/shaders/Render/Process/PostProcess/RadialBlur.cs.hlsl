@@ -39,16 +39,16 @@ ConstantBuffer<Parameter> gParameter : register(b0);
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)]
+[numthreads(NUM_THREADS_X, NUM_THREADS_Y, 1)]
 void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispathThreadId.xy;
 
-	if (CheckOverTexture(index.xy)) {
+	if (CheckOverDimension(index.xy)) {
 		return;
 	}
 
-	float2 uv        = float2(index) / size * 2.0f - 1.0f; // [-1.0 ~ 1.0]
+	float2 uv        = (float2(index) + 0.5f) / dimension * 2.0f - 1.0f; // [-1.0 ~ 1.0]
 	float2 direction = uv - gParameter.center;
 
 	float noise = 0.0f;

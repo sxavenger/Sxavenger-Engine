@@ -26,12 +26,12 @@ cbuffer ColorSpaceBuffer : register(b0) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)]
+[numthreads(NUM_THREADS_X, NUM_THREADS_Y, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispatchThreadId.xy;
 	
-	if (CheckOverTexture(index)) {
+	if (CheckOverDimension(index)) {
 		return; //!< texture size over
 	}
 

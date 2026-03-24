@@ -25,12 +25,24 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ShaderBlob()  = default;
-	~ShaderBlob() = default;
+	ShaderBlob() = default;
 
-	void Create(const std::filesystem::path& filepath, CompileProfile profile, const std::wstring& entrypoint = L"main");
+	void Create(const std::filesystem::path& filepath, CompileProfile profile, const std::wstring& entry = L"main");
 
-	//* gettter *//
+	//* operator [assign] *//
+
+	ShaderBlob(const ComPtr<IDxcBlob>& blob) : blob_(blob) {}
+	ShaderBlob& operator=(const ComPtr<IDxcBlob>& blob) { blob_ = blob; return *this; }
+
+	ShaderBlob(ComPtr<IDxcBlob>&& blob) : blob_(std::move(blob)) {}
+	ShaderBlob& operator=(ComPtr<IDxcBlob>&& blob) { blob_ = std::move(blob); return *this; }
+
+	//* operator [comparison] *//
+
+   bool operator==(std::nullptr_t) const { return blob_ == nullptr; }
+	bool operator!=(std::nullptr_t) const { return blob_ != nullptr; }
+
+	//* getter *//
 
 	IDxcBlob* GetBlob() const { return blob_.Get(); }
 

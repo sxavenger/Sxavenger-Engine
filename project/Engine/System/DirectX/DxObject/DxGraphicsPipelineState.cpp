@@ -87,6 +87,10 @@ void GraphicsPipelineDesc::SetRTVFormat(DXGI_FORMAT format) {
 }
 
 void GraphicsPipelineDesc::SetRTVFormat(uint8_t index, DXGI_FORMAT format) {
+	if (rtvFormats.size() <= index) {
+		rtvFormats.resize(index + 1, DXGI_FORMAT_UNKNOWN); //!< indexの位置までサイズを拡張
+	}
+
 	rtvFormats[index] = format;
 	StreamLogger::AssertA(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
 }
@@ -142,7 +146,7 @@ void GraphicsPipelineState::CreateBlob(const std::filesystem::path& filepath, Gr
 }
 
 void GraphicsPipelineState::SetBlob(const ShaderBlob& blob, GraphicsShaderType type) {
-	if (type == GraphicsShaderType::ms) {
+	if (type == GraphicsShaderType::Mesh) {
 		isUseMeshShaderPipeline_ = true; //!< mesh shader pipelineを使用する場合
 	}
 
@@ -182,23 +186,23 @@ void GraphicsPipelineState::SetPipeline(CommandContext* context, const D3D12_VIE
 	}
 }
 
-void GraphicsPipelineState::SetPipeline(CommandContext* context, const Vector2ui& windowSize) const {
+void GraphicsPipelineState::SetPipeline(CommandContext* context, const Vector2ui& resolution) const {
 
 	// viewportの設定
 	D3D12_VIEWPORT viewport = {};
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
-	viewport.Width    = static_cast<float>(windowSize.x);
-	viewport.Height   = static_cast<float>(windowSize.y);
+	viewport.Width    = static_cast<float>(resolution.x);
+	viewport.Height   = static_cast<float>(resolution.y);
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 
 	// シザー矩形の設定
 	D3D12_RECT rect = {};
 	rect.left   = 0;
-	rect.right  = windowSize.x;
+	rect.right  = resolution.x;
 	rect.top    = 0;
-	rect.bottom = windowSize.y;
+	rect.bottom = resolution.y;
 
 	SetPipeline(context, viewport, rect);
 }
@@ -267,9 +271,9 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 		std::copy(pipelineDesc_.rtvFormats.begin(), pipelineDesc_.rtvFormats.end(), desc.RTVFormats);
 
 		// blobの設定
-		desc.AS = GetBytecode(GraphicsShaderType::as);
-		desc.MS = GetBytecode(GraphicsShaderType::ms, true);
-		desc.PS = GetBytecode(GraphicsShaderType::ps, true);
+		desc.AS = GetBytecode(GraphicsShaderType::Amplification);
+		desc.MS = GetBytecode(GraphicsShaderType::Mesh, true);
+		desc.PS = GetBytecode(GraphicsShaderType::Pixel, true);
 
 		// pipelineの生成
 		CD3DX12_PIPELINE_MESH_STATE_STREAM psoStream = CD3DX12_PIPELINE_MESH_STATE_STREAM(desc);
@@ -304,9 +308,9 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 		desc.NumRenderTargets = static_cast<UINT>(pipelineDesc_.rtvFormats.size());
 		std::copy(pipelineDesc_.rtvFormats.begin(), pipelineDesc_.rtvFormats.end(), desc.RTVFormats);
 
-		desc.VS = GetBytecode(GraphicsShaderType::vs, true);
-		desc.GS = GetBytecode(GraphicsShaderType::gs);
-		desc.PS = GetBytecode(GraphicsShaderType::ps, true);
+		desc.VS = GetBytecode(GraphicsShaderType::Vertex, true);
+		desc.GS = GetBytecode(GraphicsShaderType::Geometry);
+		desc.PS = GetBytecode(GraphicsShaderType::Pixel, true);
 
 		// pipelineの生成
 		auto hr = device->GetDevice()->CreateGraphicsPipelineState(
@@ -326,15 +330,15 @@ void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device) {
 	table_.Reset();
 
 	if (isUseMeshShaderPipeline_) {
-		TrySetBlobToTable(GraphicsShaderType::as, ShaderVisibility::VISIBILITY_AMPLIFICATION);
-		TrySetBlobToTable(GraphicsShaderType::ms, ShaderVisibility::VISIBILITY_MESH, true);
+		TrySetBlobToTable(GraphicsShaderType::Amplification, ShaderVisibility::VISIBILITY_AMPLIFICATION);
+		TrySetBlobToTable(GraphicsShaderType::Mesh, ShaderVisibility::VISIBILITY_MESH, true);
 
 	} else {
-		TrySetBlobToTable(GraphicsShaderType::vs, ShaderVisibility::VISIBILITY_VERTEX, true);
-		TrySetBlobToTable(GraphicsShaderType::gs, ShaderVisibility::VISIBILITY_GEOMETRY);
+		TrySetBlobToTable(GraphicsShaderType::Vertex, ShaderVisibility::VISIBILITY_VERTEX, true);
+		TrySetBlobToTable(GraphicsShaderType::Geometry, ShaderVisibility::VISIBILITY_GEOMETRY);
 	}
 
-	TrySetBlobToTable(GraphicsShaderType::ps, ShaderVisibility::VISIBILITY_PIXEL, true);
+	TrySetBlobToTable(GraphicsShaderType::Pixel, ShaderVisibility::VISIBILITY_PIXEL, true);
 
 	rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc();
 	CreateDirectXRootSignature(device);
@@ -345,15 +349,15 @@ void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device, co
 	table_.Reset();
 
 	if (isUseMeshShaderPipeline_) {
-		TrySetBlobToTable(GraphicsShaderType::as, ShaderVisibility::VISIBILITY_AMPLIFICATION);
-		TrySetBlobToTable(GraphicsShaderType::ms, ShaderVisibility::VISIBILITY_MESH, true);
+		TrySetBlobToTable(GraphicsShaderType::Amplification, ShaderVisibility::VISIBILITY_AMPLIFICATION);
+		TrySetBlobToTable(GraphicsShaderType::Mesh, ShaderVisibility::VISIBILITY_MESH, true);
 
 	} else {
-		TrySetBlobToTable(GraphicsShaderType::vs, ShaderVisibility::VISIBILITY_VERTEX, true);
-		TrySetBlobToTable(GraphicsShaderType::gs, ShaderVisibility::VISIBILITY_GEOMETRY);
+		TrySetBlobToTable(GraphicsShaderType::Vertex, ShaderVisibility::VISIBILITY_VERTEX, true);
+		TrySetBlobToTable(GraphicsShaderType::Geometry, ShaderVisibility::VISIBILITY_GEOMETRY);
 	}
 
-	TrySetBlobToTable(GraphicsShaderType::ps, ShaderVisibility::VISIBILITY_PIXEL, true);
+	TrySetBlobToTable(GraphicsShaderType::Pixel, ShaderVisibility::VISIBILITY_PIXEL, true);
 
 
 	rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc(desc);
@@ -364,22 +368,22 @@ void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device, D3
 	table_.Reset();
 
 	if (isUseMeshShaderPipeline_) {
-		TrySetBlobToTable(GraphicsShaderType::as, ShaderVisibility::VISIBILITY_AMPLIFICATION);
-		TrySetBlobToTable(GraphicsShaderType::ms, ShaderVisibility::VISIBILITY_MESH, true);
+		TrySetBlobToTable(GraphicsShaderType::Amplification, ShaderVisibility::VISIBILITY_AMPLIFICATION);
+		TrySetBlobToTable(GraphicsShaderType::Mesh, ShaderVisibility::VISIBILITY_MESH, true);
 
 	} else {
-		TrySetBlobToTable(GraphicsShaderType::vs, ShaderVisibility::VISIBILITY_VERTEX, true);
-		TrySetBlobToTable(GraphicsShaderType::gs, ShaderVisibility::VISIBILITY_GEOMETRY);
+		TrySetBlobToTable(GraphicsShaderType::Vertex, ShaderVisibility::VISIBILITY_VERTEX, true);
+		TrySetBlobToTable(GraphicsShaderType::Geometry, ShaderVisibility::VISIBILITY_GEOMETRY);
 	}
 
-	TrySetBlobToTable(GraphicsShaderType::ps, ShaderVisibility::VISIBILITY_PIXEL, true);
+	TrySetBlobToTable(GraphicsShaderType::Pixel, ShaderVisibility::VISIBILITY_PIXEL, true);
 
 
 	rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc();
 	CreateDirectXRootSignature(device, flag);
 }
 
-void ReflectionGraphicsPipelineState::BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc) {
+void ReflectionGraphicsPipelineState::BindGraphicsBuffer(const CommandContext* context, const BindBufferDesc& desc) const {
 	table_.BindGraphicsBuffer(context, desc);
 }
 

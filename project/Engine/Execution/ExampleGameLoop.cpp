@@ -7,6 +7,7 @@ SXAVENGER_ENGINE_USING
 //* engine
 #include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/System.h>
+#include <Engine/Assets/Content/ContentStorage.h>
 #include <Engine/Components/Component/Transform/TransformComponent.h>
 #include <Engine/Components/Component/Light/Environment/SkyAtmosphereComponent.h>
 #include <Engine/Components/Component/Light/Environment/SkyLightComponent.h>
@@ -192,10 +193,10 @@ void ExampleGameLoop::UpdateSystem() {
 
 	auto keyboard = System::GetKeyboardInput();
 
-	if (keyboard->IsTrigger(KeyId::KEY_P)) {
+	/*if (keyboard->IsTrigger(KeyId::KEY_P)) {
 		auto& config = FMainRender::GetInstance()->GetConfig();
 		config.option.Inverse(FBaseRenderPass::Config::Option::IndirectLighting);
-	}
+	}*/
 
 	if (keyboard->IsPress(KeyId::KEY_LEFT)) {
 		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate *= Quaternion::AxisAngle(Vector3f{ 1.0f, 1.0f, 0.0f }.Normalize(), 0.01f);
@@ -240,7 +241,7 @@ void ExampleGameLoop::RenderSystem() {
 	main_->BeginRenderWindow(System::GetDirectQueueContext());
 	main_->ClearWindow(System::GetDirectQueueContext());
 
-	FMainRender::GetInstance()->PresentMain(System::GetDirectQueueContext(), main_->GetClient());
+	FMainRender::GetInstance()->Present(System::GetDirectQueueContext(), main_.get());
 	System::RenderImGui(main_->GetClient());
 
 	main_->EndRenderWindow(System::GetDirectQueueContext());

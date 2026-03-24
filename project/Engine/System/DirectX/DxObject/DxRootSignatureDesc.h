@@ -43,9 +43,11 @@ public:
 	void Set32bitConstants(uint32_t index, ShaderVisibility stage, UINT num32bit, UINT shaderRegister, UINT registerSpace = 0);
 
 	void SetSamplerDesc(const D3D12_STATIC_SAMPLER_DESC& desc);
+	void SetSamplerFilter(SamplerFilter filter, SamplerMode mode, ShaderVisibility stage, uint32_t anisotropic, UINT shaderRegister, UINT registerSpace = 0);
+
 	void SetSamplerLinear(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace = 0);
-	void SetSamplerAnisotropic(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, uint32_t anisotropic, UINT registerSpace = 0);
 	void SetSamplerPoint(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace = 0);
+	void SetSamplerAnisotropic(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, uint32_t anisotropic, UINT registerSpace = 0);
 
 	virtual ComPtr<ID3D12RootSignature> CreateRootSignature(ID3D12Device* device, D3D12_ROOT_SIGNATURE_FLAGS flags) const;
 

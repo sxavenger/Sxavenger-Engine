@@ -6,7 +6,7 @@ DXROBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void RaytracingBlob::Create(const std::filesystem::path& filepath) {
-	blob_ = DxObject::ShaderCompiler::GetInstance()->Compile(filepath, DxObject::CompileProfile::lib);
+	blob_ = DxObject::ShaderCompiler::GetInstance()->Compile(filepath, DxObject::CompileProfile::Lib);
 }
 
 D3D12_SHADER_BYTECODE RaytracingBlob::GetBytecode() const {

@@ -58,36 +58,34 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& BindBufferDesc::GetHandle(const std::string& 
 // SamplerBindDesc structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void SamplerBindDesc::SetSamplerLinear(const std::string& name, SamplerMode mode) {
-	samplers_[name].Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	samplers_[name].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers_[name].AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers_[name].AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers_[name].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-	samplers_[name].MaxLOD           = D3D12_FLOAT32_MAX;
+void SamplerBindDesc::SetSamplerDesc(const std::string& name, const D3D12_STATIC_SAMPLER_DESC& desc) {
+	samplers_[name] = desc;
 }
 
-void SamplerBindDesc::SetSamplerAnisotropic(const std::string& name, SamplerMode mode, uint32_t anisotropic) {
-	samplers_[name].Filter           = D3D12_FILTER_ANISOTROPIC;
-	samplers_[name].MaxAnisotropy    = anisotropic; //!< 異方性フィルタリングパラメーター
-	samplers_[name].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers_[name].AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers_[name].AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers_[name].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-	samplers_[name].MaxLOD           = D3D12_FLOAT32_MAX;
+void SamplerBindDesc::SetSamplerFilter(const std::string& name, SamplerFilter type, SamplerMode mode, uint32_t anisotropic) {
+
+	D3D12_STATIC_SAMPLER_DESC desc = {};
+	desc.Filter           = static_cast<D3D12_FILTER>(type);
+	desc.MaxAnisotropy    = anisotropic; //!< 異方性フィルタリングパラメーター(typeがAnisotropicのときのみ有効)
+	desc.AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	desc.AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	desc.AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	desc.ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
+	desc.MaxLOD           = D3D12_FLOAT32_MAX;
+
+	SamplerBindDesc::SetSamplerDesc(name, desc);
+}
+
+void SamplerBindDesc::SetSamplerLinear(const std::string& name, SamplerMode mode) {
+	SamplerBindDesc::SetSamplerFilter(name, SamplerFilter::Linear, mode, 0);
 }
 
 void SamplerBindDesc::SetSamplerPoint(const std::string& name, SamplerMode mode) {
-	samplers_[name].Filter           = D3D12_FILTER_MIN_MAG_MIP_POINT;
-	samplers_[name].AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers_[name].AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers_[name].AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers_[name].ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-	samplers_[name].MaxLOD           = D3D12_FLOAT32_MAX;
+	SamplerBindDesc::SetSamplerFilter(name, SamplerFilter::Point, mode, 0);
 }
 
-void SamplerBindDesc::SetSamplerDesc(const std::string& name, const D3D12_STATIC_SAMPLER_DESC& desc) {
-	samplers_[name] = desc;
+void SamplerBindDesc::SetSamplerAnisotropic(const std::string& name, SamplerMode mode, uint32_t anisotropic) {
+	SamplerBindDesc::SetSamplerFilter(name, SamplerFilter::Anisotropic, mode, anisotropic);
 }
 
 bool SamplerBindDesc::Contains(const std::string& name) const {
@@ -118,11 +116,11 @@ void BindBufferTable::BindBufferInfo::Create(ID3D12ShaderReflection* reflection,
 	bindBufferType = ToBindBufferType(_desc.Type);
 
 	if (bindBufferType == BindBufferType::kVirtual_CBV && std::isupper(_desc.Name[0])) {
-		//!< "X---"から始まるConstantBufferは32bitConstantsに変更
+		//!< 大文字から始まるConstantBufferは32bitConstantsに変更
 		bindBufferType = BindBufferType::k32bitConstants;
-		ID3D12ShaderReflectionConstantBuffer* constantbuffer = reflection->GetConstantBufferByName(_desc.Name);
+		ID3D12ShaderReflectionConstantBuffer* constant = reflection->GetConstantBufferByName(_desc.Name);
 		D3D12_SHADER_BUFFER_DESC desc = {};
-		constantbuffer->GetDesc(&desc);
+		constant->GetDesc(&desc);
 		num32bit = desc.Size / sizeof(UINT);
 	}
 
@@ -179,7 +177,7 @@ GraphicsRootSignatureDesc BindBufferTable::CreateGraphicsRootSignatureDesc() {
 				break;
 
 			case BindBufferType::kSampler:
-				desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum, info.registerSpace);
+				desc.SetSamplerLinear(SamplerMode::Wrap, info.visibility, info.registerNum, info.registerSpace);
 				continue;
 		}
 
@@ -228,7 +226,7 @@ GraphicsRootSignatureDesc BindBufferTable::CreateGraphicsRootSignatureDesc(const
 
 				} else {
 					//!< samplerがない場合はデフォルトのsamplerを設定
-					desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum, info.registerSpace);
+					desc.SetSamplerLinear(SamplerMode::Wrap, info.visibility, info.registerNum, info.registerSpace);
 				}
 				continue;
 		}
@@ -280,7 +278,7 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc() {
 				break;
 
 			case BindBufferType::kSampler:
-				desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum, info.registerSpace);
+				desc.SetSamplerLinear(SamplerMode::Wrap, info.visibility, info.registerNum, info.registerSpace);
 				continue;
 		}
 
@@ -332,7 +330,7 @@ ComputeRootSignatureDesc BindBufferTable::CreateComputeRootSignatureDesc(const S
 
 				} else {
 					//!< samplerがない場合はデフォルトのsamplerを設定
-					desc.SetSamplerLinear(MODE_WRAP, info.visibility, info.registerNum, info.registerSpace);
+					desc.SetSamplerLinear(SamplerMode::Wrap, info.visibility, info.registerNum, info.registerSpace);
 				}
 				continue;
 		}
@@ -352,7 +350,7 @@ void BindBufferTable::Reset() {
 	table_.clear();
 }
 
-void BindBufferTable::BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc) {
+void BindBufferTable::BindGraphicsBuffer(const CommandContext* context, const BindBufferDesc& desc) const {
 
 	auto commandList = context->GetCommandList();
 
@@ -394,7 +392,7 @@ void BindBufferTable::BindGraphicsBuffer(CommandContext* context, const BindBuff
 	}
 }
 
-void BindBufferTable::BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc) {
+void BindBufferTable::BindComputeBuffer(const CommandContext* context, const BindBufferDesc& desc) const {
 
 	auto commandList = context->GetCommandList();
 
