@@ -132,7 +132,7 @@ void ExampleGameLoop::InitSystem() {
 #ifndef _DEBUG //!< デバッグビルドでは、シーンのロードに時間がかかるため、ロードしない.
 	{
 		json data;
-		if (JsonHandler::LoadFromJson("assets/scene/sponza.scene", data)) {
+		if (JsonHandler::LoadFromJson("assets/scene/sponza_lit.scene", data)) {
 			sEntityBehaviourStorage->InputJson(data);
 		}
 	}

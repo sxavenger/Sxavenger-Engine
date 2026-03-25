@@ -17,6 +17,7 @@ SXAVENGER_ENGINE_USING
 #include "Light/Punctual/DirectionalLightComponent.h"
 #include "Light/Punctual/PointLightComponent.h"
 #include "Light/Punctual/SpotLightComponent.h"
+#include "Light/Rect/RectLightComponent.h"
 #include "Light/Environment/SkyLightComponent.h"
 #include "Collider/ColliderComponent.h"
 #include "Collider/CollisionManager.h"
@@ -105,6 +106,7 @@ void ComponentHelper::RegisterComponents() {
 	sComponentStorage->RegisterFactory<DirectionalLightComponent>();
 	sComponentStorage->RegisterFactory<PointLightComponent>();
 	sComponentStorage->RegisterFactory<SpotLightComponent>();
+	sComponentStorage->RegisterFactory<RectLightComponent>();
 	//sComponentStorage->RegisterFactory<ParticleComponent>();
 	sComponentStorage->RegisterFactory<SkyLightComponent>();
 	sComponentStorage->RegisterFactory<ColliderComponent>();
