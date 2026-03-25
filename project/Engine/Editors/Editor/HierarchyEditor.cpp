@@ -32,7 +32,7 @@ void HierarchyEditor::Init() {
 	actorItems_.emplace_back(SxGui::Icon::DirectionalLight, "Directional Light", [](EntityBehaviour* behaviour) { BehaviourHelper::CreateDirectionalLightBehaviour(behaviour); });
 	actorItems_.emplace_back(SxGui::Icon::PointLight, "Point Light", [](EntityBehaviour* behaviour) { BehaviourHelper::CreatePointLightBehaviour(behaviour); });
 	actorItems_.emplace_back(SxGui::Icon::SpotLight, "Spot Light", [](EntityBehaviour* behaviour) { BehaviourHelper::CreateSpotLightBehaviour(behaviour); });
-
+	actorItems_.emplace_back(SxGui::Icon::RectLight, "Rect Light", [](EntityBehaviour* behaviour) { BehaviourHelper::CreateRectLightBehaviour(behaviour); });
 
 }
 

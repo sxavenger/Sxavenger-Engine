@@ -13,6 +13,7 @@ SXAVENGER_ENGINE_USING
 #include "../Component/Light/Punctual/DirectionalLightComponent.h"
 #include "../Component/Light/Punctual/PointLightComponent.h"
 #include "../Component/Light/Punctual/SpotLightComponent.h"
+#include "../Component/Light/Rect/RectLightComponent.h"
 #include "../Component/Armature/ArmatureComponent.h"
 #include "../Component/MeshRenderer/MeshRendererComponent.h"
 #include "../Component/MeshRenderer/SkinnedMeshRendererComponent.h"
@@ -116,6 +117,22 @@ void BehaviourHelper::CreateSpotLightBehaviour(const BehaviourAddress& address) 
 BehaviourAddress BehaviourHelper::CreateSpotLightBehaviour() {
 	BehaviourAddress address = BehaviourHelper::Create("spot light");
 	BehaviourHelper::CreateSpotLightBehaviour(address);
+	return address;
+}
+
+void BehaviourHelper::CreateRectLightBehaviour(EntityBehaviour* behaviour) {
+	behaviour->AddComponent<TransformComponent>();
+	behaviour->AddComponent<RectLightComponent>();
+}
+
+void BehaviourHelper::CreateRectLightBehaviour(const BehaviourAddress& address) {
+	address->AddComponent<TransformComponent>();
+	address->AddComponent<RectLightComponent>();
+}
+
+BehaviourAddress BehaviourHelper::CreateRectLightBehaviour() {
+	BehaviourAddress address = BehaviourHelper::Create("rect light");
+	BehaviourHelper::CreateRectLightBehaviour(address);
 	return address;
 }
 

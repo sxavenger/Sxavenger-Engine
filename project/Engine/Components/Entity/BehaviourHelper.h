@@ -58,6 +58,10 @@ public:
 	static void CreateSpotLightBehaviour(const BehaviourAddress& address);
 	static BehaviourAddress CreateSpotLightBehaviour();
 
+	static void CreateRectLightBehaviour(EntityBehaviour* behaviour);
+	static void CreateRectLightBehaviour(const BehaviourAddress& address);
+	static BehaviourAddress CreateRectLightBehaviour();
+
 	static void CreateStaticMeshBehaviour(const BehaviourAddress& address, const std::shared_ptr<ContentModel>& model);
 	static BehaviourAddress CreateStaticMeshBehaviour(const std::shared_ptr<ContentModel>& model);
 
