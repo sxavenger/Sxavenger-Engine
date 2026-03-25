@@ -38,18 +38,23 @@ public:
 
 	//* create helper *//
 
+	static void CreateTransformBehaviour(EntityBehaviour* behaviour);
 	static void CreateTransformBehaviour(const BehaviourAddress& address);
 	static BehaviourAddress CreateTransformBehaviour();
 
+	static void CreateCameraBehaviour(EntityBehaviour* behaviour);
 	static void CreateCameraBehaviour(const BehaviourAddress& address);
 	static BehaviourAddress CreateCameraBehaviour();
 
+	static void CreateDirectionalLightBehaviour(EntityBehaviour* behaviour);
 	static void CreateDirectionalLightBehaviour(const BehaviourAddress& address);
 	static BehaviourAddress CreateDirectionalLightBehaviour();
 
+	static void CreatePointLightBehaviour(EntityBehaviour* behaviour);
 	static void CreatePointLightBehaviour(const BehaviourAddress& address);
 	static BehaviourAddress CreatePointLightBehaviour();
 
+	static void CreateSpotLightBehaviour(EntityBehaviour* behaviour);
 	static void CreateSpotLightBehaviour(const BehaviourAddress& address);
 	static BehaviourAddress CreateSpotLightBehaviour();
 

@@ -57,6 +57,10 @@ private:
 
 	void PassMotionVector(const DirectXQueueContext* context, const FRenderConfig& config);
 
+	//* lighting only *//
+
+	void LightingOnly(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
 };
 
 SXAVENGER_ENGINE_NAMESPACE_END

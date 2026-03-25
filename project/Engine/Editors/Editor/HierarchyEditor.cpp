@@ -24,6 +24,16 @@ SXAVENGER_ENGINE_USING
 //////////////////////////////////////////////////////////////////////////////////////////
 
 void HierarchyEditor::Init() {
+
+	//* actor items *//
+
+	actorItems_.emplace_back(SxGui::Icon::Cube, "Behaviour", [](EntityBehaviour* behaviour) { BehaviourHelper::CreateTransformBehaviour(behaviour); });
+	actorItems_.emplace_back(SxGui::Icon::Camera, "Camera", [](EntityBehaviour* behaviour) { BehaviourHelper::CreateCameraBehaviour(behaviour); });
+	actorItems_.emplace_back(SxGui::Icon::DirectionalLight, "Directional Light", [](EntityBehaviour* behaviour) { BehaviourHelper::CreateDirectionalLightBehaviour(behaviour); });
+	actorItems_.emplace_back(SxGui::Icon::PointLight, "Point Light", [](EntityBehaviour* behaviour) { BehaviourHelper::CreatePointLightBehaviour(behaviour); });
+	actorItems_.emplace_back(SxGui::Icon::SpotLight, "Spot Light", [](EntityBehaviour* behaviour) { BehaviourHelper::CreateSpotLightBehaviour(behaviour); });
+
+
 }
 
 void HierarchyEditor::ShowMainMenu() {
@@ -32,6 +42,7 @@ void HierarchyEditor::ShowMainMenu() {
 
 void HierarchyEditor::ShowWindow() {
 	ShowHierarchyWindow();
+	ShowActorWindow();
 }
 
 void HierarchyEditor::LateUpdate() {
@@ -42,46 +53,8 @@ void HierarchyEditor::ShowHierarchyMenu() {
 		MenuPadding();
 		ImGui::SeparatorText("hierarchy");
 
-		ShowActorMenu();
 		ShowSceneMenu();
 		ShowSummaryMenu();
-
-		ImGui::EndMenu();
-	}
-}
-
-void HierarchyEditor::ShowActorMenu() {
-	if (ImGui::BeginMenu("actor")) {
-		MenuPadding();
-		ImGui::SeparatorText("actor");
-
-		ImGui::Text("Common");
-		ImGui::Separator();
-
-		if (ImGui::MenuItem("Behaviour")) {
-			BehaviourAddress address = BehaviourHelper::CreateTransformBehaviour();
-			address->SetMobility(EntityBehaviour::Mobility::Static);
-		}
-
-		ImGui::Dummy({ 0, 4 });
-
-		ImGui::Text("Punctual Light");
-		ImGui::Separator();
-
-		if (ImGui::MenuItem("Directional Light")) {
-			BehaviourAddress address = BehaviourHelper::CreateDirectionalLightBehaviour();
-			address->SetMobility(EntityBehaviour::Mobility::Static);
-		}
-
-		if (ImGui::MenuItem("Point Light")) {
-			BehaviourAddress address =  BehaviourHelper::CreatePointLightBehaviour();
-			address->SetMobility(EntityBehaviour::Mobility::Static);
-		}
-
-		if (ImGui::MenuItem("Spot Light")) {
-			BehaviourAddress address = BehaviourHelper::CreateSpotLightBehaviour();
-			address->SetMobility(EntityBehaviour::Mobility::Static);
-		}
 
 		ImGui::EndMenu();
 	}
@@ -227,6 +200,38 @@ void HierarchyEditor::ShowHierarchyWindow() {
 			address->SetMobility(EntityBehaviour::Mobility::Static);
 		});
 	}
+
+	ImGui::End();
+}
+
+void HierarchyEditor::ShowActorWindow() {
+
+	std::string label = std::format("{} Actor ## Hierarchy Editor", SxGui::Icon::CubeUpdate);
+
+	BaseEditor::SetNextWindowDocking();
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag());
+
+
+	{ //!< Actor View
+		ImGui::BeginChild("## Actor View", ImVec2{}, ImGuiChildFlags_FrameStyle);
+
+		ImVec2 region = ImGui::GetContentRegionAvail();
+
+		for (const auto& item : actorItems_) {
+			if (ImGui::Button(std::format("{} | {}", item.icon, item.name).c_str(), { region.x, 32 })) {
+				BehaviourAddress address = BehaviourHelper::Create(item.name);
+				address->SetMobility(EntityBehaviour::Mobility::Static);
+				item.function(address.Get());
+				address->SetInspector(); //!< 追加したActorをInspectorで選択状態にする
+			}
+		}
+
+		ImGui::EndChild();
+	}
+
+	
+
+
 
 	ImGui::End();
 }

@@ -9,8 +9,10 @@ SXAVENGER_ENGINE_USING
 #include "../Core/FRenderCore.h"
 #include "../Core/FRenderCoreGeometry.h"
 #include "../Core/FRenderCoreTransition.h"
+#include "../FPresenter.h"
 
 //* engine
+#include <Engine/Graphics/Graphics.h>
 #include <Engine/Components/Component/MeshRenderer/MeshRendererComponent.h>
 #include <Engine/Components/Component/MeshRenderer/SkinnedMeshRendererComponent.h>
 #include <Engine/Components/Component/ComponentStorage.h>
@@ -26,7 +28,8 @@ void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const F
 	}
 
 	config.buffer->EnsureBuffer<FGBuffer>(); //!< Bufferの確保
-	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreGeometry>(); //!< RenderCoreの確保
+	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreGeometry>();
+	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreTransition>(); //!< RenderCoreの確保.
 
 	FBaseRenderPass::BeginRenderPass(context, "Deferred Base", config);
 
@@ -56,6 +59,10 @@ void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const F
 		EndMotionVectorPass(context, config.buffer);
 
 		FBaseRenderPass::EndEvent(context);
+	}
+
+	if (config.option.Test(FRenderConfig::OptionFlag::LightingOnly)) {
+		LightingOnly(context, config.buffer);
 	}
 
 	FBaseRenderPass::EndRenderPass(context);
@@ -269,5 +276,26 @@ void FRenderPassDeferredBase::PassMotionVector(const DirectXQueueContext* contex
 	core->BindComputeBuffer(FRenderCoreTransition::Transition::MotionVectorTransition, context, desc);
 	core->Dispatch(context, config.buffer->GetResolution());
 
+}
+
+void FRenderPassDeferredBase::LightingOnly(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+	//!< Lighting確認のため, Albedo Buffer を 白色で塗りつぶす.
+
+	FGBuffer* gbuffer = buffer->GetBuffer<FGBuffer>();
+	gbuffer->GetBuffer(FGBuffer::Layout::Albedo).TransitionUnorderedAccess(context);
+
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreTransition>(); //!< RenderCoreの確保.
+	core->SetPipeline(FRenderCoreTransition::Transition::AlbedoWhiteTransition, context);
+
+	//!< parameterの設定
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, &buffer->GetResolution());
+	desc.SetHandle("gAlbedo", gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleUAV());
+
+	core->BindComputeBuffer(FRenderCoreTransition::Transition::AlbedoWhiteTransition, context, desc);
+	core->Dispatch(context, buffer->GetResolution());
+
+	gbuffer->GetBuffer(FGBuffer::Layout::Albedo).TransitionDefaultState(context);
+	
 }
 

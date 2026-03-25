@@ -12,6 +12,9 @@ SXAVENGER_ENGINE_USING
 //* engine
 #include <Engine/System/Utility/RuntimeLogger.h>
 
+//* lib
+#include <Lib/Adapter/Random/Random.h>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassAmbientOcclusion class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,6 +130,10 @@ void FRenderPassAmbientOcclusion::PassAntiAliasing_XeGTAO(const DirectXQueueCont
 		desc.SetHandle("gEdgeWorking",  process->GetPreviousTexture(1).GetGPUHandleUAV());
 		desc.SetHandle("gAOWorking",    process->GetCurrentTexture().GetGPUHandleUAV());
 
+		//!< Randomの設定
+		uint32_t random = Random::UniformDistribution<uint32_t>(0, 64);
+		desc.Set32bitConstants("RandomConstant", 1, &random);
+
 		core->BindComputeBuffer(FRenderCoreProcess::CompositeProcess::XeGTAO_Main, context, desc);
 		core->Dispatch(context, config.buffer->GetResolution());
 
@@ -183,7 +190,7 @@ void FRenderPassAmbientOcclusion::PassAntiAliasing_XeGTAO(const DirectXQueueCont
 
 		//!< Bufferの設定
 		desc.SetHandle("gAOWorking",   process->GetCurrentTexture().GetGPUHandleSRV());
-		desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
+		desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleUAV());
 
 		core->BindComputeBuffer(FRenderCoreProcess::CompositeProcess::XeGTAO_Resolve, context, desc);
 		core->Dispatch(context, config.buffer->GetResolution());

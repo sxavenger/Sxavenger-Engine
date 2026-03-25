@@ -15,6 +15,7 @@ void FRenderCoreTransition::Init() {
 	CreatePresent();
 
 	CreateTransition(Transition::MotionVectorTransition, kDirectory / "MotionVectorTransition.cs.hlsl");
+	CreateTransition(Transition::AlbedoWhiteTransition,  kDirectory / "AlbedoWhiteTransition.cs.hlsl");
 
 	CreateTransition(Transition::LightingTransition,    kDirectory / "LightingTransition.cs.hlsl");
 	CreateTransition(Transition::ReflectionTransition,  kDirectory / "ReflectionTransition.cs.hlsl");

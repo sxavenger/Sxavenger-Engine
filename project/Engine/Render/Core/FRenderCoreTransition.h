@@ -35,7 +35,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Transition : uint8_t {
 		MotionVectorTransition,
-
+		AlbedoWhiteTransition,
 		LightingTransition,
 		ReflectionTransition,
 		MipmapTransition,

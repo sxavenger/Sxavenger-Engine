@@ -153,7 +153,6 @@ namespace SxGTAO {
 			constants.ThinOccluderCompensation = settings.thinOccluderCompensation;
 			constants.FinalValuePower          = settings.finalValuePower;
 			constants.DepthMIPSamplingOffset   = settings.depthMIPSamplingOffset;
-			constants.NoiseIndex               = 0; //!< = (settings.DenoisePasses > 0) ? frameCounter % 64 : 0; <= maybe [0 ~ 63] random noise...?
 
 			return constants;
 		}

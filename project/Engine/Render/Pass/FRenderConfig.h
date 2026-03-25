@@ -55,6 +55,8 @@ public:
 		PostProcess = 1 << 0,
 		Tonemap     = 1 << 1,
 
+		LightingOnly = 1 << 2,
+
 		//* option group *//
 
 		Default = PostProcess | Tonemap,

@@ -30,30 +30,45 @@ namespace SxGui {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	//!< [Google Material Icon](https://fonts.google.com/icons)
 	enum class Icon : uint32_t {
-		Home          = 0xE88A,
-		Cube          = 0xF720,
-		ChessPawn     = 0xF3B6,
-		Hierarchy     = 0xE97A,
-		Menu          = 0xE5D2,
-		MenuOpen      = 0xE9BD,
-		Layers        = 0xE53B,
-		Window        = 0xF088,
-		Folder        = 0xE2C7,
-		Files         = 0xEA85,
-		Terminal      = 0xEB8E,
-		Timer         = 0xE425,
-		Schedule      = 0xE8B5,
-		Stack         = 0xF500,
-		Visibility    = 0xE8F4,
-		VisibilityOff = 0xE8F5,
-		Delete        = 0xE872,
-		Equal         = 0xF77B,
-		Nearby        = 0xE6B7,
-		NearbyError   = 0xF03B,
-		Dialog        = 0xE99F,
-		ShortText     = 0xE261,
+		Home               = 0xE88A,
+		DeployedCode       = 0xF720,
+		DeployedCodeUpdate = 0xF5F4,
+		ChessPawn          = 0xF3B6,
+		AccountTree        = 0xE97A,
+		Menu               = 0xE5D2,
+		MenuOpen           = 0xE9BD,
+		Layers             = 0xE53B,
+		Window             = 0xF088,
+		Folder             = 0xE2C7,
+		Files              = 0xEA85,
+		Terminal           = 0xEB8E,
+		Timer              = 0xE425,
+		Schedule           = 0xE8B5,
+		Stack              = 0xF500,
+		Visibility         = 0xE8F4,
+		VisibilityOff      = 0xE8F5,
+		Delete             = 0xE872,
+		Equal              = 0xF77B,
+		Nearby             = 0xE6B7,
+		NearbyError        = 0xF03B,
+		Dialog             = 0xE99F,
+		ShortText          = 0xE261,
+		Videocam           = 0xE04B,
+		LightMode          = 0xE518,
+		LightBlob          = 0xE0F0,
+		Light              = 0xF02A,
+		BacklightHigh      = 0xF7ED,
 
-		/* 以下は使えない
+		Cube             = DeployedCode,
+		CubeUpdate       = DeployedCodeUpdate,
+		Hierarchy        = AccountTree,
+		Camera           = Videocam,
+		DirectionalLight = LightMode,
+		PointLight       = LightBlob,
+		SpotLight        = Light,
+		RectLight        = BacklightHigh,
+
+		/* なぜか以下は使えない
 		Warning       = 0xE002,
 		Error         = 0xE000,
 		*/
@@ -105,6 +120,12 @@ namespace SxGui {
 	void LoadStyle(const std::filesystem::path& filepath = kGuiStyleFilepath);
 
 	void SaveStyle(const std::filesystem::path& filepath = kGuiStyleFilepath);
+
+	//=========================================================================================
+	// widget intermediate methods
+	//=========================================================================================
+
+
 
 	//=========================================================================================
 	// widget methods

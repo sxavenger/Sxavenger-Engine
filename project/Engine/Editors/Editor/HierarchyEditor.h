@@ -9,6 +9,7 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/Configuration/Configuration.h>
+#include <Engine/System/UI/SxGui.h>
 #include <Engine/Components/Entity/EntityBehaviour.h>
 
 //* lib
@@ -45,14 +46,19 @@ public:
 private:
 
 	//////////////////////////////////////////////////////////////////////////////////////////
-	// Column enum class
+	// ActorItem structure
 	//////////////////////////////////////////////////////////////////////////////////////////
-	enum class Column : int32_t {
-		Active,
-		Node,
+	struct ActorItem {
+	public:
 
-		Count,
-		//!< TODO: activeボタンの追加
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		SxGui::Icon icon;
+		std::string name;
+		std::function<void(EntityBehaviour*)> function;
+
 	};
 
 private:
@@ -65,7 +71,13 @@ private:
 
 	static inline const std::filesystem::path kSceneDirectory = kAssetsDirectory / "scene";
 
+	//* hierarchy parameter *//
+
 	std::string hierarchyBuf_;
+
+	//* actor parameter *//
+
+	std::vector<ActorItem> actorItems_;
 
 	//=========================================================================================
 	// private methods
@@ -75,11 +87,11 @@ private:
 
 	void ShowHierarchyMenu();
 
-	void ShowActorMenu();
 	void ShowSceneMenu();
 	void ShowSummaryMenu();
 
 	void ShowHierarchyWindow();
+	void ShowActorWindow();
 
 	//* helper method *//
 

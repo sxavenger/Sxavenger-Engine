@@ -36,6 +36,10 @@ void BehaviourHelper::Destroy(BehaviourAddress& address) {
 	sEntityBehaviourStorage->PushUnregisterQueue(address);
 }
 
+void BehaviourHelper::CreateTransformBehaviour(EntityBehaviour* behaviour) {
+	behaviour->AddComponent<TransformComponent>();
+}
+
 void BehaviourHelper::CreateTransformBehaviour(const BehaviourAddress& address) {
 	address->AddComponent<TransformComponent>();
 }
@@ -44,6 +48,11 @@ BehaviourAddress BehaviourHelper::CreateTransformBehaviour() {
 	BehaviourAddress address = BehaviourHelper::Create("behaviour");
 	BehaviourHelper::CreateTransformBehaviour(address);
 	return address;
+}
+
+void BehaviourHelper::CreateCameraBehaviour(EntityBehaviour* behaviour) {
+	behaviour->AddComponent<TransformComponent>();
+	behaviour->AddComponent<CameraComponent>();
 }
 
 void BehaviourHelper::CreateCameraBehaviour(const BehaviourAddress& address) {
@@ -55,6 +64,11 @@ BehaviourAddress BehaviourHelper::CreateCameraBehaviour() {
 	BehaviourAddress address = BehaviourHelper::Create("camera");
 	BehaviourHelper::CreateCameraBehaviour(address);
 	return address;
+}
+
+void BehaviourHelper::CreateDirectionalLightBehaviour(EntityBehaviour* behaviour) {
+	behaviour->AddComponent<TransformComponent>();
+	behaviour->AddComponent<DirectionalLightComponent>();
 }
 
 void BehaviourHelper::CreateDirectionalLightBehaviour(const BehaviourAddress& address) {
@@ -73,6 +87,11 @@ BehaviourAddress BehaviourHelper::CreateDirectionalLightBehaviour() {
 	return address;
 }
 
+void BehaviourHelper::CreatePointLightBehaviour(EntityBehaviour* behaviour) {
+	behaviour->AddComponent<TransformComponent>();
+	behaviour->AddComponent<PointLightComponent>();
+}
+
 void BehaviourHelper::CreatePointLightBehaviour(const BehaviourAddress& address) {
 	address->AddComponent<TransformComponent>();
 	address->AddComponent<PointLightComponent>();
@@ -82,6 +101,11 @@ BehaviourAddress BehaviourHelper::CreatePointLightBehaviour() {
 	BehaviourAddress address = BehaviourHelper::Create("point light");
 	BehaviourHelper::CreatePointLightBehaviour(address);
 	return address;
+}
+
+void BehaviourHelper::CreateSpotLightBehaviour(EntityBehaviour* behaviour) {
+	behaviour->AddComponent<TransformComponent>();
+	behaviour->AddComponent<SpotLightComponent>();
 }
 
 void BehaviourHelper::CreateSpotLightBehaviour(const BehaviourAddress& address) {
