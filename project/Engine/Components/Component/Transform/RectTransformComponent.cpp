@@ -23,13 +23,13 @@ RectTransformComponent::RectTransformComponent(EntityBehaviour* behaviour) : Bas
 }
 
 void RectTransformComponent::ShowComponentInspector() {
-	SxGui::DragVector2("translate", &transform_.translate.x, 0.1f);
-	ImGui::SliderAngle("rotate",    &transform_.rotate);
-	SxGui::DragVector2("scale",     &transform_.scale.x, 0.1f);
+	SxGui::DragVectorN<float, 2>("translate", &transform_.translate.x, 0.1f);
+	ImGui::SliderAngle("rotate", &transform_.rotate);
+	SxGui::DragVectorN<float, 2>("scale", &transform_.scale.x, 0.1f);
 
 	ImGui::Separator();
 
-	SxImGui::DragVector2("pivot",  &transform_.pivot.x,  0.01f, 0.0f, 1.0f, "%.2f");
+	SxGui::DragVectorN<float, 2>("pivot", &transform_.pivot.x, 0.01f, 0.0f, 1.0f, "%.2f");
 	SxImGui::DragFloat("priority", &transform_.priority, 0.01f, 0.0f, 1.0f);
 
 	UpdateMatrix();

@@ -58,9 +58,9 @@ void RectLightComponent::ShowComponentInspector() {
 	}
 
 	std::string format = (parameter.unit == LightCommon::Units::Lumen ? "%.3flm" : "%.3fcd");
-	SxGui::DragScalar<float>("intensity", &parameter.intensity, 0.1f, 0.0f, std::nullopt, format.c_str());
-	SxGui::DragScalar<float>("radius",    &parameter.radius, 0.1f, 0.0f);
-	SxGui::DragVector2("source",          &parameter.source.x, 0.1f, 0.0f);
+	SxGui::DragScalar<float>("intensity",  &parameter.intensity, 0.1f, 0.0f, std::nullopt, format.c_str());
+	SxGui::DragScalar<float>("radius",     &parameter.radius, 0.1f, 0.0f);
+	SxGui::DragVectorN<float, 2>("source", &parameter.source.x, 0.1f, 0.0f);
 
 	parameter.shadow.ShowInspector();
 

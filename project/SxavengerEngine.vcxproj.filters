@@ -933,6 +933,7 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\UI\SxGuiInternal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1524,5 +1525,6 @@
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\System\UI\SxGuiInternal.cpp" />
   </ItemGroup>
 </Project>

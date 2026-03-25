@@ -158,7 +158,7 @@ void EntityBehaviour::ShowInspector() {
 
 	ImGui::SameLine();
 
-	SxImGui::InputText("## name", name_);
+	SxGui::InputText("## name", name_, std::format("{} name", SxGui::Icon::Label).c_str());
 
 	ImGui::EndDisabled();
 

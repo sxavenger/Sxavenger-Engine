@@ -22,7 +22,7 @@ void PostProcessRadialBlur::Parameter::Init() {
 }
 
 void PostProcessRadialBlur::Parameter::SetImGuiCommand() {
-	SxGui::DragVector2("center", &center.x, 0.01f, -1.0f, 1.0f);
+	SxGui::DragVectorN<float, 2>("center", &center.x, 0.01f, -1.0f, 1.0f);
 	SxGui::DragScalar<float>("intensity", &intensity, 0.01f, 0.0f, 10.0f);
 	SxGui::DragScalar<uint32_t>("quality", &quality, 1.0f, 1, 16);
 	ImGui::CheckboxFlags("stochastic", &isStochastic, 1);

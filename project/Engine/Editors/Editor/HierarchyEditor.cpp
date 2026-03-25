@@ -153,9 +153,7 @@ void HierarchyEditor::ShowHierarchyWindow() {
 	BaseEditor::SetNextWindowDocking();
 	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag());
 
-	SxImGui::InputText("## hierarchy filter", hierarchyBuf_);
-
-	ImGui::Separator();
+	SxGui::InputText("## hierarchy filter", hierarchyBuf_, std::format("{} Search Behaviour", SxGui::Icon::Search).c_str());
 
 	if (SxGui::Hierarchy::Begin(ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_SizingFixedFit)) {
 
@@ -228,10 +226,6 @@ void HierarchyEditor::ShowActorWindow() {
 
 		ImGui::EndChild();
 	}
-
-	
-
-
 
 	ImGui::End();
 }

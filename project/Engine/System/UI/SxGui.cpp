@@ -15,48 +15,7 @@ SXAVENGER_ENGINE_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Constants
-	////////////////////////////////////////////////////////////////////////////////////////////
-
-	static const float DRAG_MOUSE_THRESHOLD_FACTOR = 0.5f;
-	
-	static const ImU32 GDefaultRgbaColorMarkers[4] = {
-		IM_COL32(203, 38, 0, 255), IM_COL32(103, 169, 0, 255), IM_COL32(44, 126, 237, 255), IM_COL32(140,140,140,255)
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// ImVec operators
-	////////////////////////////////////////////////////////////////////////////////////////////
-
-#ifndef IMGUI_DEFINE_MATH_OPERATORS
-	// ImVec2 operators
-	static inline ImVec2  operator*(const ImVec2& lhs, const float rhs) { return ImVec2(lhs.x * rhs, lhs.y * rhs); }
-	static inline ImVec2  operator/(const ImVec2& lhs, const float rhs) { return ImVec2(lhs.x / rhs, lhs.y / rhs); }
-	static inline ImVec2  operator+(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x + rhs.x, lhs.y + rhs.y); }
-	static inline ImVec2  operator-(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x - rhs.x, lhs.y - rhs.y); }
-	static inline ImVec2  operator*(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x * rhs.x, lhs.y * rhs.y); }
-	static inline ImVec2  operator/(const ImVec2& lhs, const ImVec2& rhs) { return ImVec2(lhs.x / rhs.x, lhs.y / rhs.y); }
-	static inline ImVec2  operator-(const ImVec2& lhs) { return ImVec2(-lhs.x, -lhs.y); }
-	static inline ImVec2& operator*=(ImVec2& lhs, const float rhs) { lhs.x *= rhs; lhs.y *= rhs; return lhs; }
-	static inline ImVec2& operator/=(ImVec2& lhs, const float rhs) { lhs.x /= rhs; lhs.y /= rhs; return lhs; }
-	static inline ImVec2& operator+=(ImVec2& lhs, const ImVec2& rhs) { lhs.x += rhs.x; lhs.y += rhs.y; return lhs; }
-	static inline ImVec2& operator-=(ImVec2& lhs, const ImVec2& rhs) { lhs.x -= rhs.x; lhs.y -= rhs.y; return lhs; }
-	static inline ImVec2& operator*=(ImVec2& lhs, const ImVec2& rhs) { lhs.x *= rhs.x; lhs.y *= rhs.y; return lhs; }
-	static inline ImVec2& operator/=(ImVec2& lhs, const ImVec2& rhs) { lhs.x /= rhs.x; lhs.y /= rhs.y; return lhs; }
-	static inline bool    operator==(const ImVec2& lhs, const ImVec2& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y; }
-	static inline bool    operator!=(const ImVec2& lhs, const ImVec2& rhs) { return lhs.x != rhs.x || lhs.y != rhs.y; }
-	// ImVec4 operators
-	static inline ImVec4  operator*(const ImVec4& lhs, const float rhs) { return ImVec4(lhs.x * rhs, lhs.y * rhs, lhs.z * rhs, lhs.w * rhs); }
-	static inline ImVec4  operator/(const ImVec4& lhs, const float rhs) { return ImVec4(lhs.x / rhs, lhs.y / rhs, lhs.z / rhs, lhs.w / rhs); }
-	static inline ImVec4  operator+(const ImVec4& lhs, const ImVec4& rhs) { return ImVec4(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w); }
-	static inline ImVec4  operator-(const ImVec4& lhs, const ImVec4& rhs) { return ImVec4(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w); }
-	static inline ImVec4  operator*(const ImVec4& lhs, const ImVec4& rhs) { return ImVec4(lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z, lhs.w * rhs.w); }
-	static inline ImVec4  operator/(const ImVec4& lhs, const ImVec4& rhs) { return ImVec4(lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z, lhs.w / rhs.w); }
-	static inline ImVec4  operator-(const ImVec4& lhs) { return ImVec4(-lhs.x, -lhs.y, -lhs.z, -lhs.w); }
-	static inline bool    operator==(const ImVec4& lhs, const ImVec4& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z && lhs.w == rhs.w; }
-	static inline bool    operator!=(const ImVec4& lhs, const ImVec4& rhs) { return lhs.x != rhs.x || lhs.y != rhs.y || lhs.z != rhs.z || lhs.w != rhs.w; }
-#endif
+	static std::unordered_map<uintptr_t, std::string> buffers;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Json [Serialize / Deserialize] functions
@@ -339,141 +298,60 @@ void SxGui::SaveStyle(const std::filesystem::path& filename) {
 
 }
 
-bool SxGui::DragVector2(const char* label, float v[2], float v_speed, const std::optional<float>& v_min, const std::optional<float>& v_max, const char* format, ImGuiSliderFlags flags) {
-	ImGuiWindow* window = ImGui::GetCurrentWindow();
-	if (window->SkipItems) {
-		return false;
+bool SxGui::InputText(const char* label, std::string& str, ImGuiInputTextFlags flags) {
+
+	const uintptr_t value = reinterpret_cast<uintptr_t>(&str);
+
+	if (!buffers.contains(value)) {
+		buffers.emplace(value, std::string(128, '\0'));
 	}
 
-	bool isChanged = false;
+	std::string& buf = buffers[value];
 
-	// 全体のウィジェット幅は通常の DragFloat2 と同じ
-	float widgetWidth = ImGui::CalcItemWidth();
-	float setWidth = widgetWidth / 2.0f; // 各軸のセル幅
+	bool isInsert = SxGui::CheckInsertText(label);
 
-	// 角丸四角形のサイズ
-	float rectWidth = 2.0f;
-	float rectHeight = ImGui::GetFrameHeight();
-	float rounding = ImGui::GetStyle().FrameRounding;
-	float dragWidth = setWidth - rectWidth; // 各 DragFloat の幅
-
-	static const ImU32 rectColors[2] = {
-		IM_COL32(203, 38, 0, 255),
-		IM_COL32(103, 169, 0, 255),
-	};
-
-	{ //!< group
-		ImGui::PushID(label);
-		ImGui::BeginGroup();
-
-		for (uint32_t i = 0; i < 2; ++i) {
-			ImGui::PushID(i);
-			// 角丸四角形のダミー領域を描画
-			ImGui::Dummy(ImVec2(rectWidth, rectHeight));
-			ImVec2 rectPos = ImGui::GetItemRectMin();
-			ImVec2 rectMax(rectPos.x + rectWidth, rectPos.y + rectHeight);
-			ImGui::GetWindowDrawList()->AddRectFilled(rectPos, rectMax, rectColors[i], rounding, ImDrawFlags_RoundCornersTopLeft | ImDrawFlags_RoundCornersBottomLeft);
-
-			// 角丸四角形と DragFloat の間に隙間を作らない
-			ImGui::SameLine(0, 0);
-
-			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0);
-
-			ImGui::SetNextItemWidth(dragWidth - 2);
-			isChanged |= SxGui::DragScalar<float>("", &v[i], v_speed, v_min, v_max, format, flags);
-			ImGui::PopID();
-
-			ImGui::PopStyleVar(); // `FrameRounding` の変更を元に戻す
-
-			// 各セットの後に `SameLine()` を適用して 1 行に並ぶようにする
-			if (i < 1) {
-				ImGui::SameLine(0, 4); // 間隔を調整
-			}
-		}
-
-		ImGui::EndGroup();
-		ImGui::PopID();
+	if (!isInsert) {
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
 	}
 
+	bool changed = ImGui::InputText(label, buf.data(), buf.size(), flags);
 
-	// 右側に通常通りラベルを表示
-	const char* label_end = ImGui::FindRenderedTextEnd(label);
-
-	if (label != label_end) {
-		ImGui::SameLine(0, ImGui::GetStyle().ItemInnerSpacing.x);
-		ImGui::TextEx(label, label_end);
+	if (!isInsert) {
+		ImGui::PopItemWidth();
 	}
 
-	return isChanged;
+	if (!ImGui::IsItemActive()) {
+		buf = str;
+		buf.resize(128, '\0'); // バッファのサイズをリセット
+	}
+
+	if (changed) {
+		size_t pos = buf.find('\0');
+		str = (pos != std::string::npos ? buf.substr(0, pos) : buf);
+	}
+
+	return changed;
 }
 
-bool SxGui::DragVector3(const char* label, float v[3], float v_speed, const std::optional<float>& v_min, const std::optional<float>& v_max, const char* format, ImGuiSliderFlags flags) {
-	ImGuiWindow* window = ImGui::GetCurrentWindow();
-	if (window->SkipItems) {
-		return false;
+bool SxGui::InputText(const char* label, std::string& str, const char* emptyText, ImGuiInputTextFlags flags) {
+
+	ImVec2 previous_position = ImGui::GetCursorPos();
+	bool changed = SxGui::InputText(label, str, flags);
+
+	ImVec2 current_position = ImGui::GetCursorPos();
+
+	if (str.empty() && emptyText != NULL) {
+
+		float center_position_y = current_position.y - previous_position.y;
+		ImVec2 text_size        = ImGui::CalcTextSize(emptyText);
+
+		ImGui::SetCursorPos({ previous_position.x + ImGui::GetStyle().FramePadding.x, center_position_y + text_size.y * 0.5f });
+		ImGui::TextColored(ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled), emptyText);
+
+		ImGui::SetCursorPos(current_position);
 	}
 
-	bool isChanged = false;
-
-	// 全体のウィジェット幅は通常の DragFloat3 と同じ
-	float widgetWidth = ImGui::CalcItemWidth();
-	float setWidth = widgetWidth / 3.0f; // 各軸のセル幅
-
-	// 角丸四角形のサイズ
-	float rectWidth = 2.0f;
-	float rectHeight = ImGui::GetFrameHeight();
-	float rounding = ImGui::GetStyle().FrameRounding;
-	float dragWidth = setWidth - rectWidth; // 各 DragFloat の幅
-
-	static const ImU32 rectColors[3] = {
-		IM_COL32(203, 38, 0, 255),
-		IM_COL32(103, 169, 0, 255),
-		IM_COL32(44, 126, 237, 255)
-	};
-
-	{ //!< group
-		ImGui::PushID(label);
-		ImGui::BeginGroup();
-
-		for (uint32_t i = 0; i < 3; ++i) {
-			ImGui::PushID(i);
-			// 角丸四角形のダミー領域を描画
-			ImGui::Dummy(ImVec2(rectWidth, rectHeight));
-			ImVec2 rectPos = ImGui::GetItemRectMin();
-			ImVec2 rectMax(rectPos.x + rectWidth, rectPos.y + rectHeight);
-			ImGui::GetWindowDrawList()->AddRectFilled(rectPos, rectMax, rectColors[i], rounding, ImDrawFlags_RoundCornersTopLeft | ImDrawFlags_RoundCornersBottomLeft);
-
-			// 角丸四角形と DragFloat の間に隙間を作らない
-			ImGui::SameLine(0, 0);
-
-			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 0);
-
-			ImGui::SetNextItemWidth(dragWidth - 2);
-			isChanged |= SxGui::DragScalar<float>("", &v[i], v_speed, v_min, v_max, format, flags);
-			ImGui::PopID();
-
-			ImGui::PopStyleVar(); // `FrameRounding` の変更を元に戻す
-
-			// 各セットの後に `SameLine()` を適用して 1 行に並ぶようにする
-			if (i < 2) {
-				ImGui::SameLine(0, 4); // 間隔を調整
-			}
-		}
-
-		ImGui::EndGroup();
-		ImGui::PopID();
-	}
-
-
-	// 右側に通常通りラベルを表示
-	const char* label_end = ImGui::FindRenderedTextEnd(label);
-
-	if (label != label_end) {
-		ImGui::SameLine(0, ImGui::GetStyle().ItemInnerSpacing.x);
-		ImGui::TextEx(label, label_end);
-	}
-
-	return isChanged;
+	return changed;
 }
 
 void SxGui::Image(ImTextureRef handle, const ImVec2& resolution) {
@@ -932,12 +810,7 @@ bool SxGui::Table::Begin(const std::string& label) {
 	// TODO: CellPaddingの調整.
 
 	ImVec2 region = ImGui::GetContentRegionAvail();
-
 	ImGui::BeginTable(label.c_str(), static_cast<int>(Column::Count), kTableFlags, ImVec2{ region.x, 0.0f });
-
-	ImGui::TableSetupColumn(NULL, ImGuiTableColumnFlags_WidthFixed);
-	ImGui::TableSetupColumn(NULL, ImGuiTableColumnFlags_WidthStretch);
-	ImGui::TableHeadersRow();
 
 	return true;
 }
@@ -954,6 +827,39 @@ void SxGui::Table::SetColumnIndex(Column column) {
 	ImGui::TableSetColumnIndex(static_cast<int>(column));
 }
 
+bool SxGui::Table::TreeNode(const std::string& label) {
+
+	ImGui::EndTable();
+
+	bool isOpen = ImGui::TreeNodeEx(label.c_str(), ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_Framed);
+
+	const ImGuiTableFlags kTableFlags
+		= ImGuiTableFlags_Resizable
+		| ImGuiTableFlags_BordersInner;
+
+	ImVec2 region = ImGui::GetContentRegionAvail();
+	ImGui::BeginTable("TreeNode Insert", static_cast<int>(Column::Count), kTableFlags, ImVec2{region.x, 0.0f});
+
+	return isOpen;
+}
+
+void SxGui::Table::TreePop() {
+
+	ImGui::EndTable();
+
+	ImGui::TreePop();
+
+	const ImGuiTableFlags kTableFlags
+		= ImGuiTableFlags_Resizable
+		| ImGuiTableFlags_BordersInner;
+
+	// TODO: CellPaddingの調整.
+
+	ImVec2 region = ImGui::GetContentRegionAvail();
+	ImGui::BeginTable("TreePop", static_cast<int>(Column::Count), kTableFlags, ImVec2{region.x, 0.0f});
+
+}
+
 bool SxGui::Table::CheckBox(const std::string& label, bool* v) {
 
 	bool changed = false;
@@ -964,38 +870,6 @@ bool SxGui::Table::CheckBox(const std::string& label, bool* v) {
 
 	SxGui::Table::SetColumnIndex(Column::Widget);
 	changed = ImGui::Checkbox(id.c_str(), v);
-
-	SxGui::Table::SetColumnIndex(Column::Label);
-	ImGui::Text(label.c_str());
-
-	return changed;
-}
-
-bool SxGui::Table::DragVector2(const std::string& label, float v[2], float v_speed, const std::optional<float>& v_min, const std::optional<float>& v_max, const char* format, ImGuiSliderFlags flags) {
-	bool changed = false;
-
-	SxGui::Table::NextRow();
-
-	const std::string id = "## " + label;
-
-	SxGui::Table::SetColumnIndex(Column::Widget);
-	changed = SxGui::DragVector2(id.c_str(), v, v_speed, v_min, v_max, format, flags);
-
-	SxGui::Table::SetColumnIndex(Column::Label);
-	ImGui::Text(label.c_str());
-
-	return changed;
-}
-
-bool SxGui::Table::DragVector3(const std::string& label, float v[3], float v_speed, const std::optional<float>& v_min, const std::optional<float>& v_max, const char* format, ImGuiSliderFlags flags) {
-	bool changed = false;
-
-	SxGui::Table::NextRow();
-
-	const std::string id = "## " + label;
-
-	SxGui::Table::SetColumnIndex(Column::Widget);
-	changed = SxGui::DragVector3(id.c_str(), v, v_speed, v_min, v_max, format, flags);
 
 	SxGui::Table::SetColumnIndex(Column::Label);
 	ImGui::Text(label.c_str());
