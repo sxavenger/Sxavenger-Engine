@@ -162,7 +162,9 @@ void EntityBehaviour::ShowInspector() {
 
 	ImGui::EndDisabled();
 
-	ImGui::Text(std::format("mobility - {}", magic_enum::enum_name(mobility_)).c_str());
+	ImGui::Dummy(ImVec2(0.0f, 1.0f));
+	ImGui::Text(std::format("Mobility | {} {}", mobility_ == Mobility::Static ? SxGui::Icon::Cube : SxGui::Icon::ChessPawn, magic_enum::enum_name(mobility_)).c_str());
+	ImGui::Dummy(ImVec2(0.0f, 1.0f));
 
 	{ //!< hierarchyの表示
 		ImGui::BeginChild("## hierarchy child", ImVec2(0, 120), ImGuiChildFlags_ResizeY);
