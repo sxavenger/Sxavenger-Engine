@@ -173,16 +173,20 @@ void DescriptorHeaps::SystemDebugGui() {
 	{ //!< RTV
 		auto pool = pools_[kDescriptor_RTV].get();
 
-		float used
-			= static_cast<float>(pool->GetUsedDescriptorsCount()) / pool->GetDescriptorCapacity();
+		if (pool->GetDescriptorCapacity() != 0) {
+			std::string overlay = std::format(
+				"use: {} / max: {}",
+				pool->GetUsedDescriptorsCount(),
+				pool->GetDescriptorCapacity()
+			);
 
-		std::string overlay = std::format(
-			"use: {} / max: {}",
-			pool->GetUsedDescriptorsCount(),
-			pool->GetDescriptorCapacity()
-		);
+			float used = static_cast<float>(pool->GetUsedDescriptorsCount()) / pool->GetDescriptorCapacity();
+			ImGui::ProgressBar(used, {}, overlay.c_str());
 
-		ImGui::ProgressBar(used, {}, overlay.c_str());
+		} else {
+			ImGui::ProgressBar(0.0f, {}, "capacity is 0");
+		}
+
 		ImGui::SameLine();
 		ImGui::Text("RTV");
 	}
@@ -191,16 +195,20 @@ void DescriptorHeaps::SystemDebugGui() {
 
 		auto pool = pools_[kDescriptor_DSV].get();
 
-		float used
-			= static_cast<float>(pool->GetUsedDescriptorsCount()) / pool->GetDescriptorCapacity();
+		if (pool->GetDescriptorCapacity() != 0) {
+			std::string overlay = std::format(
+				"use: {} / max: {}",
+				pool->GetUsedDescriptorsCount(),
+				pool->GetDescriptorCapacity()
+			);
 
-		std::string overlay = std::format(
-			"use: {} / max: {}",
-			pool->GetUsedDescriptorsCount(),
-			pool->GetDescriptorCapacity()
-		);
+			float used = static_cast<float>(pool->GetUsedDescriptorsCount()) / pool->GetDescriptorCapacity();
+			ImGui::ProgressBar(used, {}, overlay.c_str());
 
-		ImGui::ProgressBar(used, {}, overlay.c_str());
+		} else {
+			ImGui::ProgressBar(0.0f, {}, "capacity is 0");
+		}
+
 		ImGui::SameLine();
 		ImGui::Text("DSV");
 	}
@@ -209,16 +217,21 @@ void DescriptorHeaps::SystemDebugGui() {
 
 		auto pool = pools_[kDescriptor_CBV_SRV_UAV].get();
 
-		float used
-			= static_cast<float>(pool->GetUsedDescriptorsCount()) / pool->GetDescriptorCapacity();
+		if (pool->GetDescriptorCapacity() != 0) {
 
-		std::string overlay = std::format(
-			"use: {} / max: {}",
-			pool->GetUsedDescriptorsCount(),
-			pool->GetDescriptorCapacity()
-		);
+			std::string overlay = std::format(
+				"use: {} / max: {}",
+				pool->GetUsedDescriptorsCount(),
+				pool->GetDescriptorCapacity()
+			);
 
-		ImGui::ProgressBar(used, {}, overlay.c_str());
+			float used = static_cast<float>(pool->GetUsedDescriptorsCount()) / pool->GetDescriptorCapacity();
+			ImGui::ProgressBar(used, {}, overlay.c_str());
+
+		} else {
+			ImGui::ProgressBar(0.0f, {}, "capacity is 0");
+		}
+
 		ImGui::SameLine();
 		ImGui::Text("CBV_SRV_UAV");
 	}

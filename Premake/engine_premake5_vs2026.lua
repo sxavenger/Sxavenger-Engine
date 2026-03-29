@@ -42,7 +42,7 @@ project "DirectXTex"
 	location "Externals/DirectXTex"
 
 	-- visual studioの設定
-	toolset "v143"
+	toolset "v145"
 
 	-- projectの種類
 	kind "StaticLib"
@@ -126,7 +126,7 @@ project "ImGui-Docking"
 	location "Externals/imgui"
 
 	-- visual studioの設定
-	toolset "v143"
+	toolset "v145"
 
 	-- projectの種類
 	kind "StaticLib"
@@ -183,7 +183,7 @@ project "meshoptimizer"
 	location "Externals/meshoptimizer"
 
 	-- visual studioの設定
-	toolset "v143"
+	toolset "v145"
 
 	-- projectの種類
 	kind "StaticLib"
@@ -256,7 +256,7 @@ project "Script"
 project "SxavengerEngine"
 
 	-- visual studioの設定
-	toolset "v143"
+	toolset "v145"
 
 	-- projectの種類
 	kind "WindowedApp"

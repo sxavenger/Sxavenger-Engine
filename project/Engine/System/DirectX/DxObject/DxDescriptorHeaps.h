@@ -56,17 +56,11 @@ public:
 
 	//* getter *//
 
-	ID3D12DescriptorHeap* const GetDescriptorHeap() const {
-		return descriptorHeap_.Get();
-	}
+	ID3D12DescriptorHeap* const GetDescriptorHeap() const { return descriptorHeap_.Get(); }
 
-	const uint32_t GetDescriptorCapacity() const {
-		return allocator_.GetCapacity();
-	}
+	const uint32_t GetDescriptorCapacity() const { return allocator_.GetCapacity(); }
 
-	const uint32_t GetUsedDescriptorsCount() const {
-		return allocator_.GetUsedCount();
-	}
+	const uint32_t GetUsedDescriptorsCount() const { return allocator_.GetUsedCount(); }
 
 private:
 
