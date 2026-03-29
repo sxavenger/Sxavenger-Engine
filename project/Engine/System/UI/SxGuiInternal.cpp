@@ -69,7 +69,7 @@ bool SxGui::CheckInsertText(const char* label) {
 	return label != label_end;
 }
 
-bool SxGui::DragScalarNInternal(const char* label, ImGuiDataType data_type, void* p_data, int components, float v_speed, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags) {
+bool SxGui::DragScalarNImpl(const char* label, ImGuiDataType data_type, void* p_data, int components, float v_speed, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags) {
 
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 	if (window->SkipItems) {
@@ -118,7 +118,7 @@ bool SxGui::DragScalarNInternal(const char* label, ImGuiDataType data_type, void
 	return value_changed;
 }
 
-bool SxGui::SliderScalarNInternal(const char* label, ImGuiDataType data_type, void* v, int components, const void* v_min, const void* v_max, const char* format, ImGuiSliderFlags flags) {
+bool SxGui::SliderScalarNImpl(const char* label, ImGuiDataType data_type, void* v, int components, const void* v_min, const void* v_max, const char* format, ImGuiSliderFlags flags) {
 
 	ImGuiWindow* window = ImGui::GetCurrentWindow();
 	if (window->SkipItems) {
@@ -156,6 +156,51 @@ bool SxGui::SliderScalarNInternal(const char* label, ImGuiDataType data_type, vo
 
 	if (label != label_end) {
 		ImGui::SameLine(0, g.Style.ItemInnerSpacing.x);
+		ImGui::TextEx(label, label_end);
+
+	} else {
+		ImGui::PopItemWidth();
+	}
+
+	ImGui::EndGroup();
+	return value_changed;
+}
+
+bool SxGui::InputScalarNImpl(const char* label, ImGuiDataType data_type, void* p_data, int components, const void* p_step, const void* p_step_fast, const char* format, ImGuiInputTextFlags flags) {
+
+	ImGuiWindow* window = ImGui::GetCurrentWindow();
+	if (window->SkipItems) {
+		return false;
+	}
+
+	const char* label_end = ImGui::FindRenderedTextEnd(label);
+	if (label == label_end) {
+		ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
+	}
+
+	ImGuiContext& g = *GImGui;
+	bool value_changed = false;
+	ImGui::BeginGroup();
+	ImGui::PushID(label);
+	ImGui::PushMultiItemsWidths(components, ImGui::CalcItemWidth());
+	size_t type_size = ImGui::DataTypeGetInfo(data_type)->Size;
+	for (int i = 0; i < components; i++) {
+		ImGui::PushID(i);
+
+		if (i > 0) {
+			ImGui::SameLine(0, g.Style.ItemInnerSpacing.x);
+		}
+			
+		value_changed |= ImGui::InputScalar("", data_type, p_data, p_step, p_step_fast, format, flags);
+		ImGui::PopID();
+		ImGui::PopItemWidth();
+		p_data = (void*)((char*)p_data + type_size);
+	}
+	ImGui::PopID();
+
+	
+	if (label != label_end) {
+		ImGui::SameLine(0.0f, g.Style.ItemInnerSpacing.x);
 		ImGui::TextEx(label, label_end);
 
 	} else {

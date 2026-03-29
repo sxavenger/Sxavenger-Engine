@@ -418,6 +418,10 @@ void SxGui::DummySpace(const ImVec2& size) {
 	ImGui::SetCursorPos(position);
 }
 
+void SxGui::DummyLine() {
+	ImGui::Dummy({ 0.0f, ImGui::GetStyle().ItemSpacing.y });
+}
+
 bool SxGui::Selectable(const char* label, bool isSelect, ImGuiSelectableFlags flags) {
 	ImGui::PushStyleColor(ImGuiCol_Header, ImGui::GetStyleColorVec4(ImGuiCol_TabSelectedOverline));
 	bool changed = ImGui::Selectable(label, isSelect, flags);

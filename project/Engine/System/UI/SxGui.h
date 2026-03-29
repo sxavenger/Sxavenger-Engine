@@ -125,10 +125,20 @@ namespace SxGui {
 	//-----------------------------------------------------------------------------------------
 
 	template <ScalarConcept T, int32_t Component>
-	void SliderScalarN(const char* label, T v[Component], const T v_min, const T v_max, const char* format = NULL, ImGuiSliderFlags flags = ImGuiSliderFlags_None);
+	bool SliderScalarN(const char* label, T v[Component], const T v_min, const T v_max, const char* format = NULL, ImGuiSliderFlags flags = ImGuiSliderFlags_None);
 
 	template <ScalarConcept T>
-	void SliderScalar(const char* label, T* v, const T v_min, const T v_max, const char* format = NULL, ImGuiSliderFlags flags = ImGuiSliderFlags_None);
+	bool SliderScalar(const char* label, T* v, const T v_min, const T v_max, const char* format = NULL, ImGuiSliderFlags flags = ImGuiSliderFlags_None);
+
+	//-----------------------------------------------------------------------------------------
+	// [InputScalar]
+	//-----------------------------------------------------------------------------------------
+
+	template <ScalarConcept T, int32_t Component>
+	bool InputScalarN(const char* label, T v[Component], const T p_step, const std::optional<T>& p_step_fast = std::nullopt, const char* format = NULL, ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
+
+	template <ScalarConcept T>
+	bool InputScalar(const char* label, T* v, const T p_step, const std::optional<T>& p_step_fast = std::nullopt, const char* format = NULL, ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
 
 	//-----------------------------------------------------------------------------------------
 	// [InputText]
@@ -150,6 +160,8 @@ namespace SxGui {
 	//-----------------------------------------------------------------------------------------
 
 	void DummySpace(const ImVec2& size);
+
+	void DummyLine();
 
 	//-----------------------------------------------------------------------------------------
 	// [Selectable]
@@ -272,7 +284,7 @@ struct std::formatter<SxGui::Icon, char> {
 template <SxGui::ScalarConcept T, int32_t Component>
 bool SxGui::DragScalarN(const char* label, T v[Component], float v_speed, const std::optional<T>& v_min, const std::optional<T>& v_max, const char* format, ImGuiSliderFlags flags) {
 	const std::pair<T, T> range = { v_min.value_or(std::numeric_limits<T>::lowest()), v_max.value_or(std::numeric_limits<T>::max()) };
-	return SxGui::DragScalarNInternal(label, SxGui::GetImGuiDataType<T>(), v, Component, v_speed, &range.first, &range.second, format, flags);;
+	return SxGui::DragScalarNImpl(label, SxGui::GetImGuiDataType<T>(), v, Component, v_speed, &range.first, &range.second, format, flags);;
 }
 
 template <SxGui::ScalarConcept T>
@@ -286,13 +298,23 @@ bool SxGui::DragVectorN(const char* label, T v[Component], float v_speed, const 
 }
 
 template <SxGui::ScalarConcept T, int32_t Component>
-void SxGui::SliderScalarN(const char* label, T v[Component], const T v_min, const T v_max, const char* format, ImGuiSliderFlags flags) {
-	return SxGui::SliderScalarNInternal(label, SxGui::GetImGuiDataType<T>(), v, Component, &v_min, &v_max, format, flags);
+bool SxGui::SliderScalarN(const char* label, T v[Component], const T v_min, const T v_max, const char* format, ImGuiSliderFlags flags) {
+	return SxGui::SliderScalarNImpl(label, SxGui::GetImGuiDataType<T>(), v, Component, &v_min, &v_max, format, flags);
 }
 
 template <SxGui::ScalarConcept T>
-void SxGui::SliderScalar(const char* label, T* v, const T v_min, const T v_max, const char* format, ImGuiSliderFlags flags) {
+bool SxGui::SliderScalar(const char* label, T* v, const T v_min, const T v_max, const char* format, ImGuiSliderFlags flags) {
 	return SxGui::SliderScalarN<T, 1>(label, v, v_min, v_max, format, flags);
+}
+
+template <SxGui::ScalarConcept T, int32_t Component>
+bool SxGui::InputScalarN(const char* label, T v[Component], const T p_step, const std::optional<T>& p_step_fast, const char* format, ImGuiInputTextFlags flags) {
+	return SxGui::InputScalarNImpl(label, SxGui::GetImGuiDataType<T>(), v, Component, &p_step, p_step_fast ? &p_step_fast.value() : nullptr, format, flags);
+}
+
+template <SxGui::ScalarConcept T>
+bool SxGui::InputScalar(const char* label, T* v, const T p_step, const std::optional<T>& p_step_fast, const char* format, ImGuiInputTextFlags flags) {
+	return SxGui::InputScalarN<T, 1>(label, v, p_step, p_step_fast, format, flags);
 }
 
 template <typename T> requires std::is_enum_v<T>

@@ -586,15 +586,17 @@ void RenderSceneEditor::ShowCaptureMenu() {
 
 		ImGui::EndTable();
 
-		ImGui::Dummy({ 0, ImGui::GetStyle().ItemSpacing.y });
+		SxGui::DummyLine();
 		ImGui::Text(std::format("{} Capture Pix", SxGui::Icon::ControlCamera).c_str());
+
+		SxGui::InputScalarN<uint32_t, 1>("capture frames", &captureFrames_, 1);
 
 		if (ImGui::Button("Capture Next Frames", { ImGui::GetContentRegionAvail().x, 0.0f })) {
 
 			auto filepath = WinApp::GetSaveFilepath(L"PIXの保存先", std::filesystem::current_path(), { L"PIXファイル", L"*.wpix;" }, L".wpix");
 
 			if (filepath.has_value()) {
-				DirectXPixEvent::CaptureNextFrames(filepath.value().filename(), 1);
+				DirectXPixEvent::CaptureNextFrames(filepath.value().filename(), captureFrames_);
 			}
 		}
 
