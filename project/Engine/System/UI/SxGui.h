@@ -62,6 +62,8 @@ namespace SxGui {
 		BacklightHigh      = 0xF7ED,
 		Search             = 0xE8B6,
 		Label              = 0xE892,
+		ControlCamera      = 0xE074,
+		Capture            = 0xF727,
 
 		Cube             = DeployedCode,
 		CubeUpdate       = DeployedCodeUpdate,
@@ -139,7 +141,7 @@ namespace SxGui {
 	// [Image]
 	//-----------------------------------------------------------------------------------------
 
-	void Image(ImTextureRef handle, const ImVec2& resolution);
+	void Image(ImTextureRef handle, const ImVec2& resolution, const ImVec2& region = ImGui::GetContentRegionAvail());
 
 	void ImageLabel(const char* label, ImTextureRef handle, const ImVec2& resolution);
 

@@ -216,6 +216,8 @@ private:
 	DxObject::ReflectionGraphicsPipelineState selectLine_;
 	DxObject::ReflectionComputePipelineState picker_;
 
+	//* capture parameter *//
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

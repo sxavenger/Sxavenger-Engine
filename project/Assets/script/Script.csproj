@@ -51,5 +51,7 @@
     <Compile Include="Mathematic\Vector4.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="Transform\QuaternionTransform.cs" />
+    <Compile Include="obj\Develop\net4.8\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
+    <Compile Include="obj\Develop\net4.8\Script.AssemblyInfo.cs" />
   </ItemGroup>
 </Project>

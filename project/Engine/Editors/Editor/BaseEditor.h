@@ -6,6 +6,9 @@
 //* engine
 #include <Engine/Foundation.h>
 
+//* lib
+#include <Lib/Geometry/Vector2.h>
+
 //* c++
 #include <concepts>
 
@@ -55,14 +58,6 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	//* external *//
-
-	EditorEngine* editor_ = nullptr;
-
-	//* config *//
-
-	bool isDisplay_ = true;
-
 	//=========================================================================================
 	// protected methods
 	//=========================================================================================
@@ -71,11 +66,31 @@ protected:
 
 	static void MenuPadding();
 
+	static const Vector2f& GetMenuPadding() { return kMenuPadding; }
+
 	//* option *//
 
 	void SetNextWindowDocking();
 
 	uint32_t GetWindowFlag() const;
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//* editor engine *//
+
+	EditorEngine* editor_ = nullptr;
+
+	//* config *//
+
+	bool isDisplay_ = true;
+
+	//* parameter *//
+
+	static inline const Vector2f kMenuPadding = { 320.0f, 0.0f };
 
 };
 

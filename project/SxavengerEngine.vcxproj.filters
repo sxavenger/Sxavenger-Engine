@@ -663,6 +663,9 @@
     <ClInclude Include="Engine\System\DirectX\DirectXCommon.h">
       <Filter>Engine\System\DirectX</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DirectXPixEvent.h">
+      <Filter>Engine\System\DirectX</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
@@ -813,6 +816,9 @@
     <ClInclude Include="Engine\System\UI\SxGui.h">
       <Filter>Engine\System\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\UI\SxGuiInternal.h">
+      <Filter>Engine\System\UI</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\UI\SxImGui.h">
       <Filter>Engine\System\UI</Filter>
     </ClInclude>
@@ -933,7 +939,6 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\UI\SxGuiInternal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1335,6 +1340,9 @@
     <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp">
       <Filter>Engine\System\DirectX</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\System\DirectX\DirectXPixEvent.cpp">
+      <Filter>Engine\System\DirectX</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
@@ -1467,6 +1475,9 @@
     <ClCompile Include="Engine\System\UI\SxGui.cpp">
       <Filter>Engine\System\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\System\UI\SxGuiInternal.cpp">
+      <Filter>Engine\System\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\UI\SxImGui.cpp">
       <Filter>Engine\System\UI</Filter>
     </ClCompile>
@@ -1525,6 +1536,5 @@
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\System\UI\SxGuiInternal.cpp" />
   </ItemGroup>
 </Project>

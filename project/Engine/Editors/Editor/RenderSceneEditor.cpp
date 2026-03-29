@@ -11,6 +11,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/UI/SxImGuizmo.h>
+#include <Engine/System/DirectX/DirectXPixEvent.h>
 
 //* engine [graphics]
 #include <Engine/Graphics/Graphics.h>
@@ -403,7 +404,7 @@ void RenderSceneEditor::SetCameraPoint(const Vector3f& point) {
 
 void RenderSceneEditor::ShowSceneMenu() {
 	if (ImGui::BeginMenu("scene")) {
-		MenuPadding();
+		BaseEditor::MenuPadding();
 		ImGui::SeparatorText("scene");
 
 		// render
@@ -466,7 +467,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 
 void RenderSceneEditor::ShowGameMenu() {
 	if (ImGui::BeginMenu("game")) {
-		MenuPadding();
+		BaseEditor::MenuPadding();
 		ImGui::SeparatorText("game");
 
 		FRenderConfig& config = FMainRender::GetInstance()->GetConfig();
@@ -492,7 +493,7 @@ void RenderSceneEditor::ShowGameMenu() {
 
 void RenderSceneEditor::ShowGizmoMenu() {
 	if (ImGui::BeginMenu("gizmo")) {
-		MenuPadding();
+		BaseEditor::MenuPadding();
 		ImGui::SeparatorText("gizmo");
 
 		ImGui::Text("operation");
@@ -517,40 +518,83 @@ void RenderSceneEditor::ShowGizmoMenu() {
 
 void RenderSceneEditor::ShowCaptureMenu() {
 	if (ImGui::BeginMenu("capture")) {
-		MenuPadding();
+		BaseEditor::MenuPadding();
 		ImGui::SeparatorText("capture");
 
-		if (ImGui::Button("scene window capture")) {
+		const ImVec2 region = { BaseEditor::GetMenuPadding().x, ImGui::GetContentRegionAvail().y };
 
-			auto filepath = WinApp::GetSaveFilepath(L"画像(Scene-Capture)の保存先", std::filesystem::current_path(), { L"画像ファイル", L"*.png; *.jpg; *.hdr; *.tga; *.dds;" }, L".png");
+		ImGui::Text(std::format("{} Capture Window", SxGui::Icon::Capture).c_str());
 
-			FMainBuffer* main = buffer_->GetBuffer<FMainBuffer>();
+		ImGui::BeginTable("## Capture Window", 2, ImGuiTableFlags_BordersInnerV);
+		ImGui::TableNextRow();
 
-			if (filepath.has_value()) {
-				TextureExporter::Export(
-					System::GetDirectQueueContext(),
-					TextureExporter::TextureDimension::Texture2D,
-					main->GetBuffer(FMainBuffer::Layout::Scene).GetResource(),
-					DxObject::kDefaultScreenViewFormat,
-					filepath.value()
-				);
+		ImGui::TableSetColumnIndex(0); //!< Scene Window Capture
+		if (buffer_->HasBuffer<FMainBuffer>()) {
+
+			FMainBuffer* main   = buffer_->GetBuffer<FMainBuffer>();
+			Vector2f resolution = main->GetBuffer(FMainBuffer::Layout::Scene).GetResolution();
+
+			SxGui::Image(main->GetBuffer(FMainBuffer::Layout::Scene).GetGPUHandleSRV().ptr, { resolution.x, resolution.y }, { region.x * 0.5f, region.y });
+
+			if (ImGui::Button("Scene Window Capture", { region.x * 0.5f, 0.0f })) {
+
+				auto filepath = WinApp::GetSaveFilepath(L"画像(Scene-Capture)の保存先", std::filesystem::current_path(), { L"画像ファイル", L"*.png; *.jpg; *.hdr; *.tga; *.dds;" }, L".png");
+
+				if (filepath.has_value()) {
+					TextureExporter::Export(
+						System::GetDirectQueueContext(),
+						TextureExporter::TextureDimension::Texture2D,
+						main->GetBuffer(FMainBuffer::Layout::Scene).GetResource(),
+						DxObject::kDefaultScreenViewFormat,
+						filepath.value()
+					);
+				}
 			}
-		}
 
-		if (ImGui::Button("game window capture")) {
-			auto filepath = WinApp::GetSaveFilepath(L"画像(Game-Capture)の保存先", std::filesystem::current_path(), { L"画像ファイル", L"*.png; *.jpg; *.hdr; *.tga; *.dds;" }, L".png");
+		} else {
+			ImGui::Dummy({ region.x * 0.5f, region.y });
+		}
+		
+
+		ImGui::TableSetColumnIndex(1); //!< Game Window Capture
+		if (FMainRender::GetInstance()->GetBuffer()->HasBuffer<FMainBuffer>()) {
+
+			FMainBuffer* main   = FMainRender::GetInstance()->GetBuffer()->GetBuffer<FMainBuffer>();
+			Vector2f resolution = main->GetBuffer(FMainBuffer::Layout::Scene).GetResolution();
+
+			SxGui::Image(main->GetBuffer(FMainBuffer::Layout::Scene).GetGPUHandleSRV().ptr, { resolution.x, resolution.y }, { region.x * 0.5f, region.y });
+
+			if (ImGui::Button("Game Window Capture", { region.x * 0.5f, 0.0f })) {
+
+				auto filepath = WinApp::GetSaveFilepath(L"画像(Game-Capture)の保存先", std::filesystem::current_path(), { L"画像ファイル", L"*.png; *.jpg; *.hdr; *.tga; *.dds;" }, L".png");
+
+				if (filepath.has_value()) {
+					TextureExporter::Export(
+						System::GetDirectQueueContext(),
+						TextureExporter::TextureDimension::Texture2D,
+						main->GetBuffer(FMainBuffer::Layout::Scene).GetResource(),
+						DxObject::kDefaultScreenViewFormat,
+						filepath.value()
+					);
+				}
+			}
+
+		} else {
+			ImGui::Dummy({ region.x * 0.5f, region.y });
+		}
+		
+
+		ImGui::EndTable();
+
+		ImGui::Dummy({ 0, ImGui::GetStyle().ItemSpacing.y });
+		ImGui::Text(std::format("{} Capture Pix", SxGui::Icon::ControlCamera).c_str());
+
+		if (ImGui::Button("Capture Next Frames", { ImGui::GetContentRegionAvail().x, 0.0f })) {
+
+			auto filepath = WinApp::GetSaveFilepath(L"PIXの保存先", std::filesystem::current_path(), { L"PIXファイル", L"*.wpix;" }, L".wpix");
 
 			if (filepath.has_value()) {
-
-				FMainBuffer* main = FMainRender::GetInstance()->GetBuffer()->GetBuffer<FMainBuffer>();
-
-				TextureExporter::Export(
-					System::GetDirectQueueContext(),
-					TextureExporter::TextureDimension::Texture2D,
-					main->GetBuffer(FMainBuffer::Layout::Scene).GetResource(),
-					DxObject::kDefaultScreenViewFormat,
-					filepath.value()
-				);
+				DirectXPixEvent::CaptureNextFrames(filepath.value().filename(), 1);
 			}
 		}
 

@@ -19,7 +19,7 @@ bool BaseEditor::IsDisplay() const {
 }
 
 void BaseEditor::MenuPadding() {
-	ImGui::Dummy({ 240.0f, 0.0f });
+	ImGui::Dummy({ kMenuPadding.x, kMenuPadding.y });
 }
 
 void BaseEditor::SetNextWindowDocking() {

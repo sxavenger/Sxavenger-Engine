@@ -297,9 +297,9 @@
 		},
 		"ImGuiCol_TableBorderStrong": {
 			"a": 255,
-			"b": 89,
-			"g": 79,
-			"r": 79
+			"b": 3,
+			"g": 3,
+			"r": 3
 		},
 		"ImGuiCol_TableHeaderBg": {
 			"a": 255,
