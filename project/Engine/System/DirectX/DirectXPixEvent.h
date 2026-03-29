@@ -25,6 +25,17 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 class DirectXPixEvent {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// HUDOptions enum class [PIXHUDOptions参照]
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class HUDOptions : uint8_t {
+		ShowOnAllWindows       = 0x1,
+		ShowOnTargetWindowOnly = 0x2,
+		ShowOnNoWindows        = 0x4
+	};
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -56,10 +67,13 @@ private:
 
 	static void LoadModule(const std::filesystem::path& filename);
 
+	//* pix impl function *//
 
 	static void* GetGpuCaptureFunctionPointer(const std::string& function);
 
 	static HRESULT WINAPI PIXGpuCaptureNextFramesImpl(const std::filesystem::path& filepath, uint32_t frames);
+
+	static HRESULT WINAPI PIXSetHUDOptionsImpl(HUDOptions options);
 
 };
 

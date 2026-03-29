@@ -27,11 +27,10 @@ SXAVENGER_ENGINE_USING
 void DirectXPixEvent::Init() {
 	DirectXPixEvent::InitLibraryDirectory();
 
-	//!< PIXのHUDを無効化.
-	SetEnvironmentVariableA("PIXDisableHUD", "1");
-
 	//!< moduleの読み込み. (DirectX12の生成前に行う)
 	DirectXPixEvent::LoadModule(L"WinPixGpuCapturer.dll");
+
+	DirectXPixEvent::PIXSetHUDOptionsImpl(HUDOptions::ShowOnNoWindows); //!< [pix3.h] PIXのHUDを全てのwindowで非表示にする.
 }
 
 void DirectXPixEvent::BeginEvent(ID3D12GraphicsCommandList* commandList, const std::wstring& name, uint8_t indent) {
@@ -55,7 +54,6 @@ void DirectXPixEvent::CaptureNextFrames(const std::filesystem::path& filepath, u
 		StreamLogger::EngineLog("[DirectXPixEvent] error | capture failed. invalid file extension.");
 		return; //!< 拡張子が.wpixでない場合は何もしない
 	}
-
 
 #ifdef USE_PIX
 	//!< [pix3.h] 自作関数PIXGpuCaptureNextFramesImplを呼び出す. (WinPixGpuCapturer.dllのCaptureNextFrame関数を呼び出す)
@@ -171,5 +169,23 @@ HRESULT WINAPI DirectXPixEvent::PIXGpuCaptureNextFramesImpl(const std::filesyste
 	
 #else
 	return E_NOTIMPL; //!< [pix.h] pix.hにはGPUキャプチャのAPIがないため、常にE_NOTIMPLを返す
+#endif
+}
+
+HRESULT WINAPI DirectXPixEvent::PIXSetHUDOptionsImpl(HUDOptions options) {
+#ifdef USE_PIX
+	//!< [pix3.h] PIXSetHUDOptions関数を参照.
+	
+	typedef HRESULT(WINAPI* SetHUDOptionsFn)(PIXHUDOptions);
+
+	auto fn = (SetHUDOptionsFn)DirectXPixEvent::GetGpuCaptureFunctionPointer("SetHUDOptions");
+	if (fn == nullptr) {
+		return HRESULT_FROM_WIN32(GetLastError());
+	}
+
+	return fn(static_cast<PIXHUDOptions>(options));
+
+#else
+	return E_NOTIMPL; //!< [pix.h] pix.hにはHUDオプションのAPIがないため、常にE_NOTIMPLを返す
 #endif
 }
