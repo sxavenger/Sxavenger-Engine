@@ -216,6 +216,10 @@ private:
 	DxObject::ReflectionGraphicsPipelineState selectLine_;
 	DxObject::ReflectionComputePipelineState picker_;
 
+	//* capture parameter *//
+
+	uint32_t captureFrames_ = 1;
+
 	//=========================================================================================
 	// private methods
 	//=========================================================================================

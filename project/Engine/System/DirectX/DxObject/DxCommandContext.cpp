@@ -7,9 +7,8 @@ DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/DirectX/DirectXPixEvent.h>
 
-//* windows
-#include <pix.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CommandContext class methods
@@ -65,7 +64,9 @@ void CommandContext::BeginEvent(const std::wstring& name) {
 	}
 
 	StreamLogger::AssertA(eventIndent_ < std::numeric_limits<uint8_t>::max(), "event indent is over flow.");
-	PIXBeginEvent(commandList_.Get(), PIX_COLOR_INDEX(eventIndent_++), name.c_str());
+
+	DirectXPixEvent::BeginEvent(commandList_.Get(), name, eventIndent_);
+	eventIndent_++;
 }
 
 void CommandContext::EndEvent() {
@@ -73,8 +74,10 @@ void CommandContext::EndEvent() {
 		return; //!< コマンドリストがない場合は何もしない
 	}
 
-	StreamLogger::AssertA(eventIndent_-- > 0, "event indent is not begin.");
-	PIXEndEvent(commandList_.Get());
+	StreamLogger::AssertA(eventIndent_ > 0, "event indent is not begin.");
+
+	DirectXPixEvent::EndEvent(commandList_.Get());
+	eventIndent_--;
 }
 
 void CommandContext::TransitionResourceState(ID3D12Resource* resource, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after) {

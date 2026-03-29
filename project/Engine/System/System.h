@@ -14,6 +14,7 @@
 #include "DirectX/DirectXCommon.h"
 #include "DirectX/Context/DirectXQueueContext.h"
 #include "DirectX/Context/DirectXWindowContext.h"
+#include "DirectX/DirectXPixEvent.h"
 #include "Window/WindowCollection.h"
 #include "Runtime/Input/Input.h"
 #include "Runtime/Performance/Performance.h"

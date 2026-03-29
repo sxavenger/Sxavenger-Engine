@@ -98,6 +98,14 @@ DXOBJECT CompileProfile DXOBJECT ToProfile(GraphicsShaderType type) {
 	return static_cast<CompileProfile>(type);
 }
 
+std::wstring DXOBJECT GetComError(HRESULT hr) {
+	if (SUCCEEDED(hr)) {
+		return L"";
+	}
+
+	return _com_error(hr).ErrorMessage();
+}
+
 void DXOBJECT Assert(HRESULT hr, const std::wstring& label, const std::source_location& location) {
-	StreamLogger::AssertW(SUCCEEDED(hr), label, std::format(L"_com_error: {}", _com_error(hr).ErrorMessage()), location);
+	StreamLogger::AssertW(SUCCEEDED(hr), label, std::format(L"_com_error: {}", GetComError(hr)), location);
 }

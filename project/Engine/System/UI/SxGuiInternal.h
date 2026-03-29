@@ -43,13 +43,17 @@ namespace SxGui {
 
 	bool CheckInsertText(const char* label);
 
-	//* DragScalarN [Internal]
+	//* DragScalarN [Impl]
 
-	bool DragScalarNInternal(const char* label, ImGuiDataType data_type, void* p_data, int components, float v_speed, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags);
+	bool DragScalarNImpl(const char* label, ImGuiDataType data_type, void* p_data, int components, float v_speed, const void* p_min, const void* p_max, const char* format, ImGuiSliderFlags flags);
 
-	//* SliderScalarN [Internal]
+	//* SliderScalarN [Impl]
 
-	bool SliderScalarNInternal(const char* label, ImGuiDataType data_type, void* v, int components, const void* v_min, const void* v_max, const char* format, ImGuiSliderFlags flags);
+	bool SliderScalarNImpl(const char* label, ImGuiDataType data_type, void* v, int components, const void* v_min, const void* v_max, const char* format, ImGuiSliderFlags flags);
+
+	//* InputScalarN [Impl]
+
+	bool InputScalarNImpl(const char* label, ImGuiDataType data_type, void* p_data, int components, const void* p_step, const void* p_step_fast, const char* format, ImGuiInputTextFlags flags);
 
 }
 

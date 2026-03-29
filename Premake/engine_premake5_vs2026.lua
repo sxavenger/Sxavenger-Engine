@@ -42,7 +42,7 @@ project "DirectXTex"
 	location "Externals/DirectXTex"
 
 	-- visual studioの設定
-	toolset "v143"
+	toolset "v145"
 
 	-- projectの種類
 	kind "StaticLib"
@@ -126,7 +126,7 @@ project "ImGui-Docking"
 	location "Externals/imgui"
 
 	-- visual studioの設定
-	toolset "v143"
+	toolset "v145"
 
 	-- projectの種類
 	kind "StaticLib"
@@ -183,7 +183,7 @@ project "meshoptimizer"
 	location "Externals/meshoptimizer"
 
 	-- visual studioの設定
-	toolset "v143"
+	toolset "v145"
 
 	-- projectの種類
 	kind "StaticLib"
@@ -256,7 +256,7 @@ project "Script"
 project "SxavengerEngine"
 
 	-- visual studioの設定
-	toolset "v143"
+	toolset "v145"
 
 	-- projectの種類
 	kind "WindowedApp"
@@ -307,6 +307,7 @@ project "SxavengerEngine"
     	"%{prj.location}/Externals/magic_enum", -- [magic_enum](https://github.com/Neargye/magic_enum.git)
     	"%{prj.location}/Externals/stb", -- [stb](https://github.com/nothings/stb.git)
 		"%{prj.location}/Externals/mono/include", -- [Mono](https://www.mono-project.com/)
+		"%{prj.location}/Externals/PixEvents/include", -- [PixEvents](https://github.com/microsoft/PixEvents.git)
 	}
 
 	-- 依存プロジェクト
@@ -335,39 +336,35 @@ project "SxavengerEngine"
 	-- リンカー設定(共通)
 	linkoptions {
 		"/WX",
-		"/IGNORE:4099", -- .pdb関係のエラー
+		"/IGNORE:4099", -- [LNK4099](https://learn.microsoft.com/ja-jp/cpp/error-messages/tool-errors/linker-tools-warning-lnk4099)
 	}
 
-	-- リンカー設定(共通)
-	libdirs {
-		"%{prj.location}/Externals/mono/lib"
-	}
-
-	-- 依存ファイル(共通)
-	links {
-		"mono-2.0-sgen.lib"
-	}
-
-	-- ビルド後イベント(共通)
+	-- ビルド後イベント
 	postbuildcommands {
 		-- dxcompiler関係
 		'copy "$(WindowsSdkDir)bin\\$(TargetPlatformVersion)\\x64\\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"',
   		'copy "$(WindowsSdkDir)bin\\$(TargetPlatformVersion)\\x64\\dxil.dll" "$(TargetDir)dxil.dll"',
+	}
 
-		-- mono関係
+	--- 外部プログラムごとの設定 ---
+	--- Mono
+	-- リンカー設定
+	libdirs {
+		"%{prj.location}/Externals/mono/lib"
+	}
+	
+	-- 依存ファイル
+	links {
+		"mono-2.0-sgen"
+	}
+
+	-- ビルド後イベント
+	postbuildcommands {
 		'copy "Externals\\mono\\bin\\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"',
 	}
 
-	--- 構成ごとの設定 ---
-	-- Debug
+	-- Assimp
 	filter "configurations:Debug"
-		-- ビルドオプション
-		symbols "On"
-		fatalwarnings { "All" }
-		
-		-- define定義
-		defines { "_DEVELOPMENT" }
-
 		-- リンカー設定
 		libdirs {
 			"%{prj.location}/Externals/assimp/lib/Debug"
@@ -379,15 +376,7 @@ project "SxavengerEngine"
 			"zlibstaticd"
 		}
 
-	-- Develop
-	filter "configurations:Develop"
-		-- ビルドオプション
-		optimize "On"
-		fatalwarnings { "All" }
-		
-		-- define定義
-		defines { "_DEVELOPMENT" }
-
+	filter "configurations:Develop or configurations:Release"
 		-- リンカー設定
 		libdirs {
 			"%{prj.location}/Externals/assimp/lib/Release"
@@ -398,19 +387,64 @@ project "SxavengerEngine"
 			"assimp-vc145-mt",
 			"zlibstatic"
 		}
+	
+	-- PixEvents
+	filter "configurations:Debug"
+		-- リンカー設定
+		libdirs {
+			"%{prj.location}/Externals/PixEvents/lib/Debug"
+		}
+
+		-- 依存ファイル
+		links {
+			"WinPixEventRuntime",
+		}
+
+		-- ビルド後イベント
+		postbuildcommands {
+			'copy "Externals\\PixEvents\\bin\\Debug\\WinPixEventRuntime.dll" "$(TargetDir)WinPixEventRuntime.dll"'
+		}
+	
+	filter "configurations:Develop"
+		-- リンカー設定
+		libdirs {
+			"%{prj.location}/Externals/PixEvents/lib/Release"
+		}
+
+		-- 依存ファイル
+		links {
+			"WinPixEventRuntime",
+		}
+
+		-- ビルド後イベント
+		postbuildcommands {
+			'copy "Externals\\PixEvents\\bin\\Release\\WinPixEventRuntime.dll" "$(TargetDir)WinPixEventRuntime.dll"'
+		}
+	
+	--- project構成ごとのビルドオプション設定 ---
+	-- Debug
+	filter "configurations:Debug"
+		-- ビルドオプション
+		symbols "On"
+		fatalwarnings { "All" }
+		
+		-- define定義
+		defines { "_DEVELOPMENT" }
+
+	-- Develop
+	filter "configurations:Develop"
+		-- ビルドオプション
+		optimize "On"
+		fatalwarnings { "All" }
+		
+		-- define定義
+		defines { "_DEVELOPMENT" }
 
 	-- Release
 	filter "configurations:Release"
 		-- ビルドオプション
 		optimize "On"
 
-		-- リンカー設定
-		libdirs {
-			"%{prj.location}/Externals/assimp/lib/Release",
-		}
-
-		-- 依存ファイル
-		links {
-			"assimp-vc145-mt",
-			"zlibstatic"
+		buildoptions {
+			"/wd4100" -- [C4100](https://learn.microsoft.com/ja-jp/cpp/error-messages/compiler-warnings/compiler-warning-level-4-c4100)
 		}

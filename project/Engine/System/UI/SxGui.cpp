@@ -354,9 +354,7 @@ bool SxGui::InputText(const char* label, std::string& str, const char* emptyText
 	return changed;
 }
 
-void SxGui::Image(ImTextureRef handle, const ImVec2& resolution) {
-
-	ImVec2 region = ImGui::GetContentRegionAvail();
+void SxGui::Image(ImTextureRef handle, const ImVec2& resolution, const ImVec2& region) {
 
 	// 画像アス比と分割したWindowアス比の計算
 	float textureAspectRatio = static_cast<float>(resolution.x) / static_cast<float>(resolution.y);
@@ -418,6 +416,10 @@ void SxGui::DummySpace(const ImVec2& size) {
 	ImVec2 position = ImGui::GetCursorPos();
 	ImGui::Dummy(size);
 	ImGui::SetCursorPos(position);
+}
+
+void SxGui::DummyLine() {
+	ImGui::Dummy({ 0.0f, ImGui::GetStyle().ItemSpacing.y });
 }
 
 bool SxGui::Selectable(const char* label, bool isSelect, ImGuiSelectableFlags flags) {

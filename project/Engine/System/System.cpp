@@ -28,6 +28,8 @@ void System::Init() {
 
 	WinApp::Init();
 
+	DirectXPixEvent::Init();
+
 	sDirectXCommon = std::make_unique<DirectXCommon>();
 	sDirectXCommon->Init();
 
