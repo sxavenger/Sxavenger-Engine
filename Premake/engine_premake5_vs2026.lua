@@ -336,7 +336,7 @@ project "SxavengerEngine"
 	-- リンカー設定(共通)
 	linkoptions {
 		"/WX",
-		"/IGNORE:4099", -- .pdb関係のエラー
+		"/IGNORE:4099", -- [LNK4099](https://learn.microsoft.com/ja-jp/cpp/error-messages/tool-errors/linker-tools-warning-lnk4099)
 	}
 
 	-- ビルド後イベント
@@ -444,3 +444,7 @@ project "SxavengerEngine"
 	filter "configurations:Release"
 		-- ビルドオプション
 		optimize "On"
+
+		buildoptions {
+			"/wd4100" -- [C4100](https://learn.microsoft.com/ja-jp/cpp/error-messages/compiler-warnings/compiler-warning-level-4-c4100)
+		}
