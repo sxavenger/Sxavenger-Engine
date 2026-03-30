@@ -6,6 +6,7 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/DirectX/DxObject/DxReadbackDimensionBuffer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Stamp structure methods
@@ -27,11 +28,12 @@ void TimestampGpu::Timestamp::MarkStamp(const std::string& name) {
 	StreamLogger::AssertA(stamps.size() <= kStampCount, "GPU Timestamp stamp count exceeds limit.");
 }
 
-void TimestampGpu::Timestamp::Resolve(const DxObject::ReadbackDimensionBuffer<uint64_t>& buffer, uint64_t frequency) {
-	for (size_t index = 0; Stamp& stamp : stamps) {
+void TimestampGpu::Timestamp::Resolve(const std::span<uint64_t>& buffer, uint64_t frequency) {
+	size_t index = 0;
+	for (Stamp& stamp : stamps) {
 
-		uint64_t beginTick = buffer.At(index * 2 + 0);
-		uint64_t endTick   = buffer.At(index * 2 + 1);
+		uint64_t beginTick = buffer[index * 2 + 0];
+		uint64_t endTick   = buffer[index * 2 + 1];
 
 		stamp.SetTime(beginTick, endTick, frequency);
 		index++;
@@ -44,17 +46,19 @@ void TimestampGpu::Timestamp::Resolve(const DxObject::ReadbackDimensionBuffer<ui
 
 void TimestampGpu::Init(DxObject::Device* device) {
 
-	D3D12_QUERY_HEAP_DESC desc = {};
-	desc.Type  = D3D12_QUERY_HEAP_TYPE_TIMESTAMP;
-	desc.Count = Timestamp::kStampCount * 2;
+	{ //!< QueryHeapの生成
+		D3D12_QUERY_HEAP_DESC desc = {};
+		desc.Type  = D3D12_QUERY_HEAP_TYPE_TIMESTAMP;
+		desc.Count = Timestamp::kStampCount * 2;
 
-	device->GetDevice()->CreateQueryHeap(
-		&desc,
-		IID_PPV_ARGS(query_.GetAddressOf())
-	);
+		device->GetDevice()->CreateQueryHeap(
+			&desc,
+			IID_PPV_ARGS(&query_)
+		);
+	}
+	
 
 	readback_.Capacity(device, Timestamp::kStampCount * 2);
-
 }
 
 void TimestampGpu::Begin() {
@@ -80,7 +84,7 @@ void TimestampGpu::ReadTimestamp(const DirectXQueueContext* context) {
 		D3D12_QUERY_TYPE_TIMESTAMP,
 		0,
 		timestamps_[currentIndex_].GetStampCount() * 2,
-		readback_.GetResource(),
+		readback_.GetResource(), // HACK: DEBUGだとSTATEがERRORとして出てしまう.
 		0
 	);
 
@@ -95,7 +99,7 @@ void TimestampGpu::End(const DirectXQueueContext* context) {
 	}
 
 	//!< timestampの更新終了
-	timestamps_[currentIndex_].Resolve(readback_, context->GetTimestampFrequency());
+	timestamps_[currentIndex_].Resolve(readback_.GetSpan(), context->GetTimestampFrequency());
 	
 	++currentIndex_ %= kTimestampCount; //!< 現在のtimestampIndexを更新
 	recordedTimer_  = recordInterval_;  //!< 次のtimestamp更新までの時間をリセット

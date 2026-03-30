@@ -62,7 +62,7 @@ public:
 
 		void MarkStamp(const std::string& name);
 
-		void Resolve(const DxObject::ReadbackDimensionBuffer<uint64_t>& buffer, uint64_t frequency);
+		void Resolve(const std::span<uint64_t>& buffer, uint64_t frequency);
 
 		void Clear() { stamps.clear(); }
 
