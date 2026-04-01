@@ -303,9 +303,9 @@
 		},
 		"ImGuiCol_TableHeaderBg": {
 			"a": 255,
-			"b": 51,
-			"g": 48,
-			"r": 48
+			"b": 13,
+			"g": 13,
+			"r": 13
 		},
 		"ImGuiCol_TableRowBg": {
 			"a": 80,

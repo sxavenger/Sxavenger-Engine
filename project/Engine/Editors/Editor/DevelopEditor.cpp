@@ -193,33 +193,50 @@ void DevelopEditor::ShowPerformanceWindow() {
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGuiController::ToImVec4({ 45, 5, 8, 255 }));
 	}
 
+	{ //!< Historyの更新
+
+		TimePointf<TimeUnit::second> time = System::GetDeltaTimef();
+
+		if (time.time > 0.0f) {
+			frameHistory_.emplace_back(1.0f / time.time); //!< fps履歴
+		}
+
+		if (frameHistory_.size() > kFrameHistoryCount) {
+			frameHistory_.pop_front();
+		}
+
+		// TODO: Historyの描画
+	}
+
 	BaseEditor::SetNextWindowDocking();
-	ImGui::Begin("Performance ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar);
+	ImGui::Begin("Performance ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	TimePointf<TimeUnit::second> time = System::GetDeltaTimef();
 
+	ImVec2 position = ImGui::GetCursorScreenPos();
+	ImVec2 size     = ImGui::GetContentRegionAvail();
+
 	//!< 基本情報(テキスト)
-	std::string text = "";
-	text += std::format("{} [exec speed / frame]: {:.4f}sec", SxGui::Icon::Timer, time.time) + "  ";
-	text += std::format("{} [frame per second]: {:.1f}fps",   SxGui::Icon::Stack, 1.0f / time.time);
-	ImGui::Text(text.c_str());
+	ImGui::BeginGroup();
+	ImGui::Text(std::format("{} [exec speed / frame]: {:.4f}sec", SxGui::Icon::Timer, time.time).c_str());
+	ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x * 2);
+	ImGui::Text(std::format("{} [frame per second]: {:.1f}fps", SxGui::Icon::Stack, 1.0f / time.time).c_str());
+	ImGui::EndGroup();
 
-	//!< history(グラフ)
-
-	frameHistory_.emplace_back(1.0f / time.time); //!< fps履歴
-
-	if (frameHistory_.size() > kFrameHistoryCount) {
-		frameHistory_.pop_front();
-	}
+	ImGui::SetCursorScreenPos(position);
+	ImGui::InvisibleButton("## FullWindow", size);
 
 	//!< tooltip(詳細情報)
 	if (ImGui::BeginItemTooltip()) {
 
-		ImGui::SeparatorText("CPU Timestamp");
+		{ //!< CPU Timestamp
+			ImGui::BeginGroup();
 
-		if (ImGui::BeginTable("## record cpu timestamp", 2, ImGuiTableFlags_Borders)) {
+			ImGui::Text(std::format("{} CPU Timestamp", SxGui::Icon::Timer).c_str());
+
+			ImGui::BeginTable("## record cpu timestamp", 2, ImGuiTableFlags_Borders);
 			ImGui::TableSetupColumn("name");
-			ImGui::TableSetupColumn("timestamp - delta / [elapsed]");
+			ImGui::TableSetupColumn("timestamp - section / [elapsed]");
 			ImGui::TableHeadersRow();
 
 			const TimestampCpu::Timestamp& timestamp = System::GetTimestampCpu()->GetTimestamp();
@@ -230,15 +247,21 @@ void DevelopEditor::ShowPerformanceWindow() {
 				ImGui::Text(stamp.name.c_str());
 
 				ImGui::TableNextColumn();
-				ImGui::Text(std::format("{:.2f}ms / [{:.2f}ms]", stamp.delta.time, stamp.elapsed.time).c_str());
+				ImGui::Text(std::format("{:.2f}ms / [{:.2f}ms]", stamp.section.time, stamp.elapsed.time).c_str());
 			}
-
 			ImGui::EndTable();
+
+			ImGui::EndGroup();
 		}
 
-		ImGui::SeparatorText("GPU Timestamp");
+		SxGui::DummyLine();
 
-		if (ImGui::BeginTable("## record gpu timestamp", 2, ImGuiTableFlags_Borders)) {
+		{ //!< GPU Timestamp
+			ImGui::BeginGroup();
+
+			ImGui::Text(std::format("{} GPU Timestamp", SxGui::Icon::Hourglass).c_str());
+
+			ImGui::BeginTable("## record gpu timestamp", 2, ImGuiTableFlags_Borders);
 			ImGui::TableSetupColumn("name");
 			ImGui::TableSetupColumn("timestamp - section");
 			ImGui::TableHeadersRow();
@@ -254,22 +277,9 @@ void DevelopEditor::ShowPerformanceWindow() {
 				ImGui::Text(std::format("{:.2f}ms", stamp.section.time).c_str());
 			}
 			ImGui::EndTable();
+
+			ImGui::EndGroup();
 		}
-
-		ImGui::SeparatorText("Frame History");
-
-		float average = std::accumulate(frameHistory_.begin(), frameHistory_.end(), 0.0f) / static_cast<float>(frameHistory_.size());
-		float max     = (*std::max_element(frameHistory_.begin(), frameHistory_.end()));
-
-		SxImGui::PlotLinesFunc(
-			"## fps history",
-			[this](int32_t idx) { return frameHistory_[static_cast<size_t>(idx)]; },
-			static_cast<int32_t>(frameHistory_.size()),
-			0,
-			std::format("average: {:.1f}fps", average).c_str(),
-			0.0f, std::ceil(max / 60.0f) * 60.0f,
-			ImVec2(-1.0f, 128.0f)
-		);
 
 		ImGui::EndTooltip();
 	}

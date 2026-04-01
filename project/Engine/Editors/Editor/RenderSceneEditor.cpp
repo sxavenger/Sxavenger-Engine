@@ -589,8 +589,8 @@ void RenderSceneEditor::ShowCaptureMenu() {
 		SxGui::DummyLine();
 		ImGui::Text(std::format("{} Capture Pix", SxGui::Icon::ControlCamera).c_str());
 
-		if (SxGui::InputScalarN<uint32_t, 1>("capture frames", &captureFrames_, 1)) {
-			captureFrames_ = std::clamp<uint32_t>(1, 10, captureFrames_); //!< pixでの上限が10frameまでのため.
+		if (SxGui::InputScalar<uint32_t>("capture frames", &captureFrames_, 1)) {
+			captureFrames_ = std::clamp<uint32_t>(captureFrames_, 1, 10); //!< pixでの上限が10frameまでのため.
 		}
 
 		if (ImGui::Button("Capture Next Frames", { ImGui::GetContentRegionAvail().x, 0.0f })) {

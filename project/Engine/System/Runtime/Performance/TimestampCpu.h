@@ -42,8 +42,8 @@ public:
 		//=========================================================================================
 
 		std::string name;
-		TimePointd<TimeUnit::millisecond> elapsed;
-		TimePointd<TimeUnit::millisecond> delta;
+		TimePointd<TimeUnit::millisecond> elapsed; //!< 累計経過時間
+		TimePointd<TimeUnit::millisecond> section; //!< 区間時間
 
 	};
 

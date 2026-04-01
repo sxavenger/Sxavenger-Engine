@@ -64,6 +64,7 @@ namespace SxGui {
 		Label              = 0xE892,
 		ControlCamera      = 0xE074,
 		Capture            = 0xF727,
+		Hourglass          = 0xEBFF,
 
 		Cube             = DeployedCode,
 		CubeUpdate       = DeployedCodeUpdate,
