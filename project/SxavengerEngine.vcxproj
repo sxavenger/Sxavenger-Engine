@@ -289,6 +289,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\Buffer\FMainBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FProcessBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FRenderTargetBuffer.h" />
+    <ClInclude Include="Engine\Render\Buffer\FReservoirBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FTransparentBuffer.h" />
     <ClInclude Include="Engine\Render\Common\FDepthStencilTexture.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
@@ -312,6 +313,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\Pass\FRenderPassContext.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredBase.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredIndirectLighting.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassForwardTransparent.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassLightingComposite.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassPostProcess.h" />
@@ -518,6 +520,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Render\Buffer\FMainBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FProcessBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FRenderTargetBuffer.cpp" />
+    <ClCompile Include="Engine\Render\Buffer\FReservoirBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FTransparentBuffer.cpp" />
     <ClCompile Include="Engine\Render\Common\FDepthStencilTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
@@ -540,6 +543,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Render\Pass\FRenderPassContext.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredBase.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredIndirectLighting.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassForwardTransparent.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassLightingComposite.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassPostProcess.cpp" />

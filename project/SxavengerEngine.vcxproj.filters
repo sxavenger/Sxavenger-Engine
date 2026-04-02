@@ -564,6 +564,9 @@
     <ClInclude Include="Engine\Render\Buffer\FRenderTargetBuffer.h">
       <Filter>Engine\Render\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FReservoirBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Render\Buffer\FTransparentBuffer.h">
       <Filter>Engine\Render\Buffer</Filter>
     </ClInclude>
@@ -631,6 +634,9 @@
       <Filter>Engine\Render\Pass</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredIndirectLighting.h">
       <Filter>Engine\Render\Pass</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassForwardTransparent.h">
@@ -1247,6 +1253,9 @@
     <ClCompile Include="Engine\Render\Buffer\FRenderTargetBuffer.cpp">
       <Filter>Engine\Render\Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FReservoirBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Render\Buffer\FTransparentBuffer.cpp">
       <Filter>Engine\Render\Buffer</Filter>
     </ClCompile>
@@ -1311,6 +1320,9 @@
       <Filter>Engine\Render\Pass</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredIndirectLighting.cpp">
       <Filter>Engine\Render\Pass</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FRenderPassForwardTransparent.cpp">

@@ -1,7 +1,7 @@
 #pragma once
 // Weighted Reservoir Sampling for ReSTIR
 
-/* reference
+/* # reference
  - [NVIDIA ReSTIR Direct Illumination](https://research.nvidia.com/sites/default/files/pubs/2020-07_Spatiotemporal-reservoir-resampling/ReSTIR.pdf)
  - [NVIDIA ReSTIR Global Illumination](https://d1qx31qr3h6wln.cloudfront.net/publications/ReSTIR%20GI.pdf)
  - [NVIDIA ReSTIR Path Tracing](https://d1qx31qr3h6wln.cloudfront.net/publications/sig22_GRIS.pdf)
@@ -21,14 +21,15 @@ struct Sample {
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
-	
-	float3 xv; //!< visible point position
-	float3 nv; //!< visible point normal
+
 	float3 xs; //!< sample point position
 	float3 ns; //!< sample point normal
 	float3 lo; //!< sample radiance
 	float pdf;
-	
+
+	//!< second bounce visible data
+	// float3 xv; //!< visible point position
+	// float3 nv; //!< visible point normal
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,10 +41,10 @@ struct Reservoir {
 	// public variables
 	//=========================================================================================
 
-	Sample sample;
-	float weight; //!< wsum
-	float w;      //!< W
-	uint m;       //!< M
+	Sample sample; //!< sample data
+	float weight;  //!< reservoir weight
+	float w;       //!< sum of weights
+	uint m;        //!< number of samples
 
 	//=========================================================================================
 	// public methods
@@ -57,10 +58,9 @@ struct Reservoir {
 		weight += w;
 		m++;
 		
-		if (r < w * rcp(weight)) {
+		if (r < w / weight) {
 			sample = s;
 		}
-
 	}
 
 	//! @brief reservoir merge

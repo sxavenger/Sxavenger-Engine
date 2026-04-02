@@ -598,7 +598,7 @@ void RenderSceneEditor::ShowCaptureMenu() {
 			auto filepath = WinApp::GetSaveFilepath(L"PIXの保存先", std::filesystem::current_path(), { L"PIXファイル", L"*.wpix;" }, L".wpix");
 
 			if (filepath.has_value()) {
-				DirectXPixEvent::CaptureNextFrames(filepath.value().filename(), captureFrames_);
+				DirectXPixEvent::CaptureNextFrames(filepath.value(), captureFrames_);
 			}
 		}
 
