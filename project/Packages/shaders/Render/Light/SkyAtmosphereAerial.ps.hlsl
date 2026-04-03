@@ -29,8 +29,8 @@ PSOutput main(PSInput input) {
 	GBuffer::Surface surface;
 	surface.FetchSurface(GBuffer::FetchArgument::Create(input.position.xy, dimension, gCamera.projInv, gCamera.world));
 
-	float2 texcoord = (input.position.xy + 0.5f) / dimension;
-	float2 viewport = dimension * 2.0f - 1.0f; //!< [-1, 1]の範囲で正規化されたスクリーン座標
+	float2 texcoord = input.position.xy / dimension;
+	float2 viewport = texcoord * 2.0f - 1.0f; //!< [-1, 1]の範囲で正規化されたスクリーン座標
 	float3 direction = gCamera.GetDirection(float2(viewport.x, -viewport.y));
 
 	float3 surface_position = surface.position;

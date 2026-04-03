@@ -96,15 +96,15 @@ void FDepthStencilTexture::ClearDepthStencil(const DirectXQueueContext* context)
 }
 
 NODISCARD std::optional<D3D12_RESOURCE_BARRIER> FDepthStencilTexture::GetTransitionDepthRead() {
-	return GetTransitionState(D3D12_RESOURCE_STATE_DEPTH_READ);
+	return GetTransitionState(D3D12_RESOURCE_STATE_DEPTH_READ | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
 void FDepthStencilTexture::SetTransitionDepthRead(std::vector<D3D12_RESOURCE_BARRIER>& barriers) {
-	SetTransitionState(barriers, D3D12_RESOURCE_STATE_DEPTH_READ);
+	SetTransitionState(barriers, D3D12_RESOURCE_STATE_DEPTH_READ | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
 void FDepthStencilTexture::TransitionDepthRead(const DirectXQueueContext* context) {
-	TransitionState(context, D3D12_RESOURCE_STATE_DEPTH_READ);
+	TransitionState(context, D3D12_RESOURCE_STATE_DEPTH_READ | D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
 const DxObject::Descriptor& FDepthStencilTexture::GetDescriptorDSV() const {
