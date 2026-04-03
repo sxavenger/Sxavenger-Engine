@@ -33,7 +33,6 @@ public:
 		Albedo,
 		Normal,
 		MaterialARM,
-		Position, //!< Hack: depthから復元できる
 		MotionVector,
 		Address,
 	};

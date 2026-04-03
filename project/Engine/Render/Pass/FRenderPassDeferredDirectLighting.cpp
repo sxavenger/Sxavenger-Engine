@@ -141,7 +141,8 @@ void FRenderPassDeferredDirectLighting::EndDirectLightingPass(const DirectXQueue
 
 void FRenderPassDeferredDirectLighting::PassUnlit(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	FGBuffer* gbuffer = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil(); //!< DepthStencilの取得
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreDirectLight>();
 	core->SetPipeline(FRenderCoreDirectLight::Type::Unlit, context, config.buffer->GetResolution());
@@ -155,10 +156,10 @@ void FRenderPassDeferredDirectLighting::PassUnlit(const DirectXQueueContext* con
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	//!< GBufferの設定
-	desc.SetHandle("gAlbedo",   gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
-	desc.SetHandle("gNormal",   gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
-	desc.SetHandle("gMaterial", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
-	desc.SetHandle("gPosition", gbuffer->GetBuffer(FGBuffer::Layout::Position).GetGPUHandleSRV());
+	desc.SetHandle("gDepth",       depthStencil->GetGPUHandleSRV());
+	desc.SetHandle("gAlbedo",      gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
+	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
+	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
 
 	core->BindGraphicsBuffer(FRenderCoreDirectLight::Type::Unlit, context, desc);
 	core->DrawCall(context, 1);
@@ -166,7 +167,8 @@ void FRenderPassDeferredDirectLighting::PassUnlit(const DirectXQueueContext* con
 
 void FRenderPassDeferredDirectLighting::PassDirectionalLight(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	FGBuffer* gbuffer = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil(); //!< DepthStencilの取得
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreDirectLight>();
 	core->SetPipeline(FRenderCoreDirectLight::Type::Directional, context, config.buffer->GetResolution());
@@ -180,10 +182,10 @@ void FRenderPassDeferredDirectLighting::PassDirectionalLight(const DirectXQueueC
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	//!< GBufferの設定
-	desc.SetHandle("gAlbedo",   gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
-	desc.SetHandle("gNormal",   gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
-	desc.SetHandle("gMaterial", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
-	desc.SetHandle("gPosition", gbuffer->GetBuffer(FGBuffer::Layout::Position).GetGPUHandleSRV());
+	desc.SetHandle("gDepth",       depthStencil->GetGPUHandleSRV());
+	desc.SetHandle("gAlbedo",      gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
+	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
+	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
 
 	sComponentStorage->ForEachActive<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
 
@@ -199,7 +201,8 @@ void FRenderPassDeferredDirectLighting::PassDirectionalLight(const DirectXQueueC
 
 void FRenderPassDeferredDirectLighting::PassPointLight(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	FGBuffer* gbuffer = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil(); //!< DepthStencilの取得
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreDirectLight>();
 	core->SetPipeline(FRenderCoreDirectLight::Type::Point, context, config.buffer->GetResolution());
@@ -213,10 +216,10 @@ void FRenderPassDeferredDirectLighting::PassPointLight(const DirectXQueueContext
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	//!< GBufferの設定
-	desc.SetHandle("gAlbedo",   gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
-	desc.SetHandle("gNormal",   gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
-	desc.SetHandle("gMaterial", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
-	desc.SetHandle("gPosition", gbuffer->GetBuffer(FGBuffer::Layout::Position).GetGPUHandleSRV());
+	desc.SetHandle("gDepth",       depthStencil->GetGPUHandleSRV());
+	desc.SetHandle("gAlbedo",      gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
+	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
+	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
 
 	sComponentStorage->ForEachActive<PointLightComponent>([&](PointLightComponent* component) {
 
@@ -232,7 +235,8 @@ void FRenderPassDeferredDirectLighting::PassPointLight(const DirectXQueueContext
 
 void FRenderPassDeferredDirectLighting::PassSpotLight(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	FGBuffer* gbuffer = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil(); //!< DepthStencilの取得
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreDirectLight>();
 	core->SetPipeline(FRenderCoreDirectLight::Type::Spot, context, config.buffer->GetResolution());
@@ -246,10 +250,10 @@ void FRenderPassDeferredDirectLighting::PassSpotLight(const DirectXQueueContext*
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	//!< GBufferの設定
-	desc.SetHandle("gAlbedo",   gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
-	desc.SetHandle("gNormal",   gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
-	desc.SetHandle("gMaterial", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
-	desc.SetHandle("gPosition", gbuffer->GetBuffer(FGBuffer::Layout::Position).GetGPUHandleSRV());
+	desc.SetHandle("gDepth",       depthStencil->GetGPUHandleSRV());
+	desc.SetHandle("gAlbedo",      gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
+	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
+	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
 
 	sComponentStorage->ForEachActive<SpotLightComponent>([&](SpotLightComponent* component) {
 
@@ -265,7 +269,8 @@ void FRenderPassDeferredDirectLighting::PassSpotLight(const DirectXQueueContext*
 
 void FRenderPassDeferredDirectLighting::PassRectLight(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	FGBuffer* gbuffer = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil(); //!< DepthStencilの取得
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreDirectLight>();
 	core->SetPipeline(FRenderCoreDirectLight::Type::Rect, context, config.buffer->GetResolution());
@@ -279,10 +284,10 @@ void FRenderPassDeferredDirectLighting::PassRectLight(const DirectXQueueContext*
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	//!< GBufferの設定
-	desc.SetHandle("gAlbedo",   gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
-	desc.SetHandle("gNormal",   gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
-	desc.SetHandle("gMaterial", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
-	desc.SetHandle("gPosition", gbuffer->GetBuffer(FGBuffer::Layout::Position).GetGPUHandleSRV());
+	desc.SetHandle("gDepth",       depthStencil->GetGPUHandleSRV());
+	desc.SetHandle("gAlbedo",      gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
+	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
+	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
 
 	sComponentStorage->ForEachActive<RectLightComponent>([&](RectLightComponent* component) {
 
@@ -298,7 +303,8 @@ void FRenderPassDeferredDirectLighting::PassRectLight(const DirectXQueueContext*
 
 void FRenderPassDeferredDirectLighting::PassSkyLight(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	FGBuffer* gbuffer = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil(); //!< DepthStencilの取得
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreDirectLight>();
 
@@ -311,10 +317,10 @@ void FRenderPassDeferredDirectLighting::PassSkyLight(const DirectXQueueContext* 
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	//!< GBufferの設定
-	desc.SetHandle("gAlbedo",   gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
-	desc.SetHandle("gNormal",   gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
-	desc.SetHandle("gMaterial", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
-	desc.SetHandle("gPosition", gbuffer->GetBuffer(FGBuffer::Layout::Position).GetGPUHandleSRV());
+	desc.SetHandle("gDepth",       depthStencil->GetGPUHandleSRV());
+	desc.SetHandle("gAlbedo",      gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
+	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
+	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
 
 	//!< BRDFの設定
 	desc.SetHandle("gBRDFLUT", FRenderCore::GetInstance()->GetBRDFLut());
@@ -364,7 +370,8 @@ void FRenderPassDeferredDirectLighting::PassSkyLight(const DirectXQueueContext* 
 
 void FRenderPassDeferredDirectLighting::PassSkyAtmosphere(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	FGBuffer* gbuffer = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil(); //!< DepthStencilの取得
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreDirectLight>();
 
@@ -377,10 +384,10 @@ void FRenderPassDeferredDirectLighting::PassSkyAtmosphere(const DirectXQueueCont
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	//!< GBufferの設定
-	desc.SetHandle("gAlbedo",   gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
-	desc.SetHandle("gNormal",   gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
-	desc.SetHandle("gMaterial", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
-	desc.SetHandle("gPosition", gbuffer->GetBuffer(FGBuffer::Layout::Position).GetGPUHandleSRV());
+	desc.SetHandle("gDepth",       depthStencil->GetGPUHandleSRV());
+	desc.SetHandle("gAlbedo",      gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
+	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
+	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
 
 	{ //!< Environment描画
 

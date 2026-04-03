@@ -1,26 +1,22 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-#include "LightRender.hlsli"
+#include "PathtracingCommon.hlsli"
+
+//* library
+#include "../../Library/ACES.hlsli"
 
 //=========================================================================================
-// buffers
+// local buffers
 //=========================================================================================
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// main
+// miss main entry point
 ////////////////////////////////////////////////////////////////////////////////////////////
-PSOutput main(PSInput input) {
+MISS void mainMiss(inout Payload payload) {
+
+	payload.lo = float3(0.0f, 0.0f, 0.0f);
+	payload.lo += gSkyLight.GetEnvironment(gSkySampler, WorldRayDirection()).rgb;
 	
-	PSOutput output = (PSOutput)0;
-	
-	//* Deferred Pass情報の取得
-	GBuffer::Surface surface;
-	surface.FetchSurface(GBuffer::FetchArgument::Create(input.position.xy, dimension, gCamera.projInv, gCamera.world));
-	
-	output.color.a   = 1.0f;
-	output.color.rgb = float3(0.0f, 0.0f, 0.0f);
-	
-	return output;
 	
 }

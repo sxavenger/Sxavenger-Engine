@@ -21,8 +21,8 @@ PSOutput main(PSInput input) {
 	PSOutput output = (PSOutput)0;
 	
 	//* Deferred Pass情報の取得
-	Surface surface;
-	surface.GetSurface(input.position.xy);
+	GBuffer::Surface surface;
+	surface.FetchSurface(GBuffer::FetchArgument::Create(input.position.xy, dimension, gCamera.projInv, gCamera.world));
 
 	//* Lightの情報を取得
 	float3 l = gParameters[input.instanceId].GetDirectionFromSurface(gTransforms[input.instanceId].mat, surface.position); //!< lightの方向ベクトル

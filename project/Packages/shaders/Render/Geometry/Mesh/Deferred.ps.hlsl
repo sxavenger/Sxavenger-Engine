@@ -27,7 +27,6 @@ GeometryDeferredOutput main(GeometryPSInput input) {
 
 	output.SetAlbedo(gMaterials[input.instanceId].albedo.GetAlbedo(parameter));
 	output.SetNormal(gMaterials[input.instanceId].normal.GetNormal(input.normal, parameter, tbn));
-	output.SetPosition(input.worldPos);
 
 	output.SetMaterial(
 		gMaterials[input.instanceId].properties.roughness.GetValue(parameter, 1),

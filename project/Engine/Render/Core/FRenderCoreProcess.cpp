@@ -57,10 +57,6 @@ void FRenderCoreProcess::CreatePipeline() {
 		//!< Local Exposure
 		CreatePipeline(PostProcess::LocalExposure, "Exposure/LocalExposure.cs.hlsl");
 
-		//!< Depth of Field
-		CreatePipeline(PostProcess::DepthOfField, "DoF.cs.hlsl");
-		// FIXME: Depth of Fieldの処理の修正.
-
 		//!< Bloom
 		CreatePipeline(PostProcess::Bloom_Luminance, "Bloom/BloomLuminance.cs.hlsl", desc);
 		CreatePipeline(PostProcess::Bloom_Apply,     "Bloom/BloomApply.cs.hlsl",     desc);

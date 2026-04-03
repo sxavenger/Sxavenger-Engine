@@ -14,99 +14,112 @@
 #include "../../Library/RandomLib.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Sample structure
+// ReSTIR namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct Sample {
+namespace ReSTIR {
 
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-
-	float3 xs; //!< sample point position
-	float3 ns; //!< sample point normal
-	float3 lo; //!< sample radiance
-	float pdf;
-
-	//!< second bounce visible data
-	// float3 xv; //!< visible point position
-	// float3 nv; //!< visible point normal
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Reservoir structure
-////////////////////////////////////////////////////////////////////////////////////////////
-struct Reservoir {
-
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-
-	Sample sample; //!< sample data
-	float weight;  //!< reservoir weight
-	float w;       //!< sum of weights
-	uint m;        //!< number of samples
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	//! @brief sample update
-	//! @param s[in] new sample
-	//! @param w[in] new sample weight
-	//! @param r[in] random value [0, 1]
-	void Update(Sample s, float w, float r) {
-		weight += w;
-		m++;
-		
-		if (r < w / weight) {
-			sample = s;
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Sample structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Sample {
+	
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+	
+		float3 xs; //!< sample point position
+		float3 ns; //!< sample point normal
+		float3 lo; //!< sample radiance
+		float pdf;
+	
+		//!< second bounce visible data
+		// float3 xv; //!< visible point position
+		// float3 nv; //!< visible point normal
+	};
+	
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Reservoir structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Reservoir {
+	
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+	
+		Sample sample; //!< sample data
+		float weight; //!< reservoir weight
+		float w; //!< sum of weights
+		uint m; //!< number of samples
+	
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+	
+		//! @brief sample update
+		//! @param s[in] new sample
+		//! @param w[in] new sample weight
+		//! @param r[in] random value [0, 1]
+		void Update(Sample s, float w, float r) {
+			weight += w;
+			m++;
+			
+			if (r < w / weight) {
+				sample = s;
+			}
 		}
-	}
-
-	//! @brief reservoir merge
-	//! @param reservoir[in] merge source reservoir
-	//! @param p_hat[in] estimated sample weight of the target reservoir
-	//! @param r[in] random value [0, 1]
-	void Merge(Reservoir reservoir, float p_hat, float r) {
-		uint m0 = m;
-		Update(reservoir.sample, p_hat * reservoir.w * reservoir.m, r);
-		m = m0 + reservoir.m;
-	}
 	
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Moment structure
-////////////////////////////////////////////////////////////////////////////////////////////
-struct Moment {
-
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-
-	uint offset;
-	uint index;
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	static Moment GetDefault(uint2 pixel) {
-		Moment moment = (Moment)0;
-		moment.offset = Xorshift::xorshift32(pixel.x * pixel.y) + 1;
-
-		return moment;
-	}
-
-	uint GetRandamizeSampleIndex(uint i, uint maxSampleCount) {
-		const uint kDivision = maxSampleCount / 16;
-		uint divisionIndex = kDivision * ((index + i + offset) % maxSampleCount);
+		//! @brief reservoir merge
+		//! @param reservoir[in] merge source reservoir
+		//! @param p_hat[in] estimated sample weight of the target reservoir
+		//! @param r[in] random value [0, 1]
+		void Merge(Reservoir reservoir, float p_hat, float r) {
+			uint m0 = m;
+			Update(reservoir.sample, p_hat * reservoir.w * reservoir.m, r);
+			m = m0 + reservoir.m;
+		}
+		
+	};
 	
-		return (divisionIndex % maxSampleCount) + (divisionIndex / maxSampleCount);
-	}
-
-	bool CheckCompleteSample(uint maxSampleCount) {
-		return index >= maxSampleCount;
-	}
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Moment structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Moment {
 	
-};
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+	
+		uint offset;
+		uint index;
+	
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+	
+		static Moment GetDefault(uint2 pixel) {
+			Moment moment = (Moment)0;
+			moment.offset = Xorshift::xorshift32(pixel.x * pixel.y) + 1;
+	
+			return moment;
+		}
+	
+		uint GetRandamizeSampleIndex(uint i, uint maxSampleCount) {
+			const uint kDivision = maxSampleCount / 16;
+			uint divisionIndex = kDivision * ((index + i + offset) % maxSampleCount);
+		
+			return (divisionIndex % maxSampleCount) + (divisionIndex / maxSampleCount);
+		}
+	
+		bool CheckCompleteSample(uint maxSampleCount) {
+			return index >= maxSampleCount;
+		}
+		
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// methods
+	////////////////////////////////////////////////////////////////////////////////////////////
+
+	
+}
+

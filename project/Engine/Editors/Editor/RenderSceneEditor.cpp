@@ -1160,7 +1160,6 @@ void RenderSceneEditor::ShowDisplayBuffer(DisplayBuffer buffer) {
 						{ gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV(),       DisplayBuffer::Albedo },
 						{ gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV(),       DisplayBuffer::Normal },
 						{ gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV(),  DisplayBuffer::MaterialARM },
-						{ gbuffer->GetBuffer(FGBuffer::Layout::Position).GetGPUHandleSRV(),     DisplayBuffer::Position },
 						{ gbuffer->GetBuffer(FGBuffer::Layout::MotionVector).GetGPUHandleSRV(), DisplayBuffer::MotionVector }
 					},
 					buffer_->GetResolution(),
@@ -1211,22 +1210,6 @@ void RenderSceneEditor::ShowDisplayBuffer(DisplayBuffer buffer) {
 
 				SetImGuiImageFullWindowEnable(
 					gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV(),
-					buffer_->GetResolution(),
-					isRender_
-				);
-			}
-			return;
-
-		case DisplayBuffer::Position:
-			{
-				if (!buffer_->HasBuffer<FGBuffer>()) {
-					return;
-				}
-
-				FGBuffer* gbuffer = buffer_->GetBuffer<FGBuffer>();
-
-				SetImGuiImageFullWindowEnable(
-					gbuffer->GetBuffer(FGBuffer::Layout::Position).GetGPUHandleSRV(),
 					buffer_->GetResolution(),
 					isRender_
 				);

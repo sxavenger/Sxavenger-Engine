@@ -130,7 +130,6 @@ private:
 		Albedo,
 		Normal,
 		MaterialARM,
-		Position,
 		MotionVector,
 
 		//* FLightAccumulationBuffer *//

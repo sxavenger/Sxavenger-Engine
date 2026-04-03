@@ -15,7 +15,6 @@ const std::array<DXGI_FORMAT, FGBuffer::kLayoutCount> FGBuffer::kFormats = {
 	FBaseBuffer::kColorFormat,      //!< Albedo
 	DXGI_FORMAT_R10G10B10A2_UNORM,  //!< Normal
 	DXGI_FORMAT_R8G8B8A8_UNORM,     //!< MaterialARM
-	DXGI_FORMAT_R32G32B32A32_FLOAT, //!< Position
 	DXGI_FORMAT_R16G16B16A16_FLOAT, //!< MotionVector
 	DXGI_FORMAT_R32G32_UINT         //!< Address
 };
@@ -24,7 +23,6 @@ const std::array<DXGI_FORMAT, FGBuffer::kLayoutCount> FGBuffer::kFormats = {
 // Albedo:       [FBaseBuffer::ColorFormat]       float3 albedo
 // Normal:       [DXGI_FORMAT_R10G10B10A2_UNORM]  float3 normal
 // MaterialARM:  [DXGI_FORMAT_R8G8B8A8_UNORM]     float ambient_occlusion, float roughness, float metallic
-// Position:     [DXGI_FORMAT_R32G32B32A32_FLOAT] float3 position
 // MotionVector: [DXGI_FORMAT_R16G16B16A16_FLOAT] float2 motion_vector
 // Address:      [DXGI_FORMAT_R32G32_UINT]        uint2 address(= uintptr_tと同等[x: upper, y: lower])
 
