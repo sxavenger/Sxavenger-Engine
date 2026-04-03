@@ -20,7 +20,7 @@
 #include "../../../Component/SkyAtmosphereComponent.hlsli"
 
 //* deferred buffer
-#include "../../DeferredBuffers.hlsli"
+#include "../../GBuffer.hlsli"
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,3 +91,4 @@ ConstantBuffer<LightCount> gSpotLightCount                : register(b2, space2)
 StructuredBuffer<TransformComponent> gSpotLightTransforms : register(t4, space2);
 StructuredBuffer<SpotLightComponent> gSpotLights          : register(t5, space2);
 
+// TODO: Rect Light, Sky Light

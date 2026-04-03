@@ -32,7 +32,7 @@ namespace ReSTIR {
 		float3 lo; //!< sample radiance
 		float pdf;
 	
-		//!< second bounce visible data
+		//!< multi bounce visible data
 		// float3 xv; //!< visible point position
 		// float3 nv; //!< visible point normal
 	};

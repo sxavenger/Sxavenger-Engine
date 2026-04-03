@@ -71,7 +71,7 @@ struct RectLightComponent {
 			return 0.0f;
 		}
 		
-		float attenuation_shadow = shadow.TraceShadow(scene, l, d);
+		float attenuation_shadow = shadow.TraceShadow(scene, surface_position, l, d);
 		
 		return attenuation_distance * attenuation_angle * attenuation_shadow;
 

@@ -1,6 +1,13 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// constant variables
+////////////////////////////////////////////////////////////////////////////////////////////
+
+static const float kShadowDefaultTMax = 10000.0f;
+static const float kShadowDefaultTMin = 0.04f;
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // InlineShadow structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct InlineShadow {
@@ -18,14 +25,12 @@ struct InlineShadow {
 
 	float TraceShadow(RaytracingAccelerationStructure scene, float3 origin, float3 direction, float tmax = 0.0f) {
 #ifdef _SUPPORT_INLINE_RAYTRACING
-		static const float kDefaultTMax = 10000.0f;
-		static const float kDefaultTMin = 0.04f;
 
 		RayDesc desc;
 		desc.Origin    = origin;
 		desc.Direction = direction;
-		desc.TMin      = kDefaultTMin;
-		desc.TMax      = tmax != 0.0f ? tmax : kDefaultTMax;
+		desc.TMin      = kShadowDefaultTMin;
+		desc.TMax      = tmax != 0.0f ? tmax : kShadowDefaultTMax;
 
 		if (strength <= 0.0f) {
 			return 1.0f;
