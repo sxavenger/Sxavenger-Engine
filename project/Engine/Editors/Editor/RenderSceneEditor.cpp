@@ -407,31 +407,45 @@ void RenderSceneEditor::ShowSceneMenu() {
 		BaseEditor::MenuPadding();
 		ImGui::SeparatorText("scene");
 
-		// render
-		ImGui::Checkbox("render scene", &isRender_);
+		ImGui::Checkbox("Render Scene", &isRender_);
 
-		ImGui::BeginDisabled(!isRender_);
+		// Buffer
+		if (SxGui::ButtonRegion(std::format("{} Reset Buffer", SxGui::Icon::FlipToBack))) {
+			buffer_->ResetBuffer(); //!< Bufferのリセット
+		}
 
-		// layout display
-		ImGui::Text("layout");
-		ImGui::Separator();
+		// Window
+		if (sceneWindow_.expired()) { //!< windowが表示されていない場合.
+			if (SxGui::ButtonRegion(std::format("{} Window Open", SxGui::Icon::Window))) {
+				sceneWindow_ = System::CreateSubWindow(Configuration::GetConfig().resolution, L"Scene Window (Editor)", DirectXWindowContext::ProcessCategory::Window);
+			}
 
+		} else { //!< windowが表示されている場合
+			if (SxGui::ButtonRegion(std::format("{} Window Close", SxGui::Icon::Close))) {
+				sceneWindow_.lock()->Close();
+				sceneWindow_.reset();
+			}
+
+		}
+
+		// Layout
+		SxGui::DummyLine();
+		SxGui::Text(std::format("{} Layout", SxGui::Icon::Texture));
 		SxGui::ComboEnum("Display Buffer", &displayBuffer_);
-
 		SxImGui::HelpMarker("(!)", "[alt] + [up] || [down]");
 
-		ImGui::EndDisabled();
 
-		// process
-		ImGui::Text("process option");
-		ImGui::Separator();
-
+		// config
+		SxGui::DummyLine();
+		SxGui::Text(std::format("{} Config", SxGui::Icon::Settings));
 		SxGui::ComboEnum("anti-aliasing",       &config_.antiAliasing);
 		SxGui::ComboEnum("ambient-occlusion",   &config_.ambientOcclusion);
 		SxGui::ComboEnum("global-illumination", &config_.globalIllumination);
 
+		SxGui::DummyLine();
+		SxGui::Text(std::format("{} Option", SxGui::Icon::CheckBoxOutline));
 		for (const auto& [value, name] : magic_enum::enum_entries<FRenderConfig::OptionFlag>()) {
-			if (value == FRenderConfig::OptionFlag::Default) {
+			if (value == FRenderConfig::OptionFlag::Default || value == FRenderConfig::OptionFlag::None) {
 				continue;
 			}
 			SxImGui::CheckBoxFlags(name.data(), &config_.option.Get(), static_cast<size_t>(value));
@@ -443,23 +457,6 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Checkbox("cull camera",  &isDebugCulling_);
 		ImGui::Checkbox("render grid",  &isRenderGrid_);
 		ImGui::Checkbox("render probe", &isRenderProbe_);
-
-		// window
-		ImGui::Text("window");
-		ImGui::Separator();
-
-		if (sceneWindow_.expired()) { //!< windowが表示されていない場合.
-			if (ImGui::Button("open")) {
-				sceneWindow_ = System::CreateSubWindow(Configuration::GetConfig().resolution, L"Scene Window (Editor)", DirectXWindowContext::ProcessCategory::Window);
-			}
-
-		} else { //!< windowが表示されている場合
-			if (ImGui::Button("close")) {
-				sceneWindow_.lock()->Close();
-				sceneWindow_.reset();
-			}
-			
-		}
 		
 		ImGui::EndMenu();
 	}
@@ -593,7 +590,7 @@ void RenderSceneEditor::ShowCaptureMenu() {
 			captureFrames_ = std::clamp<uint32_t>(captureFrames_, 1, 10); //!< pixでの上限が10frameまでのため.
 		}
 
-		if (ImGui::Button("Capture Next Frames", { ImGui::GetContentRegionAvail().x, 0.0f })) {
+		if (SxGui::ButtonRegion("Capture Next Frames")) {
 
 			auto filepath = WinApp::GetSaveFilepath(L"PIXの保存先", std::filesystem::current_path(), { L"PIXファイル", L"*.wpix;" }, L".wpix");
 

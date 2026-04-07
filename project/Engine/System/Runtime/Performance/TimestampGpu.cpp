@@ -84,9 +84,10 @@ void TimestampGpu::ReadTimestamp(const DirectXQueueContext* context) {
 		D3D12_QUERY_TYPE_TIMESTAMP,
 		0,
 		timestamps_[currentIndex_].GetStampCount() * 2,
-		readback_.GetResource(), // HACK: DEBUGだとSTATEがERRORとして出てしまう.
+		readback_.GetResource(),
 		0
 	);
+	// note: PIX 2602.25以前だとErrorとなってしまう
 
 	readback_.Map();
 }

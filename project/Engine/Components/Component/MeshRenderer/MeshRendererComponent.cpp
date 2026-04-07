@@ -21,6 +21,8 @@ void MeshRendererComponent::ShowComponentInspector() {
 	ImGui::Checkbox("enable", &isEnable_);
 	SxImGui::CheckBoxFlags("cast shadow", &mask_.Get(), static_cast<uint8_t>(MeshInstanceMask::Shadow));
 
+	SxGui::ComboEnum("mode", &mode_);
+
 	if (ImGui::BeginCombo("mesh", mesh_.GetStr().c_str())) {
 		for (const auto& id : sAssetStorage->GetAssetStorage<AssetMesh>() | std::views::keys) {
 			if (ImGui::Selectable(id.Serialize().c_str(), mesh_ == id)) {
@@ -54,6 +56,7 @@ json MeshRendererComponent::ParseToJson() const {
 	data["mask"]     = mask_.Get();
 	data["isEnable"] = isEnable_;
 	data["stencil"]  = stencil_;
+	data["mode"]     = magic_enum::enum_name(mode_);
 
 	return data;
 }
@@ -82,6 +85,8 @@ void MeshRendererComponent::InputJson(const json& data) {
 	isEnable_ = data["isEnable"].get<bool>();
 
 	stencil_  = data["stencil"].get<uint8_t>();
+
+	mode_ = magic_enum::enum_cast<MeshRendererCommon::Mode>(data["mode"].get<std::string>()).value();
 }
 
 bool MeshRendererComponent::IsEnable() const {

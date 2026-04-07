@@ -6,6 +6,7 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../Core/FRenderCore.h"
+#include "../Core/FRenderCoreReSTIR.h"
 
 //* engine
 #include <Engine/System/Utility/RuntimeLogger.h>
@@ -22,7 +23,7 @@ void FScene::Init() {
 	// TLASの初期化
 	topLevelAS_.Init(System::GetDxDevice());
 
-	 //!< light containerの初期化
+	//!< light containerの初期化
 	directionalLightContainer_.Init(System::GetDxDevice());
 	pointLightContainer_.Init(System::GetDxDevice());
 	spotLightContainer_.Init(System::GetDxDevice());
@@ -41,7 +42,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 		std::shared_ptr<AssetMesh> mesh         = component->GetMesh();
 		std::shared_ptr<AssetMaterial> material = component->GetMaterial();
 
-		if (material->GetMode() == AssetMaterial::Mode::Translucent) {
+		if (component->GetMode() == MeshRendererCommon::Mode::Translucent) {
 			return; //!< 透明マテリアルはTLASに登録しない
 		}
 
@@ -57,7 +58,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 		instance.instanceId    = NULL;
 
 		//* ExportGroupの設定
-		instance.name = magic_enum::enum_name(material->GetMode());
+		instance.name = magic_enum::enum_name(component->GetMode());
 		instance.parameter.SetAddress(0, mesh->GetInputVertex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(1, mesh->GetInputIndex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(2, material->GetGPUVirtualAddress());
@@ -73,7 +74,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 
 		std::shared_ptr<AssetMaterial> material = component->GetMaterial();
 
-		if (material->GetMode() == AssetMaterial::Mode::Translucent) {
+		if (component->GetMode() == MeshRendererCommon::Mode::Translucent) {
 			return; //!< 透明マテリアルはTLASに登録しない
 		}
 
@@ -89,7 +90,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 		instance.instanceId    = NULL;
 
 		//* ExportGroupの設定
-		instance.name = magic_enum::enum_name(material->GetMode());
+		instance.name = magic_enum::enum_name(component->GetMode());
 		instance.parameter.SetAddress(0, component->GetInputVertex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(1, component->GetInputIndex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(2, material->GetGPUVirtualAddress());
@@ -102,9 +103,10 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 
 void FScene::SetupStateObject() {
 	// TopLevelASに設定
-	//FRenderCore::GetInstance()->GetRestir()->UpdateShaderTable(&topLevelAS_);
-	//FRenderCore::GetInstance()->GetProbe()->UpdateShaderTable(&topLevelAS_); //!< HACK
-	//FRenderCore::GetInstance()->GetReflection()->UpdateShaderTable(&topLevelAS_); //!< HACK
+
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreReSTIR>();
+	core->UpdateShaderTable(&topLevelAS_); //!< HACK: RenderCoreが常時存在する前提で実装.
+
 }
 
 void FScene::SetupLightContainer() {

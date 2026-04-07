@@ -9,6 +9,7 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DirectXAlignment.h>
+#include <Engine/System/DirectX/DxObject/DxUnorderedDimensionBuffer.h>
 
 //* external
 #include <magic_enum.hpp>
@@ -31,7 +32,7 @@ public:
 	// Reservoir structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	template <size_t N>
-	struct GPU_BUFFER_ALIGNAS Reservoir {
+	struct GPU_BUFFER_ALIGNAS BaseReservoir {
 	public:
 
 		//=========================================================================================
@@ -46,6 +47,8 @@ public:
 	};
 
 	POP_GPU_BUFFER_ALIGNAS
+
+	using Reservoir = BaseReservoir<12>; //!< ReSTIR::Sample構造体のsizeに合わせる.
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Moment structure
@@ -62,7 +65,7 @@ public:
 	// Layout enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Layout : uint8_t {
-		Initialize,
+		Initial,
 		Temporal,
 		Spatial,
 	};
@@ -78,13 +81,18 @@ public:
 
 	//* getter *//
 
+	DxObject::UnorderedDimensionBuffer<Reservoir>& GetReservoir(Layout layout) { return reservoirs_[static_cast<size_t>(layout)]; }
 
+	DxObject::UnorderedDimensionBuffer<Moment>& GetMoment() { return moment_; }
 
 private:
 
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
+
+	std::array<DxObject::UnorderedDimensionBuffer<Reservoir>, kLayoutCount> reservoirs_ = {};
+	DxObject::UnorderedDimensionBuffer<Moment> moment_;
 
 };
 

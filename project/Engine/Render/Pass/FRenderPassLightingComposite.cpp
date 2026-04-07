@@ -52,6 +52,9 @@ void FRenderPassLightingComposite::TransitionLightingCompositePass(const DirectX
 
 	main->GetBuffer(FMainBuffer::Layout::Scene).TransitionUnorderedAccess(context);
 
+	lightAccumulation->GetBuffer(FLightAccumulationBuffer::Layout::Direct).TransitionDefaultState(context);
+	lightAccumulation->GetBuffer(FLightAccumulationBuffer::Layout::Indirect).TransitionDefaultState(context);
+
 	{ //!< Transition Lighting Composite Pass
 
 		//!< parameterの設定

@@ -49,6 +49,8 @@ public:
 	template <class T> requires std::derived_from<T, FBaseBuffer>
 	T* GetBuffer() const;
 
+	void ResetBuffer();
+
 	//* depth stencil option *//
 
 	FDepthStencilTexture* GetDepthStencil() const { return depthStencil_.get(); }
@@ -109,7 +111,7 @@ inline T* FRenderTargetBuffer::EnsureBuffer() {
 	}
 
 	T* buffer = registry_.Get<T>();
-	buffer->Create(resolution_); //!< Bufferを生成する.
+	buffer->Resize(resolution_); //!< Bufferを生成する.
 
 	return buffer;
 }

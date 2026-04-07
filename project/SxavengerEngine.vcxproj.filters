@@ -636,7 +636,7 @@
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.h">
       <Filter>Engine\Render\Pass</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredIndirectLighting.h">
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredGlobalIllumination.h">
       <Filter>Engine\Render\Pass</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassForwardTransparent.h">
@@ -945,6 +945,7 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreReSTIR.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1322,7 +1323,7 @@
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.cpp">
       <Filter>Engine\Render\Pass</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredIndirectLighting.cpp">
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredGlobalIllumination.cpp">
       <Filter>Engine\Render\Pass</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FRenderPassForwardTransparent.cpp">
@@ -1548,5 +1549,7 @@
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreReSTIR.cpp" />
+    <ClCompile Include="Engine\Render\Buffer\FBaseBuffer.cpp" />
   </ItemGroup>
 </Project>

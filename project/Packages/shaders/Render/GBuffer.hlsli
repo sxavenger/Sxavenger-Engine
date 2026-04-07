@@ -7,7 +7,7 @@
 Texture2D<float>  gDepth       : register(t0, space3);
 Texture2D<float4> gAlbedo      : register(t1, space3);
 Texture2D<float4> gNormal      : register(t2, space3);
-Texture2D<float4> gMaterialARM : register(t4, space3);
+Texture2D<float4> gMaterialARM : register(t3, space3);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GBuffer namespace

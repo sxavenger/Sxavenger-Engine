@@ -12,6 +12,7 @@
 #include <Engine/Graphics/Animation/Animation.h>
 #include <Engine/Assets/Content/ContentModel.h>
 #include <Engine/Assets/Asset/AssetMaterial.h>
+#include <Engine/Components/Component/MeshRenderer/MeshRendererCommon.h>
 
 //* c++
 #include <string>
@@ -73,6 +74,9 @@ public:
 	static void ForEachBehaviour(EntityBehaviour* behaviour, const std::function<void(EntityBehaviour*)>& function);
 	static void ForEachBehaviour(const BehaviourAddress& address, const std::function<void(EntityBehaviour*)>& function);
 
+	//* mesh renderer helper *//
+
+	static void SetMeshRendererMode(const BehaviourAddress& address, MeshRendererCommon::Mode mode);
 
 	//* animation helper *//
 

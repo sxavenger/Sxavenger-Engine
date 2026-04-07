@@ -23,14 +23,47 @@ TransformComponent::TransformComponent(EntityBehaviour* behaviour) : BaseCompone
 }
 
 void TransformComponent::ShowComponentInspector() {
-	SxGui::DragVectorN<float, 3>("transform", &transform_.translate.x, 0.01f);
 
-	Vector3f e = Quaternion::ToEuler(transform_.rotate);
-	if (SxGui::DragVectorN<float, 3>("rotate", &e.x, 0.01f)) {
-		transform_.rotate = Quaternion::ToQuaternion(e);
+	
+	{ //!< translateの表示
+		SxGui::DragVectorN<float, 3>("transform", &transform_.translate.x, 0.01f);
 	}
 
-	SxGui::DragVectorN<float, 3>("scale", &transform_.scale.x, 0.01f);
+	{ //!< rotateの表示
+
+		//!< eulerの表示
+		Vector3f prev = Quaternion::ToEuler(transform_.rotate);
+		Vector3f edit = prev;
+
+		if (SxGui::DragVectorN<float, 3>("rotate", &edit.x, 0.01f)) {
+
+			ImGuiIO& io = ImGui::GetIO();
+
+			if (io.WantTextInput) {
+				//!< TextInputの場合, Euler角の直接代入.
+				transform_.rotate = Quaternion::ToQuaternion(edit);
+
+			} else {
+				//!< Dragの場合, Euler角の差分から回転を計算.
+				Vector3f delta = edit - prev;
+
+				Vector3<Quaternion> q = {
+					Quaternion::AxisAngle(kUnitX3<float>, delta.x),
+					Quaternion::AxisAngle(kUnitY3<float>, delta.y),
+					Quaternion::AxisAngle(kUnitZ3<float>, delta.z)
+				};
+
+				transform_.rotate *= q.x * q.y * q.z;
+			}
+		}
+
+	}
+
+	
+	{ //!< scaleの表示
+		SxGui::DragVectorN<float, 3>("scale", &transform_.scale.x, 0.01f);
+	}
+
 	UpdateMatrix();
 }
 

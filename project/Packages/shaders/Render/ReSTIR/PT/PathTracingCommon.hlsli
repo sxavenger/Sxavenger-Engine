@@ -10,6 +10,9 @@
 #include "../../../Library/ImportanceSample.hlsli"
 #include "../../../Library/RaytracingLib.hlsli"
 
+//* content
+#include "../../../Content/Random.hlsli"
+
 //* component
 #include "../../../Component/CameraComponent.hlsli"
 #include "../../../Component/TransformComponent.hlsli"
@@ -38,20 +41,20 @@ static const uint kRayMask = 0xFF;
 //=========================================================================================
 
 //* output buffers
-RWStructuredBuffer<ReSTIR::Reservoir> gInitalizeReservoir : register(u0, space1);
-RWStructuredBuffer<ReSTIR::Moment> gMoment                : register(u1, space1);
+RWStructuredBuffer<ReSTIR::Reservoir> gInitalReservoir : register(u0, space1);
+RWStructuredBuffer<ReSTIR::Moment> gMoment             : register(u1, space1);
 //!< array size [DispatchRaysDimensions().x * DispatchRaysDimensions().y]
 
 //* scene
 RaytracingAccelerationStructure gScene : register(t0, space1);
 
 //* camera
-ConstantBuffer<CameraComponent> gCamera : register(b1, space1);
+ConstantBuffer<CameraComponent> gCamera : register(b0, space1);
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Setting cbuffer 32bitconstants.
 ////////////////////////////////////////////////////////////////////////////////////////////
-cbuffer Setting : register(b2, space1) {
+cbuffer Setting : register(b1, space1) {
 
 	//=========================================================================================
 	// public variables
@@ -65,7 +68,7 @@ cbuffer Setting : register(b2, space1) {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Seed cbuffer 32bitconstants
 ////////////////////////////////////////////////////////////////////////////////////////////
-cbuffer Seed : register(b3, space1) {
+cbuffer Seed : register(b2, space1) {
 
 	//=========================================================================================
 	// public variables
@@ -92,3 +95,33 @@ StructuredBuffer<TransformComponent> gSpotLightTransforms : register(t4, space2)
 StructuredBuffer<SpotLightComponent> gSpotLights          : register(t5, space2);
 
 // TODO: Rect Light, Sky Light
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Payload structure
+////////////////////////////////////////////////////////////////////////////////////////////
+struct PAYLOAD Payload {
+
+	//=========================================================================================
+	// public variables
+	//=========================================================================================
+
+	float3 lo : QUALIFIRE_DEFAULT;
+	float3 position : QUALIFIRE_DEFAULT;
+	float3 normal : QUALIFIRE_DEFAULT;
+	
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	static Payload Default() {
+		return (Payload)0;
+	}
+
+	static Payload TracePrimaryRay(RayDesc desc, uint flag = kFlag) {
+		Payload payload = Payload::Default();
+		TraceRay(gScene, flag, kRayMask, 0, 1, 0, desc, payload);
+
+		return payload;
+	}
+	
+};

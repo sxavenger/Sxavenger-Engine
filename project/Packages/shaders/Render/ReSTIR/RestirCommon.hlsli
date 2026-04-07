@@ -90,7 +90,7 @@ namespace ReSTIR {
 		//=========================================================================================
 	
 		uint offset;
-		uint index;
+		uint count;
 	
 		//=========================================================================================
 		// public methods
@@ -105,13 +105,13 @@ namespace ReSTIR {
 	
 		uint GetRandamizeSampleIndex(uint i, uint maxSampleCount) {
 			const uint kDivision = maxSampleCount / 16;
-			uint divisionIndex = kDivision * ((index + i + offset) % maxSampleCount);
+			uint divisionCount = kDivision * ((count + i + offset) % maxSampleCount);
 		
-			return (divisionIndex % maxSampleCount) + (divisionIndex / maxSampleCount);
+			return (divisionCount % maxSampleCount) + (divisionCount / maxSampleCount);
 		}
 	
 		bool CheckCompleteSample(uint maxSampleCount) {
-			return index >= maxSampleCount;
+			return count >= maxSampleCount;
 		}
 		
 	};
@@ -120,6 +120,9 @@ namespace ReSTIR {
 	// methods
 	////////////////////////////////////////////////////////////////////////////////////////////
 
+	uint FlattenIndex(uint2 index, uint2 dimension) {
+		return index.x + index.y * dimension.x;
+	}
 	
 }
 

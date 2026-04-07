@@ -177,7 +177,7 @@ void FRenderPassDeferredBase::RenderStaticMesh(const DirectXQueueContext* contex
 		const auto& meshlet = mesh->GetInputMesh().GetMeshlet();
 
 		//!< 不透明なジオメトリは別のパスで描画
-		if (material->GetMode() != AssetMaterial::Mode::Opaque) {
+		if (component->GetMode() != MeshRendererCommon::Mode::Opaque) {
 			return;
 		}
 
@@ -220,7 +220,7 @@ void FRenderPassDeferredBase::RenderSkinnedMesh(const DirectXQueueContext* conte
 		auto address   = component->GetBehaviourAddress();
 
 		//!< 不透明ジオメトリ描画
-		if (material->GetMode() != AssetMaterial::Mode::Opaque) {
+		if (component->GetMode() != MeshRendererCommon::Mode::Opaque) {
 			return;
 		}
 
