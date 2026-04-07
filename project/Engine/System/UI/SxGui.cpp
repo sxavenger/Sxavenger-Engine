@@ -430,6 +430,15 @@ bool SxGui::Selectable(const char* label, bool isSelect, ImGuiSelectableFlags fl
 	return changed;
 }
 
+void SxGui::Text(const std::string_view& text) {
+	ImGui::Text(text.data());
+}
+
+bool SxGui::ButtonRegion(const std::string_view& label) {
+	ImVec2 region = ImGui::GetContentRegionAvail();
+	return ImGui::Button(label.data(), { region.x, 0.0f });
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Hierarchy namespace methods
 ////////////////////////////////////////////////////////////////////////////////////////////

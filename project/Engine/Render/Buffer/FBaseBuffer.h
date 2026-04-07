@@ -16,7 +16,7 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FBaseBuffer
+// FBaseBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class FBaseBuffer {
 public:
@@ -30,6 +30,8 @@ public:
 
 	virtual void Create(const Vector2ui& resolution) = 0;
 
+	void Resize(const Vector2ui& resolution);
+
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
@@ -37,6 +39,13 @@ public:
 	static const DXGI_FORMAT kColorFormat = DXGI_FORMAT_R16G16B16A16_FLOAT;
 
 private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	Vector2ui resolution_ = {}; //!< 内部バッファの解像度
+
 };
 
 SXAVENGER_ENGINE_NAMESPACE_END

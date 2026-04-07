@@ -49,6 +49,8 @@ public:
 
 	void Reset();
 
+	void SetName(const std::wstring& name) const { resource_.SetName(name); }
+
 	//* getter *//
 
 	DxObject::Resource& Get() { return resource_; }

@@ -369,8 +369,6 @@ void AssetMaterial::Copy(const AssetMaterial& material) {
 
 	transform_ = material.transform_;
 
-	mode_ = material.mode_;
-
 	buffer_->At(0) = material.buffer_->At(0);
 }
 
@@ -390,8 +388,6 @@ void AssetMaterial::ShowInspector() {
 		ImGui::Text("loading...");
 		return;
 	}
-
-	SxGui::ComboEnum("mode", &mode_);
 
 }
 

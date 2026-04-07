@@ -289,6 +289,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\Buffer\FMainBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FProcessBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FRenderTargetBuffer.h" />
+    <ClInclude Include="Engine\Render\Buffer\FReservoirBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FTransparentBuffer.h" />
     <ClInclude Include="Engine\Render\Common\FDepthStencilTexture.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
@@ -301,6 +302,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\Core\FRenderCoreDirectLight.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreReSTIR.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h" />
     <ClInclude Include="Engine\Render\FMainRender.h" />
     <ClInclude Include="Engine\Render\FPresenter.h" />
@@ -312,6 +314,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\Pass\FRenderPassContext.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredBase.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredGlobalIllumination.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassForwardTransparent.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassLightingComposite.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassPostProcess.h" />
@@ -513,11 +516,13 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Module\Scene\BaseScene.cpp" />
     <ClCompile Include="Engine\Module\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\Module\Scene\SceneFactory.cpp" />
+    <ClCompile Include="Engine\Render\Buffer\FBaseBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FGBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FLightAccumulationBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FMainBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FProcessBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FRenderTargetBuffer.cpp" />
+    <ClCompile Include="Engine\Render\Buffer\FReservoirBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FTransparentBuffer.cpp" />
     <ClCompile Include="Engine\Render\Common\FDepthStencilTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
@@ -529,6 +534,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Render\Core\FRenderCoreDirectLight.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreReSTIR.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp" />
     <ClCompile Include="Engine\Render\FMainRender.cpp" />
     <ClCompile Include="Engine\Render\FPresenter.cpp" />
@@ -540,6 +546,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Render\Pass\FRenderPassContext.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredBase.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredGlobalIllumination.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassForwardTransparent.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassLightingComposite.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassPostProcess.cpp" />

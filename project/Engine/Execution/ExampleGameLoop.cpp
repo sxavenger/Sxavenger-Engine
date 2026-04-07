@@ -150,10 +150,11 @@ void ExampleGameLoop::InitSystem() {
 			sContentStorage->Import<ContentModel>("assets/models/primitive/cube.obj")
 		);
 
+		BehaviourHelper::SetMeshRendererMode(cubes_[i]->GetAddress(), MeshRendererCommon::Mode::Translucent);
+
 		BehaviourHelper::DetachBehaviourMaterial(cubes_[i]->GetAddress());
 
 		BehaviourHelper::ModifyBehaviourMaterial(cubes_[i]->GetAddress(), [](AssetMaterial* material) {
-			material->SetMode(AssetMaterial::Mode::Translucent);
 			material->GetBuffer().transparency.SetValue(0.5f);
 			material->GetBuffer().albedo.SetValue(kWhite3<float>);
 		});

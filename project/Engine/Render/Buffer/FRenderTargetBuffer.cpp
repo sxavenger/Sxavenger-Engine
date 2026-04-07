@@ -31,6 +31,11 @@ void FRenderTargetBuffer::Init(const Vector2ui& resolution) {
 
 }
 
+void FRenderTargetBuffer::ResetBuffer() {
+	registry_.Clear(); //!< Bufferを全て破棄する.
+	FRenderTargetBuffer::EnsureBuffer<FMainBuffer>(); //!< Bufferを全て破棄した後に、MainBufferだけは生成しておく.
+}
+
 void FRenderTargetBuffer::ClearMainRenderTarget(const DirectXQueueContext* context) {
 	//!< MainBufferのRenderTargetをクリアする
 	FMainBuffer* main = FRenderTargetBuffer::EnsureBuffer<FMainBuffer>();

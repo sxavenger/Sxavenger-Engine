@@ -90,9 +90,11 @@ project "DirectXTex"
 
 	-- ShaderCompile起動
 	prebuildcommands {
-        "{ECHO} Compiling shaders...",
-        "cd %{prj.location}/Shaders",
-        "CompileShaders.cmd"
+   		'if not exist "%{prj.location}\\Shaders\\Compiled\\BC6HEncode_EncodeBlockCS.inc" ( ' ..
+        'echo Compiling shaders... && ' ..
+        'cd /d "%{prj.location}\\Shaders" && ' ..
+        'CompileShaders.cmd' ..
+    	' )'
     }
 
 	cleancommands {

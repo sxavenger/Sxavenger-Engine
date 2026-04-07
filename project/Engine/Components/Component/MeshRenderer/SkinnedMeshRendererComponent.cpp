@@ -58,6 +58,8 @@ void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateBottomLevelAS(const D
 void SkinnedMeshRendererComponent::ShowComponentInspector() {
 	ImGui::Checkbox("enable", &isEnable_);
 	SxImGui::CheckBoxFlags("cast shadow", &mask_.Get(), static_cast<uint8_t>(MeshInstanceMask::Shadow));
+
+	SxGui::ComboEnum("mode", &mode_);
 }
 
 void SkinnedMeshRendererComponent::CreateMesh(const Uuid& referenceMesh) {
@@ -127,6 +129,7 @@ json SkinnedMeshRendererComponent::ParseToJson() const {
 	data["mask"]          = mask_.Get();
 	data["isEnable"]      = isEnable_;
 	data["stencil"]       = stencil_;
+	data["mode"]          = magic_enum::enum_name(mode_);
 
 	return data;
 }
@@ -154,6 +157,7 @@ void SkinnedMeshRendererComponent::InputJson(const json& data) {
 	mask_     = static_cast<MeshInstanceMask>(JsonSerializeFormatter<uint8_t>::Deserialize(data["mask"]));
 	isEnable_ = JsonSerializeFormatter<bool>::Deserialize(data["isEnable"]);
 	stencil_  = JsonSerializeFormatter<uint8_t>::Deserialize(data["stencil"]);
+	mode_     = magic_enum::enum_cast<Mode>(data["mode"].get<std::string>()).value();
 	
 }
 

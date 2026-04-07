@@ -33,32 +33,32 @@ public:
 	//* operator [assignment] *//
 
 	//!< encoded string [copy]
-	EncodedString(const EncodedString& other) : string_(other.string_) {}
-	EncodedString& operator=(const EncodedString& other) { string_ = other.string_; return *this; }
+	EncodedString(const EncodedString& other) noexcept : string_(other.string_) {}
+	EncodedString& operator=(const EncodedString& other) noexcept { string_ = other.string_; return *this; }
 
 	//!< encoded string [move]
-	EncodedString(EncodedString&& other) : string_(std::move(other.string_)) {}
-	EncodedString& operator=(EncodedString&& other) { string_ = std::move(other.string_); return *this; }
+	EncodedString(EncodedString&& other) noexcept : string_(std::move(other.string_)) {}
+	EncodedString& operator=(EncodedString&& other) noexcept { string_ = std::move(other.string_); return *this; }
 
 	//!< string [copy]
-	EncodedString(const std::string& str) : string_(str) {}
-	EncodedString& operator=(const std::string& str) { string_ = str; return *this; }
+	EncodedString(const std::string& str) noexcept : string_(str) {}
+	EncodedString& operator=(const std::string& str) noexcept { string_ = str; return *this; }
 
 	//!< string [move]
-	EncodedString(std::string&& str) : string_(std::move(str)) {}
-	EncodedString& operator=(std::string&& str) { string_ = std::move(str); return *this; }
+	EncodedString(std::string&& str) noexcept : string_(std::move(str)) {}
+	EncodedString& operator=(std::string&& str) noexcept { string_ = std::move(str); return *this; }
 
 	//!< wstring [copy]
-	EncodedString(const std::wstring& wstr) : string_(wstr) {}
-	EncodedString& operator=(const std::wstring& wstr) { string_ = wstr; return *this; }
+	EncodedString(const std::wstring& wstr) noexcept : string_(wstr) {}
+	EncodedString& operator=(const std::wstring& wstr) noexcept { string_ = wstr; return *this; }
 
 	//!< wstring [move]
-	EncodedString(std::wstring&& wstr) : string_(std::move(wstr)) {}
+	EncodedString(std::wstring&& wstr) noexcept : string_(std::move(wstr)) {}
 	EncodedString& operator=(std::wstring&& wstr) { string_ = std::move(wstr); return *this; }
 
 	//!< empty
-	EncodedString(std::monostate) : string_(std::monostate{}) {}
-	EncodedString& operator=(std::monostate) { string_ = std::monostate{}; return *this; }
+	EncodedString(std::monostate) noexcept : string_(std::monostate{}) {}
+	EncodedString& operator=(std::monostate) noexcept { string_ = std::monostate{}; return *this; }
 
 	//!< template [forwarding] (string)
 	template <class T> requires std::constructible_from<std::string, T>

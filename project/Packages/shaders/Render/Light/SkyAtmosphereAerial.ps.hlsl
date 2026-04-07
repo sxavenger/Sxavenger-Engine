@@ -26,10 +26,14 @@ PSOutput main(PSInput input) {
 
 	PSOutput output = (PSOutput)0;
 
-	float2 uv = (input.position.xy + 0.5f) / size.xy * 2.0f - 1.0f;
-	float3 direction = gCamera.GetDirection(float2(uv.x, -uv.y));
+	GBuffer::Surface surface;
+	surface.FetchSurface(GBuffer::FetchArgument::Create(input.position.xy, dimension, gCamera.projInv, gCamera.world));
 
-	float3 surface_position = gPosition.Load(int3(input.position.xy, 0)).rgb;
+	float2 texcoord = input.position.xy / dimension;
+	float2 viewport = texcoord * 2.0f - 1.0f; //!< [-1, 1]の範囲で正規化されたスクリーン座標
+	float3 direction = gCamera.GetDirection(float2(viewport.x, -viewport.y));
+
+	float3 surface_position = surface.position;
 	float3 camera_position  = gCamera.GetPosition();
 
 	float distance = length(camera_position - surface_position);

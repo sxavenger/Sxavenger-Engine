@@ -205,6 +205,19 @@ void BehaviourHelper::ForEachBehaviour(const BehaviourAddress& address, const st
 	BehaviourHelper::ForEachBehaviour(address.Get(), function);
 }
 
+void BehaviourHelper::SetMeshRendererMode(const BehaviourAddress& address, MeshRendererCommon::Mode mode) {
+
+	BehaviourHelper::ForEachBehaviour(address, [&](EntityBehaviour* child) {
+		if (MeshRendererComponent* component = child->GetComponent<MeshRendererComponent>()) {
+			component->SetMode(mode);
+		}
+
+		if (auto component = child->GetComponent<SkinnedMeshRendererComponent>()) {
+			component->SetMode(mode);
+		}
+	});
+}
+
 void BehaviourHelper::ApplyAnimation(const BehaviourAddress& address, const Animation& animation, TimePointd<TimeUnit::second> time, bool isLoop) {
 	auto child = address->FindChild(ArmatureComponent::kArmatureName);
 	child->GetComponent<ArmatureComponent>()->UpdateAnimation(animation, time, isLoop);

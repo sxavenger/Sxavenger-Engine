@@ -43,7 +43,6 @@ void FRenderCoreGeometry::CreateDesc() {
 		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::Albedo));
 		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::Normal));
 		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::MaterialARM));
-		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::Position));
 		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::Address));
 
 		D3D12_RENDER_TARGET_BLEND_DESC blend = {};

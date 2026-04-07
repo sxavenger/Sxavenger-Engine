@@ -75,9 +75,7 @@
     <ProjectReference>
     </ProjectReference>
     <PreBuildEvent>
-      <Command>echo Compiling shaders...
-cd $(ProjectDir)/Shaders
-CompileShaders.cmd</Command>
+      <Command>if not exist "$(ProjectDir)\Shaders\Compiled\BC6HEncode_EncodeBlockCS.inc" ( echo Compiling shaders... &amp;&amp; cd /d "$(ProjectDir)\Shaders" &amp;&amp; CompileShaders.cmd )</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -106,9 +104,7 @@ CompileShaders.cmd</Command>
     <ProjectReference>
     </ProjectReference>
     <PreBuildEvent>
-      <Command>echo Compiling shaders...
-cd $(ProjectDir)/Shaders
-CompileShaders.cmd</Command>
+      <Command>if not exist "$(ProjectDir)\Shaders\Compiled\BC6HEncode_EncodeBlockCS.inc" ( echo Compiling shaders... &amp;&amp; cd /d "$(ProjectDir)\Shaders" &amp;&amp; CompileShaders.cmd )</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

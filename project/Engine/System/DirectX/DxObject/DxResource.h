@@ -90,8 +90,8 @@ public:
 
 	//* operator [move] *//
 
-	Resource(Resource&&) noexcept            = default;
-	Resource& operator=(Resource&&) noexcept = default;
+	Resource(Resource&& other) noexcept : resource_(std::move(other.resource_)), current_(other.current_) { other.Reset(); }
+	Resource& operator=(Resource&& other) noexcept { resource_ = std::move(other.resource_); current_ = other.current_; other.Reset(); return *this; }
 
 	//* operator [assign] *//
 

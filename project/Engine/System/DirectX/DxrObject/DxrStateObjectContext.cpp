@@ -214,22 +214,22 @@ void StateObjectContext::SetStateObject(DxObject::CommandContext* context) const
 	context->GetCommandList()->SetPipelineState1(stateObject_.Get());
 }
 
-void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const Vector2ui& size) const {
+void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const Vector2ui& resolution) const {
 
 	D3D12_DISPATCH_RAYS_DESC desc = dispatchDesc_;
-	desc.Width  = size.x;
-	desc.Height = size.y;
+	desc.Width  = resolution.x;
+	desc.Height = resolution.y;
 	desc.Depth  = 1;
 
 	context->GetCommandList()->DispatchRays(&desc);
 }
 
-void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const Vector3ui& size) const {
+void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const Vector3ui& resolution) const {
 
 	D3D12_DISPATCH_RAYS_DESC desc = dispatchDesc_;
-	desc.Width  = size.x;
-	desc.Height = size.y;
-	desc.Depth  = size.z;
+	desc.Width  = resolution.x;
+	desc.Height = resolution.y;
+	desc.Depth  = resolution.z;
 
 	context->GetCommandList()->DispatchRays(&desc);
 

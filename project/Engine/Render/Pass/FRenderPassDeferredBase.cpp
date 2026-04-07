@@ -75,12 +75,11 @@ void FRenderPassDeferredBase::BeginOpaqueMeshRenderPass(const DirectXQueueContex
 	FGBuffer* gbuffer                  = buffer->GetBuffer<FGBuffer>();
 	FDepthStencilTexture* depthStencil = buffer->GetDepthStencil();
 
-	static const size_t kBufferCount = 5;
+	static const size_t kBufferCount = 4;
 	std::array<FRenderTexture*, kBufferCount> buffers = {
 		&gbuffer->GetBuffer(FGBuffer::Layout::Albedo),
 		&gbuffer->GetBuffer(FGBuffer::Layout::Normal),
 		&gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM),
-		&gbuffer->GetBuffer(FGBuffer::Layout::Position),
 		&gbuffer->GetBuffer(FGBuffer::Layout::Address)
 	};
 
@@ -125,12 +124,11 @@ void FRenderPassDeferredBase::EndOpaqueMeshRenderPass(const DirectXQueueContext*
 	FGBuffer* gbuffer                  = buffer->GetBuffer<FGBuffer>();
 	FDepthStencilTexture* depthStencil = buffer->GetDepthStencil();
 
-	static const size_t kBufferCount = 5;
+	static const size_t kBufferCount = 4;
 	std::array<FRenderTexture*, kBufferCount> buffers = {
 		&gbuffer->GetBuffer(FGBuffer::Layout::Albedo),
 		&gbuffer->GetBuffer(FGBuffer::Layout::Normal),
 		&gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM),
-		&gbuffer->GetBuffer(FGBuffer::Layout::Position),
 		&gbuffer->GetBuffer(FGBuffer::Layout::Address)
 	};
 
@@ -179,7 +177,7 @@ void FRenderPassDeferredBase::RenderStaticMesh(const DirectXQueueContext* contex
 		const auto& meshlet = mesh->GetInputMesh().GetMeshlet();
 
 		//!< 不透明なジオメトリは別のパスで描画
-		if (material->GetMode() != AssetMaterial::Mode::Opaque) {
+		if (component->GetMode() != MeshRendererCommon::Mode::Opaque) {
 			return;
 		}
 
@@ -222,7 +220,7 @@ void FRenderPassDeferredBase::RenderSkinnedMesh(const DirectXQueueContext* conte
 		auto address   = component->GetBehaviourAddress();
 
 		//!< 不透明ジオメトリ描画
-		if (material->GetMode() != AssetMaterial::Mode::Opaque) {
+		if (component->GetMode() != MeshRendererCommon::Mode::Opaque) {
 			return;
 		}
 
@@ -260,7 +258,8 @@ void FRenderPassDeferredBase::EndMotionVectorPass(const DirectXQueueContext* con
 
 void FRenderPassDeferredBase::PassMotionVector(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	FGBuffer* gbuffer = config.buffer->GetBuffer<FGBuffer>();
+	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>();
+	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil();
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreTransition>();
 	core->SetPipeline(FRenderCoreTransition::Transition::MotionVectorTransition, context);
@@ -269,7 +268,7 @@ void FRenderPassDeferredBase::PassMotionVector(const DirectXQueueContext* contex
 	DxObject::BindBufferDesc desc = {};
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 	desc.SetHandle("gMotionVector",   gbuffer->GetBuffer(FGBuffer::Layout::MotionVector).GetGPUHandleUAV());
-	desc.SetHandle("gPosition",       gbuffer->GetBuffer(FGBuffer::Layout::Position).GetGPUHandleSRV());
+	desc.SetHandle("gDepth",          depthStencil->GetGPUHandleSRV());
 	desc.SetAddress("gCurrentCamera", config.camera->GetGPUVirtualAddress());
 	desc.SetAddress("gPrevCamera",    config.camera->GetPrevGPUVirtualAddress());
 

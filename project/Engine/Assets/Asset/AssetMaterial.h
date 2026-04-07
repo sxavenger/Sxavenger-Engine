@@ -40,15 +40,6 @@ class AssetMaterial final
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Mode enum class 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class Mode : uint8_t {
-		Opaque,      //!< 不透明
-		Translucent, //!< 半透明
-		Emissive
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
 	// TextureType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class TextureType : uint8_t {
@@ -333,15 +324,9 @@ public:
 
 	void ShowInspector() override;
 
-	//* option *//
-
-	void SetMode(Mode mode) { mode_ = mode; }
-
 	//* getter *//
 
 	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
-
-	Mode GetMode() const { return mode_; }
 
 	const MaterialBuffer& GetBuffer() const;
 	MaterialBuffer& GetBuffer();
@@ -363,10 +348,6 @@ private:
 	float metallic_  = 1.0f;
 
 	Transform2d transform_; //!< 2D transform for UV mapping
-
-	//* mode *//
-
-	Mode mode_ = Mode::Opaque;
 
 	//* buffer *//
 

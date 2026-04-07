@@ -10,7 +10,7 @@
 // buffers
 //=========================================================================================
 
-Texture2D<float4> gPosition : register(t0);
+Texture2D<float> gDepth : register(t0);
 
 ConstantBuffer<CameraComponent> gCurrentCamera : register(b0);
 ConstantBuffer<CameraComponent> gPrevCamera    : register(b1);
@@ -30,10 +30,16 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		return;
 	}
 
-	float3 position = gPosition.Load(uint3(index, 0)).xyz;
+	float depth = gDepth.Load(uint3(index, 0)).x;
+
+	float2 texcoord = (float2(index) + 0.5f) / dimension; //!< [0.0 ~ 1.0]
+	float2 viewport = texcoord * 2.0f - 1.0f; //!< [-1.0 ~ 1.0]
+	viewport.y *= -1.0f; //!< y軸反転
+
+	float3 position = gCurrentCamera.GetPosition(viewport, depth);
 
 	float3 current = gCurrentCamera.CalculateNDCPosition(position);
-	float3 prev    = gPrevCamera.CalculateNDCPosition(position);
+	float3 prev    = gPrevCamera.CalculateNDCPosition(position); //!< HACK: 前フレーム自体のDepthを使用して取得する.
 
 	float3 delta = current - prev;
 	delta.y *= -1.0f; //!< y軸反転

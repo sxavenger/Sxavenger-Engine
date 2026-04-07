@@ -36,6 +36,9 @@ public:
 	template <typename T> requires std::derived_from<T, FBaseRenderCore>
 	T* EnsureRenderCore();
 
+	template <typename T> requires std::derived_from<T, FBaseRenderCore>
+	bool HasRenderCore() const { return registry_.Contains<T>(); }
+
 	//* singleton *//
 
 	static FRenderCore* GetInstance();

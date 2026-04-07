@@ -264,7 +264,7 @@ void FRenderPassForwardTransparent::RenderStaticMesh(const DirectXQueueContext* 
 		const auto& meshlet = mesh->GetInputMesh().GetMeshlet();
 
 		//!< 半透明ジオメトリ描画
-		if (material->GetMode() != AssetMaterial::Mode::Translucent) {
+		if (component->GetMode() != MeshRendererCommon::Mode::Translucent) {
 			return;
 		}
 
@@ -322,7 +322,7 @@ void FRenderPassForwardTransparent::RenderSkinnedMesh(const DirectXQueueContext*
 		auto address   = component->GetBehaviourAddress();
 
 		//!< 半透明ジオメトリ描画
-		if (material->GetMode() != AssetMaterial::Mode::Translucent) {
+		if (component->GetMode() != MeshRendererCommon::Mode::Translucent) {
 			return;
 		}
 
@@ -331,7 +331,7 @@ void FRenderPassForwardTransparent::RenderSkinnedMesh(const DirectXQueueContext*
 
 		desc.Set32bitConstants("AddressBuffer", 2, &address);
 		desc.SetAddress("gTransform", transform->GetGPUVirtualAddress());
-		desc.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
+		desc.SetAddress("gMaterials", material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
 		core->BindGraphicsBuffer(pipeline.value(), context, desc);

@@ -14,9 +14,9 @@ PSOutput main(PSInput input) {
 	
 	PSOutput output = (PSOutput)0;
 	
-	//* Deferred Pass���̎擾
-	Surface surface;
-	surface.GetSurface(input.position.xy);
+	//* Deferred Pass情報の取得
+	GBuffer::Surface surface;
+	surface.FetchSurface(GBuffer::FetchArgument::Create(input.position.xy, dimension, gCamera.projInv, gCamera.world));
 	
 	output.color.a   = 1.0f;
 	output.color.rgb = float3(0.0f, 0.0f, 0.0f);

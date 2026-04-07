@@ -62,7 +62,6 @@ public:
 		AutoExposure_Average,
 		AutoExposure_Apply,
 		LocalExposure,
-		DepthOfField,
 		RadialBlur,
 		MotionBlur,
 		ChromaticAberration,

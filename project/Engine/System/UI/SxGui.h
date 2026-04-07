@@ -32,39 +32,45 @@ namespace SxGui {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	//!< [Google Material Icon](https://fonts.google.com/icons)
 	enum class Icon : uint32_t {
-		Home               = 0xE88A,
-		DeployedCode       = 0xF720,
-		DeployedCodeUpdate = 0xF5F4,
-		ChessPawn          = 0xF3B6,
-		AccountTree        = 0xE97A,
-		Menu               = 0xE5D2,
-		MenuOpen           = 0xE9BD,
-		Layers             = 0xE53B,
-		Window             = 0xF088,
-		Folder             = 0xE2C7,
-		Files              = 0xEA85,
-		Terminal           = 0xEB8E,
-		Timer              = 0xE425,
-		Schedule           = 0xE8B5,
-		Stack              = 0xF500,
-		Visibility         = 0xE8F4,
-		VisibilityOff      = 0xE8F5,
-		Delete             = 0xE872,
-		Equal              = 0xF77B,
-		Nearby             = 0xE6B7,
-		NearbyError        = 0xF03B,
-		Dialog             = 0xE99F,
-		ShortText          = 0xE261,
-		Videocam           = 0xE04B,
-		LightMode          = 0xE518,
-		LightBlob          = 0xE0F0,
-		Light              = 0xF02A,
-		BacklightHigh      = 0xF7ED,
-		Search             = 0xE8B6,
-		Label              = 0xE892,
-		ControlCamera      = 0xE074,
-		Capture            = 0xF727,
-		Hourglass          = 0xEBFF,
+		Home                 = 0xE88A,
+		DeployedCode         = 0xF720,
+		DeployedCodeUpdate   = 0xF5F4,
+		ChessPawn            = 0xF3B6,
+		AccountTree          = 0xE97A,
+		Menu                 = 0xE5D2,
+		MenuOpen             = 0xE9BD,
+		Layers               = 0xE53B,
+		Window               = 0xF088,
+		Folder               = 0xE2C7,
+		Files                = 0xEA85,
+		Terminal             = 0xEB8E,
+		Timer                = 0xE425,
+		Schedule             = 0xE8B5,
+		Stack                = 0xF500,
+		Visibility           = 0xE8F4,
+		VisibilityOff        = 0xE8F5,
+		Delete               = 0xE872,
+		Equal                = 0xF77B,
+		Nearby               = 0xE6B7,
+		NearbyError          = 0xF03B,
+		Dialog               = 0xE99F,
+		ShortText            = 0xE261,
+		Videocam             = 0xE04B,
+		LightMode            = 0xE518,
+		LightBlob            = 0xE0F0,
+		Light                = 0xF02A,
+		BacklightHigh        = 0xF7ED,
+		Search               = 0xE8B6,
+		Label                = 0xE892,
+		ControlCamera        = 0xE074,
+		Capture              = 0xF727,
+		Hourglass            = 0xEBFF,
+		Texture              = 0xE421,
+		FlipToBack           = 0xE882,
+		Settings             = 0xE8B8,
+		CheckBox             = 0xE834,
+		CheckBoxOutlineBlank = 0xE835,
+		Close                = 0xE5CD,
 
 		Cube             = DeployedCode,
 		CubeUpdate       = DeployedCodeUpdate,
@@ -74,6 +80,7 @@ namespace SxGui {
 		PointLight       = LightBlob,
 		SpotLight        = Light,
 		RectLight        = BacklightHigh,
+		CheckBoxOutline  = CheckBoxOutlineBlank,
 
 		/* なぜか以下は使えない
 		Warning       = 0xE002,
@@ -170,13 +177,24 @@ namespace SxGui {
 
 	bool Selectable(const char* label, bool isSelect, ImGuiSelectableFlags flags = ImGuiSelectableFlags_None);
 
-
 	//-----------------------------------------------------------------------------------------
 	// [ComboEnum]
 	//-----------------------------------------------------------------------------------------
 
 	template <typename T> requires std::is_enum_v<T>
 	bool ComboEnum(const char* label, T* v, ImGuiComboFlags flags = ImGuiComboFlags_None);
+
+	//-----------------------------------------------------------------------------------------
+	// [Text]
+	//-----------------------------------------------------------------------------------------
+
+	void Text(const std::string_view& text);
+
+	//-----------------------------------------------------------------------------------------
+	// [Button]
+	//-----------------------------------------------------------------------------------------
+
+	bool ButtonRegion(const std::string_view& label);
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Hierarchy namespace

@@ -34,6 +34,17 @@ enum class MeshInstanceMask : uint8_t {
 class MeshRendererCommon {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Mode enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Mode : uint8_t {
+		Opaque,
+		Translucent,
+		Emissive,
+	};
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
@@ -43,6 +54,10 @@ public:
 	uint8_t GetStencil() const { return stencil_; }
 
 	void SetEnable(bool isEnable = true) { isEnable_ = isEnable; }
+
+	Mode GetMode() const { return mode_; }
+
+	void SetMode(Mode mode) { mode_ = mode; }
 
 protected:
 
@@ -57,6 +72,8 @@ protected:
 	Sxl::Flag<MeshInstanceMask> mask_ = MeshInstanceMask::Default;
 
 	uint8_t stencil_ = 0;
+
+	Mode mode_ = Mode::Opaque;
 
 };
 
