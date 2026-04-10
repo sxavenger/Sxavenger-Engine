@@ -7,6 +7,7 @@ SXAVENGER_ENGINE_USING
 //* render
 #include "../Core/FRenderCore.h"
 #include "../Core/FRenderCoreReSTIR.h"
+#include "../Core/FRenderCoreLuxGlobalIllumination.h"
 
 //* engine
 #include <Engine/System/Utility/RuntimeLogger.h>
@@ -102,11 +103,17 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 }
 
 void FScene::SetupStateObject() {
-	// TopLevelASに設定
+	if (FRenderCore::GetInstance()->HasRenderCore<FRenderCoreReSTIR>()) {
+		//!< RenderCoreが存在する場合はShaderTableを更新する.
+		auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreReSTIR>();
+		core->UpdateShaderTable(&topLevelAS_);
+	}
 
-	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreReSTIR>();
-	core->UpdateShaderTable(&topLevelAS_); //!< HACK: RenderCoreが常時存在する前提で実装.
-
+	if (FRenderCore::GetInstance()->HasRenderCore<FRenderCoreLuxGlobalIllumination>()) {
+		//!< RenderCoreが存在する場合はShaderTableを更新する.
+		auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreLuxGlobalIllumination>();
+		core->UpdateShaderTable(&topLevelAS_);
+	}
 }
 
 void FScene::SetupLightContainer() {

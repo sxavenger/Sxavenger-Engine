@@ -35,6 +35,8 @@ void FRenderPassAntiAliasing::Render(const DirectXQueueContext* context, const F
 
 		BeginAntiAliasingPass(context, config.buffer);
 
+		FBaseRenderPass::BeginEvent(context, std::format("Anti-Aliasing | {}", magic_enum::enum_name(config.antiAliasing)));
+
 		switch (config.antiAliasing) {
 			case FRenderConfig::AntiAliasing::FXAA:
 				PassAntiAliasingFXAA(context, config);
@@ -43,7 +45,16 @@ void FRenderPassAntiAliasing::Render(const DirectXQueueContext* context, const F
 			case FRenderConfig::AntiAliasing::SMAA_1x:
 				PassAntiAliasingSMAA(context, config);
 				break;
+
+			default:
+				RuntimeLogger::LogWarning(
+					"[RenderPass - Anti-Aliasing]",
+					std::format("unsupported anti-aliasing. name: {}", magic_enum::enum_name(config.antiAliasing))
+				);
+				break;
 		}
+
+		FBaseRenderPass::EndEvent(context);
 
 		EndAntiAliasingPass(context, config.buffer);
 	}

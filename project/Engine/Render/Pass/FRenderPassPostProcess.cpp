@@ -76,6 +76,8 @@ void FRenderPassPostProcess::EndPostProcessPass(const DirectXQueueContext* conte
 
 void FRenderPassPostProcess::PostProcessGlobal(const DirectXQueueContext* context, const FRenderConfig& config) {
 
+	FBaseRenderPass::BeginEvent(context, "Post-Process | Global");
+
 	BasePostProcess::ProcessInfo info = {};
 	info.buffer = config.buffer;
 	info.camera = config.camera;
@@ -89,9 +91,12 @@ void FRenderPassPostProcess::PostProcessGlobal(const DirectXQueueContext* contex
 		component->Process(context, info);
 	});
 
+	FBaseRenderPass::EndEvent(context);
 }
 
 void FRenderPassPostProcess::PostProcessVolume(const DirectXQueueContext* context, const FRenderConfig& config) {
+
+	FBaseRenderPass::BeginEvent(context, "Post-Process | Volume");
 
 	BasePostProcess::ProcessInfo info = {};
 	info.buffer = config.buffer;
@@ -119,9 +124,12 @@ void FRenderPassPostProcess::PostProcessVolume(const DirectXQueueContext* contex
 		component->Process(context, info);
 	});
 
+	FBaseRenderPass::EndEvent(context);
 }
 
 void FRenderPassPostProcess::PostProcessLocal(const DirectXQueueContext* context, const FRenderConfig& config) {
+
+	FBaseRenderPass::BeginEvent(context, "Post-Process | Local");
 
 	BasePostProcess::ProcessInfo info = {};
 	info.buffer = config.buffer;
@@ -132,5 +140,7 @@ void FRenderPassPostProcess::PostProcessLocal(const DirectXQueueContext* context
 			component->Process(context, info);
 		}
 	}
+
+	FBaseRenderPass::EndEvent(context);
 
 }

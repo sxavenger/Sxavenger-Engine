@@ -87,6 +87,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"0261659a-1508-4141-9bb2d1853311a27b": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"026479ad-db9d-4d0c-8d66cb83059f655d": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -150,6 +154,10 @@
 	"03c6c1a3-2650-4053-87d6188a1a9487be": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"03d4baaa-953f-47cd-b7416aadd583d63e": [
+		"assets/models/Metoro/textures/WorldGridMaterial_BaseColor.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"03d8dadf-ff53-4cc8-a860a758df6a71de": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
@@ -278,6 +286,10 @@
 	"062e90b3-2be7-4204-b9012b09c352f735": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"06302c53-0c24-4b54-a5bfb0e78fe55bdc": [
+		"assets/models/Metoro/textures/MI_Metal_BaseColor.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"0631c4a5-3daf-4b87-97fcf8ef34226948": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -527,6 +539,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"0c068668-4b36-47ff-a82cb27cef13c156": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"0c242b27-092c-481b-978fe33a249aa453": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -566,6 +582,10 @@
 	"0d0695f6-60c3-49df-869ae9aa638c2815": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMaterial"
+	],
+	"0d0808a4-2191-4510-aad1d62032d1b624": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"0d113513-fc89-4288-b83e1a751368c8fa": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -663,6 +683,10 @@
 		"assets/models/Bistro/textures/MASTER_Brick_Large_White_Normal.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"0f1398d1-c6a1-4338-aaa4baae6b5c5f0a": [
+		"assets/models/Metoro/textures/MI_Concrete_3_BaseColor.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"0f1bf28a-8c78-443c-aa5a1dc9e0c6f2d4": [
 		"assets/models/Bistro/textures/Concrete_Normal.png",
 		"class SxxEngine::AssetTexture"
@@ -682,6 +706,10 @@
 	"0f60e0ae-a9db-4087-91dc020f60580b70": [
 		"assets/models/Bistro/textures/Paris_StreetPivot_BaseColor-Paris_StreetPivot_BaseColor.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"0f6b50c0-05b4-4137-8dc6a3b6e9bbacec": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"0f7fa957-965e-4ee9-b979204c784ea6b5": [
 		"assets/models/Bistro/textures/Paris_StringLights_01_Red_Color_Emissive_Normal.png",
@@ -1127,6 +1155,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"1780d29d-2831-44ae-b81584c7527c89a3": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"1799a618-e4dd-4241-adb2af62bd5a03d4": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -1161,6 +1193,10 @@
 	],
 	"1876762c-0257-4df8-a4cf03b4cfd63de5": [
 		"assets/models/Bistro/Bistro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"18862955-632f-46ef-b71cc82351a711fa": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"18900b29-1b4c-40f8-863709d02339982a": [
@@ -1339,6 +1375,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"1cae91ac-ce93-42f2-b3a5bf6090c53899": [
+		"assets/models/Metoro/textures/MI_Metal_MetallicRoughness.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"1cbe7b27-1092-4c1a-8f08a3a485062558": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -1499,6 +1539,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"208b887e-574c-471b-8425bdea69f0529c": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"209035cd-3c3e-47d0-829805d70042a660": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
 		"class SxxEngine::AssetMaterial"
@@ -1574,6 +1618,10 @@
 	"22893d8e-05a1-4e7a-bd9e77a7421e6f11": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
 		"class SxxEngine::AssetMaterial"
+	],
+	"229bc710-884a-4de0-86953616f7b440bc": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"229d1a0f-d577-4f83-a00df0a96c51e9a9": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -1915,6 +1963,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"2950f8ca-0dd5-4c18-a5fe0ac4ef230c0e": [
+		"assets/models/Metoro/textures/MI_Fences_Occlusion-MI_Fences_MetallicRoughness.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"29514258-13b3-4a0a-b82a811ed5271509": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -1970,6 +2022,10 @@
 	"2a88ac7a-519c-4d9d-8104385730da77fa": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"2a8b2dc8-ac2f-423f-95b5e8dd42f53334": [
+		"assets/models/Metoro/textures/MI_Metal_Normal.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"2aafeb20-ac0e-4695-a9bbc9b2b821e90c": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -2035,6 +2091,10 @@
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"2ba50167-26f8-4ca4-91dfb5d85ff265ae": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"2bba392c-36a5-4614-a390a3d96feef2e1": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
@@ -2066,6 +2126,10 @@
 	"2c3e3e2b-fd65-4054-be97904f5c495de2": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"2c79adec-4f95-496f-8c3838dbe2d5d4d1": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"2c9a12ba-1aab-469e-94d6b257b493607c": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -2295,6 +2359,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"324ec102-1a88-485a-a3bec34f5332001e": [
+		"assets/models/Metoro/textures/T_Fences_Default_Normal.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"32620554-c1c6-427a-94dda514ddcabf81": [
 		"assets/models/Bistro/textures/MASTER_Concrete_Smooth_BaseColor-MASTER_Concrete_Smooth_BaseColor.png",
 		"class SxxEngine::AssetTexture"
@@ -2383,6 +2451,10 @@
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"340e1346-a57f-4b10-8dd6bd2a2740a9ba": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"3415359e-6d33-45e0-9b444aa4469e8694": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -2401,6 +2473,10 @@
 	],
 	"347490ce-f696-4761-956e57e8129db67d": [
 		"assets/models/Bistro/Bistro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"34dd3cc1-45ec-4e3f-b0155eef75f1833b": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"34e02819-64f2-4346-822e3ca3892208d6": [
@@ -2430,6 +2506,10 @@
 	"353db56f-b6c9-44a1-a6ee9de6f3a0e345": [
 		"assets/models/Bistro/textures/MASTER_Concrete_BaseColor-MASTER_Concrete_BaseColor.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"354121c4-a618-40a2-ad228b322e3c2d79": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"3552fcaf-3ca0-43f3-8c8d7c4e24aaaedb": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -2559,9 +2639,17 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"37afc3c7-2f08-49d5-b21a523e2fc127a9": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"37b72853-852e-4def-ae9469057ce3ea4e": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"3800621e-e675-482c-9b3a6cf9f609203d": [
+		"assets/models/Metoro/textures/MI_Concrete_2_MetallicRoughness.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"3838014e-7ecc-4183-ba15fcd699393e72": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -2727,6 +2815,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"3b75cdd7-6687-4363-801878d15cd97dc9": [
+		"assets/models/Metoro/textures/MI_Concrete_1_BaseColor.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"3b799bb3-f1c6-425f-a01194dfc4bbec22": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMaterial"
@@ -2795,6 +2887,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"3ce3120d-3327-41e3-90fbee66569b7271": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"3cf534b7-adb7-4541-acc1aab438e65abe": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMesh"
@@ -2842,6 +2938,10 @@
 	"3dffa220-1223-40d0-8f92d1244dcddd93": [
 		"assets/models/Bistro/textures/MASTER_Brick_Small_Red_BLENDSHADER_BaseColor-MASTER_Brick_Small_Red_BLENDSHADER_BaseColor.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"3e0ce352-959c-434d-955fb29d8040e509": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"3e161697-5036-4dcb-849be0247aceb76a": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -3071,6 +3171,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"42f8b7c1-125e-4e62-8cb54726775b9671": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"43027378-7c64-462b-8188cff923941454": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMesh"
@@ -3135,6 +3239,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"448261ff-462f-449d-8a4855554a089178": [
+		"assets/models/Metoro/textures/WorldGridMaterial_MetallicRoughness.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"4489a31a-0211-4987-81cf7471acb23466": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -3145,6 +3253,10 @@
 	],
 	"44c9c84c-d73c-4285-89302a37cef17084": [
 		"assets/models/Bistro/Bistro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"44d655fe-48f3-43dd-b9d338e258ceedbe": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"44dab715-e4ed-42ee-8be9759df8a6c273": [
@@ -3197,6 +3309,10 @@
 	],
 	"45bdb213-45c1-4588-af1399a60205b92f": [
 		"assets/models/Bistro/Bistro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"45dbf57f-21e6-4da5-bcce75ee66f793be": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"45ed4dc6-ddef-4a3c-a20557771595a90a": [
@@ -3419,6 +3535,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"4a5cd315-a025-4d56-86cfeee301229d7b": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"4a71924f-989b-453d-b94d89b62fa17b7d": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMesh"
@@ -3462,6 +3582,10 @@
 	"4b14855b-ee58-44e0-abe7876946a2457a": [
 		"assets/models/Bistro/textures/MASTER_Concrete_White_BaseColor-MASTER_Concrete_White_BaseColor.png",
 		"class SxxEngine::AssetTexture"
+	],
+	"4b2097ea-591c-4647-a5262d34eee14f51": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetSkeleton"
 	],
 	"4b540bec-54de-4b3c-b998929fdae7ef73": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -3541,6 +3665,10 @@
 	],
 	"4d4bcc9a-0543-49bc-9dfbc58f929a554b": [
 		"assets/models/Bistro/Bistro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"4d7aec8f-2501-4309-9b67a263c0e98a3c": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"4d820b11-de33-4ed2-b1b46796a5818e2c": [
@@ -3675,6 +3803,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
+	"50755260-2de0-4357-bb79e2b0347a8bf5": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"50760754-846f-4f86-bb5a26cde889a9ec": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -3733,6 +3865,10 @@
 	],
 	"50e73bd1-f5cb-489a-bb65d7a23ccbde56": [
 		"assets/models/Bistro/Bistro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"5100754b-2ca7-4e4b-bd68a07142b2ef76": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"51020fc5-e9f1-43c3-809f4e7397ad8ac4": [
@@ -3939,6 +4075,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"553e5be5-af37-4588-b1135fd83b6126a7": [
+		"assets/models/Metoro/textures/MI_Wires_BaseColor.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"553e9bbf-8fb8-4236-a1b34982a7fe57fa": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -4038,6 +4178,10 @@
 	"568cc0e5-76a9-4b28-9386e39a4cfd03de": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"568ffbe0-a92e-42ae-97f4f7bc86e9bff2": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"56927599-a2c8-4436-993677568300d8b3": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
@@ -4187,6 +4331,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"5a5498be-2152-48aa-9933f67efeacc8e8": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"5a55077e-a45c-49f1-b4ea6d18ea75ccec": [
 		"assets/models/tree/MI_EuropeanBeech_Trunk_05_BaseColor.png",
 		"class SxxEngine::AssetTexture"
@@ -4206,6 +4354,10 @@
 	"5a7663c4-4306-4ddb-8bc3b4b1d2a08c4d": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"5a99565e-a60e-431e-ba65eb24a08d3e1d": [
+		"assets/models/Metoro/textures/MI_Guidelights_Occlusion-MI_Guidelights_MetallicRoughness.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"5aaed5d1-2b09-4d35-ab02a1aa02891daa": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -4234,6 +4386,10 @@
 	"5b843464-9e6e-44cc-98e7f47da4627362": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMaterial"
+	],
+	"5b944555-e3dc-42d0-8d112b5816de2ea7": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"5baba31e-6cac-4345-b9b316dfba406f6e": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -4791,6 +4947,10 @@
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
+	"6ace5f62-0397-4071-90f8874b936a6fb2": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"6ad0ecbd-f2a1-4e8e-bcb202dd0e5b0d60": [
 		"assets/models/sponza/2299742237651021498.jpg",
 		"class SxxEngine::AssetTexture"
@@ -5047,6 +5207,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"6f542139-81cb-4088-b3557e8d1a8b26c3": [
+		"assets/models/Metoro/textures/MI_Sign_BaseColor.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"6f55fef2-6f17-4053-8873d67d400ec1f5": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -5114,6 +5278,10 @@
 	"70c91d35-4512-448f-b1793769b75a02be": [
 		"assets/models/sponza/3455394979645218238.jpg",
 		"class SxxEngine::AssetTexture"
+	],
+	"70ce64fc-5d32-4774-a1d8fbb0f34a64a9": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"70d605d3-6822-407f-a8105b68c7fd7344": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -5261,6 +5429,10 @@
 	],
 	"75a4dc9e-1d4b-4d1e-a33646f123d8896c": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"75c5ca46-22a4-4637-b2613457537a00af": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"75e547ae-8b44-481a-a17793201743fdd9": [
@@ -5495,6 +5667,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"7b206415-c003-4493-ada2d4dd39b20dc7": [
+		"assets/models/Metoro/textures/MI_Concrete_2_Normal.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"7b44d708-0f9d-4499-9b1ea7a68535e344": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMaterial"
@@ -5526,6 +5702,14 @@
 	"7be2b4fe-ce66-4547-b3aeb93a34751f64": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMaterial"
+	],
+	"7c0751ba-8268-4abe-8f9ddf7ed4b02f9b": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
+	"7c0b6fe1-0afe-4a7c-b13e7f3d946d2372": [
+		"assets/models/Metoro/textures/WorldGridMaterial_Normal.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"7c18a913-7d10-4ea9-8fda4c494ef4faa5": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -5578,6 +5762,14 @@
 	"7cfc14cd-5b92-434f-ae9ecbac78dada15": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMaterial"
+	],
+	"7cfe0670-0d71-4307-87b8a0960fc12eaa": [
+		"assets/models/Metoro/textures/MI_Concrete_2_BaseColor.png",
+		"class SxxEngine::AssetTexture"
+	],
+	"7cfe2f59-218d-45e8-90483adf487697e9": [
+		"assets/models/Metoro/textures/T_Sign_Default_Normal.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"7d06fea1-7187-45fa-a52f98e2802ed653": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -5687,6 +5879,10 @@
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"7f035396-f9f0-47a4-ad5c05234892f15d": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"7f0a7354-4322-48f2-bc6408c7fcf7f900": [
 		"assets/models/Bistro/textures/Pavement_Cobblestone_Small_BLENDSHADER_BaseColor-Pavement_Cobblestone_Small_BLENDSHADER_BaseColor.png",
 		"class SxxEngine::AssetTexture"
@@ -5741,6 +5937,10 @@
 	],
 	"80376b14-d90c-4555-87074d6eddd9356e": [
 		"assets/models/Bistro/Bistro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"803d11af-f475-4002-830af3fabec603e2": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"80404648-8e82-40cc-9e42aa6900b9705d": [
@@ -5863,6 +6063,10 @@
 		"assets/models/Bistro/textures/MASTER_Concrete_Normal.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"82e77621-094d-488d-b7061f5e181102bb": [
+		"assets/models/Metoro/textures/MI_Wires_Occlusion-MI_Wires_MetallicRoughness.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"82eb57f0-b482-4bb6-b32e369b9943b710": [
 		"assets/models/tree/MI_EuropeanBeech_Decoration_MetallicRoughness.png",
 		"class SxxEngine::AssetTexture"
@@ -5886,6 +6090,10 @@
 	"833f2b87-c66f-41f8-88da3e92014b099a": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMaterial"
+	],
+	"83588808-32c4-421f-b1ffbbe87ea287c8": [
+		"assets/models/Metoro/textures/M_Fusebox_BaseColor.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"835fb4a8-ac92-4187-9da70c2c69f238ac": [
 		"assets/models/sponza/Sponza.gltf",
@@ -5986,6 +6194,10 @@
 	"85ba6969-7461-44c4-af2227adacf3322f": [
 		"assets/models/sponza/Sponza.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"85dbdf71-191d-4d46-b8362e016c238ec4": [
+		"assets/models/Metoro/textures/MI_Concrete_1_Normal.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"86098d1c-bb31-46d4-acdc0fe2716464ea": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -6143,6 +6355,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
+	"8998734f-b496-4f4e-a57118dc88623a24": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"8998c5cb-af05-448a-b1cd99d361a8b04c": [
 		"assets/models/Bistro/textures/Shopsign_Ties_Shop_Normal.png",
 		"class SxxEngine::AssetTexture"
@@ -6223,6 +6439,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"8b19230c-62b2-4078-b7c4c33b430263f3": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"8b482949-31a4-48d3-9c5555e93e1f90fc": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -6230,6 +6450,10 @@
 	"8b48cfbc-b34a-473c-a547f12fce28ae2d": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"8b71cbbe-8893-4bfe-b97466dc1a9c3124": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"8b77ffc5-409f-4a11-a32a5ac74d0a7be8": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -6586,6 +6810,10 @@
 	"9398e206-3eb2-42ed-a77442379af516b3": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"93ba392c-9fd4-4746-8aa327603d6d6709": [
+		"assets/models/Metoro/textures/MI_Sign_Occlusion-MI_Sign_MetallicRoughness.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"93cd91cb-0364-420c-8af78753011761cf": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -7167,6 +7395,10 @@
 		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
+	"a2e55268-9a64-4eb8-94e909a53aadc572": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"a2e698f0-3ae0-45b8-b10b0dd6ceb2111f": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -7199,6 +7431,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"a3b2bd45-992f-4062-bf731e7727fa3ee5": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"a3df02ce-27ca-4305-aa7bf237a8a71477": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -7229,6 +7465,10 @@
 	],
 	"a4592b35-0d67-4060-8557add287f9e889": [
 		"assets/models/Bistro/Bistro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"a47c70d5-ebf7-45f6-b3c307fb1e59b779": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"a481b155-1a31-4690-816283a7a4450231": [
@@ -7326,6 +7566,10 @@
 	"a6574507-f80a-47cf-8df7279dd77c9954": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"a6675579-b2dd-4239-b706b70d0e4dc87d": [
+		"assets/models/Metoro/textures/T_Fusebox_N.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"a67d60a3-8239-4fcb-b01b9326ca817ea8": [
 		"assets/models/sponza/7268504077753552595.jpg",
@@ -7510,6 +7754,10 @@
 	"aa9f04b9-f1b0-472f-accecee8e558d360": [
 		"assets/models/cube/concrete_floor.gltf",
 		"class SxxEngine::AssetMaterial"
+	],
+	"aa9fdd76-2224-47ec-acae6552c5e7f442": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"aaaa8981-e727-4b69-aaca732ed3a0addb": [
 		"assets/models/primitive/cube.obj",
@@ -7735,6 +7983,10 @@
 		"assets/models/Bistro/textures/Stringlights_Normal.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"aff11d07-c3c1-40cd-81d930cd5289cf1c": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"b0056bc1-a9b2-42a2-89115384e2304a36": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -7947,6 +8199,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"b511aeb2-f922-4175-8164bc3ea472259f": [
+		"assets/models/Metoro/textures/MI_Concrete_3_Normal.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"b52eb500-07c6-4472-9769a98b7fc31a74": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMaterial"
@@ -8022,6 +8278,10 @@
 	"b699542b-b794-42b7-a0c0dd71fcd69cba": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"b6afd804-1810-4e6d-bce0e977eb4d9777": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"b6cd1e91-1dd4-400e-91e1a36b934071bb": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -8147,9 +8407,17 @@
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
+	"b9163e93-fbf6-4323-bfe7fab60f037d6a": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"b91904fc-4931-4900-8adf7aba74157f56": [
 		"assets/models/macbeth_chart/macbeth_chart_scene.gltf",
 		"class SxxEngine::AssetMaterial"
+	],
+	"b927a63a-7363-4b2d-a5d15cbc03a7cb38": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"b9335a93-2896-401a-bfad48775722bf29": [
 		"assets/models/tree/tree.gltf",
@@ -8239,12 +8507,20 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"bbc0e113-eab2-4cf8-aabb9aaec30d5188": [
+		"assets/models/Metoro/textures/M_Fusebox_Occlusion-M_Fusebox_MetallicRoughness.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"bbc31056-556b-4d44-9f4fdba31ac0f283": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"bbc8e873-7aa4-478e-81cf547a5b17cb34": [
 		"assets/models/Bistro/Bistro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"bbda4c47-d112-4a3e-a019f0e66bb6f377": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"bbf99d66-682b-428d-8877b9e020856cd1": [
@@ -8331,6 +8607,10 @@
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
+	"be4dff8e-bed9-4995-943d8af734250749": [
+		"assets/models/Metoro/textures/MI_Fences_BaseColor.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"be600680-bc91-4ec8-b24c0aec190673e7": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -8354,6 +8634,10 @@
 	"bec28ad9-c2db-478c-b10f9d2d4a658958": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"bec59f09-01f9-4da3-bc87334f3e2b7cd2": [
+		"assets/models/Metoro/textures/MI_Guidelights_BaseColor.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"bed18fc8-26aa-401d-93676d3b87804502": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -8435,6 +8719,10 @@
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere_Plane.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
+	"bffe13d2-83cc-4711-9c30dd3bec06552e": [
+		"assets/models/Metoro/textures/MI_Concrete_1_MetallicRoughness.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"c05b3991-7aeb-45d1-b9f80a3e9896dee9": [
 		"assets/models/Bistro/textures/MASTER_Metal_BaseColor-MASTER_Metal_BaseColor.png",
 		"class SxxEngine::AssetTexture"
@@ -8486,6 +8774,14 @@
 	"c13daf80-65e0-436e-ad2d11f5013ca664": [
 		"assets/models/sponza/6772804448157695701.jpg",
 		"class SxxEngine::AssetTexture"
+	],
+	"c145ccde-c51e-48d3-ace690f321488bc4": [
+		"assets/models/Metoro/textures/T_GuideLights_Default_Normal.png",
+		"class SxxEngine::AssetTexture"
+	],
+	"c171327e-ba18-4818-ae63bbfdebe3ac04": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"c1724131-7d05-4995-b48250a9582ddbe3": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -8602,6 +8898,10 @@
 	"c3711735-d593-4ea4-b7b4c68351b1f229": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"c3865fd4-47d2-4763-8711e04202ad6f34": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"c38f906b-ba95-4534-a2c97cd8ed531f87": [
 		"assets/models/Bistro/Bistro.gltf",
@@ -8878,6 +9178,10 @@
 	"c9644f27-65e9-4ef5-b5c9458985ccc9df": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"c968bb7c-645a-4c34-b35a0dd9bc63e32b": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
 	],
 	"c9812a47-6516-434d-8566825d98023e8c": [
 		"assets/models/Bistro/textures/Pavement_Ground_Wet_Normal.png",
@@ -9411,6 +9715,10 @@
 		"assets/models/cube/textures/concrete_floor_worn_001_ao_1k.png",
 		"class SxxEngine::AssetTexture"
 	],
+	"d5567f4f-b42e-473f-b1056bbab779644e": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"d56f4b8b-b974-46d6-8a5f01d01cddbe2b": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
 		"class SxxEngine::AssetMaterial"
@@ -9551,6 +9859,10 @@
 		"assets/models/sponza/3628158980083700836.jpg",
 		"class SxxEngine::AssetTexture"
 	],
+	"d8451265-667d-461a-882c989902bfa856": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMaterial"
+	],
 	"d849072e-c8e3-4bae-9f63caff5e184520": [
 		"assets/models/cornell_box/cornell-box.obj",
 		"class SxxEngine::AssetMaterial"
@@ -9561,6 +9873,10 @@
 	],
 	"d881933b-4034-408a-84fa3b50185cac2f": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"d8acadc3-7177-4b00-b07af43a9bc982b0": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"d8affa04-efdf-435b-8f62e4b1c76ae46d": [
@@ -9999,6 +10315,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"e304a845-2c14-4c27-abc59d0df40d2477": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
 	"e31517bc-42ae-4753-b3e57705d2f3acd8": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
 		"class SxxEngine::AssetMesh"
@@ -10046,6 +10366,10 @@
 	"e3f86ab4-8930-4e61-89c9e97210310a7d": [
 		"assets/models/sponza/10388182081421875623.jpg",
 		"class SxxEngine::AssetTexture"
+	],
+	"e3fed633-e564-4384-b5644efe47d600ae": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"e403aa06-d5a8-45df-8a601d985acda972": [
 		"assets/models/Bistro/textures/MASTER_Wood_Painted_Green_BLENDSHADER_Normal.png",
@@ -10130,6 +10454,10 @@
 	"e64cd6c9-c458-44ad-9b6c2ced272ef50e": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMaterial"
+	],
+	"e64e9888-c9b6-471f-a0a60a09a47a2b15": [
+		"assets/models/Metoro/Metoro.gltf",
+		"class SxxEngine::AssetMesh"
 	],
 	"e68898b4-017d-45e2-b4a4c0603ea8aa3a": [
 		"assets/models/Bistro/textures/Plantpots_Normal.png",
@@ -10603,6 +10931,10 @@
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
+	"f172cd72-f84d-42fb-b0ecf4265816e238": [
+		"assets/models/Metoro/textures/MI_Concrete_3_MetallicRoughness.png",
+		"class SxxEngine::AssetTexture"
+	],
 	"f181219c-d33e-462f-8d0b8fcc835a64d9": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
@@ -10641,6 +10973,10 @@
 	],
 	"f253cac3-b69d-4f2f-ba873b2bbfdb9353": [
 		"assets/models/Bistro/Bistro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"f296d73a-07a9-4c78-ac1e56366f9290f8": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"f29e0aee-14ab-427c-8ca21190e1b493c8": [
@@ -10689,6 +11025,10 @@
 	],
 	"f36f68a5-3626-491e-922e8b2ed20be300": [
 		"assets/models/Bistro/Bistro.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"f3983de9-ad45-4850-b16cf3be97f401aa": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"f3a18691-bfa4-4faa-a4d932f53d59e6d2": [
@@ -10741,6 +11081,10 @@
 	],
 	"f4ab2d72-9b86-4af8-a958721c56a84df1": [
 		"assets/models/PBR_Sphere_Test/Model/PBR_Sphere.gltf",
+		"class SxxEngine::AssetMesh"
+	],
+	"f4b02a3a-8491-4e27-8e27bcbe4c1f3eac": [
+		"assets/models/Metoro/Metoro.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"f4b63084-a89a-445c-a544de06095a4233": [
@@ -10878,6 +11222,10 @@
 	"f831d79f-9e44-4c96-9bbe947116164975": [
 		"assets/models/Bistro/Bistro.gltf",
 		"class SxxEngine::AssetMesh"
+	],
+	"f84d8d63-baa2-4971-a6226b29f75bf601": [
+		"assets/models/Metoro/textures/T_Wirestuff_Rusty_Normal.png",
+		"class SxxEngine::AssetTexture"
 	],
 	"f8730e83-10ba-453a-9957c73b0e7d8f06": [
 		"assets/models/Bistro/Bistro.gltf",

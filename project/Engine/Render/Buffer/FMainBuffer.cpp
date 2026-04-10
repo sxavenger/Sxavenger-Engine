@@ -20,8 +20,8 @@ const std::array<DXGI_FORMAT, FMainBuffer::kLayoutCount> FMainBuffer::kFormats =
 };
 
 //- Format
-// Scene:  [FBaseBuffer::ColorFormat] float4 color
-// Canvas: [FBaseBuffer::ColorFormat] float4 color
+// Scene:  [FBaseBuffer::kColorFormat] float4 color
+// Canvas: [FBaseBuffer::kColorFormat] float4 color
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FMainBuffer class methods

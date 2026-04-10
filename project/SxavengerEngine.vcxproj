@@ -290,6 +290,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\Buffer\FProcessBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FRenderTargetBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FReservoirBuffer.h" />
+    <ClInclude Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FTransparentBuffer.h" />
     <ClInclude Include="Engine\Render\Common\FDepthStencilTexture.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
@@ -301,6 +302,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\Core\FRenderCoreCanvas.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreDirectLight.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreReSTIR.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h" />
@@ -523,6 +525,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Render\Buffer\FProcessBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FRenderTargetBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FReservoirBuffer.cpp" />
+    <ClCompile Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FTransparentBuffer.cpp" />
     <ClCompile Include="Engine\Render\Common\FDepthStencilTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
@@ -533,6 +536,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Render\Core\FRenderCoreCanvas.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreDirectLight.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreReSTIR.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp" />

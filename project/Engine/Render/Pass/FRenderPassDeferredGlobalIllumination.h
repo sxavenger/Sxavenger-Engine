@@ -31,6 +31,8 @@ public:
 
 	//* render option *//
 
+	void Init() override;
+
 	void Render(const DirectXQueueContext* context, const FRenderConfig& config) override;
 
 private:
@@ -44,6 +46,18 @@ private:
 	void BeginGlobalIlluminationPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
 	void EndGlobalIlluminationPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	//* Lux pass *//
+
+	void BeginPassLux(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	void EndPassLux(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	void PassLuxProbeTrace(const DirectXQueueContext* context, const FRenderConfig& config);
+
+	void PassLuxIrradiance(const DirectXQueueContext* context, const FRenderConfig& config);
+
+	void PassLuxSolve(const DirectXQueueContext* context, const FRenderConfig& config);
 
 	//* ReSTIR pass *//
 

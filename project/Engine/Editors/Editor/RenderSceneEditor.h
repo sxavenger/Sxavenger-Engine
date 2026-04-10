@@ -90,17 +90,17 @@ private:
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// GuizmoEnable enum class
+	// GizmoUsed enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class GuizmoUsed : uint32_t {
+	enum class GizmoUsed : uint32_t {
 		Scene,
 		Canvas,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// GuizmoOperation enum class
+	// GizmoOperation enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class GuizmoOperation : uint32_t {
+	enum class GizmoOperation : uint32_t {
 		Scale,
 		Translate,
 		Rotate,
@@ -193,8 +193,8 @@ private:
 	ImDrawList* sceneWindowDrawer_  = nullptr;
 	ImDrawList* canvasWindowDrawer_ = nullptr;
 
-	std::optional<GuizmoUsed> gizmoUsed_ = std::nullopt;
-	GuizmoOperation gizmoOperation_      = GuizmoOperation::Translate;
+	std::optional<GizmoUsed> gizmoUsed_ = std::nullopt;
+	GizmoOperation gizmoOperation_      = GizmoOperation::Translate;
 	SxImGuizmo::Mode gizmoMode_          = SxImGuizmo::Mode::World;
 
 	//* icon *//
@@ -227,7 +227,6 @@ private:
 
 	void ShowSceneMenu();
 	void ShowGameMenu();
-	void ShowGizmoMenu();
 	void ShowCaptureMenu();
 
 	void ShowSceneWindow();

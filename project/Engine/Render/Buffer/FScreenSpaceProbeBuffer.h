@@ -4,11 +4,15 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "FRenderConfig.h"
+#include "FBaseBuffer.h"
+#include "../Common/FRenderTexture.h"
 
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
+
+//* external
+#include <magic_enum.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -16,43 +20,46 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FBaseRenderPass class
+// FScreenSpaceProbeBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FBaseRenderPass {
+class FScreenSpaceProbeBuffer final
+	: public FBaseBuffer {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Layout enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Layout : uint8_t {
+		Radiance,
+		Irradiance,
+	};
+	static inline const size_t kLayoutCount = magic_enum::enum_count<Layout>();
+
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	FBaseRenderPass()          = default;
-	virtual ~FBaseRenderPass() = default;
+	void Create(const Vector2ui& resolution) override;
 
-	virtual void Init() {};
+	//* getter *//
 
-	virtual void Render(const DirectXQueueContext* context, const FRenderConfig& config) = 0;
+	FRenderTexture& GetBuffer(Layout layout) { return buffers_[static_cast<size_t>(layout)]; }
 
-protected:
-
-	//=========================================================================================
-	// protected methods
-	//=========================================================================================
-
-	static void BeginRenderPass(const DirectXQueueContext* context, const std::string& pass, const FRenderConfig& config);
-
-	static void EndRenderPass(const DirectXQueueContext* context);
-
-	static void BeginEvent(const DirectXQueueContext* context, const std::string& event);
-
-	static void EndEvent(const DirectXQueueContext* context);
+	static DXGI_FORMAT GetFormat(Layout layout) { return kFormats[static_cast<size_t>(layout)]; }
 
 private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	static const std::array<DXGI_FORMAT, kLayoutCount> kFormats;
+
+	std::array<FRenderTexture, kLayoutCount> buffers_ = {};
+
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderPass concept
-////////////////////////////////////////////////////////////////////////////////////////////
-template <class T>
-concept FRenderPass = std::derived_from<T, FBaseRenderPass> && !std::is_same_v<T, FBaseRenderPass>;
-
 SXAVENGER_ENGINE_NAMESPACE_END
+
