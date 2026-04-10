@@ -40,6 +40,7 @@ void FRenderPassContext::Render(const DirectXQueueContext* context, const FRende
 }
 
 void FRenderPassContext::Insert(std::unique_ptr<FBaseRenderPass>&& pass) {
+	pass->Init();
 	passes_.emplace_back(std::move(pass));
 }
 

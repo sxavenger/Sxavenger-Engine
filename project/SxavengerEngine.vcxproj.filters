@@ -946,6 +946,8 @@
       <Filter>Lib\Transform</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreReSTIR.h" />
+    <ClInclude Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1551,5 +1553,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreReSTIR.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FBaseBuffer.cpp" />
+    <ClCompile Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.cpp" />
   </ItemGroup>
 </Project>

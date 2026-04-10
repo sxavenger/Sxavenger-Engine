@@ -241,13 +241,21 @@ void DevelopEditor::ShowPerformanceWindow() {
 
 			const TimestampCpu::Timestamp& timestamp = System::GetTimestampCpu()->GetTimestamp();
 
+			auto itr = std::ranges::max_element(timestamp, {}, &TimestampCpu::Stamp::section); //!< sectionの最大値を持つiterator
+
 			for (const auto& stamp : timestamp) {
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
 				ImGui::Text(stamp.name.c_str());
 
 				ImGui::TableNextColumn();
+
+				float t = static_cast<float>(stamp.section.time) / static_cast<float>(itr->section.time); //!< sectionの最大値に対する割合
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f - t, 1.0f)); //!< sectionの最大値に近いほど黄色になる
+
 				ImGui::Text(std::format("{:.2f}ms / [{:.2f}ms]", stamp.section.time, stamp.elapsed.time).c_str());
+
+				ImGui::PopStyleColor();
 			}
 			ImGui::EndTable();
 
@@ -268,13 +276,21 @@ void DevelopEditor::ShowPerformanceWindow() {
 
 			const TimestampGpu::Timestamp& timestamp = System::GetTimestampGpu()->GetTimestamp();
 
+			auto itr = std::ranges::max_element(timestamp.stamps, {}, &TimestampGpu::Stamp::section); //!< sectionの最大値を持つiterator
+
 			for (const auto& stamp : timestamp.stamps) {
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
 				ImGui::Text(stamp.name.c_str());
 
 				ImGui::TableNextColumn();
+
+				float t = static_cast<float>(stamp.section.time) / static_cast<float>(itr->section.time); //!< sectionの最大値に対する割合
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f - t, 1.0f)); //!< sectionの最大値に近いほど黄色になる
+
 				ImGui::Text(std::format("{:.2f}ms", stamp.section.time).c_str());
+
+				ImGui::PopStyleColor();
 			}
 			ImGui::EndTable();
 

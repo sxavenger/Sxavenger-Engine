@@ -17,8 +17,8 @@ const std::array<DXGI_FORMAT, FLightAccumulationBuffer::kLayoutCount> FLightAccu
 };
 
 //- Format
-// Direct:   [FMainGBuffer::ColorFormat] float3 direct lighting
-// Indirect: [FMainGBuffer::ColorFormat] float3 indirect lighting
+// Direct:   [FBaseBuffer::kColorFormat] float3 direct lighting
+// Indirect: [FBaseBuffer::kColorFormat] float3 indirect lighting
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FLightAccumulationBuffer class methods

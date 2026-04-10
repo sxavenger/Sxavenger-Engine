@@ -63,19 +63,19 @@ void RenderSceneEditor::Init() {
 			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
 		)->GetId();
 
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)]
+	operationTexture_[static_cast<uint32_t>(GizmoOperation::Translate)]
 		= sContentStorage->Import<ContentTexture>(
 			"packages/textures/icon/operation_translate.png",
 			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
 		)->GetId();
 
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)]
+	operationTexture_[static_cast<uint32_t>(GizmoOperation::Rotate)]
 		= sContentStorage->Import<ContentTexture>(
 			"packages/textures/icon/operation_rotate.png",
 			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
 		)->GetId();
 
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)]
+	operationTexture_[static_cast<uint32_t>(GizmoOperation::Scale)]
 		= sContentStorage->Import<ContentTexture>(
 			"packages/textures/icon/operation_scale.png",
 			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
@@ -158,7 +158,6 @@ void RenderSceneEditor::ShowMainMenu() {
 
 		ShowSceneMenu();
 		ShowGameMenu();
-		ShowGizmoMenu();
 		ShowCaptureMenu();
 		
 		ImGui::EndMenu();
@@ -240,7 +239,7 @@ void RenderSceneEditor::Render() {
 }
 
 void RenderSceneEditor::Manipulate(EntityBehaviour* behaviour) {
-	if (gizmoUsed_.has_value() && gizmoUsed_.value() != GuizmoUsed::Scene) {
+	if (gizmoUsed_.has_value() && gizmoUsed_.value() != GizmoUsed::Scene) {
 		return;
 	}
 
@@ -250,15 +249,15 @@ void RenderSceneEditor::Manipulate(EntityBehaviour* behaviour) {
 	SxImGuizmo::Operation operation = SxImGuizmo::NONE;
 
 	// todo: flagに変更
-	if (gizmoOperation_ == GuizmoOperation::Scale) {
+	if (gizmoOperation_ == GizmoOperation::Scale) {
 		operation = SxImGuizmo::SCALE;
 	}
 
-	if (gizmoOperation_ == GuizmoOperation::Translate) {
+	if (gizmoOperation_ == GizmoOperation::Translate) {
 		operation = SxImGuizmo::TRANSLATE;
 	}
 
-	if (gizmoOperation_ == GuizmoOperation::Rotate) {
+	if (gizmoOperation_ == GizmoOperation::Rotate) {
 		operation = SxImGuizmo::ROTATE;
 	}
 
@@ -288,7 +287,7 @@ void RenderSceneEditor::Manipulate(EntityBehaviour* behaviour) {
 
 	SxImGuizmo::Enable(true);
 
-	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::make_optional(GuizmoUsed::Scene) : std::nullopt;
+	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::make_optional(GizmoUsed::Scene) : std::nullopt;
 
 	if (component->HasParent()) {
 		return;
@@ -320,7 +319,7 @@ void RenderSceneEditor::Manipulate(EntityBehaviour* behaviour) {
 }
 
 void RenderSceneEditor::ManipulateCanvas(EntityBehaviour* behaviour) {
-	if (gizmoUsed_.has_value() && gizmoUsed_.value() != GuizmoUsed::Canvas) {
+	if (gizmoUsed_.has_value() && gizmoUsed_.value() != GizmoUsed::Canvas) {
 		return;
 	}
 
@@ -328,17 +327,17 @@ void RenderSceneEditor::ManipulateCanvas(EntityBehaviour* behaviour) {
 	SxImGuizmo::SetOrthographic(true);
 
 	SxImGuizmo::Operation operation = SxImGuizmo::NONE;
-
+	
 	// todo: flagに変更
-	if (gizmoOperation_ == GuizmoOperation::Scale) {
+	if (gizmoOperation_ == GizmoOperation::Scale) {
 		operation = SxImGuizmo::SCALE_X | SxImGuizmo::SCALE_Y;
 	}
 
-	if (gizmoOperation_ == GuizmoOperation::Translate) {
+	if (gizmoOperation_ == GizmoOperation::Translate) {
 		operation = SxImGuizmo::TRANSLATE_X | SxImGuizmo::TRANSLATE_Y;
 	}
 
-	if (gizmoOperation_ == GuizmoOperation::Rotate) {
+	if (gizmoOperation_ == GizmoOperation::Rotate) {
 		operation = SxImGuizmo::ROTATE_Z;
 	}
 
@@ -371,7 +370,7 @@ void RenderSceneEditor::ManipulateCanvas(EntityBehaviour* behaviour) {
 
 	SxImGuizmo::Enable(true);
 
-	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::make_optional(GuizmoUsed::Canvas) : std::nullopt;
+	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::make_optional(GizmoUsed::Canvas) : std::nullopt;
 
 	if (component->HasParent()) {
 		return;
@@ -483,31 +482,6 @@ void RenderSceneEditor::ShowGameMenu() {
 			}
 			SxImGui::CheckBoxFlags(name.data(), &config.option.Get(), static_cast<size_t>(value));
 		}
-
-		ImGui::EndMenu();
-	}
-}
-
-void RenderSceneEditor::ShowGizmoMenu() {
-	if (ImGui::BeginMenu("gizmo")) {
-		BaseEditor::MenuPadding();
-		ImGui::SeparatorText("gizmo");
-
-		ImGui::Text("operation");
-		ImGui::Separator();
-
-		SxImGui::RadioButton("translate", &gizmoOperation_, GuizmoOperation::Translate);
-		ImGui::SameLine();
-		SxImGui::RadioButton("rotate", &gizmoOperation_, GuizmoOperation::Rotate);
-		ImGui::SameLine();
-		SxImGui::RadioButton("scale", &gizmoOperation_, GuizmoOperation::Scale);
-
-		ImGui::Text("mode");
-		ImGui::Separator();
-
-		SxImGui::RadioButton("world", &gizmoMode_, SxImGuizmo::World);
-		ImGui::SameLine();
-		SxImGui::RadioButton("local", &gizmoMode_, SxImGuizmo::Local);
 
 		ImGui::EndMenu();
 	}
@@ -625,28 +599,28 @@ void RenderSceneEditor::ShowSceneWindow() {
 		//* translate
 		if (SxImGui::ImageButton(
 			"## gizmo translate",
-			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)].Get()->GetGPUHandleSRV().ptr,
+			operationTexture_[static_cast<uint32_t>(GizmoOperation::Translate)].Get()->GetGPUHandleSRV().ptr,
 			{ 16, 16 },
-			gizmoOperation_ == GuizmoOperation::Translate ? kSelectedColor : kNonSelectedColor)) {
-			gizmoOperation_ = GuizmoOperation::Translate;
+			gizmoOperation_ == GizmoOperation::Translate ? kSelectedColor : kNonSelectedColor)) {
+			gizmoOperation_ = GizmoOperation::Translate;
 		}
 
 		//* rotate
 		if (SxImGui::ImageButton(
 			"## gizmo rotate",
-			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)].Get()->GetGPUHandleSRV().ptr,
+			operationTexture_[static_cast<uint32_t>(GizmoOperation::Rotate)].Get()->GetGPUHandleSRV().ptr,
 			{ 16, 16 },
-			gizmoOperation_ == GuizmoOperation::Rotate ? kSelectedColor : kNonSelectedColor)) {
-			gizmoOperation_ = GuizmoOperation::Rotate;
+			gizmoOperation_ == GizmoOperation::Rotate ? kSelectedColor : kNonSelectedColor)) {
+			gizmoOperation_ = GizmoOperation::Rotate;
 		}
 
 		//* scale
 		if (SxImGui::ImageButton(
 			"## gizmo scale",
-			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)].Get()->GetGPUHandleSRV().ptr,
+			operationTexture_[static_cast<uint32_t>(GizmoOperation::Scale)].Get()->GetGPUHandleSRV().ptr,
 			{ 16, 16 },
-			gizmoOperation_ == GuizmoOperation::Scale ? kSelectedColor : kNonSelectedColor)) {
-			gizmoOperation_ = GuizmoOperation::Scale;
+			gizmoOperation_ == GizmoOperation::Scale ? kSelectedColor : kNonSelectedColor)) {
+			gizmoOperation_ = GizmoOperation::Scale;
 		}
 
 		ImGui::Dummy({ 8, 0 });

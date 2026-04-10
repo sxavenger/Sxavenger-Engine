@@ -59,7 +59,7 @@ struct SkyAtmosphereComponent {
 
 		static const float kApDistancePerSlice = 100.0f; //!< Aerial.cs.hlsl: slice distance.
 		
-		float2 octahedral = EncodeOctahedral(direction);
+		float2 octahedral = Octahedral::EncodeOctahedral(direction);
 		
 		float slice = distance / kApDistancePerSlice;
 		float s     = saturate(slice / 16.0f);

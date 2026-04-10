@@ -17,7 +17,7 @@ const std::array<DXGI_FORMAT, FTransparentBuffer::kLayoutCount> FTransparentBuff
 };
 
 //- Format
-// Accumulation: [FBaseBuffer::ColorFormat] float4 accumulation
+// Accumulation: [FBaseBuffer::kColorFormat] float4 accumulation
 // Revealage:    [DXGI_FORMAT_R16_UNORM]    float transparent
 
 ////////////////////////////////////////////////////////////////////////////////////////////

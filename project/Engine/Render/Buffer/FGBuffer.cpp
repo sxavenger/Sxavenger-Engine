@@ -20,7 +20,7 @@ const std::array<DXGI_FORMAT, FGBuffer::kLayoutCount> FGBuffer::kFormats = {
 };
 
 //- Format
-// Albedo:       [FBaseBuffer::ColorFormat]       float3 albedo
+// Albedo:       [FBaseBuffer::kColorFormat]       float3 albedo
 // Normal:       [DXGI_FORMAT_R10G10B10A2_UNORM]  float3 normal
 // MaterialARM:  [DXGI_FORMAT_R8G8B8A8_UNORM]     float ambient_occlusion, float roughness, float metallic
 // MotionVector: [DXGI_FORMAT_R16G16B16A16_FLOAT] float2 motion_vector

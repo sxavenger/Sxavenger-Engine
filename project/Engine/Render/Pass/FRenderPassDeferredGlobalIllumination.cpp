@@ -8,8 +8,10 @@ SXAVENGER_ENGINE_USING
 #include "../Buffer/FGBuffer.h"
 #include "../Buffer/FLightAccumulationBuffer.h"
 #include "../Buffer/FReservoirBuffer.h"
+#include "../Buffer/FScreenSpaceProbeBuffer.h"
 #include "../Core/FRenderCore.h"
 #include "../Core/FRenderCoreReSTIR.h"
+#include "../Core/FRenderCoreLuxGlobalIllumination.h"
 
 //* engine
 #include <Engine/System/Utility/RuntimeLogger.h>
@@ -17,6 +19,11 @@ SXAVENGER_ENGINE_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassDeferredGlobalIllumination class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
+
+void FRenderPassDeferredGlobalIllumination::Init() {
+	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreReSTIR>();
+	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreLuxGlobalIllumination>();
+}
 
 void FRenderPassDeferredGlobalIllumination::Render(const DirectXQueueContext* context, const FRenderConfig& config) {
 
@@ -45,7 +52,17 @@ void FRenderPassDeferredGlobalIllumination::Render(const DirectXQueueContext* co
 
 		BeginGlobalIlluminationPass(context, config.buffer);
 
+		FBaseRenderPass::BeginEvent(context, std::format("Global Illumination | {}", magic_enum::enum_name(config.globalIllumination)));
+
 		switch (config.globalIllumination) {
+			case FRenderConfig::GlobalIllumination::Lux:
+				BeginPassLux(context, config.buffer);
+				PassLuxProbeTrace(context, config); // TODO: Temporal形式に変更する.
+				PassLuxIrradiance(context, config);
+				PassLuxSolve(context, config);
+				EndPassLux(context, config.buffer);
+				break;
+
 			case FRenderConfig::GlobalIllumination::ReSTIR_GI:
 				BeginPassReSTIR(context, config.buffer);
 				PassReSTIRResetReservoir(context, config);
@@ -54,7 +71,16 @@ void FRenderPassDeferredGlobalIllumination::Render(const DirectXQueueContext* co
 				PassReSTIRSolve(context, config);
 				EndPassReSTIR(context, config.buffer);
 				break;
+
+			default:
+				RuntimeLogger::LogWarning(
+					"[FRenderPass - Deferred Global Illumination]",
+					std::format("unsupported global illumination. name: {}", magic_enum::enum_name(config.globalIllumination))
+				);
+				break;
 		}
+
+		FBaseRenderPass::EndEvent(context);
 
 		EndGlobalIlluminationPass(context, config.buffer);
 	}
@@ -73,20 +99,171 @@ void FRenderPassDeferredGlobalIllumination::EndGlobalIlluminationPass(const Dire
 	lightAccumulation->GetBuffer(FLightAccumulationBuffer::Layout::Indirect).TransitionDefaultState(context);
 }
 
+void FRenderPassDeferredGlobalIllumination::BeginPassLux(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	buffer->EnsureBuffer<FScreenSpaceProbeBuffer>(); //!< Bufferの確保
+
+	// HACK: Scene概念が変更されない前提.
+	// ShaderTableの保持がRenderCore側のため, Sceneが変更できない.
+	StreamLogger::AssertA(FRenderCore::GetInstance()->HasRenderCore<FRenderCoreLuxGlobalIllumination>(), "[FRenderPass - Deferred Global Illumination]", "FRenderCoreLuxGlobalIllumination is required. (hack methods.)"); //!< RenderCoreが存在しない.
+	context;
+}
+
+void FRenderPassDeferredGlobalIllumination::EndPassLux(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+	context;
+	buffer;
+}
+
+void FRenderPassDeferredGlobalIllumination::PassLuxProbeTrace(const DirectXQueueContext* context, const FRenderConfig& config) {
+
+	auto commandList = context->GetCommandList(); //!< CommandListの取得
+
+	FScreenSpaceProbeBuffer* probe     = config.buffer->GetBuffer<FScreenSpaceProbeBuffer>(); //!< ScreenSpaceProbeの取得
+	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil(); //!< DepthStencilの取得
+
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreLuxGlobalIllumination>(); //!< RenderCoreの取得.
+	core->GetContext()->SetStateObject(context->GetDxCommand());
+
+	probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Radiance).TransitionUnorderedAccess(context);
+
+	//* output buffers
+	commandList->SetComputeRootDescriptorTable(0, probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Radiance).GetGPUHandleUAV()); //!< gRadiance
+
+	//* scene
+	commandList->SetComputeRootShaderResourceView(1, config.scene->GetTopLevelAS().GetGPUVirtualAddress()); //!< gScene
+
+	//* camera
+	commandList->SetComputeRootConstantBufferView(2, config.camera->GetGPUVirtualAddress()); //!< gCamera
+
+	//* setting
+	static const FRenderCoreLuxGlobalIllumination::Setting setting = {}; //!< Default設定として使用.
+	commandList->SetComputeRoot32BitConstants(3, 4, &setting, 0); //!< gSetting
+
+	//* resolution
+	commandList->SetComputeRoot32BitConstants(4, 2, &config.buffer->GetResolution(), 0); //!< Resolution
+
+	//* GBuffer
+	commandList->SetComputeRootDescriptorTable(5, depthStencil->GetGPUHandleSRV());                                     //!< gDepth
+	commandList->SetComputeRootDescriptorTable(6, gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());      //!< gAlbedo
+	commandList->SetComputeRootDescriptorTable(7, gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());      //!< gNormal
+	commandList->SetComputeRootDescriptorTable(8, gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV()); //!< gMaterialARM
+
+	//* light
+	// Directional Light
+	FScene::LightAddress directionalLightAddress = config.scene->GetDirectionalLightAddress();
+	commandList->SetComputeRoot32BitConstants(9, 1, &directionalLightAddress.count, 0);
+	commandList->SetComputeRootShaderResourceView(10, directionalLightAddress.transforms);
+	commandList->SetComputeRootShaderResourceView(11, directionalLightAddress.parameters);
+
+	// Point Light
+	FScene::LightAddress pointLightAddress = config.scene->GetPointLightAddress();
+	commandList->SetComputeRoot32BitConstants(12, 1, &pointLightAddress.count, 0);
+	commandList->SetComputeRootShaderResourceView(13, pointLightAddress.transforms);
+	commandList->SetComputeRootShaderResourceView(14, pointLightAddress.parameters);
+
+	// Spot Light
+	FScene::LightAddress spotLightAddress = config.scene->GetSpotLightAddress();
+	commandList->SetComputeRoot32BitConstants(15, 1, &spotLightAddress.count, 0);
+	commandList->SetComputeRootShaderResourceView(16, spotLightAddress.transforms);
+	commandList->SetComputeRootShaderResourceView(17, spotLightAddress.parameters);
+
+	core->GetContext()->DispatchRays(context->GetDxCommand(), probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Radiance).GetResolution());
+
+	probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Radiance).TransitionDefaultState(context);
+}
+
+void FRenderPassDeferredGlobalIllumination::PassLuxIrradiance(const DirectXQueueContext* context, const FRenderConfig& config) {
+
+	FScreenSpaceProbeBuffer* probe     = config.buffer->GetBuffer<FScreenSpaceProbeBuffer>(); //!< ScreenSpaceProbeの取得
+	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil(); //!< DepthStencilの取得
+
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreLuxGlobalIllumination>(); //!< RenderCoreの取得.
+	core->SetPipeline(FRenderCoreLuxGlobalIllumination::Process::IrradianceCalculate, context);
+
+	probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Irradiance).TransitionUnorderedAccess(context);
+
+	Vector2ui resolution = probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Irradiance).GetResolution(); //!< 解像度の取得
+
+	//!< parameterの設定
+	DxObject::BindBufferDesc desc = {};
+
+	//!< 共通parameterの設定
+	desc.Set32bitConstants("Dimension", 2, &resolution);
+
+	static const FRenderCoreLuxGlobalIllumination::Setting setting = {}; //!< Default設定として使用.
+	desc.Set32bitConstants("Setting", 4, &setting); //!< Setting
+
+	//!< probeの設定
+	desc.SetHandle("gRadianceCache", probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Radiance).GetGPUHandleSRV());
+	desc.SetHandle("gIrradiance",    probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Irradiance).GetGPUHandleUAV());
+
+	//!< cameraの設定
+	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+
+	//!< GBufferの設定
+	desc.SetHandle("gDepth",       depthStencil->GetGPUHandleSRV());
+	desc.SetHandle("gAlbedo",      gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
+	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
+	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
+
+	core->BindComputeBuffer(FRenderCoreLuxGlobalIllumination::Process::IrradianceCalculate, context, desc);
+	core->Dispatch(context, resolution);
+
+	probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Irradiance).TransitionDefaultState(context);
+}
+
+void FRenderPassDeferredGlobalIllumination::PassLuxSolve(const DirectXQueueContext* context, const FRenderConfig& config) {
+
+	FScreenSpaceProbeBuffer* probe              = config.buffer->GetBuffer<FScreenSpaceProbeBuffer>(); //!< ScreenSpaceProbeの取得
+	FGBuffer* gbuffer                           = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilTexture* depthStencil          = config.buffer->GetDepthStencil(); //!< DepthStencilの取得
+	FLightAccumulationBuffer* lightAccumulation = config.buffer->GetBuffer<FLightAccumulationBuffer>(); //!< LightAccumulationBufferの取得
+
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreLuxGlobalIllumination>(); //!< RenderCoreの取得.
+	core->SetPipeline(FRenderCoreLuxGlobalIllumination::Process::Solve, context);
+
+	//!< parameterの設定
+	DxObject::BindBufferDesc desc = {};
+
+	//!< 共通parameterの設定
+	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
+
+	static const FRenderCoreLuxGlobalIllumination::Setting setting = {}; //!< Default設定として使用.
+	desc.Set32bitConstants("Setting", 4, &setting); //!< Setting
+
+	//!< probeの設定
+	desc.SetHandle("gIrradiance", probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Irradiance).GetGPUHandleSRV());
+
+	//!< cameraの設定
+	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+
+	//!< GBufferの設定
+	desc.SetHandle("gDepth",       depthStencil->GetGPUHandleSRV());
+	desc.SetHandle("gAlbedo",      gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
+	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
+	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
+
+	//!< LightAccumulationBufferの設定
+	desc.SetHandle("gIndirect", lightAccumulation->GetBuffer(FLightAccumulationBuffer::Layout::Indirect).GetGPUHandleUAV());
+
+	core->BindComputeBuffer(FRenderCoreLuxGlobalIllumination::Process::Solve, context, desc);
+	core->Dispatch(context, config.buffer->GetResolution());
+}
+
 void FRenderPassDeferredGlobalIllumination::BeginPassReSTIR(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
 
 	buffer->EnsureBuffer<FReservoirBuffer>(); //!< Bufferの確保
 
 	// HACK: Scene概念が変更されない前提.
 	// ShaderTableの保持がRenderCore側のため, Sceneが変更できない.
-	StreamLogger::AssertA(FRenderCore::GetInstance()->HasRenderCore<FRenderCoreReSTIR>(), "[FRenderPass - Deferred Indirect Lighting]", "FRenderCoreReSTIR is required. (hack methods.)"); //!< RenderCoreが存在しない.
-	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreReSTIR>(); //!< RenderCoreの取得. (TLASの更新完了済み)
-
-	FBaseRenderPass::BeginEvent(context, "ReSTIR Global Illumination Pass");
+	StreamLogger::AssertA(FRenderCore::GetInstance()->HasRenderCore<FRenderCoreReSTIR>(), "[FRenderPass - Deferred Global Illumination]", "FRenderCoreReSTIR is required. (hack methods.)"); //!< RenderCoreが存在しない.
+	context;
 }
 
 void FRenderPassDeferredGlobalIllumination::EndPassReSTIR(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
-	FBaseRenderPass::EndEvent(context);
+	context;
 	buffer;
 }
 
@@ -139,7 +316,7 @@ void FRenderPassDeferredGlobalIllumination::PassReSTIRInitialReservoir(const Dir
 	reservoir->GetReservoir(FReservoirBuffer::Layout::Initial).TransitionUnordered(context->GetDxCommand());
 	reservoir->GetMoment().TransitionUnordered(context->GetDxCommand());
 
-	//* output buffer
+	//* output buffers
 	commandList->SetComputeRootUnorderedAccessView(0, reservoir->GetReservoir(FReservoirBuffer::Layout::Initial).GetGPUVirtualAddress()); //!< gInitialReservoir
 	commandList->SetComputeRootUnorderedAccessView(1, reservoir->GetMoment().GetGPUVirtualAddress());                                     //!< gMoment
 	
@@ -150,11 +327,11 @@ void FRenderPassDeferredGlobalIllumination::PassReSTIRInitialReservoir(const Dir
 	commandList->SetComputeRootConstantBufferView(3, config.camera->GetGPUVirtualAddress());
 
 	//* setting
-	FRenderCoreReSTIR::Setting setting = {}; //!< Default設定として使用.
+	static const FRenderCoreReSTIR::Setting setting = {}; //!< Default設定として使用.
 	commandList->SetComputeRoot32BitConstants(4, 2, &setting, 0); //!< gSetting
 
 	//* seed
-	Seed<uint32_t, 3> seed = {};
+	const Seed<uint32_t, 3> seed = {};
 	commandList->SetComputeRoot32BitConstants(5, 3, &seed, 0); //!< gSeed
 
 	//* GBuffer
