@@ -40,7 +40,8 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	GBuffer::Surface reference_surface; //!< pixelのsurface
 	if (!reference_surface.FetchSurface(GBuffer::FetchArgument::Create(pixel, dimension, gCamera.projInv, gCamera.world))) {
-		return; //!< surfaceが存在しない場合
+		gHistory[pixel] = float4(0.0f, 0.0f, 0.0f, 0.0f);
+		return; //!< surfaceが存在しない
 	}
 
 	uint2 downscale_rect[4];
@@ -66,7 +67,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	float3 lo = float3(0.0f, 0.0f, 0.0f);
 
-	const float solid_angle = Mathmatic::kPi / (setting.atlasDimension.x * setting.atlasDimension.y);
+	const float solid_angle = Mathmatic::kTau / (setting.atlasDimension.x * setting.atlasDimension.y);
 	
 	for (uint i = 0; i < 4; ++i) {
 
@@ -74,7 +75,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		
 		GBuffer::Surface sample_surface;
 		if (!sample_surface.FetchSurface(GBuffer::FetchArgument::Create(downscale_rect[i], dimension, gCamera.projInv, gCamera.world))) {
-			return; //!< surfaceが存在しない場合
+			continue; //!< surfaceが存在しない場合
 		}
 	
 		for (uint x = 0; x < setting.atlasDimension.x; ++x) {
@@ -104,7 +105,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	
 	BxDFAlbedo albedo = BxDFAlbedo::Create(reference_surface.albedo, reference_surface.metallic);
 	
-	float3 current_indirect  = lo * albedo.diffuse * reference_surface.ao;
+	float3 current_indirect  = lo * Diffuse_Lambert(albedo) * reference_surface.ao;
 	float3 previous_indirect = gHistory[pixel].rgb;
 
 
