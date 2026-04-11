@@ -16,7 +16,7 @@ SXAVENGER_ENGINE_USING
 
 const std::array<DXGI_FORMAT, FScreenSpaceProbeBuffer::kLayoutCount> FScreenSpaceProbeBuffer::kFormats = {
 	FBaseBuffer::kColorFormat, //!< Radiance
-	FBaseBuffer::kColorFormat, //!< Irradiance
+	FBaseBuffer::kColorFormat, //!< History
 };
 
 //- Format
@@ -31,7 +31,8 @@ void FScreenSpaceProbeBuffer::Create(const Vector2ui& resolution) {
 	static const FRenderCoreLuxGlobalIllumination::Setting setting = {}; //!< TODO: どこかで設定できるようにする
 
 	buffers_[static_cast<size_t>(Layout::Radiance)].Create({ resolution / setting.downscale * setting.atlas, kFormats[static_cast<size_t>(Layout::Radiance)] });
-	buffers_[static_cast<size_t>(Layout::Irradiance)].Create({ resolution / setting.downscale * setting.atlas, kFormats[static_cast<size_t>(Layout::Irradiance)] });
+
+	buffers_[static_cast<size_t>(Layout::History)].Create({ resolution, kFormats[static_cast<size_t>(Layout::History)] });
 
 	for (size_t i = 0; i < kLayoutCount; ++i) {
 		// nameの設定

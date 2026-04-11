@@ -55,7 +55,7 @@ private:
 
 	void PassLuxProbeTrace(const DirectXQueueContext* context, const FRenderConfig& config);
 
-	void PassLuxIrradiance(const DirectXQueueContext* context, const FRenderConfig& config);
+	void PassLuxHistory(const DirectXQueueContext* context, const FRenderConfig& config);
 
 	void PassLuxSolve(const DirectXQueueContext* context, const FRenderConfig& config);
 

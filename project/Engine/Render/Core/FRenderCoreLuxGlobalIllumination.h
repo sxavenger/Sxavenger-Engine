@@ -70,8 +70,8 @@ public:
 		// public variables
 		//=========================================================================================
 
-		Vector2ui downscale = { 16, 16 };   //!< 描画解像度のダウンスケール率.
-		Vector2ui atlas     = { 8, 8 }; //!< 1区間のサイズ
+		Vector2ui downscale = { 16, 16 }; //!< 描画解像度のダウンスケール率.
+		Vector2ui atlas     = { 16, 16 }; //!< 1区間のサイズ
 
 	};
 
@@ -79,7 +79,7 @@ public:
 	// Process enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Process : uint8_t {
-		IrradianceCalculate,
+		History,
 		Solve,
 	};
 	static const size_t kProcessCount = magic_enum::enum_count<Process>();

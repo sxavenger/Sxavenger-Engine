@@ -31,7 +31,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Layout : uint8_t {
 		Radiance,
-		Irradiance,
+		History,
 	};
 	static inline const size_t kLayoutCount = magic_enum::enum_count<Layout>();
 

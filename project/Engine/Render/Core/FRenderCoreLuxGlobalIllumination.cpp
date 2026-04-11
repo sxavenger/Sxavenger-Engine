@@ -187,7 +187,7 @@ void FRenderCoreLuxGlobalIllumination::CreateContext() {
 }
 
 void FRenderCoreLuxGlobalIllumination::CreatePipeline() {
-	CreateComputePipeline(Process::IrradianceCalculate, kDirectory / "Process" / "IrradianceCalculate.cs.hlsl");
+	CreateComputePipeline(Process::History, kDirectory / "Process" / "History.cs.hlsl");
 	CreateComputePipeline(Process::Solve, kDirectory / "Process" / "Solve.cs.hlsl");
 }
 
