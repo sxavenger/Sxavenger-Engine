@@ -30,7 +30,16 @@ public:
 	// Layout enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Layout : uint8_t {
-		Radiance,
+
+		//* Cache *//
+		
+		BRDFRadianceCache,
+		// IncomingRadianceCache
+		// IncomingDirection
+		Moment,
+
+		//* History *//
+
 		History,
 	};
 	static inline const size_t kLayoutCount = magic_enum::enum_count<Layout>();

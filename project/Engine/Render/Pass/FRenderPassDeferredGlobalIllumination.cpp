@@ -57,7 +57,7 @@ void FRenderPassDeferredGlobalIllumination::Render(const DirectXQueueContext* co
 		switch (config.globalIllumination) {
 			case FRenderConfig::GlobalIllumination::Lux:
 				BeginPassLux(context, config.buffer);
-				PassLuxProbeTrace(context, config); // TODO: Temporal形式に変更する.
+				PassLuxProbeTrace(context, config);
 				PassLuxHistory(context, config);
 				PassLuxSolve(context, config);
 				EndPassLux(context, config.buffer);
@@ -125,52 +125,55 @@ void FRenderPassDeferredGlobalIllumination::PassLuxProbeTrace(const DirectXQueue
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreLuxGlobalIllumination>(); //!< RenderCoreの取得.
 	core->GetContext()->SetStateObject(context->GetDxCommand());
 
-	probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Radiance).TransitionUnorderedAccess(context);
+	probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::BRDFRadianceCache).TransitionUnorderedAccess(context);
+	probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Moment).TransitionUnorderedAccess(context);
 
-	//* output buffers
-	commandList->SetComputeRootDescriptorTable(0, probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Radiance).GetGPUHandleUAV()); //!< gRadiance
+	//* cache
+	commandList->SetComputeRootDescriptorTable(0, probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::BRDFRadianceCache).GetGPUHandleUAV()); //!< gBRDFRadianceCache
+	commandList->SetComputeRootDescriptorTable(1, probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Moment).GetGPUHandleUAV());            //!< gMoment
 
 	//* scene
-	commandList->SetComputeRootShaderResourceView(1, config.scene->GetTopLevelAS().GetGPUVirtualAddress()); //!< gScene
+	commandList->SetComputeRootShaderResourceView(2, config.scene->GetTopLevelAS().GetGPUVirtualAddress()); //!< gScene
 
 	//* camera
-	commandList->SetComputeRootConstantBufferView(2, config.camera->GetGPUVirtualAddress()); //!< gCamera
+	commandList->SetComputeRootConstantBufferView(3, config.camera->GetGPUVirtualAddress()); //!< gCamera
 
 	//* setting
 	static const FRenderCoreLuxGlobalIllumination::Setting setting = {}; //!< Default設定として使用.
-	commandList->SetComputeRoot32BitConstants(3, 4, &setting, 0); //!< gSetting
+	commandList->SetComputeRoot32BitConstants(4, 5, &setting, 0); //!< gSetting
 
 	//* resolution
-	commandList->SetComputeRoot32BitConstants(4, 2, &config.buffer->GetResolution(), 0); //!< Resolution
+	commandList->SetComputeRoot32BitConstants(5, 2, &config.buffer->GetResolution(), 0); //!< Resolution
 
 	//* GBuffer
-	commandList->SetComputeRootDescriptorTable(5, depthStencil->GetGPUHandleSRV());                                     //!< gDepth
-	commandList->SetComputeRootDescriptorTable(6, gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());      //!< gAlbedo
-	commandList->SetComputeRootDescriptorTable(7, gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());      //!< gNormal
-	commandList->SetComputeRootDescriptorTable(8, gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV()); //!< gMaterialARM
+	commandList->SetComputeRootDescriptorTable(6, depthStencil->GetGPUHandleSRV());                                     //!< gDepth
+	commandList->SetComputeRootDescriptorTable(7, gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());      //!< gAlbedo
+	commandList->SetComputeRootDescriptorTable(8, gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());      //!< gNormal
+	commandList->SetComputeRootDescriptorTable(9, gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV()); //!< gMaterialARM
 
 	//* light
 	// Directional Light
 	FScene::LightAddress directionalLightAddress = config.scene->GetDirectionalLightAddress();
-	commandList->SetComputeRoot32BitConstants(9, 1, &directionalLightAddress.count, 0);
-	commandList->SetComputeRootShaderResourceView(10, directionalLightAddress.transforms);
-	commandList->SetComputeRootShaderResourceView(11, directionalLightAddress.parameters);
+	commandList->SetComputeRoot32BitConstants(10, 1, &directionalLightAddress.count, 0);
+	commandList->SetComputeRootShaderResourceView(11, directionalLightAddress.transforms);
+	commandList->SetComputeRootShaderResourceView(12, directionalLightAddress.parameters);
 
 	// Point Light
 	FScene::LightAddress pointLightAddress = config.scene->GetPointLightAddress();
-	commandList->SetComputeRoot32BitConstants(12, 1, &pointLightAddress.count, 0);
-	commandList->SetComputeRootShaderResourceView(13, pointLightAddress.transforms);
-	commandList->SetComputeRootShaderResourceView(14, pointLightAddress.parameters);
+	commandList->SetComputeRoot32BitConstants(13, 1, &pointLightAddress.count, 0);
+	commandList->SetComputeRootShaderResourceView(14, pointLightAddress.transforms);
+	commandList->SetComputeRootShaderResourceView(15, pointLightAddress.parameters);
 
 	// Spot Light
 	FScene::LightAddress spotLightAddress = config.scene->GetSpotLightAddress();
-	commandList->SetComputeRoot32BitConstants(15, 1, &spotLightAddress.count, 0);
-	commandList->SetComputeRootShaderResourceView(16, spotLightAddress.transforms);
-	commandList->SetComputeRootShaderResourceView(17, spotLightAddress.parameters);
+	commandList->SetComputeRoot32BitConstants(16, 1, &spotLightAddress.count, 0);
+	commandList->SetComputeRootShaderResourceView(17, spotLightAddress.transforms);
+	commandList->SetComputeRootShaderResourceView(18, spotLightAddress.parameters);
 
-	core->GetContext()->DispatchRays(context->GetDxCommand(), probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Radiance).GetResolution());
+	core->GetContext()->DispatchRays(context->GetDxCommand(), setting.CalculateResolution(config.buffer->GetResolution()));
 
-	probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Radiance).TransitionDefaultState(context);
+	probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::BRDFRadianceCache).TransitionDefaultState(context);
+	probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Moment).TransitionDefaultState(context);
 }
 
 void FRenderPassDeferredGlobalIllumination::PassLuxHistory(const DirectXQueueContext* context, const FRenderConfig& config) {
@@ -191,10 +194,11 @@ void FRenderPassDeferredGlobalIllumination::PassLuxHistory(const DirectXQueueCon
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 
 	static const FRenderCoreLuxGlobalIllumination::Setting setting = {}; //!< Default設定として使用.
-	desc.Set32bitConstants("Setting", 4, &setting); //!< Setting
+	desc.Set32bitConstants("Setting", 5, &setting); //!< Setting
 
-	//!< probeの設定
-	desc.SetHandle("gRadianceCache", probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Radiance).GetGPUHandleSRV());
+	//!< cacheの設定
+	desc.SetHandle("gBRDFRadianceCache", probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::BRDFRadianceCache).GetGPUHandleSRV());
+	desc.SetHandle("gMoment",            probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::Moment).GetGPUHandleSRV());
 
 	//!< historyの設定
 	desc.SetHandle("gHistory", probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::History).GetGPUHandleUAV());
@@ -229,7 +233,7 @@ void FRenderPassDeferredGlobalIllumination::PassLuxSolve(const DirectXQueueConte
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 
 	static const FRenderCoreLuxGlobalIllumination::Setting setting = {}; //!< Default設定として使用.
-	desc.Set32bitConstants("Setting", 4, &setting); //!< Setting
+	desc.Set32bitConstants("Setting", 5, &setting); //!< Setting
 
 	//!< historyの設定
 	desc.SetHandle("gHistory", probe->GetBuffer(FScreenSpaceProbeBuffer::Layout::History).GetGPUHandleSRV());

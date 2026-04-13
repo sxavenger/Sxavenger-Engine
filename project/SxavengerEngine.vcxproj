@@ -79,7 +79,7 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\backends;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;Externals\PixEvents\include;Externals\NRD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\backends;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;Externals\PixEvents\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -92,8 +92,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>mono-2.0-sgen.lib;assimp-vc145-mtd.lib;zlibstaticd.lib;WinPixEventRuntime.lib;NRD.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>Externals\mono\lib;Externals\assimp\lib\Debug;Externals\PixEvents\lib\Debug;Externals\NRD\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;assimp-vc145-mtd.lib;zlibstaticd.lib;WinPixEventRuntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Externals\mono\lib;Externals\assimp\lib\Debug;Externals\PixEvents\lib\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/WX /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
@@ -102,8 +102,7 @@
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
 copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"
 copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"
-copy "Externals\PixEvents\bin\Debug\WinPixEventRuntime.dll" "$(TargetDir)WinPixEventRuntime.dll"
-copy "Externals\NRD\bin\Debug\NRD.dll" "$(TargetDir)NRD.dll"</Command>
+copy "Externals\PixEvents\bin\Debug\WinPixEventRuntime.dll" "$(TargetDir)WinPixEventRuntime.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Develop|x64'">
@@ -112,7 +111,7 @@ copy "Externals\NRD\bin\Debug\NRD.dll" "$(TargetDir)NRD.dll"</Command>
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\backends;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;Externals\PixEvents\include;Externals\NRD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\backends;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;Externals\PixEvents\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -128,8 +127,8 @@ copy "Externals\NRD\bin\Debug\NRD.dll" "$(TargetDir)NRD.dll"</Command>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>mono-2.0-sgen.lib;assimp-vc145-mt.lib;zlibstatic.lib;WinPixEventRuntime.lib;NRD.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>Externals\mono\lib;Externals\assimp\lib\Release;Externals\PixEvents\lib\Release;Externals\NRD\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;assimp-vc145-mt.lib;zlibstatic.lib;WinPixEventRuntime.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Externals\mono\lib;Externals\assimp\lib\Release;Externals\PixEvents\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/WX /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
@@ -138,8 +137,7 @@ copy "Externals\NRD\bin\Debug\NRD.dll" "$(TargetDir)NRD.dll"</Command>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
 copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"
 copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"
-copy "Externals\PixEvents\bin\Release\WinPixEventRuntime.dll" "$(TargetDir)WinPixEventRuntime.dll"
-copy "Externals\NRD\bin\Release\NRD.dll" "$(TargetDir)NRD.dll"</Command>
+copy "Externals\PixEvents\bin\Release\WinPixEventRuntime.dll" "$(TargetDir)WinPixEventRuntime.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -147,7 +145,7 @@ copy "Externals\NRD\bin\Release\NRD.dll" "$(TargetDir)NRD.dll"</Command>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\backends;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;Externals\PixEvents\include;Externals\NRD\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\backends;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;Externals\PixEvents\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -163,8 +161,8 @@ copy "Externals\NRD\bin\Release\NRD.dll" "$(TargetDir)NRD.dll"</Command>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>mono-2.0-sgen.lib;assimp-vc145-mt.lib;zlibstatic.lib;NRD.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>Externals\mono\lib;Externals\assimp\lib\Release;Externals\NRD\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mono-2.0-sgen.lib;assimp-vc145-mt.lib;zlibstatic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>Externals\mono\lib;Externals\assimp\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>/WX /IGNORE:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <ProjectReference>
@@ -172,8 +170,7 @@ copy "Externals\NRD\bin\Release\NRD.dll" "$(TargetDir)NRD.dll"</Command>
     <PostBuildEvent>
       <Command>copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"
 copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dxil.dll"
-copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"
-copy "Externals\NRD\bin\Release\NRD.dll" "$(TargetDir)NRD.dll"</Command>
+copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
