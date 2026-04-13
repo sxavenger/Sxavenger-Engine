@@ -81,7 +81,11 @@ float3 CalculateDirectionalLight(uint index, Surface surface) {
 		return float3(0.0f, 0.0f, 0.0f);
 	}
 
+#if 0
 	return EvaluateBRDF(albedo, context, surface.roughness) * context.NdotL * color_mask * light_mask;
+#else
+	return Diffuse_Lambert(albedo) * context.NdotL * color_mask * light_mask;
+#endif
 }
 
 float3 CalculatePointLight(uint index, Surface surface) {
@@ -101,7 +105,11 @@ float3 CalculatePointLight(uint index, Surface surface) {
 		return float3(0.0f, 0.0f, 0.0f);
 	}
 
+#if 0
 	return EvaluateBRDF(albedo, context, surface.roughness) * context.NdotL * color_mask * light_mask;
+#else
+	return Diffuse_Lambert(albedo) * context.NdotL * color_mask * light_mask;
+#endif
 	
 }
 
@@ -122,7 +130,11 @@ float3 CalculateSpotLight(uint index, Surface surface) {
 		return float3(0.0f, 0.0f, 0.0f);
 	}
 
+#if 0
 	return EvaluateBRDF(albedo, context, surface.roughness) * context.NdotL * color_mask * light_mask;
+#else
+	return Diffuse_Lambert(albedo) * context.NdotL * color_mask * light_mask;
+#endif
 	
 }
 

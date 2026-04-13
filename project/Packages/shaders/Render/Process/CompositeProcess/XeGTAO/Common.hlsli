@@ -10,10 +10,12 @@
 //-----------------------------------------------------------------------------------------
 //* process
 #include "../../Process.hlsli"
-#include "XeGTAO.hlsli"
 
 //* component
 #include "../../../../Component/CameraComponent.hlsli"
+
+//* externals
+#include "../../../../Externals/XeGTAO/XeGTAO.hlsli"
 
 //=========================================================================================
 // buffers

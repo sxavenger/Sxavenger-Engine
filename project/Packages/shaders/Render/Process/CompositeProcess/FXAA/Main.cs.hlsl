@@ -3,10 +3,11 @@
 //-----------------------------------------------------------------------------------------
 #include "../../Process.hlsli"
 
+//* externals
 #define FXAA_PC 1
 #define FXAA_HLSL_5 1
 #define FXAA_QUALITY__PRESET 39
-#include "Fxaa_3.11.hlsli"
+#include "../../../../Externals/FXAA/Fxaa_3.11.hlsli"
 
 //=========================================================================================
 // buffers

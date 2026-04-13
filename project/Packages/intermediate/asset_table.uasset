@@ -4932,7 +4932,7 @@
 		"class SxxEngine::AssetMesh"
 	],
 	"6a61b8b5-148d-400b-804e3d848a1b4b39": [
-		"Assets/models/human/idle.gltf",
+		"assets/models/human/idle.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
 	"6abfa113-7c35-4e21-b73708bdd94fc3d6": [
@@ -5832,7 +5832,7 @@
 		"class SxxEngine::AssetMesh"
 	],
 	"7e39e87e-ad6c-4645-85f5acdc889f21c7": [
-		"Assets/models/human/idle.gltf",
+		"assets/models/human/idle.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"7e4e03af-e80c-438d-bf0b0258691002b4": [
@@ -6376,7 +6376,7 @@
 		"class SxxEngine::AssetMesh"
 	],
 	"89cbefcc-031e-43f2-b1c873e10a9d3028": [
-		"Assets/models/human/idle.gltf",
+		"assets/models/human/idle.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
 	"89cf2172-7919-4587-ad0049a35f565cff": [
@@ -6796,7 +6796,7 @@
 		"class SxxEngine::AssetTexture"
 	],
 	"933060aa-8127-4876-912b03f0f2a744b2": [
-		"Assets/models/human/idle.gltf",
+		"assets/models/human/idle.gltf",
 		"class SxxEngine::AssetMaterial"
 	],
 	"93556453-84f5-4439-9e922827eb9b28f3": [
@@ -9984,7 +9984,7 @@
 		"class SxxEngine::AssetTexture"
 	],
 	"db3170df-3cdd-40c4-86c245e3856d6b19": [
-		"Assets/models/human/idle.gltf",
+		"assets/models/human/idle.gltf",
 		"class SxxEngine::AssetSkeleton"
 	],
 	"db3752d8-d361-407d-9548e3a015f3f4fe": [
@@ -10980,7 +10980,7 @@
 		"class SxxEngine::AssetMesh"
 	],
 	"f29e0aee-14ab-427c-8ca21190e1b493c8": [
-		"Assets/models/human/idle.gltf",
+		"assets/models/human/idle.gltf",
 		"class SxxEngine::AssetMesh"
 	],
 	"f2a38c11-6e26-46c1-aad4d8990382a2f7": [
