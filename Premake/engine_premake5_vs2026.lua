@@ -310,7 +310,6 @@ project "SxavengerEngine"
     	"%{prj.location}/Externals/stb", -- [stb](https://github.com/nothings/stb.git)
 		"%{prj.location}/Externals/mono/include", -- [Mono](https://www.mono-project.com/)
 		"%{prj.location}/Externals/PixEvents/include", -- [PixEvents](https://github.com/microsoft/PixEvents.git)
-		"%{prj.location}/Externals/NRD/include", -- [Nvidia Runtime Denoisers](https://github.com/NVIDIA-RTX/NRD.git)
 	}
 
 	-- 依存プロジェクト --
@@ -423,40 +422,6 @@ project "SxavengerEngine"
 		postbuildcommands {
 			'copy "Externals\\PixEvents\\bin\\Release\\WinPixEventRuntime.dll" "$(TargetDir)WinPixEventRuntime.dll"'
 		}
-
-	-- NRD
-	filter "configurations:Debug"
-		-- リンカー設定 --
-		libdirs {
-			"%{prj.location}/Externals/NRD/lib/Debug"
-		}
-
-		-- 依存ファイル --
-		links {
-			"NRD",
-		}
-
-		-- ビルド後イベント --
-		postbuildcommands {
-			'copy "Externals\\NRD\\bin\\Debug\\NRD.dll" "$(TargetDir)NRD.dll"'
-		}
-
-	filter "configurations:Develop or configurations:Release"
-		-- リンカー設定 --
-		libdirs {
-			"%{prj.location}/Externals/NRD/lib/Release"
-		}
-
-		-- 依存ファイル --
-		links {
-			"NRD",
-		}
-
-		-- ビルド後イベント --
-		postbuildcommands {
-			'copy "Externals\\NRD\\bin\\Release\\NRD.dll" "$(TargetDir)NRD.dll"'
-		}
-
 	
 	--- project構成ごとのビルドオプション設定 ---
 	-- Debug
