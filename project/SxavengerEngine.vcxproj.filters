@@ -567,6 +567,9 @@
     <ClInclude Include="Engine\Render\Buffer\FReservoirBuffer.h">
       <Filter>Engine\Render\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Render\Buffer\FTransparentBuffer.h">
       <Filter>Engine\Render\Buffer</Filter>
     </ClInclude>
@@ -600,7 +603,13 @@
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreReSTIR.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h">
@@ -945,9 +954,6 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Core\FRenderCoreReSTIR.h" />
-    <ClInclude Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.h" />
-    <ClInclude Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
@@ -1241,6 +1247,9 @@
     <ClCompile Include="Engine\Module\Scene\SceneFactory.cpp">
       <Filter>Engine\Module\Scene</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FBaseBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Render\Buffer\FGBuffer.cpp">
       <Filter>Engine\Render\Buffer</Filter>
     </ClCompile>
@@ -1257,6 +1266,9 @@
       <Filter>Engine\Render\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Buffer\FReservoirBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.cpp">
       <Filter>Engine\Render\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Buffer\FTransparentBuffer.cpp">
@@ -1289,7 +1301,13 @@
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreReSTIR.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp">
@@ -1551,9 +1569,5 @@
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCoreReSTIR.cpp" />
-    <ClCompile Include="Engine\Render\Buffer\FBaseBuffer.cpp" />
-    <ClCompile Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.cpp" />
   </ItemGroup>
 </Project>

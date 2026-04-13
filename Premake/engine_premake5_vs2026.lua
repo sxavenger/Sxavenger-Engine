@@ -257,17 +257,17 @@ project "Script"
 -------------------------------------------------------------------------------------------
 project "SxavengerEngine"
 
-	-- visual studioの設定
+	-- visual studioの設定 --
 	toolset "v145"
 
-	-- projectの種類
+	-- projectの種類 --
 	kind "WindowedApp"
 
-	-- 言語
+	-- 言語 --
 	language "c++"
 	cppdialect "c++20"
 
-	-- ファイルの追加
+	-- ファイルの追加 --
 	files {
 		"%{prj.location}/*.cpp",
 		"%{prj.location}/*.h",
@@ -281,7 +281,7 @@ project "SxavengerEngine"
 		"%{prj.location}/Engine/**.cpp",
 	}
 
-	-- ファイルの除外(!xxx)
+	-- ファイルの除外(!xxx) --
 	removefiles  {
 		"Lib/!*/**.cpp",
 		"Lib/!*/**.h",
@@ -297,7 +297,7 @@ project "SxavengerEngine"
 		"Demo/**/!*/**.cpp",
 	}
 
-	-- 追加include
+	-- 追加include --
 	includedirs {
 		"%{prj.location}",
     	"%{prj.location}/Externals/nlohmann", -- [nlohmann json](https://github.com/nlohmann/json.git)
@@ -310,9 +310,10 @@ project "SxavengerEngine"
     	"%{prj.location}/Externals/stb", -- [stb](https://github.com/nothings/stb.git)
 		"%{prj.location}/Externals/mono/include", -- [Mono](https://www.mono-project.com/)
 		"%{prj.location}/Externals/PixEvents/include", -- [PixEvents](https://github.com/microsoft/PixEvents.git)
+		"%{prj.location}/Externals/NRD/include", -- [Nvidia Runtime Denoisers](https://github.com/NVIDIA-RTX/NRD.git)
 	}
 
-	-- 依存プロジェクト
+	-- 依存プロジェクト --
 	dependson {
 		"DirectXTex",
 		"ImGui-Docking",
@@ -326,22 +327,22 @@ project "SxavengerEngine"
 		"meshoptimizer",
 	}
 
-	-- ビルドオプション(共通)
+	-- ビルドオプション(共通) --
 	warnings "High"
 	multiprocessorcompile "On" -- 複数コアのでの並列コアコンパイル
 	staticruntime "On"
 	buildoptions { "/utf-8" }
 	
-	-- define定義(共通)
+	-- define定義(共通) --
 	defines { '_PROFILE="$(Configuration)"', "NOMINMAX" }
 
-	-- リンカー設定(共通)
+	-- リンカー設定(共通) --
 	linkoptions {
 		"/WX",
 		"/IGNORE:4099", -- [LNK4099](https://learn.microsoft.com/ja-jp/cpp/error-messages/tool-errors/linker-tools-warning-lnk4099)
 	}
 
-	-- ビルド後イベント
+	-- ビルド後イベント --
 	postbuildcommands {
 		-- dxcompiler関係
 		'copy "$(WindowsSdkDir)bin\\$(TargetPlatformVersion)\\x64\\dxcompiler.dll" "$(TargetDir)dxcompiler.dll"',
@@ -350,41 +351,41 @@ project "SxavengerEngine"
 
 	--- 外部プログラムごとの設定 ---
 	--- Mono
-	-- リンカー設定
+	-- リンカー設定 --
 	libdirs {
 		"%{prj.location}/Externals/mono/lib"
 	}
 	
-	-- 依存ファイル
+	-- 依存ファイル --
 	links {
 		"mono-2.0-sgen"
 	}
 
-	-- ビルド後イベント
+	-- ビルド後イベント --
 	postbuildcommands {
 		'copy "Externals\\mono\\bin\\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"',
 	}
 
 	-- Assimp
 	filter "configurations:Debug"
-		-- リンカー設定
+		-- リンカー設定 --
 		libdirs {
 			"%{prj.location}/Externals/assimp/lib/Debug"
 		}
 
-		-- 依存ファイル
+		-- 依存ファイル --
 		links {
 			"assimp-vc145-mtd",
 			"zlibstaticd"
 		}
 
 	filter "configurations:Develop or configurations:Release"
-		-- リンカー設定
+		-- リンカー設定 --
 		libdirs {
 			"%{prj.location}/Externals/assimp/lib/Release"
 		}
 
-		-- 依存ファイル
+		-- 依存ファイル --
 		links {
 			"assimp-vc145-mt",
 			"zlibstatic"
@@ -392,36 +393,70 @@ project "SxavengerEngine"
 	
 	-- PixEvents
 	filter "configurations:Debug"
-		-- リンカー設定
+		-- リンカー設定 --
 		libdirs {
 			"%{prj.location}/Externals/PixEvents/lib/Debug"
 		}
 
-		-- 依存ファイル
+		-- 依存ファイル --
 		links {
 			"WinPixEventRuntime",
 		}
 
-		-- ビルド後イベント
+		-- ビルド後イベント --
 		postbuildcommands {
 			'copy "Externals\\PixEvents\\bin\\Debug\\WinPixEventRuntime.dll" "$(TargetDir)WinPixEventRuntime.dll"'
 		}
 	
 	filter "configurations:Develop"
-		-- リンカー設定
+		-- リンカー設定 --
 		libdirs {
 			"%{prj.location}/Externals/PixEvents/lib/Release"
 		}
 
-		-- 依存ファイル
+		-- 依存ファイル --
 		links {
 			"WinPixEventRuntime",
 		}
 
-		-- ビルド後イベント
+		-- ビルド後イベント --
 		postbuildcommands {
 			'copy "Externals\\PixEvents\\bin\\Release\\WinPixEventRuntime.dll" "$(TargetDir)WinPixEventRuntime.dll"'
 		}
+
+	-- NRD
+	filter "configurations:Debug"
+		-- リンカー設定 --
+		libdirs {
+			"%{prj.location}/Externals/NRD/lib/Debug"
+		}
+
+		-- 依存ファイル --
+		links {
+			"NRD",
+		}
+
+		-- ビルド後イベント --
+		postbuildcommands {
+			'copy "Externals\\NRD\\bin\\Debug\\NRD.dll" "$(TargetDir)NRD.dll"'
+		}
+
+	filter "configurations:Develop or configurations:Release"
+		-- リンカー設定 --
+		libdirs {
+			"%{prj.location}/Externals/NRD/lib/Release"
+		}
+
+		-- 依存ファイル --
+		links {
+			"NRD",
+		}
+
+		-- ビルド後イベント --
+		postbuildcommands {
+			'copy "Externals\\NRD\\bin\\Release\\NRD.dll" "$(TargetDir)NRD.dll"'
+		}
+
 	
 	--- project構成ごとのビルドオプション設定 ---
 	-- Debug
