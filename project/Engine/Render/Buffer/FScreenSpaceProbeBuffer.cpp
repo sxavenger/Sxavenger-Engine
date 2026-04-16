@@ -15,12 +15,15 @@ SXAVENGER_ENGINE_USING
 //=========================================================================================
 
 const std::array<DXGI_FORMAT, FScreenSpaceProbeBuffer::kLayoutCount> FScreenSpaceProbeBuffer::kFormats = {
-	FBaseBuffer::kColorFormat, //!< Radiance
+	FBaseBuffer::kColorFormat, //!< BRDFRadianceCache
+	DXGI_FORMAT_R32G32_UINT,   //!< Moment
 	FBaseBuffer::kColorFormat, //!< History
 };
 
 //- Format
-// Radiance: [FBaseBuffer::kColorFormat] float3 radiance
+// BRDFRadianceCache: [FBaseBuffer::kColorFormat] float3 radiance, float pdf
+// Moment:            [DXGI_FORMAT_R32_UINT] uint moment
+// History:           [FBaseBuffer::kColorFormat] float3 color (もしかしたら不要になるかも)
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FScreenSpaceProbeBuffer class methods
@@ -30,7 +33,13 @@ void FScreenSpaceProbeBuffer::Create(const Vector2ui& resolution) {
 
 	static const FRenderCoreLuxGlobalIllumination::Setting setting = {}; //!< TODO: どこかで設定できるようにする
 
-	buffers_[static_cast<size_t>(Layout::Radiance)].Create({ resolution / setting.downscale * setting.atlas, kFormats[static_cast<size_t>(Layout::Radiance)] });
+	//* cache *//
+
+	buffers_[static_cast<size_t>(Layout::BRDFRadianceCache)].Create({ setting.CalculateResolution(resolution), kFormats[static_cast<size_t>(Layout::BRDFRadianceCache)]});
+
+	buffers_[static_cast<size_t>(Layout::Moment)].Create({ setting.CalculateDownscaledResolution(resolution), kFormats[static_cast<size_t>(Layout::Moment)] });
+
+	//* history *//
 
 	buffers_[static_cast<size_t>(Layout::History)].Create({ resolution, kFormats[static_cast<size_t>(Layout::History)] });
 

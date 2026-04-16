@@ -37,7 +37,9 @@ static const uint kRayMask = 0xFF;
 //=========================================================================================
 
 //* output buffers
-RWTexture2D<float4> gRadiance : register(u0, space1);
+RWTexture2D<float4> gBRDFRadianceCache : register(u0, space1);
+// TODO: IncomingRadiance Buffer.
+RWTexture2D<uint2> gMoment         : register(u1, space1);
 
 //* scene
 RaytracingAccelerationStructure gScene : register(t0, space1);

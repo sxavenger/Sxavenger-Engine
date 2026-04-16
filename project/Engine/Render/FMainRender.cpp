@@ -39,8 +39,6 @@ void FMainRender::Init() {
 	context_.Insert<FRenderPassTonemap>();
 	context_.Insert<FRenderPassCanvas>();
 
-	// TODO: Indirect Lightingの追加
-
 	//!< bufferの初期化
 	buffer_ = std::make_unique<FRenderTargetBuffer>();
 	buffer_->Init(Configuration::GetConfig().resolution);

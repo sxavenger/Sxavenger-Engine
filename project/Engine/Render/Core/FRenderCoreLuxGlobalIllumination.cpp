@@ -11,6 +11,19 @@ SXAVENGER_ENGINE_USING
 #include <Lib/Adapter/String/EncodedString.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// Setting structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+Vector2ui FRenderCoreLuxGlobalIllumination::Setting::CalculateResolution(const Vector2ui& resolution) const {
+	return resolution / downscale * atlas;
+	//!< downscaleで描画解像度を下げ、atlasで1区間のサイズを設定.
+}
+
+Vector2ui FRenderCoreLuxGlobalIllumination::Setting::CalculateDownscaledResolution(const Vector2ui& resolution) const {
+	return resolution / downscale;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreLuxGlobalIllumination class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -131,41 +144,42 @@ void FRenderCoreLuxGlobalIllumination::CreateContext() {
 		DxrObject::GlobalRootSignatureDesc desc = {};
 
 		//* output buffers
-		desc.SetHandleUAV(0, 0, 1); //!< gRadiance
+		desc.SetHandleUAV(0, 0, 1); //!< gBRDFRadianceCache
+		desc.SetHandleUAV(1, 1, 1); //!< gMoment
 
 		//* scene
-		desc.SetVirtualSRV(1, 0, 1); //!< gScene
+		desc.SetVirtualSRV(2, 0, 1); //!< gScene
 
 		//* camera
-		desc.SetVirtualCBV(2, 0, 1); //!< gCamera
+		desc.SetVirtualCBV(3, 0, 1); //!< gCamera
 
 		//* setting
-		desc.Set32bitConstants(3, DxObject::ShaderVisibility::VISIBILITY_ALL, 4, 1, 1); //!< gSetting
+		desc.Set32bitConstants(4, DxObject::ShaderVisibility::VISIBILITY_ALL, 5, 1, 1); //!< gSetting
 
 		//* resolution
-		desc.Set32bitConstants(4, DxObject::ShaderVisibility::VISIBILITY_ALL, 2, 2, 1); //!< Resolution
+		desc.Set32bitConstants(5, DxObject::ShaderVisibility::VISIBILITY_ALL, 2, 2, 1); //!< Resolution
 
 		//* GBuffer
-		desc.SetHandleSRV(5, 0, 3); //!< gDepth
-		desc.SetHandleSRV(6, 1, 3); //!< gAlbedo
-		desc.SetHandleSRV(7, 2, 3); //!< gNormal
-		desc.SetHandleSRV(8, 3, 3); //!< gMaterialARM
+		desc.SetHandleSRV(6, 0, 3); //!< gDepth
+		desc.SetHandleSRV(7, 1, 3); //!< gAlbedo
+		desc.SetHandleSRV(8, 2, 3); //!< gNormal
+		desc.SetHandleSRV(9, 3, 3); //!< gMaterialARM
 
 		//* light
 		// Directional Light
-		desc.Set32bitConstants(9, DxObject::ShaderVisibility::VISIBILITY_ALL, 1, 0, 2); //!< gDirectionalLightCount
-		desc.SetVirtualSRV(10, 0, 2); //!< gDirectionalLightTransforms
-		desc.SetVirtualSRV(11, 1, 2); //!< gDirectionalLights
+		desc.Set32bitConstants(10, DxObject::ShaderVisibility::VISIBILITY_ALL, 1, 0, 2); //!< gDirectionalLightCount
+		desc.SetVirtualSRV(11, 0, 2); //!< gDirectionalLightTransforms
+		desc.SetVirtualSRV(12, 1, 2); //!< gDirectionalLights
 
 		// Point Light
-		desc.Set32bitConstants(12, DxObject::ShaderVisibility::VISIBILITY_ALL, 1, 1, 2); //!< gPointLightCount
-		desc.SetVirtualSRV(13, 2, 2); //!< gPointLightTransforms
-		desc.SetVirtualSRV(14, 3, 2); //!< gPointLights
+		desc.Set32bitConstants(13, DxObject::ShaderVisibility::VISIBILITY_ALL, 1, 1, 2); //!< gPointLightCount
+		desc.SetVirtualSRV(14, 2, 2); //!< gPointLightTransforms
+		desc.SetVirtualSRV(15, 3, 2); //!< gPointLights
 
 		// Spot Light
-		desc.Set32bitConstants(15, DxObject::ShaderVisibility::VISIBILITY_ALL, 1, 2, 2); //!< gSpotLightCount
-		desc.SetVirtualSRV(16, 4, 2); //!< gSpotLightTransforms
-		desc.SetVirtualSRV(17, 5, 2); //!< gSpotLights
+		desc.Set32bitConstants(16, DxObject::ShaderVisibility::VISIBILITY_ALL, 1, 2, 2); //!< gSpotLightCount
+		desc.SetVirtualSRV(17, 4, 2); //!< gSpotLightTransforms
+		desc.SetVirtualSRV(18, 5, 2); //!< gSpotLights
 
 		context_->CreateRootSignature(System::GetDxDevice(), desc);
 	}
