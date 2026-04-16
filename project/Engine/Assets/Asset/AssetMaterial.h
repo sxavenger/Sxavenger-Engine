@@ -347,7 +347,7 @@ private:
 	float roughness_ = 1.0f;
 	float metallic_  = 1.0f;
 
-	Transform2d transform_; //!< 2D transform for UV mapping
+	Transform2d transform_; //!< UV変換行列
 
 	//* buffer *//
 
