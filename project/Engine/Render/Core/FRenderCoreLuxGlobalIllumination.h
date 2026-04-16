@@ -78,7 +78,7 @@ public:
 		// public variables
 		//=========================================================================================
 
-		Vector2ui downscale      = { 8, 8 }; //!< 描画解像度のダウンスケール率.
+		Vector2ui downscale      = { 16, 16 }; //!< 描画解像度のダウンスケール率.
 		Vector2ui atlas          = { 8, 8 }; //!< 1区間のサイズ
 		uint32_t sampleStepCount = 2;
 

@@ -428,7 +428,6 @@ project "SxavengerEngine"
 	filter "configurations:Debug"
 		-- ビルドオプション
 		symbols "On"
-		fatalwarnings { "All" }
 		
 		-- define定義
 		defines { "_DEVELOPMENT" }
@@ -437,7 +436,6 @@ project "SxavengerEngine"
 	filter "configurations:Develop"
 		-- ビルドオプション
 		optimize "On"
-		fatalwarnings { "All" }
 		
 		-- define定義
 		defines { "_DEVELOPMENT" }

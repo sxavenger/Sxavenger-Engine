@@ -51,14 +51,13 @@ float3 CalculateIrradiance(uint2 surface_pixel, GBuffer::Surface surface, uint2 
 
 			float2 xi        = Hammersley(moment.GetAtlasIndex(setting, uint2(x, y)), setting.atlasDimension.x * setting.atlasDimension.y);
 			float3 direction = ImportanceSampleCosineWeight(xi, sample_surface.normal);
-			float pdf        = ImportanceSampleCosineWeightPDF(direction, sample_surface.normal);
 
 			uint2 sample_pixel = atlas_pixel + uint2(x, y); //!< atlas内のピクセル座標
 
 			float4 cache = gBRDFRadianceCache.Load(uint3(sample_pixel, 0));
 
 			float3 radiance = cache.rgb;
-			//float pdf       = cache.a;
+			float pdf       = cache.a;
 
 			float NdotL = max(0.0f, dot(direction, surface.normal));
 
