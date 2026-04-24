@@ -14,6 +14,7 @@
 //* lib
 #include <Lib/Geometry/Color3.h>
 #include <Lib/Geometry/Matrix4x4.h>
+#include <Lib/Sxl/Flag.h>
 #include <Lib/Transform/Transform.h>
 #include <Lib/Adapter/Uuid/Uuid.h>
 
@@ -33,60 +34,159 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AssetMaterial class
+// Asset namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AssetMaterial final
-	: public BaseAsset {
-public:
+namespace Asset {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// TextureType enum class
+	// Material class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class TextureType : uint8_t {
-		Albedo,
-		Bump,
-		AmbientOcclusion,
-		Roughness,
-		Metallic,
-	};
-
-	PUSH_GPU_BUFFER_ALIGNAS
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// UVTransformation structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct UVTransformation {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
-
-		void Transfer(const Matrix4x4& _mat);
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		Matrix4x4 mat;
-
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Albedo structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Albedo {
+	class Material final
+		: public BaseAsset {
 	public:
 
 		////////////////////////////////////////////////////////////////////////////////////////////
-		// Type enum class
+		// Texture enum class
 		////////////////////////////////////////////////////////////////////////////////////////////
-		enum class Type : uint32_t {
-			Value,
-			Texture,
-			Multiply,
+		enum class Texture : uint8_t {
+			Albedo,
+			Transparency,
+			Normal,
+			Roughness,
+			Metallic,
+			Emissive,
+		};
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// UVTransformation structure
+		////////////////////////////////////////////////////////////////////////////////////////////
+		struct UVTransformation {
+		public:
+
+			//=========================================================================================
+			// public variables
+			//=========================================================================================
+
+			Matrix4x4 mat = Matrix4x4::Identity();
+
+		};
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Albedo structure
+		////////////////////////////////////////////////////////////////////////////////////////////
+		struct Albedo {
+		public:
+
+			//=========================================================================================
+			// public variables
+			//=========================================================================================
+
+			Color3f value  = kWhite3<float>;
+			uint32_t index = NULL;
+
+		};
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Transparency structure
+		////////////////////////////////////////////////////////////////////////////////////////////
+		struct Transparency {
+		public:
+
+			//=========================================================================================
+			// public variables
+			//=========================================================================================
+
+			float value    = 1.0f;
+			uint32_t index = NULL;
+
+		};
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Normal structure
+		////////////////////////////////////////////////////////////////////////////////////////////
+		struct Normal {
+		public:
+
+			//=========================================================================================
+			// public variables
+			//=========================================================================================
+
+			uint32_t index = NULL;
+
+		};
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// [Helper] Property structure
+		////////////////////////////////////////////////////////////////////////////////////////////
+		struct Property {
+		public:
+
+			//=========================================================================================
+			// public variables
+			//=========================================================================================
+
+			float value    = 0.0f;
+			uint32_t index = NULL;
+
+		};
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Emissive structure
+		////////////////////////////////////////////////////////////////////////////////////////////
+		struct Emissive {
+		public:
+
+			//=========================================================================================
+			// public variables
+			//=========================================================================================
+
+			Color3f value   = kBlack3<float>;
+			uint32_t index  = NULL;
+			float intensity = 1.0f;
+
+		};
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// MaterialBuffer structure
+		////////////////////////////////////////////////////////////////////////////////////////////
+		struct MaterialBuffer {
+		public:
+
+			////////////////////////////////////////////////////////////////////////////////////////////
+			// TextureFlags enum class
+			////////////////////////////////////////////////////////////////////////////////////////////
+			enum class TextureFlags : uint32_t {
+				None         = 0,
+				Albedo       = 1 << 0,
+				Transparency = 1 << 1,
+				Normal       = 1 << 2,
+				Roughness    = 1 << 3,
+				Metallic     = 1 << 4,
+				Emissive     = 1 << 5,
+			};
+
+		public:
+
+			//=========================================================================================
+			// public methods
+			//=========================================================================================
+
+			void Init();
+
+			//=========================================================================================
+			// public variables
+			//=========================================================================================
+
+			UVTransformation transformation;
+			Albedo albedo;
+			Property roughness;
+			Property metallic;
+			Transparency transparency;
+			Normal normal;
+			Emissive emissive;
+
+			Sxl::Flag<TextureFlags> flags = TextureFlags::None;
+
 		};
 
 	public:
@@ -95,276 +195,53 @@ public:
 		// public methods
 		//=========================================================================================
 
-		void Init();
+		//* constructor / destructor *//
 
-		//* option *//
+		Material(const Uuid& id) : BaseAsset(id) { CreateBuffer(); }
+		Material(std::nullopt_t) : BaseAsset(std::nullopt) { CreateBuffer(); }
 
-		void SetValue(const Color3f& _color);
+		~Material() override = default;
 
-		void SetTexture(uint32_t _index);
+		//* setup option *//
 
-		void SetValueMultiply(const Color3f& _color);
+		void Setup(const aiMaterial* material, const std::filesystem::path& directory); //!< assimp用setup
 
-		void SetTextureMultiply(uint32_t _index);
+		void Setup(const json& data); //!< json用setup
 
-		//* debug *//
-
-		void SetImGuiCommand();
+	private:
 
 		//=========================================================================================
-		// public variables
+		// private variables
 		//=========================================================================================
 
-		Type type = Type::Value;
+		//* buffer *//
 
-		Color3f color = kWhite3<float>;
-		uint32_t index = NULL;
+		DxObject::ConstantBuffer<MaterialBuffer> buffer_;
+
+		//* texture parameter *//
+
+		std::array<std::optional<Uuid>, static_cast<uint8_t>(Texture::Emissive) + 1> textures_;
+
+		//* value parameter *//
+
+		Transform2d transform_;
+
+		//=========================================================================================
+		// private methods
+		//=========================================================================================
+
+		void CreateBuffer();
+
+		//* setup helper methods *//
+
+		static std::optional<Uuid> GetTextureId(const aiMaterial* aiMaterial, aiTextureType type, const std::filesystem::path& directory, bool isIntensity = false);
+
+		static Transform2d GetTransform2d(const aiMaterial* aiMaterial);
+
+		static std::optional<Uuid> GetTextureId(const json& data, Texture texture, bool isIntensity = false);
 
 	};
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Transparency structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Transparency {
-	public:
-
-		////////////////////////////////////////////////////////////////////////////////////////////
-		// Type enum class
-		////////////////////////////////////////////////////////////////////////////////////////////
-		enum class Type : uint32_t {
-			Value,
-			Texture,
-		};
-
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
-
-		//* option *//
-
-		void SetValue(float _value);
-
-		void SetTexture(uint32_t _index);
-
-		//* debug *//
-
-		void SetImGuiCommand();
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		Type type = Type::Value;
-
-		float value    = 1.0f;
-		uint32_t index = NULL;
-
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Normal structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Normal {
-	public:
-
-		////////////////////////////////////////////////////////////////////////////////////////////
-		// Type enum class
-		////////////////////////////////////////////////////////////////////////////////////////////
-		enum class Type : uint32_t {
-			None,
-			Texture,
-		};
-
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
-
-		//* option *//
-
-		void SetNone();
-
-		void SetTexture(uint32_t _index);
-
-		//* debug *//
-
-		void SetImGuiCommand();
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		Type type = Type::None;
-
-		uint32_t index = NULL;
-
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Property structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Property { //!< helper struct
-	public:
-
-		////////////////////////////////////////////////////////////////////////////////////////////
-		// Type enum class
-		////////////////////////////////////////////////////////////////////////////////////////////
-		enum class Type : uint32_t {
-			Value,
-			Texture,
-		};
-
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
-
-		//* option *//
-
-		void SetValue(float _value);
-
-		void SetTexture(uint32_t _index);
-
-		//* debug *//
-
-		void SetImGuiCommand();
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		Type type = Type::Value;
-
-		float value    = 0.0f;
-		uint32_t index = NULL;
-
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// SurfaceProperties structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct SurfaceProperties {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
-
-		//* debug *//
-
-		void SetImGuiCommand();
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		Property ao;
-		Property roughness;
-		Property metallic;
-
-	};
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// MaterialBuffer structure
-	////////////////////////////////////////////////////////////////////////////////////////////
-	struct MaterialBuffer {
-	public:
-
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
-
-		void Init();
-
-		//=========================================================================================
-		// public variables
-		//=========================================================================================
-
-		UVTransformation  transformation;
-		Albedo            albedo;
-		Transparency      transparency;
-		Normal            normal;
-		SurfaceProperties properties;
-
-	};
-
-	POP_GPU_BUFFER_ALIGNAS
-
-public:
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	AssetMaterial(const Uuid& id) : BaseAsset(id) { CreateBuffer(); }
-	AssetMaterial(std::nullopt_t) : BaseAsset(std::nullopt) { CreateBuffer(); }
-	~AssetMaterial() override = default;
-
-	void Setup(const aiMaterial* material, const std::filesystem::path& directory);
-
-	void Update();
-
-	void Copy(const AssetMaterial& material);
-
-	void Wait();
-
-	//* inspector *//
-
-	void ShowInspector() override;
-
-	//* getter *//
-
-	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
-
-	const MaterialBuffer& GetBuffer() const;
-	MaterialBuffer& GetBuffer();
-
-private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	//* texture parameter *//
-
-	std::array<std::optional<Uuid>, static_cast<uint8_t>(TextureType::Metallic) + 1> textures_;
-
-	//* value parameter *//
-
-	Color3f color_   = kWhite3<>;
-	float roughness_ = 1.0f;
-	float metallic_  = 1.0f;
-
-	Transform2d transform_; //!< UV変換行列
-
-	//* buffer *//
-
-	std::unique_ptr<DxObject::DimensionBuffer<MaterialBuffer>> buffer_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	//* helper methods *//
-
-	static std::optional<Uuid> GetTextureId(const aiMaterial* aiMaterial, aiTextureType type, const std::filesystem::path& directory, bool isIntensity = false);
-
-	static Transform2d GetTransform2d(const aiMaterial* aiMaterial);
-
-	void CreateBuffer();
-
-};
+}
 
 SXAVENGER_ENGINE_NAMESPACE_END

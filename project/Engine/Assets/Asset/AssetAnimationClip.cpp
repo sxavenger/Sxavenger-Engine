@@ -1,4 +1,4 @@
-#include "AssetAnimation.h"
+#include "AssetAnimationClip.h"
 SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
@@ -8,30 +8,29 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AssetAnimation class methods
+// AnimationClip class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AssetAnimation::Setup(const aiAnimation* animation) {
-
+void Asset::AnimationClip::Setup(const aiAnimation* animation) {
 	// animation全体時間の取得
 	animation_.duration = GetTime(animation->mDuration, animation->mTicksPerSecond);
 
 	for (uint32_t channelIndex = 0; channelIndex < animation->mNumChannels; ++channelIndex) {
-		LoadTransformAnimation(animation->mChannels[channelIndex], animation->mTicksPerSecond);
+		const aiNodeAnim* aiNodeAnimation = animation->mChannels[channelIndex];
+		animation_.nodeAnimations[aiNodeAnimation->mNodeName.C_Str()] = LoadAnimation(aiNodeAnimation, animation->mTicksPerSecond);
 	}
 
-	BaseAsset::Complete();
-	StreamLogger::EngineThreadLog(std::format("[AssetAnimation]: animation setup complete. uuid: {}", BaseAsset::GetId().Serialize()));
+	BaseAsset::SetComplete();
+	StreamLogger::EngineThreadLog(std::format("[AssetAnimationClip]: animation setup complete. uuid: {}", BaseAsset::SerializeId()));
 }
 
-TimePointd<TimeUnit::second> AssetAnimation::GetTime(double time, double ticksPerSeconds) {
+TimePointd<TimeUnit::second> Asset::AnimationClip::GetTime(double time, double ticksPerSeconds) {
 	return { time / ticksPerSeconds };
 }
 
-void AssetAnimation::LoadTransformAnimation(const aiNodeAnim* aiNodeAnimation, double tickPerSeconds) {
+TransformAnimation Asset::AnimationClip::LoadAnimation(const aiNodeAnim* aiNodeAnimation, double tickPerSeconds) {
 
-	// transform animation の参照取得
-	TransformAnimation& nodeAnimation = animation_.nodeAnimations[aiNodeAnimation->mNodeName.C_Str()];
+	TransformAnimation animation;
 
 	//* 
 	//* positionの取得
@@ -41,7 +40,7 @@ void AssetAnimation::LoadTransformAnimation(const aiNodeAnim* aiNodeAnimation, d
 		// keyの取得
 		const aiVectorKey& aiKey = aiNodeAnimation->mPositionKeys[keyIndex];
 
-		Keyframe<Vector3f>& keyframe = nodeAnimation.translate.emplace_back();
+		Keyframe<Vector3f>& keyframe = animation.translate.emplace_back();
 
 		keyframe.time  = GetTime(aiKey.mTime, tickPerSeconds);
 		keyframe.value = { aiKey.mValue.x, aiKey.mValue.y, -aiKey.mValue.z }; //!< 左手座標系に変換
@@ -55,7 +54,7 @@ void AssetAnimation::LoadTransformAnimation(const aiNodeAnim* aiNodeAnimation, d
 		// keyの取得
 		const aiQuatKey& aiKey = aiNodeAnimation->mRotationKeys[keyIndex];
 
-		Keyframe<Quaternion>& keyframe = nodeAnimation.rotate.emplace_back();
+		Keyframe<Quaternion>& keyframe = animation.rotate.emplace_back();
 
 		keyframe.time  = GetTime(aiKey.mTime, tickPerSeconds);
 		keyframe.value = { -aiKey.mValue.x, -aiKey.mValue.y, aiKey.mValue.z, aiKey.mValue.w }; //!< 左手座標系に変換
@@ -69,9 +68,12 @@ void AssetAnimation::LoadTransformAnimation(const aiNodeAnim* aiNodeAnimation, d
 		// keyの取得
 		const aiVectorKey& aiKey = aiNodeAnimation->mScalingKeys[keyIndex];
 
-		Keyframe<Vector3f>& keyframe = nodeAnimation.scale.emplace_back();
+		Keyframe<Vector3f>& keyframe = animation.scale.emplace_back();
 
 		keyframe.time  = GetTime(aiKey.mTime, tickPerSeconds);
 		keyframe.value = { aiKey.mValue.x, aiKey.mValue.y, aiKey.mValue.z }; //!< 左手座標系に変換
 	}
+
+	return animation;
+
 }

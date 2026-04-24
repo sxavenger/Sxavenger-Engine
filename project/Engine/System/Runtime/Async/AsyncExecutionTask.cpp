@@ -1,4 +1,4 @@
-#include "AsyncTask.h"
+#include "AsyncExecutionTask.h"
 SXAVENGER_ENGINE_USING
 
 //-----------------------------------------------------------------------------------------
@@ -11,20 +11,25 @@ SXAVENGER_ENGINE_USING
 #include <thread>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AsyncTask class methods
+// ExecutionTask class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AsyncTask::Execute(const AsyncThread* thread) {
+void Async::ExecutionTask::Execute(const DirectXQueueContext* context) const {
 	if (function_ == nullptr) {
 		return;
 	}
 
-	function_(thread);
+	function_(this, context);
 }
 
-void AsyncTask::Wait(Status status) const {
+void Async::ExecutionTask::SetFunction(Execution execution, const ExecutionFunction& function) {
+	execution_ = execution;
+	function_  = function;
+}
+
+void Async::ExecutionTask::Wait(Status status) const {
 	while (status_ != status) {
-		RuntimeLogger::LogDebug("[AsyncTask]", "waiting for task... tag: " + tag_);
+		RuntimeLogger::LogDebug("[Async::ExecutionTask]", "waiting for task... tag: " + tag_);
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 }

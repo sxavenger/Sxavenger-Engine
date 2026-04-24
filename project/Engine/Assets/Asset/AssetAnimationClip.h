@@ -8,23 +8,15 @@
 
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/Utility/ComPtr.h>
+#include <Engine/Graphics/Animation/Animation.h>
 
-//* mf
-#include <mfapi.h>
-#include <mfidl.h>
-#include <mfreadwrite.h>
+//* lib
+#include <Lib/Adapter/Uuid/Uuid.h>
 
-//* c++
-#include <vector>
-
-//-----------------------------------------------------------------------------------------
-// comment
-//-----------------------------------------------------------------------------------------
-//* mf
-#pragma comment(lib, "mfplat.lib")
-#pragma comment(lib, "Mfreadwrite.lib")
-#pragma comment(lib, "mfuuid.lib")
+//* external
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -37,9 +29,9 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 namespace Asset {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// AudioClip class
+	// AnimationClip class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class AudioClip final
+	class AnimationClip final
 		: public BaseAsset {
 	public:
 
@@ -49,31 +41,33 @@ namespace Asset {
 
 		//* constructor / destructor *//
 
-		AudioClip(const Uuid& id) : BaseAsset(id) {}
+		AnimationClip(const Uuid& id) : BaseAsset(id) {}
 
-		~AudioClip() override = default;
+		~AnimationClip() override = default;
 
 		//* setup option *//
 
-		void Setup(IMFSourceReader* reader);
+		void Setup(const aiAnimation* animation); //!< assimp用
 
-		//* audio clip option *//
-
-		const WAVEFORMATEX& GetFormat() const;
-
-		const BYTE* GetBufferPointer() const;
-
-		const size_t GetBufferSize() const;
+		//* animation option *//
 
 	private:
-
 
 		//=========================================================================================
 		// private variables
 		//=========================================================================================
 
-		WAVEFORMATEX format_ = {}; //!< 波形フォーマット
-		std::vector<BYTE> buffer_; //!< 波形データ
+		Animation animation_;
+
+		//=========================================================================================
+		// private methods
+		//=========================================================================================
+
+		//* [assimp] setup helper methods *//
+
+		static TimePointd<TimeUnit::second> GetTime(double time, double ticksPerSeconds);
+
+		static TransformAnimation LoadAnimation(const aiNodeAnim* aiNodeAnimation, double tickPerSeconds);
 
 	};
 

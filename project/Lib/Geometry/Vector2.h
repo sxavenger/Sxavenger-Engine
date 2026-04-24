@@ -14,10 +14,10 @@
 #include <algorithm>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Vector2 class
+// Vector2 structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <class _Ty>
-class Vector2 {
+template <typename _Ty>
+struct Vector2 {
 public:
 
 	//=========================================================================================
@@ -44,7 +44,7 @@ public:
 	constexpr Vector2& operator/=(const _Ty rhs) noexcept { x /= rhs; y /= rhs; return *this; }
 
 	//* cast
-	template <class _U>
+	template <typename _U>
 	constexpr operator Vector2<_U>() const noexcept { return { static_cast<_U>(x), static_cast<_U>(y) }; }
 
 	//* unary
@@ -73,10 +73,10 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Vector2 - floating_point class
+// Vector2 - floating_point structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <std::floating_point _Ty>
-class Vector2<_Ty> {
+struct Vector2<_Ty> {
 public:
 
 	//=========================================================================================
@@ -102,7 +102,7 @@ public:
 	constexpr Vector2& operator/=(const _Ty rhs) noexcept { x /= rhs; y /= rhs; return *this; }
 
 	//* cast
-	template <class _U>
+	template <typename _U>
 	operator Vector2<_U>() const noexcept { return { static_cast<_U>(x), static_cast<_U>(y) }; }
 
 	//* unary
@@ -179,40 +179,40 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Vector2 class binary operators
+// Vector2 typename binary operators
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector2<_Ty> operator+(const Vector2<_Ty>& lhs, const Vector2<_Ty>& rhs) noexcept {
 	return { lhs.x + rhs.x, lhs.y + rhs.y };
 }
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector2<_Ty> operator-(const Vector2<_Ty>& lhs, const Vector2<_Ty>& rhs) noexcept {
 	return { lhs.x - rhs.x, lhs.y - rhs.y };
 }
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector2<_Ty> operator*(const Vector2<_Ty>& lhs, const Vector2<_Ty>& rhs) noexcept {
 	return { lhs.x * rhs.x, lhs.y * rhs.y };
 }
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector2<_Ty> operator*(const Vector2<_Ty>& lhs, const _Ty& rhs) noexcept {
 	return { lhs.x * rhs, lhs.y * rhs };
 }
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector2<_Ty> operator*(const _Ty& lhs, const Vector2<_Ty>& rhs) noexcept {
 	return { lhs * rhs.x, lhs * rhs.y };
 }
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector2<_Ty> operator/(const Vector2<_Ty>& lhs, const Vector2<_Ty>& rhs) noexcept {
 	return { lhs.x / rhs.x, lhs.y / rhs.y };
 }
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector2<_Ty> operator/(const Vector2<_Ty>& lhs, const _Ty& rhs) noexcept {
 	return { lhs.x / rhs, lhs.y / rhs };
 }
@@ -220,26 +220,26 @@ constexpr Vector2<_Ty> operator/(const Vector2<_Ty>& lhs, const _Ty& rhs) noexce
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Vector2 formatter structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <class T>
+template <typename T>
 struct std::formatter<Vector2<T>> : Sxl::BaseFormatter<Vector2<T>> {};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // constexpr constants
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector2<_Ty> kOrigin2 = { 0, 0 };
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector2<_Ty> kUnit2 = { 1, 1 };
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector2<_Ty> kUnitX2 = { 1, 0 };
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector2<_Ty> kUnitY2 = { 0, 1 };
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector2<_Ty> kInfinity2 = { std::numeric_limits<_Ty>::infinity(), std::numeric_limits<_Ty>::infinity() };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

@@ -3,23 +3,19 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* uasset
-#include "BaseAsset.h"
+//* content
+#include "BaseContent.h"
 
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxResource.h>
-#include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
 #include <Lib/Adapter/Uuid/Uuid.h>
 
-//* external
-#include <stb_truetype.h>
-
-//* c++
-#include <unordered_map>
+//* DirectX12
+#include <d3dx12.h>
+#include <DirectXTex.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -27,31 +23,40 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Asset namespace
+// Content namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace Asset {
+namespace Content {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Font class
+	// Texture class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class Font final
-		: public BaseAsset {
+	class Texture final
+		: public BaseContent {
 	public:
 
 		////////////////////////////////////////////////////////////////////////////////////////////
-		// GlyphInfo structure
+		// Encoding enum class
 		////////////////////////////////////////////////////////////////////////////////////////////
-		struct GlyphInfo {
+		enum class Encoding : bool {
+			Lightness, //!< sRGB
+			Intensity, //!< Linear
+		};
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Option structure
+		////////////////////////////////////////////////////////////////////////////////////////////
+		struct Option {
 		public:
 
 			//=========================================================================================
 			// public variables
 			//=========================================================================================
 
-			Vector2f uv[2];
-			Vector2f size;
-			Vector2f offset;
-			float advance;
+			Encoding encoding = Encoding::Lightness;
+			//!< 読み込み時のエンコード形式の指定. LightnessはsRGB形式(Albedo etc...), IntensityはLinear形式で読み込む.(Normal etc...)
+
+			bool isGenerateMipmap = true;
+			bool useCompress      = true; //!< 圧縮されたテクスチャを使用するかどうか. 圧縮されたテクスチャが存在しない場合は、通常のテクスチャを使用する.
 
 		};
 
@@ -61,23 +66,14 @@ namespace Asset {
 		// public methods
 		//=========================================================================================
 
-		Font(const Uuid& id) : BaseAsset(id) {}
+		Texture() : BaseContent(Async::Execution::Copy) {}
+		~Texture() = default;
 
-		~Font() override = default;
+		//* content option *//
 
-		//* setup option *//
+		void Attach(const std::filesystem::path& filepath, const std::any& parameter) override;
 
-		void Setup(const DirectXQueueContext* context, const stbtt_fontinfo& info, float size);
-
-		//* font option *//
-
-		const DxObject::Descriptor& GetDescriptorSRV() const;
-
-		const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const;
-
-		float GetFontSize() const { return fontSize_; }
-
-		const GlyphInfo& GetGlyphInfo(wchar_t c) const;
+		void Load(MAYBE_UNUSED const DirectXQueueContext* context) override;
 
 	private:
 
@@ -85,51 +81,16 @@ namespace Asset {
 		// private variables
 		//=========================================================================================
 
-		//=========================================================================================
-		// private variables
-		//=========================================================================================
-	
-		//* directx12 *// 
-
-		DxObject::Resource   resource_;
-		DxObject::Descriptor descriptorSRV_;
-
-		//* font intermediate *//
-
-		Vector2i current_ = {};
-		int32_t maxHeight_ = 0;
-
-		std::vector<uint8_t> atlasData_;
-		//!< todo: 中間データとして持たせるので削除する
-
-		//* parameter *//
-
-		static inline const Vector2ui kAtlasSize = { 1024, 1024 };
-
-		float fontSize_ = NULL;
-
-		int32_t ascent_ = NULL;
-		int32_t descent_ = NULL;
-
-		std::unordered_map<wchar_t, GlyphInfo> glyphs_;
-		//!< wchar_tごとのglyph情報
+		Uuid id_;
 
 		//=========================================================================================
 		// private methods
 		//=========================================================================================
 
-		//* create helper methods *//
-
-		void CreateAtlasTexture();
-
-		void LoadGlyph(const stbtt_fontinfo& info, float scale);
-
-		GlyphInfo GenerateGlyphInfo(const stbtt_fontinfo& info, float scale, wchar_t c);
-
-		void UploadAtlasData(const DirectXQueueContext* context);
+		void AttachUuid(const std::filesystem::path& filepath);
 
 	};
 
-};
+}
 
 SXAVENGER_ENGINE_NAMESPACE_END

@@ -1,6 +1,5 @@
 #include "AssetFont.h"
 SXAVENGER_ENGINE_USING
-DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -11,10 +10,10 @@ DXOBJECT_USING
 #include <Engine/System/System.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AssetFont class methods
+// Font class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AssetFont::Setup(const DirectXQueueContext* context, const stbtt_fontinfo& info, float size) {
+void Asset::Font::Setup(const DirectXQueueContext* context, const stbtt_fontinfo& info, float size) {
 
 	// 引数の保存
 	fontSize_ = size;
@@ -35,36 +34,24 @@ void AssetFont::Setup(const DirectXQueueContext* context, const stbtt_fontinfo& 
 
 	UploadAtlasData(context);
 
-	BaseAsset::Complete();
-	StreamLogger::EngineThreadLog(std::format("[AssetFont]: font setup complete. uuid: {}", BaseAsset::GetId().Serialize()));
+	BaseAsset::SetComplete();
+	StreamLogger::EngineThreadLog(std::format("[AssetFont]: font setup complete. uuid: {}", BaseAsset::SerializeId()));
 }
 
-const DxObject::Descriptor& AssetFont::GetDescriptorSRV() const {
+const DxObject::Descriptor& Asset::Font::GetDescriptorSRV() const {
 	return descriptorSRV_;
 }
 
-const D3D12_GPU_DESCRIPTOR_HANDLE& AssetFont::GetGPUHandleSRV() const {
+const D3D12_GPU_DESCRIPTOR_HANDLE& Asset::Font::GetGPUHandleSRV() const {
 	return GetDescriptorSRV().GetGPUHandle();
 }
 
-const AssetFont::GlyphInfo& AssetFont::GetGlyphInfo(wchar_t c) const {
+const Asset::Font::GlyphInfo& Asset::Font::GetGlyphInfo(wchar_t c) const {
 	StreamLogger::AssertW(glyphs_.contains(c), std::format(L"glyph not found. wchar_t: {}", c));
 	return glyphs_.at(c);
 }
 
-void AssetFont::ShowInspector() {
-	BaseAsset::ShowInspector();
-
-	if (!BaseAsset::IsComplete()) {
-		ImGui::Text("loading...");
-		return;
-	}
-
-	ImGui::Text("Font Atlas Texture");
-	SxImGui::Image(descriptorSRV_.GetGPUHandle().ptr, ImVec2{ static_cast<float>(kAtlasSize.x), static_cast<float>(kAtlasSize.y) });
-}
-
-void AssetFont::CreateAtlasTexture() {
+void Asset::Font::CreateAtlasTexture() {
 
 	auto device = System::GetDxDevice()->GetDevice();
 
@@ -82,22 +69,19 @@ void AssetFont::CreateAtlasTexture() {
 		desc.Format           = DXGI_FORMAT_R8_UNORM;
 		desc.SampleDesc.Count = 1;
 
-		auto hr = device->CreateCommittedResource(
-			&prop,
-			D3D12_HEAP_FLAG_NONE,
-			&desc,
-			D3D12_RESOURCE_STATE_COPY_DEST,
-			nullptr,
-			IID_PPV_ARGS(&resource_)
+		resource_.CreateCommitted(
+			System::GetDxDevice(),
+			prop,
+			desc,
+			D3D12_RESOURCE_STATE_COPY_DEST
 		);
-		DxObject::Assert(hr, L"font atlas texture resource create failed.");
 
-		resource_->SetName(L"Asset | Font Atlas Texture");
+		resource_.SetName(L"Asset | Font Atlas Texture");
 	}
 
 	{ //!< SRVの生成
 
-		descriptorSRV_ = System::GetDescriptor(kDescriptor_SRV);
+		descriptorSRV_ = System::GetDescriptor(DxObject::kDescriptor_SRV);
 
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
 		desc.Format                  = DXGI_FORMAT_R8_UNORM;
@@ -113,7 +97,7 @@ void AssetFont::CreateAtlasTexture() {
 	}
 }
 
-void AssetFont::LoadGlyph(const stbtt_fontinfo& info, float scale) {
+void Asset::Font::LoadGlyph(const stbtt_fontinfo& info, float scale) {
 	for (wchar_t c = L' '; c <= L'~'; ++c) {
 		glyphs_[c] = GenerateGlyphInfo(info, scale, c);
 	}
@@ -129,7 +113,7 @@ void AssetFont::LoadGlyph(const stbtt_fontinfo& info, float scale) {
 	glyphs_[L'ー'] = GenerateGlyphInfo(info, scale, L'ー');
 }
 
-AssetFont::GlyphInfo AssetFont::GenerateGlyphInfo(const stbtt_fontinfo& info, float scale, wchar_t c) {
+Asset::Font::GlyphInfo Asset::Font::GenerateGlyphInfo(const stbtt_fontinfo& info, float scale, wchar_t c) {
 
 	int32_t width, height, offsetX, offsetY;
 
@@ -182,7 +166,7 @@ AssetFont::GlyphInfo AssetFont::GenerateGlyphInfo(const stbtt_fontinfo& info, fl
 	return glyph;
 }
 
-void AssetFont::UploadAtlasData(const DirectXQueueContext* context) {
+void Asset::Font::UploadAtlasData(const DirectXQueueContext* context) {
 
 	auto device      = System::GetDxDevice()->GetDevice();
 	auto commandList = context->GetCommandList();
@@ -222,14 +206,7 @@ void AssetFont::UploadAtlasData(const DirectXQueueContext* context) {
 	commandList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
 
 	// 使用可能状態に遷移
-	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Transition.pResource   = resource_.Get();
-	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COPY_DEST;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_COMMON;
-
-	commandList->ResourceBarrier(1, &barrier);
+	resource_.Transition(context->GetDxCommand(), D3D12_RESOURCE_STATE_COMMON);
 
 	// commandの実行
 	context->ExecuteAllAllocators();

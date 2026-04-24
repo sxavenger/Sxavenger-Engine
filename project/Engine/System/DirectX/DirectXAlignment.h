@@ -11,8 +11,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 //!< GPU Bufferに対するアライメント
-constexpr const size_t kAlignment = 16;
-#define GPU_BUFFER_ALIGNAS alignas(kAlignment)
+constexpr const size_t kGpuBufferAlignment = 16;
+#define GPU_BUFFER_ALIGNAS alignas(kGpuBufferAlignment)
 
 //!< warning対策
 #define PUSH_GPU_BUFFER_ALIGNAS __pragma(warning(push)) __pragma(warning(disable: 4324))

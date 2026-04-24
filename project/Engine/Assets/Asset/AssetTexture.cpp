@@ -1,31 +1,29 @@
 #include "AssetTexture.h"
 SXAVENGER_ENGINE_USING
-DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/System.h>
-#include <Engine/Graphics/Graphics.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Metadata structure methods
+// [Texture] Metadata structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AssetTexture::Metadata::Assign(const DirectX::TexMetadata& metadata) {
-	size      = { static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height) };
-	miplevels = static_cast<uint32_t>(metadata.mipLevels);
-	format    = metadata.format;
-	isCubemap = metadata.IsCubemap();
+void Asset::Texture::Metadata::Assign(const DirectX::TexMetadata& metadata) {
+	size         = { static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height), static_cast<uint32_t>(metadata.depth) };
+	miplevels    = static_cast<uint32_t>(metadata.mipLevels);
+	format       = metadata.format;
+	miscflags[0] = metadata.miscFlags;
+	miscflags[1] = metadata.miscFlags2;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AssetTexture class methods
+// Texture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AssetTexture::Setup(const DirectXQueueContext* context, const DirectX::ScratchImage& image) {
+void Asset::Texture::Setup(const DirectXQueueContext* context, const DirectX::ScratchImage& image) {
 	context->RequestQueue(DirectXQueueContext::RenderQueue::Copy); //!< CopyQueue以上を使用
 
 	// metadataの取得
@@ -40,7 +38,7 @@ void AssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scra
 
 	{ //!< SRVの生成
 
-		descriptorSRV_ = System::GetDescriptor(kDescriptor_SRV);
+		descriptorSRV_ = System::GetDescriptor(DxObject::kDescriptor_SRV);
 
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
 		desc.Format                  = metadata.format;
@@ -70,76 +68,29 @@ void AssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scra
 	// textureをuploadさせる.
 	context->ExecuteAllAllocators();
 
-	BaseAsset::Complete();
-	StreamLogger::EngineThreadLog(std::format("[AssetTexture]: texture setup complete. uuid: {}", BaseAsset::GetId().Serialize()));
+	BaseAsset::SetComplete();
+	StreamLogger::EngineThreadLog(std::format("[AssetTexture]: texture setup complete. uuid: {}", BaseAsset::SerializeId()));
 }
 
-void AssetTexture::Update(const DirectXQueueContext* context) {
+void Asset::Texture::Transition(const DirectXQueueContext* context) {
 	if (!BaseAsset::IsComplete()) {
 		return;
 	}
 
 	context->RequestQueue(DirectXQueueContext::RenderQueue::Direct); //!< DirectQueue以上を使用
-
 	resource_.Transition(context->GetDxCommand(), D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE);
 }
 
-void AssetTexture::Reset() {
-	resource_.Reset();
-	metadata_ = {};
-
-	status_ = Status::None; //!< 状態を初期化
-}
-
-const DxObject::Descriptor& AssetTexture::GetDescriptorSRV() const {
-	if (!BaseAsset::IsComplete()) {
-		return Graphics::GetDescriptorSRV("checkerboard");
-	}
-
+const DxObject::Descriptor& Asset::Texture::GetDescriptorSRV() const {
+	BaseAsset::WaitComplete(); // TODO: 仮Textureの設定
 	return descriptorSRV_;
 }
 
-const D3D12_GPU_DESCRIPTOR_HANDLE& AssetTexture::GetGPUHandleSRV() const {
+const D3D12_GPU_DESCRIPTOR_HANDLE& Asset::Texture::GetGPUHandleSRV() const {
 	return GetDescriptorSRV().GetGPUHandle();
 }
 
-void AssetTexture::ShowInspector() {
-	BaseAsset::ShowInspector();
-
-	if (!BaseAsset::IsComplete()) { //!< loadが完了していない場合
-		ImGui::Text("loading...");
-		return;
-	}
-
-	const D3D12_RESOURCE_DESC desc = resource_.GetDesc();
-
-	if (ImGui::CollapsingHeader("Texture", ImGuiTreeNodeFlags_DefaultOpen)) {
-		if (desc.Dimension == D3D12_RESOURCE_DIMENSION_TEXTURE2D) {
-			SxImGui::Image(descriptorSRV_.GetGPUHandle().ptr, ImVec2{ static_cast<float>(metadata_.size.x), static_cast<float>(metadata_.size.y) });
-
-		} else {
-			ImGui::Text("texture dimension type is not D3D12_RESOURCE_DIMENSION_TEXTURE2D");
-		}
-
-	}
-
-	if (ImGui::CollapsingHeader("Desc", ImGuiTreeNodeFlags_DefaultOpen)) {
-		ImGui::Text("dimension: %s", magic_enum::enum_name(desc.Dimension).data());
-		ImGui::Text("width:     %u", desc.Width);
-		ImGui::Text("height:    %u", desc.Height);
-		ImGui::Text("depth:     %u", desc.DepthOrArraySize);
-		ImGui::Text("miplevels: %u", desc.MipLevels);
-		ImGui::Text("format:    %s", magic_enum::enum_name(desc.Format).data());
-	}
-
-	if (ImGui::CollapsingHeader("Descriptor", ImGuiTreeNodeFlags_DefaultOpen)) {
-		ImGui::Text("index:  %u",   descriptorSRV_.GetIndex());
-		ImGui::Text("handle: 0x%p", descriptorSRV_.GetGPUHandle().ptr);
-	}
-}
-
-DxObject::Resource AssetTexture::CreateTextureResource(const DirectX::TexMetadata& metadata) {
-
+DxObject::Resource Asset::Texture::CreateTextureResource(const DirectX::TexMetadata& metadata) {
 	DxObject::Resource resource;
 
 	resource = DxObject::Resource::CreateTexture(
@@ -157,20 +108,20 @@ DxObject::Resource AssetTexture::CreateTextureResource(const DirectX::TexMetadat
 	return resource;
 }
 
-ComPtr<ID3D12Resource> AssetTexture::UploadTextureData(const DirectXQueueContext* context, ID3D12Resource* texture, const DirectX::ScratchImage& image) {
+ComPtr<ID3D12Resource> Asset::Texture::UploadTextureData(const DirectXQueueContext* context, ID3D12Resource* texture, const DirectX::ScratchImage& image) {
 
-	auto device      = System::GetDxDevice()->GetDevice();
+	auto device = System::GetDxDevice()->GetDevice();
 	auto commandList = context->GetCommandList();
 
 	std::vector<D3D12_SUBRESOURCE_DATA> subresource;
 	DirectX::PrepareUpload(device, image.GetImages(), image.GetImageCount(), image.GetMetadata(), subresource);
 
 	uint64_t intermediateSize = GetRequiredIntermediateSize(texture, 0, UINT(subresource.size()));
-	ComPtr<ID3D12Resource> intermediateResource = CreateBufferResource(device, D3D12_HEAP_TYPE_UPLOAD, intermediateSize, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_SOURCE);
+	ComPtr<ID3D12Resource> intermediateResource = DxObject::CreateBufferResource(device, D3D12_HEAP_TYPE_UPLOAD, intermediateSize, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_SOURCE);
 
 	UpdateSubresources(commandList, texture, intermediateResource.Get(), 0, 0, UINT(subresource.size()), subresource.data());
 
 	intermediateResource->SetName(L"Asset | intermediate upload resource");
 	return intermediateResource;
-	
+
 }

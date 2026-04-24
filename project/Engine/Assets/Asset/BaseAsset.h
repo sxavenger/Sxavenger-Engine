@@ -5,15 +5,13 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/Editors/Editor/InspectorEditor.h>
 
 //* lib
 #include <Lib/Adapter/Uuid/Uuid.h>
 
 //* c++
-#include <concepts>
 #include <optional>
-#include <thread>
+#include <concepts>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -21,78 +19,77 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BaseAsset class
+// Asset namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BaseAsset
-	: public BaseInspector {
-public:
+namespace Asset {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Status enum class
+	// BaseAsset class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class Status : uint8_t {
-		None,     //!< 初期状態
-		Complete, //!< Setupが完了した状態
+	class BaseAsset {
+	public:
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Status enum class
+		////////////////////////////////////////////////////////////////////////////////////////////
+		enum class Status : bool {
+			None,     //!< 初期状態
+			Complete, //!< 使用可能な状態
+		};
+
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		//* constructor / destructor *//
+
+		BaseAsset(const Uuid& id) : id_(id) {}
+		BaseAsset(std::nullopt_t) : id_(std::nullopt) {}
+
+		virtual ~BaseAsset() = default;
+
+		//* asset option *//
+
+		bool HasId() const { return id_.has_value(); }
+
+		const Uuid& GetId() const;
+
+		std::string SerializeId() const;
+
+		//* status option *//
+
+		bool IsComplete() const { return status_ == Status::Complete; }
+
+		void WaitComplete() const;
+
+	protected:
+
+		//=========================================================================================
+		// protected methods
+		//=========================================================================================
+
+		void SetComplete() { status_ = Status::Complete; }
+
+	private:
+
+		//=========================================================================================
+		// private variables
+		//=========================================================================================
+
+		const std::optional<Uuid> id_; //!< Assetに紐図いているuuid.
+
+		Status status_ = Status::None; //!< Assetの状態.
+
 	};
 
-public:
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// concept
+	////////////////////////////////////////////////////////////////////////////////////////////
+	template <class T>
+	concept AssetDerived = std::derived_from<T, BaseAsset> && !std::is_same_v<T, BaseAsset>;
 
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	BaseAsset(const Uuid& id) : id_(id) {}
-	BaseAsset(const std::nullopt_t&) : id_(std::nullopt) {}
-	virtual ~BaseAsset() = default;
-
-	//* asset option *//
-
-	bool HasId() const { return id_.has_value(); }
-
-	const Uuid& GetId() const { return id_.value(); } //!< todo exceptionの追加
-
-	bool IsComplete() const { return status_ == Status::Complete; }
-
-	void WaitComplete() const;
-
-	//* inspector *//
-
-	virtual void ShowInspector() override;
-
-protected:
-
-	//=========================================================================================
-	// protected variables
-	//=========================================================================================
-
-	Status status_ = Status::None;
-
-	//=========================================================================================
-	// protected methods
-	//=========================================================================================
-
-	void Complete() { status_ = Status::Complete; }
-
-private:
-
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
-
-	const std::optional<Uuid> id_;
-
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
-
-	std::string GetStr() const;
-
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// concept
-////////////////////////////////////////////////////////////////////////////////////////////
-template <class T>
-concept AssetConcept = std::derived_from<T, BaseAsset> && !std::is_same_v<T, BaseAsset>;
+}
 
 SXAVENGER_ENGINE_NAMESPACE_END

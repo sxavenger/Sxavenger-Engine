@@ -40,6 +40,9 @@ public:
 	static void Log(const std::string& message);
 	static void Log(const std::wstring& message);
 
+	static void ThreadLog(const std::string& message);
+	static void ThreadLog(const std::wstring& message);
+
 	NORETURN static void Exception(const std::string& label, const std::string& detail = "", const std::source_location& location = std::source_location::current());
 	NORETURN static void Exception(const std::wstring& label, const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
 
@@ -104,6 +107,9 @@ private:
 	//* helper methods *//
 
 	static std::filesystem::path GetStreamLogFilename();
+
+	static std::string GetThreadLabelA(const std::thread::id id);
+	static std::wstring GetThreadLabelW(const std::thread::id id);
 
 	//* output methods *//
 

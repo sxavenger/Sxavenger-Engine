@@ -8,10 +8,10 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AssetAudioClip class methods
+// AudioClip class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AssetAudioClip::Setup(IMFSourceReader* reader) {
+void Asset::AudioClip::Setup(IMFSourceReader* reader) {
 
 	// PCM形式にフォーマットを指定する
 	ComPtr<IMFMediaType> pcmType;
@@ -61,24 +61,22 @@ void AssetAudioClip::Setup(IMFSourceReader* reader) {
 		buffer->Unlock();
 	}
 
-	BaseAsset::Complete();
+	BaseAsset::SetComplete();
 	StreamLogger::EngineThreadLog(std::format("[AssetAudioClip]: audio clip setup complete. uuid: {}", BaseAsset::GetId().Serialize()));
 }
 
-void AssetAudioClip::ShowInspector() {
-}
-
-const WAVEFORMATEX& AssetAudioClip::GetFormat() const {
-	BaseAsset::WaitComplete();
+const WAVEFORMATEX& Asset::AudioClip::GetFormat() const {
+	BaseAsset::WaitComplete();	
 	return format_;
 }
 
-const BYTE* AssetAudioClip::GetBufferPointer() const {
+const BYTE* Asset::AudioClip::GetBufferPointer() const {
 	BaseAsset::WaitComplete();
 	return buffer_.data();
 }
 
-const size_t AssetAudioClip::GetBufferSize() const {
+const size_t Asset::AudioClip::GetBufferSize() const {
 	BaseAsset::WaitComplete();
 	return buffer_.size();
 }
+

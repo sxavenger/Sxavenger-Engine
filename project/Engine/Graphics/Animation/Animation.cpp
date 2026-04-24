@@ -8,10 +8,10 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Animation methods
+// TransformAnimation structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-Vector3f SXAVENGER_ENGINE CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, TimePointd<TimeUnit::second> time) {
+Vector3f TransformAnimation::CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, TimePointd<TimeUnit::second> time) {
 	StreamLogger::AssertA(!keyframes.empty(), "keyframes is empty.");
 
 	if (keyframes.size() == 1 || time <= keyframes.front().time) {
@@ -32,7 +32,7 @@ Vector3f SXAVENGER_ENGINE CalculateAnimationCurve(const AnimationCurve<Vector3f>
 	return keyframes.back().value;
 }
 
-Quaternion SXAVENGER_ENGINE CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, TimePointd<TimeUnit::second> time) {
+Quaternion TransformAnimation::CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, TimePointd<TimeUnit::second> time) {
 	StreamLogger::AssertA(!keyframes.empty(), "keyframes is empty.");
 
 	if (keyframes.size() == 1 || time <= keyframes.front().time) {

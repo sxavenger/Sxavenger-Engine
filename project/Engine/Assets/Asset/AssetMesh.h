@@ -31,68 +31,66 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AssetMesh class
+// Asset namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-class AssetMesh final
-	: public BaseAsset {
-public:
+namespace Asset {
 
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Mesh class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	class Mesh final
+		: public BaseAsset {
+	public:
 
-	AssetMesh(const Uuid& id) : BaseAsset(id) {}
-	~AssetMesh() override = default;
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
 
-	void Setup(const aiMesh* mesh);
+		//* constructor / destructor *//
 
-	void Update(const DirectXQueueContext* context);
+		Mesh(const Uuid& id) : BaseAsset(id) {}
 
-	//* inspector option *//
+		~Mesh() override = default;
 
-	void ShowInspector() override;
+		//* setup option *//
 
-	//* asset option *//
+		void Setup(const DirectXQueueContext* context, const aiMesh* mesh);
 
-	void BindInputAssembler(const DirectXQueueContext* context) const;
+		//* mesh option *//
 
-	void DrawCall(const DirectXQueueContext* context, UINT instanceCount = 1) const;
+		const InputMesh& GetInputMesh() const;
 
-	//* getter *//
+		const std::unordered_map<std::string, JointWeightData>& GetJointWeights() const { return jointWeights_; }
+		// hack: meshの読み込みが完了してから取得する.
 
-	const InputMesh& GetInputMesh() const;
-	InputMesh& GetInputMesh();
+		const std::string& GetName() const { return name_; }
+		// hack: meshの読み込みが完了してから取得する.
 
-	const InputMesh::InputVertex* GetInputVertex() const { return GetInputMesh().GetVertex(); }
-	const InputMesh::InputIndex* GetInputIndex() const { return GetInputMesh().GetIndex(); }
+	private:
 
-	const std::unordered_map<std::string, JointWeightData>& GetJointWeights() const { return jointWeights_; }
+		//=========================================================================================
+		// private variables
+		//=========================================================================================
 
-	const std::string& GetName() const { return name_; }
+		//* mesh data
+		InputMesh                                        input_;
+		std::unordered_map<std::string, JointWeightData> jointWeights_;
+		std::string                                      name_;
 
-private:
+		//=========================================================================================
+		// private methods
+		//=========================================================================================
 
-	//=========================================================================================
-	// private variables
-	//=========================================================================================
+		//* helper convert methods *//
 
-	//* mesh data
-	InputMesh                                        input_;
-	std::optional<uint32_t>                          materialIndex_;
-	std::unordered_map<std::string, JointWeightData> jointWeights_;
-	std::string                                      name_;
+		static Vector3f ConvertVector3(const aiVector3D& aiVector);
 
-	//=========================================================================================
-	// private methods
-	//=========================================================================================
+		static Vector4f ConvertVector4(const aiVector3D& aiVector);
 
-	//* helper convert methods *//
+		static Quaternion ConvertQuaternion(const aiQuaternion& aiQuaternion);
 
-	static Vector3f ConvertNormal(const aiVector3D& aiVector);
-	static Vector3f ConvertPosition3(const aiVector3D& aiVector);
-	static Vector4f ConvertPosition4(const aiVector3D& aiVector);
-	static Quaternion ConvertQuaternion(const aiQuaternion& aiQuaternion);
+	};
 
-};
+}
 
 SXAVENGER_ENGINE_NAMESPACE_END

@@ -3,23 +3,20 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* uasset
-#include "BaseAsset.h"
+//* async
+#include "AsyncExecutionTask.h"
+#include "AsyncExecutionThread.h"
 
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxResource.h>
-#include <Engine/System/DirectX/DxObject/DxDescriptor.h>
-#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
-
-//* lib
-#include <Lib/Adapter/Uuid/Uuid.h>
-
-//* external
-#include <stb_truetype.h>
 
 //* c++
-#include <unordered_map>
+#include <memory>
+#include <queue>
+#include <array>
+#include <list>
+#include <mutex>
+#include <condition_variable>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -27,31 +24,44 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Asset namespace
+// Async namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace Asset {
+namespace Async {
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Font class
+	// ExecutionThreadPool class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	class Font final
-		: public BaseAsset {
+	class ExecutionThreadPool {
 	public:
 
 		////////////////////////////////////////////////////////////////////////////////////////////
-		// GlyphInfo structure
+		// TaskQueue class
 		////////////////////////////////////////////////////////////////////////////////////////////
-		struct GlyphInfo {
+		class TaskQueue {
 		public:
 
 			//=========================================================================================
-			// public variables
+			// public methods
 			//=========================================================================================
 
-			Vector2f uv[2];
-			Vector2f size;
-			Vector2f offset;
-			float advance;
+			void Push(const std::shared_ptr<ExecutionTask>& task);
+
+			std::shared_ptr<ExecutionTask> Pop(Execution execution);
+
+			bool IsEmpty() const;
+
+			bool HasTask(Execution execution) const;
+
+		private:
+
+			//=========================================================================================
+			// private variables
+			//=========================================================================================
+
+			std::array<
+				std::queue<std::shared_ptr<ExecutionTask>>,
+				static_cast<uint8_t>(Execution::Cpu) + 1
+			> queue_;
 
 		};
 
@@ -61,23 +71,15 @@ namespace Asset {
 		// public methods
 		//=========================================================================================
 
-		Font(const Uuid& id) : BaseAsset(id) {}
+		void Init();
 
-		~Font() override = default;
+		void NotifyTerminate(bool isWaitForQueue = false);
 
-		//* setup option *//
+		void Shutdown();
 
-		void Setup(const DirectXQueueContext* context, const stbtt_fontinfo& info, float size);
+		//* task option *//
 
-		//* font option *//
-
-		const DxObject::Descriptor& GetDescriptorSRV() const;
-
-		const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const;
-
-		float GetFontSize() const { return fontSize_; }
-
-		const GlyphInfo& GetGlyphInfo(wchar_t c) const;
+		void PushTask(const std::shared_ptr<ExecutionTask>& task);
 
 	private:
 
@@ -85,51 +87,26 @@ namespace Asset {
 		// private variables
 		//=========================================================================================
 
-		//=========================================================================================
-		// private variables
-		//=========================================================================================
-	
-		//* directx12 *// 
+		std::list<ExecutionThread> threads_;
 
-		DxObject::Resource   resource_;
-		DxObject::Descriptor descriptorSRV_;
+		std::mutex mutex_;
+		std::condition_variable condition_;
 
-		//* font intermediate *//
+		TaskQueue queue_;
 
-		Vector2i current_ = {};
-		int32_t maxHeight_ = 0;
-
-		std::vector<uint8_t> atlasData_;
-		//!< todo: 中間データとして持たせるので削除する
-
-		//* parameter *//
-
-		static inline const Vector2ui kAtlasSize = { 1024, 1024 };
-
-		float fontSize_ = NULL;
-
-		int32_t ascent_ = NULL;
-		int32_t descent_ = NULL;
-
-		std::unordered_map<wchar_t, GlyphInfo> glyphs_;
-		//!< wchar_tごとのglyph情報
+		bool isTerminate_ = false;
 
 		//=========================================================================================
 		// private methods
 		//=========================================================================================
 
-		//* create helper methods *//
+		std::shared_ptr<ExecutionTask> GetTask(const ExecutionThread* thread);
 
-		void CreateAtlasTexture();
-
-		void LoadGlyph(const stbtt_fontinfo& info, float scale);
-
-		GlyphInfo GenerateGlyphInfo(const stbtt_fontinfo& info, float scale, wchar_t c);
-
-		void UploadAtlasData(const DirectXQueueContext* context);
+		void CreateThread(Execution execution, size_t count);
 
 	};
 
-};
+}
 
 SXAVENGER_ENGINE_NAMESPACE_END
+

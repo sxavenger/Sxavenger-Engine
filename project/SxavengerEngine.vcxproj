@@ -174,12 +174,13 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\Assets\Asset\AssetAnimation.h" />
+    <ClInclude Include="Engine\!Content\BaseContent.h" />
+    <ClInclude Include="Engine\!Content\ContentTexture.h" />
+    <ClInclude Include="Engine\Assets\Asset\AssetAnimationClip.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetAudioClip.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetFont.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetMaterial.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetMesh.h" />
-    <ClInclude Include="Engine\Assets\Asset\AssetParameter.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetSkeleton.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetStorage.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetTexture.h" />
@@ -361,6 +362,9 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\System\Mono\MonoController.h" />
     <ClInclude Include="Engine\System\Mono\MonoDomain.h" />
     <ClInclude Include="Engine\System\Mono\MonoInstance.h" />
+    <ClInclude Include="Engine\System\Runtime\Async\AsyncExecutionTask.h" />
+    <ClInclude Include="Engine\System\Runtime\Async\AsyncExecutionThread.h" />
+    <ClInclude Include="Engine\System\Runtime\Async\AsyncExecutionThreadPool.h" />
     <ClInclude Include="Engine\System\Runtime\Execution\ExecutionContext.h" />
     <ClInclude Include="Engine\System\Runtime\Execution\ExecutionInterface.h" />
     <ClInclude Include="Engine\System\Runtime\Execution\ExecutionPipeline.h" />
@@ -371,9 +375,6 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\TimestampCpu.h" />
     <ClInclude Include="Engine\System\Runtime\Performance\TimestampGpu.h" />
-    <ClInclude Include="Engine\System\Runtime\Thread\AsyncTask.h" />
-    <ClInclude Include="Engine\System\Runtime\Thread\AsyncThread.h" />
-    <ClInclude Include="Engine\System\Runtime\Thread\AsyncThreadCollection.h" />
     <ClInclude Include="Engine\System\System.h" />
     <ClInclude Include="Engine\System\UI\ISystemDebugGui.h" />
     <ClInclude Include="Engine\System\UI\ImGuiController.h" />
@@ -421,12 +422,13 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Lib\Transform\Transform.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp" />
+    <ClCompile Include="Engine\!Content\BaseContent.cpp" />
+    <ClCompile Include="Engine\!Content\ContentTexture.cpp" />
+    <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetAudioClip.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetFont.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetMaterial.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetMesh.cpp" />
-    <ClCompile Include="Engine\Assets\Asset\AssetSkeleton.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetStorage.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetTexture.cpp" />
     <ClCompile Include="Engine\Assets\Asset\BaseAsset.cpp" />
@@ -592,6 +594,9 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\System\Mono\MonoController.cpp" />
     <ClCompile Include="Engine\System\Mono\MonoDomain.cpp" />
     <ClCompile Include="Engine\System\Mono\MonoInstance.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Async\AsyncExecutionTask.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Async\AsyncExecutionThread.cpp" />
+    <ClCompile Include="Engine\System\Runtime\Async\AsyncExecutionThreadPool.cpp" />
     <ClCompile Include="Engine\System\Runtime\Execution\ExecutionContext.cpp" />
     <ClCompile Include="Engine\System\Runtime\Execution\ExecutionPipeline.cpp" />
     <ClCompile Include="Engine\System\Runtime\Input\Input.cpp" />
@@ -599,9 +604,6 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\TimestampCpu.cpp" />
     <ClCompile Include="Engine\System\Runtime\Performance\TimestampGpu.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Thread\AsyncTask.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Thread\AsyncThread.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Thread\AsyncThreadCollection.cpp" />
     <ClCompile Include="Engine\System\System.cpp" />
     <ClCompile Include="Engine\System\UI\ImGuiController.cpp" />
     <ClCompile Include="Engine\System\UI\SxGui.cpp" />
@@ -637,6 +639,9 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ProjectReference Include="Externals\meshoptimizer\meshoptimizer.vcxproj">
       <Project>{75046AD2-E1C4-E508-AAFF-2E86167F2AE5}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Engine\Assets\Asset\AssetSkeleton.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

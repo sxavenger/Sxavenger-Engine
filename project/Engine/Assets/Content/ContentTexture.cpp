@@ -13,6 +13,7 @@ SXAVENGER_ENGINE_USING
 //* lib
 #include <Lib/Adapter/Json/JsonHandler.h>
 #include <Lib/Adapter/Time/LocalTimePoint.h>
+#include "ContentTexture.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ContentTexture class methods

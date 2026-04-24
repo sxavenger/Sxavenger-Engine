@@ -20,7 +20,7 @@
 #include "Runtime/Performance/Performance.h"
 #include "Runtime/Performance/TimestampCpu.h"
 #include "Runtime/Performance/TimestampGpu.h"
-#include "Runtime/Thread/AsyncThreadCollection.h"
+#include "Runtime/Async/AsyncExecutionThreadPool.h"
 #include "UI/ImGuiController.h"
 #include "Mono/MonoController.h"
 
@@ -146,21 +146,21 @@ public:
 	static TimestampGpu* GetTimestampGpu();
 
 	//-----------------------------------------------------------------------------------------
-	// Async thread collection option
+	// Async execution thread pool option
 	//-----------------------------------------------------------------------------------------
 
 	//! @brief 非同期タスクを追加
 	//! @param[in] execution 実行するスレッド
 	//! @param[in] task      実行するタスク
-	static void PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task);
+	static void PushTask(const std::shared_ptr<Async::ExecutionTask>& task);
 
 	//! @brief 非同期タスクを追加
 	//! @param[in] execution 実行するスレッド
 	//! @param[in] function 実行する関数
 	//! @return 追加されたタスク
-	static std::shared_ptr<AsyncTask> PushTask(AsyncExecution execution, const AsyncTask::Function& function);
+	static std::shared_ptr<Async::ExecutionTask> PushTask(Async::Execution execution, const Async::ExecutionTask::ExecutionFunction& function);
 
-	static AsyncThreadCollection* GetAsyncThreadCollection();
+	static Async::ExecutionThreadPool* GetExecutionThreadPool();
 
 	//-----------------------------------------------------------------------------------------
 	// imgui controller option

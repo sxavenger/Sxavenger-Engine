@@ -53,6 +53,16 @@ void StreamLogger::Log(const std::wstring& message) {
 	StreamLogger::OutputW(message);
 }
 
+void StreamLogger::ThreadLog(const std::string& message) {
+	std::string label = StreamLogger::GetThreadLabelA(std::this_thread::get_id());
+	StreamLogger::Log(std::format("{} >> {}", label, message));
+}
+
+void StreamLogger::ThreadLog(const std::wstring& message) {
+	std::wstring label = StreamLogger::GetThreadLabelW(std::this_thread::get_id());
+	StreamLogger::Log(std::format(L"{} >> {}", label, message));
+}
+
 NORETURN void StreamLogger::Exception(const std::string& label, const std::string& detail, const std::source_location& location) {
 
 	ExceptionMessage<std::string> message = StreamLogger::ParseExceptionMessageA(location, std::this_thread::get_id(), label, detail);
@@ -112,45 +122,25 @@ NORETURN void StreamLogger::Exception(const std::wstring& label, const std::wstr
 }
 
 void StreamLogger::EngineLog(const std::string& message) {
-	std::string tag = "[Sxavenger Engine] >> ";
-	StreamLogger::Log(tag + message);
+	std::string tag = "[Sxavenger Engine]";
+	StreamLogger::Log(std::format("{} >> {}", tag, message));
 }
 
 void StreamLogger::EngineLog(const std::wstring& message) {
-	std::wstring tag = L"[Sxavenger Engine] >> ";
-	StreamLogger::Log(tag + message);
+	std::wstring tag = L"[Sxavenger Engine]";
+	StreamLogger::Log(std::format(L"{} >> {}", tag, message));
 }
 
 void StreamLogger::EngineThreadLog(const std::string& message) {
-	std::ostringstream tag;
-	tag << "[Sxavenger Engine] ";
-
-	std::thread::id id = std::this_thread::get_id();
-
-	if (id == kMainThreadId_) {
-		tag << "[main thread] >> ";
-
-	} else {
-		tag << "[thread id: " << id << "] >> ";
-	}
-
-	StreamLogger::Log(tag.str() + message);
+	std::string tag   = "[Sxavenger Engine]";
+	std::string label = StreamLogger::GetThreadLabelA(std::this_thread::get_id());
+	StreamLogger::Log(std::format("{} {} >> {}", tag, label, message));
 }
 
 void StreamLogger::EngineThreadLog(const std::wstring& message) {
-	std::wostringstream tag;
-	tag << L"[Sxavenger Engine] ";
-
-	std::thread::id id = std::this_thread::get_id();
-
-	if (id == kMainThreadId_) {
-		tag << L"[main thread] >> ";
-
-	} else {
-		tag << L"[thread id: " << id << L"] >> ";
-	}
-
-	StreamLogger::Log(tag.str() + message);
+	std::wstring tag   = L"[Sxavenger Engine]";
+	std::wstring label = StreamLogger::GetThreadLabelW(std::this_thread::get_id());
+	StreamLogger::Log(std::format(L"{} {} >> {}", tag, label, message));
 }
 
 void StreamLogger::AssertA(bool expression, const std::string& label, const std::string& detail, const std::source_location& location) {
@@ -186,6 +176,33 @@ std::filesystem::path StreamLogger::GetStreamLogFilename() {
 		time.minute,
 		time.second
 	);
+}
+
+std::string StreamLogger::GetThreadLabelA(const std::thread::id id) {
+
+	std::ostringstream tag;
+
+	if (id == kMainThreadId_) {
+		tag << "[main thread]";
+
+	} else {
+		tag << "[thread id: " << id << "]";
+	}
+
+	return tag.str();
+}
+
+std::wstring StreamLogger::GetThreadLabelW(const std::thread::id id) {
+	std::wostringstream tag;
+
+	if (id == kMainThreadId_) {
+		tag << L"[main thread]";
+
+	} else {
+		tag << L"[thread id: " << id << L"]";
+	}
+
+	return tag.str();
 }
 
 void StreamLogger::OutputConsoleA(const std::string& message) {

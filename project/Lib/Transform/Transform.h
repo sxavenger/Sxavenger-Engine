@@ -87,8 +87,7 @@ struct TransformationMatrix {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Transform2d structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-struct Transform2d
-	: public IJsonSerializer {
+struct Transform2d {
 public:
 
 	//=========================================================================================
@@ -97,9 +96,11 @@ public:
 
 	Matrix4x4 ToMatrix() const;
 
-	json ParseToJson() const override;
+	//* json option *//
 
-	void InputJson(const json& data) override;
+	json Serialize() const;
+
+	static Transform2d Deserialize(const json& data);
 
 	//=========================================================================================
 	// public variables
