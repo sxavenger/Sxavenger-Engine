@@ -58,35 +58,39 @@ public:
 	//! @brief Contentの読み込み 
 	//! @tparam T Contentの型
 	//! @param[in] filepath Contentのファイルパス
-	//! @param[in] param 読み込みパラメータ
+	//! @param[in] parameter 読み込みパラメータ
 	//! @return 読み込んだContentの共有ポインタ
-	template <ContentConcept T>
-	std::shared_ptr<T> Import(const std::filesystem::path& filepath, const std::any& param = std::any());
+	template <Content T>
+	std::shared_ptr<T> Import(const std::filesystem::path& filepath, const std::any& parameter = std::any());
 
 	//! @brief Contentの再読み込み
 	//! @tparam T Contentの型
 	//! @param[in] filepath Contentのファイルパス
-	//! @param[in] param 読み込みパラメータ
+	//! @param[in] parameter 読み込みパラメータ
 	//! @return 読み込んだContentの共有ポインタ
-	template <ContentConcept T>
-	std::shared_ptr<T> Reload(const std::filesystem::path& filepath, const std::any& param = std::any());
+	template <Content T>
+	std::shared_ptr<T> Reload(const std::filesystem::path& filepath, const std::any& parameter = std::any());
 
 	//! @brief Contentの直接登録
 	//! @param[in] type Contentの型情報
 	//! @param[in] content 登録するContentの共有ポインタ
-	void Emplace(const std::type_info* type, const std::shared_ptr<BaseContent>& content);
+	//! @param[in] filepath Contentのファイルパス
+	//! @param[in] parameter 登録するContentのパラメータ
+	void Emplace(const std::type_info* type, const std::shared_ptr<BaseContent>& content, const std::filesystem::path& filepath, const std::any& parameter);
 
 	//! @brief Contentの登録（存在しない場合のみ）
 	//! @param[in] type Contentの型情報
 	//! @param[in] content 登録するContentの共有ポインタ
-	void TryEmplace(const std::type_info* type, const std::shared_ptr<BaseContent>& content);
+	//! @param[in] filepath Contentのファイルパス
+	//! @param[in] parameter 登録するContentのパラメータ
+	void TryEmplace(const std::type_info* type, const std::shared_ptr<BaseContent>& content, const std::filesystem::path& filepath, const std::any& parameter = std::any());
 
 	//! @brief Contentの取得
 	//! @tparam T Contentの型
 	//! @param[in] filepath Contentのファイルパス
 	//! @retval ptr     取得したContentの共有ポインタ
 	//! @retval nullptr Contentが存在しない場合
-	template <ContentConcept T>
+	template <Content T>
 	std::shared_ptr<T> GetContent(const std::filesystem::path& filepath) const;
 
 	//! @brief Contentの取得
@@ -97,7 +101,7 @@ public:
 	std::shared_ptr<BaseContent> GetContent(const std::type_info* type, const std::filesystem::path& filepath) const;
 
 	//! @brief 指定したfilepathのContent型情報を取得
-	//! @param filepath Contentのファイルパス
+	//! @param[in] filepath Contentのファイルパス
 	//! @retval ptr 取得したContentの型情報
 	//! @retval nullptr Contentが存在しない場合
 	const std::type_info* GetType(const std::filesystem::path& filepath) const;
@@ -108,10 +112,10 @@ public:
 
 	static std::optional<std::filesystem::path> DragAndDropTargetFilepath(const std::type_info* type);
 
-	template <ContentConcept T>
+	template <Content T>
 	std::shared_ptr<T> DragAndDropTargetContent();
 
-	template <ContentConcept T>
+	template <Content T>
 	void DragAndDropTargetContentFunc(const std::function<void(const std::shared_ptr<T>&)>& function);
 	
 	//* singleton *//
@@ -132,10 +136,14 @@ private:
 
 	//* helper methods *//
 
+	static void CheckExists(const std::filesystem::path& filepath);
+
+	template <Content T>
+	static std::shared_ptr<T> Cast(const std::shared_ptr<BaseContent>& content);
+
 	bool Contains(const std::type_info* type, const std::filesystem::path& filepath) const;
 
-	template <ContentConcept T>
-	static std::shared_ptr<T> Cast(const std::shared_ptr<BaseContent>& content);
+	
 
 };
 
@@ -143,41 +151,39 @@ private:
 // ContentStorage class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <ContentConcept T>
-inline std::shared_ptr<T> ContentStorage::Import(const std::filesystem::path& filepath, const std::any& param) {
+template <Content T>
+inline std::shared_ptr<T> ContentStorage::Import(const std::filesystem::path& filepath, const std::any& parameter) {
 	constexpr const std::type_info* type = &typeid(T);
 
-	if (!Contains(type, filepath)) {
-		return this->Reload<T>(filepath, param); //!< Contentが存在しない場合は、読み込みを行う
+	if (!ContentStorage::Contains(type, filepath)) {
+		return ContentStorage::Reload<T>(filepath, parameter); //!< Contentが存在しない場合は、読み込みを行う
 	}
 
 	return ContentStorage::Cast<T>(storage_[type][filepath]);
 }
 
-template <ContentConcept T>
-inline std::shared_ptr<T> ContentStorage::Reload(const std::filesystem::path& filepath, const std::any& param) {
+template <Content T>
+inline std::shared_ptr<T> ContentStorage::Reload(const std::filesystem::path& filepath, const std::any& parameter) {
 	constexpr const std::type_info* type = &typeid(T);
 
 	std::shared_ptr<BaseContent> content = std::make_shared<T>();
-	content->SetFilepath(filepath);
-	content->SetParam(param);
-	this->Emplace(type, content);
+	ContentStorage::Emplace(type, content, filepath, parameter);
 
 	return ContentStorage::Cast<T>(content);
 }
 
-template <ContentConcept T>
+template <Content T>
 inline std::shared_ptr<T> ContentStorage::GetContent(const std::filesystem::path& filepath) const {
 	constexpr const std::type_info* type = &typeid(T);
 
-	if (!Contains(type, filepath)) {
+	if (!ContentStorage::Contains(type, filepath)) {
 		return nullptr; //!< Contentが存在しない
 	}
 
 	return ContentStorage::Cast<T>(storage_.at(type).At(filepath)); //!< Contentを取得
 }
 
-template <ContentConcept T>
+template <Content T>
 inline std::shared_ptr<T> ContentStorage::DragAndDropTargetContent() {
 	constexpr const std::type_info* type = &typeid(T);
 
@@ -187,12 +193,17 @@ inline std::shared_ptr<T> ContentStorage::DragAndDropTargetContent() {
 		return nullptr;
 	}
 
-	return this->Import<T>(filepath.value());
+	return ContentStorage::Import<T>(filepath.value());
 }
 
-template <ContentConcept T>
+template <Content T>
+inline std::shared_ptr<T> ContentStorage::Cast(const std::shared_ptr<BaseContent>& content) {
+	return std::static_pointer_cast<T>(content);
+}
+
+template <Content T>
 inline void ContentStorage::DragAndDropTargetContentFunc(const std::function<void(const std::shared_ptr<T>&)>& function) {
-	std::shared_ptr<T> content = this->DragAndDropTargetContent<T>();
+	std::shared_ptr<T> content = ContentStorage::DragAndDropTargetContent<T>();
 
 	if (content == nullptr) {
 		return;
@@ -201,14 +212,10 @@ inline void ContentStorage::DragAndDropTargetContentFunc(const std::function<voi
 	function(content);
 }
 
-template <ContentConcept T>
-inline std::shared_ptr<T> ContentStorage::Cast(const std::shared_ptr<BaseContent>& content) {
-	return std::static_pointer_cast<T>(content);
-}
+////////////////////////////////////////////////////////////////////////////////////////////
+// instance
+////////////////////////////////////////////////////////////////////////////////////////////
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// singleton instance variable
-////////////////////////////////////////////////////////////////////////////////////////////
 static ContentStorage* const sContentStorage = ContentStorage::GetInstance();
 
 SXAVENGER_ENGINE_NAMESPACE_END

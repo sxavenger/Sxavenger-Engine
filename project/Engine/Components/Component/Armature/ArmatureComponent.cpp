@@ -80,7 +80,7 @@ void ArmatureComponent::InputJson(const json& data) {
 	// skeletonのuuidが存在しない場合は, tableから読み込み
 
 	if (!sAssetStorage->Contains<AssetSkeleton>(skeleton)) {
-		const auto& filepath = sAssetStorage->GetFilepath(skeleton);
+		const auto& filepath = sAssetStorage->GetLocation(skeleton);
 		sContentStorage->Import<ContentModel>(filepath);
 	}
 

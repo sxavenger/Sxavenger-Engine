@@ -17,7 +17,7 @@ GeometryPSInput main(MeshVertex input, uint instanceId : SV_InstanceID) {
 	output.position = mul(gTransform.Transform(input.position), kViewProj);
 	output.worldPos = gTransform.Transform(input.position).xyz;
 	
-	output.texcoord = gMaterials[instanceId].transform.Transformation(input.texcoord);
+	output.texcoord = gMaterials[instanceId].transformation.Transform(input.texcoord);
 	
 	output.normal    = normalize(gTransform.TransformNormal(input.normal));
 	output.tangent   = normalize(gTransform.TransformNormal(input.tangent));

@@ -46,7 +46,7 @@ void TextRendererComponent::ShowComponentInspector() {
 	// TODO: MultilineInputTextFuncを使用する
 
 	if (ImGui::BeginCombo("font", font_.GetStr().c_str())) {
-		for (const auto& id : sAssetStorage->GetAssetStorage<AssetFont>() | std::views::keys) {
+		for (const auto& id : sAssetStorage->GetStorage<AssetFont>() | std::views::keys) {
 			if (ImGui::Selectable(id.Serialize().c_str(), font_ == id)) {
 				font_ = id; //!< 選択されたfontを設定
 			}
@@ -191,7 +191,7 @@ void TextRendererComponent::InputJson(const json& data) {
 
 	// fontのuuidが存在しない場合は, tableから読み込み
 	if (!sAssetStorage->Contains<AssetFont>(font)) {
-		const auto& filepath = sAssetStorage->GetFilepath(font);
+		const std::filesystem::path& filepath = sAssetStorage->GetLocation(font);
 		sContentStorage->Import<ContentFont>(filepath);
 	}
 

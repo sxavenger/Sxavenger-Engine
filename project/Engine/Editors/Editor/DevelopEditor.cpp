@@ -175,7 +175,7 @@ void DevelopEditor::ShowSystemMenu() {
 void DevelopEditor::ShowThreadMenu() {
 	if (ImGui::BeginMenu("thread")) {
 		MenuPadding();
-		System::GetAsyncThreadCollection()->SystemDebugGui();
+		System::GetExecutionThreadPool()->DebugGui();
 		ImGui::EndMenu();
 	}
 }

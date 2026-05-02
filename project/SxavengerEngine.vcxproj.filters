@@ -151,6 +151,9 @@
     <Filter Include="Engine\System\Runtime">
       <UniqueIdentifier>{C222E51B-2E8F-A016-F782-387463AEC27E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\System\Runtime\Async">
+      <UniqueIdentifier>{6F7BD4B7-DB88-029E-646F-FE88D07BCE54}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\System\Runtime\Execution">
       <UniqueIdentifier>{C52BFF8E-310F-0ECF-3A12-3C0BA674D41F}</UniqueIdentifier>
     </Filter>
@@ -162,9 +165,6 @@
     </Filter>
     <Filter Include="Engine\System\Runtime\Performance">
       <UniqueIdentifier>{23757C96-8FE3-D115-D8CC-8C15447AC7B1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\System\Runtime\Thread">
-      <UniqueIdentifier>{E9E2EADD-D59D-DA89-7E55-53D46AEF241A}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\System\UI">
       <UniqueIdentifier>{5C738E13-486C-AD65-719E-92EA5DF68C71}</UniqueIdentifier>
@@ -219,6 +219,36 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Assets\Asset\AssetAnimationClip.h">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Assets\Asset\AssetAudioClip.h">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Assets\Asset\AssetFont.h">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Assets\Asset\AssetMaterial.h">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Assets\Asset\AssetMesh.h">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Assets\Asset\AssetParameter.h">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Assets\Asset\AssetSkeleton.h">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Assets\Asset\AssetStorage.h">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Assets\Asset\AssetTexture.h">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Assets\Asset\BaseAsset.h">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Assets\Content\BaseContent.h">
       <Filter>Engine\Assets\Content</Filter>
     </ClInclude>
@@ -750,6 +780,15 @@
     <ClInclude Include="Engine\System\Mono\MonoInstance.h">
       <Filter>Engine\System\Mono</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\Runtime\Async\AsyncExecutionTask.h">
+      <Filter>Engine\System\Runtime\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Runtime\Async\AsyncExecutionThread.h">
+      <Filter>Engine\System\Runtime\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Runtime\Async\AsyncExecutionThreadPool.h">
+      <Filter>Engine\System\Runtime\Async</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\Runtime\Execution\ExecutionContext.h">
       <Filter>Engine\System\Runtime\Execution</Filter>
     </ClInclude>
@@ -915,22 +954,35 @@
     <ClInclude Include="Lib\Transform\Transform.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Assets\Asset\BaseAsset.h" />
-    <ClInclude Include="Engine\Assets\Asset\AssetMaterial.h" />
-    <ClInclude Include="Engine\Assets\Asset\AssetTexture.h" />
-    <ClInclude Include="Engine\Assets\Asset\AssetMesh.h" />
-    <ClInclude Include="Engine\Assets\Asset\AssetAnimationClip.h" />
-    <ClInclude Include="Engine\Assets\Asset\AssetSkeleton.h" />
-    <ClInclude Include="Engine\Assets\Asset\AssetAudioClip.h" />
-    <ClInclude Include="Engine\Assets\Asset\AssetFont.h" />
-    <ClInclude Include="Engine\Assets\Asset\AssetStorage.h" />
-    <ClInclude Include="Engine\System\Runtime\Async\AsyncExecutionTask.h" />
-    <ClInclude Include="Engine\System\Runtime\Async\AsyncExecutionThread.h" />
-    <ClInclude Include="Engine\System\Runtime\Async\AsyncExecutionThreadPool.h" />
-    <ClInclude Include="Engine\!Content\BaseContent.h" />
-    <ClInclude Include="Engine\!Content\ContentTexture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Assets\Asset\AssetAudioClip.cpp">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Assets\Asset\AssetFont.cpp">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Assets\Asset\AssetMaterial.cpp">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Assets\Asset\AssetMesh.cpp">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Assets\Asset\AssetSkeleton.cpp">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Assets\Asset\AssetStorage.cpp">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Assets\Asset\AssetTexture.cpp">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Assets\Asset\BaseAsset.cpp">
+      <Filter>Engine\Assets\Asset</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Assets\Content\BaseContent.cpp">
       <Filter>Engine\Assets\Content</Filter>
     </ClCompile>
@@ -1417,6 +1469,15 @@
     <ClCompile Include="Engine\System\Mono\MonoInstance.cpp">
       <Filter>Engine\System\Mono</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\System\Runtime\Async\AsyncExecutionTask.cpp">
+      <Filter>Engine\System\Runtime\Async</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Runtime\Async\AsyncExecutionThread.cpp">
+      <Filter>Engine\System\Runtime\Async</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Runtime\Async\AsyncExecutionThreadPool.cpp">
+      <Filter>Engine\System\Runtime\Async</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\Runtime\Execution\ExecutionContext.cpp">
       <Filter>Engine\System\Runtime\Execution</Filter>
     </ClCompile>
@@ -1508,21 +1569,5 @@
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\Assets\Asset\BaseAsset.cpp" />
-    <ClCompile Include="Engine\Assets\Asset\AssetMaterial.cpp" />
-    <ClCompile Include="Engine\Assets\Asset\AssetTexture.cpp" />
-    <ClCompile Include="Engine\Assets\Asset\AssetMesh.cpp" />
-    <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp" />
-    <ClCompile Include="Engine\Assets\Asset\AssetAudioClip.cpp" />
-    <ClCompile Include="Engine\Assets\Asset\AssetFont.cpp" />
-    <ClCompile Include="Engine\Assets\Asset\AssetStorage.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Async\AsyncExecutionTask.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Async\AsyncExecutionThread.cpp" />
-    <ClCompile Include="Engine\System\Runtime\Async\AsyncExecutionThreadPool.cpp" />
-    <ClCompile Include="Engine\!Content\BaseContent.cpp" />
-    <ClCompile Include="Engine\!Content\ContentTexture.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Engine\Assets\Asset\AssetSkeleton.cpp" />
   </ItemGroup>
 </Project>

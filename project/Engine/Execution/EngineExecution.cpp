@@ -45,7 +45,7 @@ void EngineExecution::Term() {
 void EngineExecution::SetProcess(Execution::Context* context) {
 	context->SetProcess(Execution::Process::Init, std::nullopt, [this]() {
 
-		sAssetStorage->Deserialize();
+		sAssetStorage->DeserializeLocation();
 
 		ComponentHelper::RegisterComponents();
 		sAudioController->Init();
@@ -70,7 +70,7 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 		System::Shutdown();
 		System::ExecuteAllAllocator();
 
-		sAssetStorage->Serialize();
+		sAssetStorage->SerializeLocation();
 	});
 
 	context->SetProcess(Execution::Process::Begin, 0, [this]() {
@@ -170,6 +170,6 @@ void EngineExecution::UpdateAsset() {
 	});
 
 	sAssetStorage->ForEach<AssetTexture>([](AssetTexture* asset) {
-		asset->Update(System::GetDirectQueueContext());
+		asset->Transition(System::GetDirectQueueContext());
 	});
 }

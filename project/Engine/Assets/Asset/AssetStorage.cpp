@@ -14,7 +14,12 @@ SXAVENGER_ENGINE_USING
 // Storage class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Asset::Storage::SerializeLocation() const {
+void AssetStorage::Term() {
+	location_.clear();
+	storage_.clear();
+}
+
+void AssetStorage::SerializeLocation() const {
 
 	json data = json::object();
 
@@ -26,7 +31,7 @@ void Asset::Storage::SerializeLocation() const {
 	StreamLogger::EngineLog("[Asset::Storage] asset storage location serialized.");
 }
 
-void Asset::Storage::DeserializeLocation() {
+void AssetStorage::DeserializeLocation() {
 
 	if (!JsonHandler::CheckExist(kLocationFilepath)) {
 		return; //!< ファイルが存在しない場合は何もしない
@@ -41,12 +46,12 @@ void Asset::Storage::DeserializeLocation() {
 	StreamLogger::EngineLog("[Asset::Storage] asset storage location deserialized.");
 }
 
-const std::filesystem::path& Asset::Storage::GetLocation(const Uuid& id) const {
+const std::filesystem::path& AssetStorage::GetLocation(const Uuid& id) const {
 	StreamLogger::AssertA(location_.contains(id), "asset storage location does not exist. uuid: " + id.Serialize());
 	return location_.at(id);
 }
 
-Asset::Storage* Asset::Storage::GetInstance() {
-	static Storage instance;
+AssetStorage* AssetStorage::GetInstance() {
+	static AssetStorage instance;
 	return &instance;
 }

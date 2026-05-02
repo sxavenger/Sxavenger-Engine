@@ -52,6 +52,10 @@ void Async::ExecutionThread::Create(Execution execution, const GetTaskFunction& 
 
 			task->Execute(context_.get());
 
+			if (context_ != nullptr) {
+				context_->ExecuteAllAllocators();
+			}
+
 			tracker.End();
 
 			task->SetStatus(ExecutionTask::Status::Completed);

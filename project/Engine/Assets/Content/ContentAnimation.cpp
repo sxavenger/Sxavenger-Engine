@@ -6,6 +6,7 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* asset
 #include "../Asset/AssetStorage.h"
+#include "../Asset/AssetAnimationClip.h"
 
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
@@ -17,66 +18,56 @@ SXAVENGER_ENGINE_USING
 // ContentAnimation class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentAnimation::AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) {
-	BaseContent::CheckExist();
+void ContentAnimation::Attach(const std::filesystem::path& filepath, const std::any& parameter) {
 
-	uint32_t option = 0; //!< default option
+	//!< 引数の保存
+	BaseContent::Attach(filepath, parameter);
 
-	if (param_.has_value()) {
-		option = std::any_cast<uint32_t>(param_);
-	}
+	//!< sceneの取得
+	std::shared_ptr<Assimp::Importer> importer = ContentAnimation::LoadImporter(filepath);
+	const aiScene* aiScene = importer->GetScene();
 
-	Load(BaseContent::GetFilepath(), option);
-}
+	animations_.resize(aiScene->mNumAnimations); //!< idのサイズを確保
 
-void ContentAnimation::AttachUuid() {
-	BaseContent::CheckExist();
+	//!< Uuidの割り当て
+	AttachUuid(filepath);
 
-	// sceneの取得
-	Assimp::Importer importer;
-	const aiScene* aiScene = importer.ReadFile(BaseContent::GetFilepath().generic_string().c_str(), 0);
-
-	if (aiScene == nullptr) {
-		StreamLogger::Exception("animation load failed. filepath: " + BaseContent::GetFilepath().generic_string(), importer.GetErrorString());
-		return;
-	}
-
-	// idのサイズを確保
-	animations_.resize(aiScene->mNumAnimations);
-
-	// idを取得
-	AssignUuid();
-
-	// storageに登録
+	//!< Storageに登録
 	for (size_t i = 0; i < animations_.size(); ++i) {
-		auto asset = std::make_shared<AssetAnimation>(animations_[i]);
-		sAssetStorage->Register(asset, BaseContent::GetFilepath());
+		sAssetStorage->Register<AssetAnimationClip>(animations_[i], filepath);
 	}
 
 }
 
-void ContentAnimation::Load(const std::filesystem::path& filepath, uint32_t assimpOption) {
+void ContentAnimation::Load(MAYBE_UNUSED const DirectXQueueContext* context) {
 
-	// sceneの取得
-	Assimp::Importer importer;
-	const aiScene* aiScene = importer.ReadFile(filepath.generic_string().c_str(), assimpOption);
+	std::shared_ptr<Assimp::Importer> importer = ContentAnimation::LoadImporter(BaseContent::GetFilepath());
 
-	if (aiScene == nullptr) {
-		StreamLogger::Exception("animation load failed. filepath: " + filepath.generic_string(), importer.GetErrorString());
-		return;
+#if 1 //!< 非同期Taskとして委任する場合.
+	for (size_t i = 0; i < animations_.size(); ++i) {
+		System::PushTask(
+			Async::Execution::Cpu,
+			std::format("AssetAnimationClip {}[{}]", BaseContent::GetFilepath().filename().string(), i),
+			[this, i, importer](const Async::ExecutionTask*, const DirectXQueueContext*) {
+				std::shared_ptr<AssetAnimationClip> asset = sAssetStorage->Get<AssetAnimationClip>(animations_[i]);
+				asset->Setup(importer->GetScene()->mAnimations[i]);
+			}
+		);
 	}
 
-	// idのサイズを確保
-	animations_.resize(aiScene->mNumAnimations);
+#else //!< 同一Taskとして実行する場合.
+	for (size_t i = 0; i < animations_.size(); ++i) {
+		std::shared_ptr<AssetAnimationClip> asset = sAssetStorage->Get<AssetAnimationClip>(animations_[i]);
+		asset->Setup(importer->GetScene()->mAnimations[i]);
+	}
+#endif
 
-	// Animationの読み込み
-	LoadAnimations(aiScene);
+	BaseContent::SetComplete(); //!< 読み込み完了
 }
 
-void ContentAnimation::AssignUuid() {
-	//!< multi threadにする場合, thread safeにする必要がある.
+void ContentAnimation::AttachUuid(const std::filesystem::path& filepath) {
 
-	json meta = BaseContent::LoadMeta();
+	json meta = BaseContent::LoadMetaData(filepath);
 
 	if (meta.contains("animations")) {
 		//!< idが既に存在する場合は、metaから取得する
@@ -88,7 +79,7 @@ void ContentAnimation::AssignUuid() {
 
 	} else {
 		//!< idが存在しない場合は、新しくidを生成し, metaに保存する
-		
+
 		std::generate(animations_.begin(), animations_.end(), []() { return Uuid::Generate(); });
 
 		meta["animations"] = json::array();
@@ -96,20 +87,19 @@ void ContentAnimation::AssignUuid() {
 		for (const auto& animation : animations_) {
 			meta["animations"].emplace_back(animation.Serialize());
 		}
-		BaseContent::SaveMeta(meta);
+
+		BaseContent::SaveMetaData(meta, filepath);
 	}
-	
+
 }
 
-void ContentAnimation::LoadAnimations(const aiScene* aiScene) {
+std::shared_ptr<Assimp::Importer> ContentAnimation::LoadImporter(const std::filesystem::path& filepath, uint32_t option) {
+	std::shared_ptr<Assimp::Importer> importer = std::make_shared<Assimp::Importer>();
+	importer->ReadFile(filepath.generic_string().c_str(), option);
 
-	for (size_t i = 0; i < aiScene->mNumAnimations; ++i) {
-		// animationの取得
-		const aiAnimation* animation = aiScene->mAnimations[i];
-
-		// assetの生成
-		auto asset = sAssetStorage->GetAsset<AssetAnimation>(animations_[i]);
-		asset->Setup(animation);
+	if (importer->GetScene() == nullptr) {
+		StreamLogger::Exception("animation load failed. filepath: " + filepath.generic_string(), importer->GetErrorString());
 	}
 
+	return importer;
 }

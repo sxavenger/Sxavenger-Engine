@@ -166,8 +166,8 @@ void BehaviourHelper::CreateSkinnedMeshBehaviour(const BehaviourAddress& address
 	// meshの登録
 	for (size_t i = 0; i < model->GetMeshCount(); ++i) {
 
-		auto mesh     = sAssetStorage->GetAsset<AssetMesh>(model->GetMeshId(i));
-		auto material = sAssetStorage->GetAsset<AssetMaterial>(model->GetMeshToMaterialId(i));
+		std::shared_ptr<AssetMesh> mesh = sAssetStorage->Get<AssetMesh>(model->GetMeshId(i));
+		std::shared_ptr<AssetMaterial> material = sAssetStorage->Get<AssetMaterial>(model->GetMeshToMaterialId(i));
 
 		BehaviourAddress child = BehaviourHelper::Create(mesh->GetName());
 
@@ -240,10 +240,9 @@ void BehaviourHelper::DetachBehaviourMaterial(const BehaviourAddress& address) {
 			std::shared_ptr<AssetMaterial> material = std::make_shared<AssetMaterial>(std::nullopt);
 			std::shared_ptr<AssetMaterial> reference = component->GetMaterial();
 			reference->WaitComplete();
-			reference->Wait();
 			reference->Update();
 
-			material->Copy(*reference);
+			*material = *reference; //!< Materialのコピー
 
 			component->SetMaterial(material);
 		}
@@ -252,10 +251,9 @@ void BehaviourHelper::DetachBehaviourMaterial(const BehaviourAddress& address) {
 			std::shared_ptr<AssetMaterial> material = std::make_shared<AssetMaterial>(std::nullopt);
 			std::shared_ptr<AssetMaterial> reference = component->GetMaterial();
 			reference->WaitComplete();
-			reference->Wait();
 			reference->Update();
 
-			material->Copy(*reference);
+			*material = *reference; //!< Materialのコピー
 
 			component->SetMaterial(material);
 		}
@@ -310,8 +308,8 @@ void BehaviourHelper::CreateStaticMeshBehaviourNode(const BehaviourAddress& pare
 		// componentが1つの場合, そのままMeshRendererComponentを追加
 		const uint32_t meshIndex = node.meshIndices.front();
 
-		auto mesh     = sAssetStorage->GetAsset<AssetMesh>(model->GetMeshId(meshIndex));
-		auto material = sAssetStorage->GetAsset<AssetMaterial>(model->GetMeshToMaterialId(meshIndex));
+		std::shared_ptr<AssetMesh> mesh         = sAssetStorage->Get<AssetMesh>(model->GetMeshId(meshIndex));
+		std::shared_ptr<AssetMaterial> material = sAssetStorage->Get<AssetMaterial>(model->GetMeshToMaterialId(meshIndex));
 
 		auto renderer = child->AddComponent<MeshRendererComponent>();
 		renderer->SetMesh(mesh->GetId());
@@ -321,8 +319,8 @@ void BehaviourHelper::CreateStaticMeshBehaviourNode(const BehaviourAddress& pare
 		// componentが一つしか付けられないので苦肉の策
 		for (auto& meshIndex : node.meshIndices) {
 
-			auto mesh     = sAssetStorage->GetAsset<AssetMesh>(model->GetMeshId(meshIndex));
-			auto material = sAssetStorage->GetAsset<AssetMaterial>(model->GetMeshToMaterialId(meshIndex));
+			std::shared_ptr<AssetMesh> mesh         = sAssetStorage->Get<AssetMesh>(model->GetMeshId(meshIndex));
+			std::shared_ptr<AssetMaterial> material = sAssetStorage->Get<AssetMaterial>(model->GetMeshToMaterialId(meshIndex));
 
 			auto behaviour = BehaviourHelper::Create(mesh->GetName());
 

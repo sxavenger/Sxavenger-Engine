@@ -20,7 +20,7 @@ void FLUTTexture::Create(const std::shared_ptr<AssetTexture>& texture, const Vec
 	// 引数の保存
 	texture_ = texture;
 
-	if (texture_->GetMetadata().IsLightness()) {
+	if (texture_->GetMetadata().GetColorEncoding() == ColorEncoding::Lightness) {
 		StreamLogger::EngineLog("[FLUTTexture] warning | lut texture is lightness(sRGB) format.");
 	}
 

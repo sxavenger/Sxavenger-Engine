@@ -31,66 +31,66 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Asset namespace
+// AssetMesh class
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace Asset {
+class AssetMesh final
+	: public BaseAsset {
+public:
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Mesh class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class Mesh final
-		: public BaseAsset {
-	public:
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
 
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
+	//* constructor / destructor *//
 
-		//* constructor / destructor *//
+	AssetMesh(const Uuid& id) : BaseAsset(id) {}
 
-		Mesh(const Uuid& id) : BaseAsset(id) {}
+	~AssetMesh() override = default;
 
-		~Mesh() override = default;
+	//* setup option *//
 
-		//* setup option *//
+	void Setup(const DirectXQueueContext* context, const aiMesh* mesh);
 
-		void Setup(const DirectXQueueContext* context, const aiMesh* mesh);
+	//* mesh option *//
 
-		//* mesh option *//
+	void BindInputAssembler(const DirectXQueueContext* context) const;
 
-		const InputMesh& GetInputMesh() const;
+	void DrawCall(const DirectXQueueContext* context, UINT instanceCount = 1) const;
 
-		const std::unordered_map<std::string, JointWeightData>& GetJointWeights() const { return jointWeights_; }
-		// hack: meshの読み込みが完了してから取得する.
+	const InputMesh& GetInputMesh() const;
 
-		const std::string& GetName() const { return name_; }
-		// hack: meshの読み込みが完了してから取得する.
+	const InputMesh::InputVertex* GetInputVertex() const { return GetInputMesh().GetVertex(); }
+	const InputMesh::InputIndex* GetInputIndex() const { return GetInputMesh().GetIndex(); }
 
-	private:
+	const std::unordered_map<std::string, JointWeightData>& GetJointWeights() const { return jointWeights_; }
+	// hack: meshの読み込みが完了してから取得する.
 
-		//=========================================================================================
-		// private variables
-		//=========================================================================================
+	const std::string& GetName() const { return name_; }
+	// hack: meshの読み込みが完了してから取得する.
 
-		//* mesh data
-		InputMesh                                        input_;
-		std::unordered_map<std::string, JointWeightData> jointWeights_;
-		std::string                                      name_;
+	//* convert methods *//
 
-		//=========================================================================================
-		// private methods
-		//=========================================================================================
+	static Vector3f ConvertVector3(const aiVector3D& aiVector);
 
-		//* helper convert methods *//
+	static Vector4f ConvertVector4(const aiVector3D& aiVector);
 
-		static Vector3f ConvertVector3(const aiVector3D& aiVector);
+	static Quaternion ConvertQuaternion(const aiQuaternion& aiQuaternion);
 
-		static Vector4f ConvertVector4(const aiVector3D& aiVector);
+private:
 
-		static Quaternion ConvertQuaternion(const aiQuaternion& aiQuaternion);
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
 
-	};
+	//* mesh data
+	InputMesh                                        input_;
+	std::unordered_map<std::string, JointWeightData> jointWeights_;
+	std::string                                      name_;
 
-}
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+};
 
 SXAVENGER_ENGINE_NAMESPACE_END

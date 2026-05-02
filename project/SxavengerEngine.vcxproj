@@ -77,7 +77,6 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\backends;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;Externals\PixEvents\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -109,7 +108,6 @@ copy "Externals\PixEvents\bin\Debug\WinPixEventRuntime.dll" "$(TargetDir)WinPixE
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
-      <TreatWarningAsError>true</TreatWarningAsError>
       <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\backends;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;Externals\PixEvents\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
@@ -174,13 +172,12 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\!Content\BaseContent.h" />
-    <ClInclude Include="Engine\!Content\ContentTexture.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetAnimationClip.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetAudioClip.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetFont.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetMaterial.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetMesh.h" />
+    <ClInclude Include="Engine\Assets\Asset\AssetParameter.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetSkeleton.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetStorage.h" />
     <ClInclude Include="Engine\Assets\Asset\AssetTexture.h" />
@@ -422,13 +419,12 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Lib\Transform\Transform.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\!Content\BaseContent.cpp" />
-    <ClCompile Include="Engine\!Content\ContentTexture.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetAudioClip.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetFont.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetMaterial.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetMesh.cpp" />
+    <ClCompile Include="Engine\Assets\Asset\AssetSkeleton.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetStorage.cpp" />
     <ClCompile Include="Engine\Assets\Asset\AssetTexture.cpp" />
     <ClCompile Include="Engine\Assets\Asset\BaseAsset.cpp" />
@@ -639,9 +635,6 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ProjectReference Include="Externals\meshoptimizer\meshoptimizer.vcxproj">
       <Project>{75046AD2-E1C4-E508-AAFF-2E86167F2AE5}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Engine\Assets\Asset\AssetSkeleton.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

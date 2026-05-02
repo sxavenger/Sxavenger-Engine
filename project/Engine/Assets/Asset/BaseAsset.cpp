@@ -6,22 +6,24 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/Utility/RuntimeLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseAsset class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-const Uuid& Asset::BaseAsset::GetId() const {
+const Uuid& BaseAsset::GetId() const {
 	StreamLogger::AssertA(id_.has_value(), "asset does not have an id.");
 	return id_.value();
 }
 
-std::string Asset::BaseAsset::SerializeId() const {
+std::string BaseAsset::SerializeId() const {
 	return id_.has_value() ? id_->Serialize() : "null";
 }
 
-void Asset::BaseAsset::WaitComplete() const {
+void BaseAsset::WaitComplete() const {
 	while (status_ != Status::Complete) {
-		std::this_thread::sleep_for(std::chrono::microseconds(2));
+		RuntimeLogger::LogDebug("[BaseAsset]", "waiting for asset to complete loading... id: " + SerializeId());
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 }

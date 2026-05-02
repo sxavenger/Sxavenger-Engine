@@ -6,9 +6,13 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/UI/SxGui.h>
 
 //* external
 #include <magic_enum.hpp>
+
+//* c++
+#include <numeric>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TaskQueue class
@@ -47,14 +51,22 @@ bool Async::ExecutionThreadPool::TaskQueue::HasTask(Execution execution) const {
 	return false; //!< executionに対応するキューおよび下位のキューにタスクが存在しない.
 }
 
+size_t Async::ExecutionThreadPool::TaskQueue::GetTaskCount(Execution execution) const {
+	return queue_[static_cast<uint8_t>(execution)].size();
+}
+
+size_t Async::ExecutionThreadPool::TaskQueue::GetTotalTaskCount() const {
+	return std::accumulate(queue_.begin(), queue_.end(), size_t{}, [](size_t x, const Queue& queue) { return x + queue.size(); });
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ExecutionThreadPool class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Async::ExecutionThreadPool::Init() {
-	CreateThread(Execution::Compute, 1);
-	CreateThread(Execution::Copy, 1);
-	CreateThread(Execution::Cpu, 1);
+	CreateThread(Execution::Compute, 2);
+	CreateThread(Execution::Copy, 2);
+	CreateThread(Execution::Cpu, 2);
 
 	isTerminate_ = false;
 }
@@ -97,6 +109,65 @@ void Async::ExecutionThreadPool::PushTask(const std::shared_ptr<ExecutionTask>& 
 	);
 
 	condition_.notify_one();
+}
+
+void Async::ExecutionThreadPool::DebugGui() {
+
+	{ //!< Queueの情報
+
+		ImGui::Text(std::format("{} Execution - Queue", SxGui::Icon::Menu).c_str());
+		ImGui::Text(std::format("Total Task: {}", queue_.GetTotalTaskCount()).c_str());
+
+		ImGui::BeginTable("## Async Execution - Queue", 2, ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders);
+		ImGui::TableSetupColumn("execution");
+		ImGui::TableSetupColumn("count");
+		ImGui::TableHeadersRow();
+
+		for (const auto& [value, name] : magic_enum::enum_entries<Execution>()) {
+			ImGui::TableNextRow();
+			ImGui::TableNextColumn();
+			ImGui::Text(name.data());
+			ImGui::TableNextColumn();
+			ImGui::Text(std::format("{}", queue_.GetTaskCount(value)).c_str());
+		}
+
+		ImGui::EndTable();
+	}
+
+	SxGui::DummyLine();
+
+	{ //!< Threadの情報
+
+		ImGui::Text(std::format("{} Execution - Thread", SxGui::Icon::Menu).c_str());
+		ImGui::Text(std::format("Thread Count: {}", threads_.size()).c_str());
+
+		ImGui::BeginTable("## Async Execution - Thread", 3, ImGuiTableFlags_RowBg | ImGuiTableFlags_Borders);
+		ImGui::TableSetupColumn("execution");
+		ImGui::TableSetupColumn("id");
+		ImGui::TableSetupColumn("state");
+		ImGui::TableHeadersRow();
+
+		for (const auto& thread : threads_) {
+			ImGui::TableNextRow();
+
+			ImGui::TableNextColumn();
+			ImGui::Text(magic_enum::enum_name(thread.GetExecution()).data());
+
+			ImGui::TableNextColumn();
+			std::ostringstream id;
+			id << thread.GetId();
+			ImGui::Text(id.str().c_str());
+
+			ImGui::TableNextColumn();
+			ExecutionThread::State state = thread.GetState();
+
+			ImGui::BeginDisabled(state == ExecutionThread::State::Wait);
+			ImGui::Text(magic_enum::enum_name(state).data());
+			ImGui::EndDisabled();
+		}
+
+		ImGui::EndTable();
+	}
 }
 
 std::shared_ptr<Async::ExecutionTask> Async::ExecutionThreadPool::GetTask(const ExecutionThread* thread) {

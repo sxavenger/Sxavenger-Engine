@@ -38,7 +38,7 @@ void SpriteRendererComponent::ShowComponentInspector() {
 	ImGui::SameLine();
 
 	if (ImGui::BeginCombo("## texture", texture_.GetStr().c_str())) {
-		for (const auto& id : sAssetStorage->GetAssetStorage<AssetTexture>() | std::views::keys) {
+		for (const auto& id : sAssetStorage->GetStorage<AssetTexture>() | std::views::keys) {
 			if (ImGui::Selectable(id.Serialize().c_str(), texture_ == id)) {
 				texture_ = id; //!< 選択されたtextureを設定
 				// todo: 2d texture以外は設定しない
@@ -114,7 +114,7 @@ const RectTransformComponent* SpriteRendererComponent::GetRectTransform() const 
 json SpriteRendererComponent::ParseToJson() const {
 	json component = json::object();
 	component["isEnable"]    = JsonSerializeFormatter<bool>::Serialize(isEnable_);
-	component["transformUV"] = transformUV_.ParseToJson();
+	component["transformUV"] = transformUV_.Serialize();
 	component["texture"]     = texture_.Serialize();
 
 	for (uint8_t i = 0; i < magic_enum::enum_count<VertexPoint>(); ++i) {
@@ -126,7 +126,7 @@ json SpriteRendererComponent::ParseToJson() const {
 
 void SpriteRendererComponent::InputJson(const json& data) {
 	isEnable_    = JsonSerializeFormatter<bool>::Deserialize(data.at("isEnable"));
-	transformUV_.InputJson(data.at("transformUV"));
+	transformUV_ = Transform2d::Deserialize(data.at("transformUV"));
 
 	if (!data["texture"].is_null()) {
 		Uuid texture = Uuid::Deserialize(JsonSerializeFormatter<std::string>::Deserialize(data.at("texture")));
@@ -134,7 +134,7 @@ void SpriteRendererComponent::InputJson(const json& data) {
 		// textureのuuidが存在しない場合は, tableから読み込み
 
 		if (!sAssetStorage->Contains<AssetTexture>(texture)) {
-			const auto& filepath = sAssetStorage->GetFilepath(texture);
+			const auto& filepath = sAssetStorage->GetLocation(texture);
 			sContentStorage->Import<ContentTexture>(filepath);
 		}
 

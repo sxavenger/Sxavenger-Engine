@@ -20,14 +20,38 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Asset namespace
+// AssetSkeleton class
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace Asset {
+class AssetSkeleton
+	: public BaseAsset {
+public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Skeleton class
 	////////////////////////////////////////////////////////////////////////////////////////////
 
-}
+	//* constructor / destructor *//
+
+	AssetSkeleton(const Uuid& id) : BaseAsset(id) {}
+
+	~AssetSkeleton() override = default;
+
+	//* setup option *//
+
+	void Setup(const BornNode& root);
+
+	//* getter *//
+
+	const Skeleton& GetSkeleton() const { return skeleton_; }
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	Skeleton skeleton_;
+
+};
 
 SXAVENGER_ENGINE_NAMESPACE_END

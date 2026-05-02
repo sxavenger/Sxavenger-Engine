@@ -11,7 +11,7 @@ SXAVENGER_ENGINE_USING
 // AnimationClip class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Asset::AnimationClip::Setup(const aiAnimation* animation) {
+void AssetAnimationClip::Setup(const aiAnimation* animation) {
 	// animation全体時間の取得
 	animation_.duration = GetTime(animation->mDuration, animation->mTicksPerSecond);
 
@@ -24,11 +24,11 @@ void Asset::AnimationClip::Setup(const aiAnimation* animation) {
 	StreamLogger::EngineThreadLog(std::format("[AssetAnimationClip]: animation setup complete. uuid: {}", BaseAsset::SerializeId()));
 }
 
-TimePointd<TimeUnit::second> Asset::AnimationClip::GetTime(double time, double ticksPerSeconds) {
+TimePointd<TimeUnit::second> AssetAnimationClip::GetTime(double time, double ticksPerSeconds) {
 	return { time / ticksPerSeconds };
 }
 
-TransformAnimation Asset::AnimationClip::LoadAnimation(const aiNodeAnim* aiNodeAnimation, double tickPerSeconds) {
+TransformAnimation AssetAnimationClip::LoadAnimation(const aiNodeAnim* aiNodeAnimation, double tickPerSeconds) {
 
 	TransformAnimation animation;
 

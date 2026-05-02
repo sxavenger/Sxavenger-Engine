@@ -24,53 +24,48 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Asset namespace
+// AssetAnimationClip class
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace Asset {
+class AssetAnimationClip
+	: public BaseAsset {
+public:
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// AnimationClip class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class AnimationClip final
-		: public BaseAsset {
-	public:
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
 
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
+	//* constructor / destructor *//
 
-		//* constructor / destructor *//
+	AssetAnimationClip(const Uuid& uuid) : BaseAsset(uuid) {}
 
-		AnimationClip(const Uuid& id) : BaseAsset(id) {}
+	~AssetAnimationClip() override = default;
 
-		~AnimationClip() override = default;
+	//* setup option *//
 
-		//* setup option *//
+	void Setup(const aiAnimation* animation);
 
-		void Setup(const aiAnimation* animation); //!< assimp用
+	//* getter *//
 
-		//* animation option *//
+	const Animation& GetAnimation() const { return animation_; }
 
-	private:
+private:
 
-		//=========================================================================================
-		// private variables
-		//=========================================================================================
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
 
-		Animation animation_;
+	Animation animation_;
 
-		//=========================================================================================
-		// private methods
-		//=========================================================================================
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
 
-		//* [assimp] setup helper methods *//
+	//* [assimp] setup helper methods *//
 
-		static TimePointd<TimeUnit::second> GetTime(double time, double ticksPerSeconds);
+	static TimePointd<TimeUnit::second> GetTime(double time, double ticksPerSeconds);
 
-		static TransformAnimation LoadAnimation(const aiNodeAnim* aiNodeAnimation, double tickPerSeconds);
+	static TransformAnimation LoadAnimation(const aiNodeAnim* aiNodeAnimation, double tickPerSeconds);
 
-	};
-
-}
+};
 
 SXAVENGER_ENGINE_NAMESPACE_END

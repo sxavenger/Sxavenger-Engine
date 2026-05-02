@@ -2,10 +2,10 @@
 SXAVENGER_ENGINE_USING
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Mesh class methods
+// AssetMesh class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Asset::Mesh::Setup(const DirectXQueueContext* context, const aiMesh* mesh) {
+void AssetMesh::Setup(const DirectXQueueContext* context, const aiMesh* mesh) {
 	context->RequestQueue(DirectXQueueContext::RenderQueue::Compute); //!< ComputeQueue以上を使用
 
 	// meshの解析
@@ -102,19 +102,27 @@ void Asset::Mesh::Setup(const DirectXQueueContext* context, const aiMesh* mesh) 
 
 }
 
-const InputMesh& Asset::Mesh::GetInputMesh() const {
+void AssetMesh::BindInputAssembler(const DirectXQueueContext* context) const {
+	input_.BindInputAssembler(context);
+}
+
+void AssetMesh::DrawCall(const DirectXQueueContext* context, UINT instanceCount) const {
+	input_.DrawCall(context, instanceCount);
+}
+
+const InputMesh& AssetMesh::GetInputMesh() const {
 	BaseAsset::WaitComplete(); //!< TODO: 仮meshを用意する.
 	return input_;
 }
 
-Vector3f Asset::Mesh::ConvertVector3(const aiVector3D& aiVector) {
+Vector3f AssetMesh::ConvertVector3(const aiVector3D& aiVector) {
 	return { aiVector.x, aiVector.y, -aiVector.z }; //!< 左手座標系に変換
 }
 
-Vector4f Asset::Mesh::ConvertVector4(const aiVector3D& aiVector) {
+Vector4f AssetMesh::ConvertVector4(const aiVector3D& aiVector) {
 	return { aiVector.x, aiVector.y, -aiVector.z, 1.0f }; //!< 左手座標系に変換
 }
 
-Quaternion Asset::Mesh::ConvertQuaternion(const aiQuaternion& aiQuaternion) {
+Quaternion AssetMesh::ConvertQuaternion(const aiQuaternion& aiQuaternion) {
 	return { -aiQuaternion.x, -aiQuaternion.y, aiQuaternion.z, aiQuaternion.w }; //!< 左手座標系に変換
 }

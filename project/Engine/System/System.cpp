@@ -211,9 +211,19 @@ void System::PushTask(const std::shared_ptr<Async::ExecutionTask>& task) {
 	sExecutionThreadPool->PushTask(task);
 }
 
-std::shared_ptr<Async::ExecutionTask> System::PushTask(Async::Execution execution, const Async::ExecutionTask::ExecutionFunction& function) {
-	auto task = std::make_shared<Async::ExecutionTask>();
+std::shared_ptr<Async::ExecutionTask> System::PushTask(Async::Execution execution, const std::string& tag, const Async::ExecutionTask::ExecutionFunction& function) {
+	std::shared_ptr<Async::ExecutionTask> task = std::make_shared<Async::ExecutionTask>();
+	task->SetTag(tag);
 	task->SetFunction(execution, function);
+
+	sExecutionThreadPool->PushTask(task);
+	return task;
+}
+
+std::shared_ptr<Async::ExecutionTask> System::PushTask(Async::Execution execution, const Async::ExecutionTask::ExecutionFunction& function) {
+	std::shared_ptr<Async::ExecutionTask> task = std::make_shared<Async::ExecutionTask>();
+	task->SetFunction(execution, function);
+
 	sExecutionThreadPool->PushTask(task);
 	return task;
 }

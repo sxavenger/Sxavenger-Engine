@@ -156,7 +156,14 @@ public:
 
 	//! @brief 非同期タスクを追加
 	//! @param[in] execution 実行するスレッド
-	//! @param[in] function 実行する関数
+	//! @param[in] tag       タスクのタグ
+	//! @param[in] function  実行する関数
+	//! @return 追加されたタスク
+	static std::shared_ptr<Async::ExecutionTask> PushTask(Async::Execution execution, const std::string& tag, const Async::ExecutionTask::ExecutionFunction& function);
+
+	//! @brief 非同期タスクを追加
+	//! @param[in] execution 実行するスレッド
+	//! @param[in] function  実行する関数
 	//! @return 追加されたタスク
 	static std::shared_ptr<Async::ExecutionTask> PushTask(Async::Execution execution, const Async::ExecutionTask::ExecutionFunction& function);
 

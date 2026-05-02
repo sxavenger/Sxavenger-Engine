@@ -24,7 +24,7 @@ void MeshRendererComponent::ShowComponentInspector() {
 	SxGui::ComboEnum("mode", &mode_);
 
 	if (ImGui::BeginCombo("mesh", mesh_.GetStr().c_str())) {
-		for (const auto& id : sAssetStorage->GetAssetStorage<AssetMesh>() | std::views::keys) {
+		for (const auto& id : sAssetStorage->GetStorage<AssetMesh>() | std::views::keys) {
 			if (ImGui::Selectable(id.Serialize().c_str(), mesh_ == id)) {
 				mesh_ = id; //!< 選択されたmeshを設定
 			}
@@ -33,7 +33,7 @@ void MeshRendererComponent::ShowComponentInspector() {
 	}
 
 	if (ImGui::BeginCombo("material", material_.GetStr().c_str())) {
-		for (const auto& id : sAssetStorage->GetAssetStorage<AssetMaterial>() | std::views::keys) {
+		for (const auto& id : sAssetStorage->GetStorage<AssetMaterial>() | std::views::keys) {
 			if (ImGui::Selectable(id.Serialize().c_str(), material_ == id)) {
 				material_ = id; //!< 選択されたmaterialを設定
 			}
@@ -69,12 +69,12 @@ void MeshRendererComponent::InputJson(const json& data) {
 	// mesh, materialのuuidが存在しない場合は, tableから読み込み
 
 	if (!sAssetStorage->Contains<AssetMesh>(mesh)) {
-		const auto& filepath = sAssetStorage->GetFilepath(mesh);
+		const std::filesystem::path& filepath = sAssetStorage->GetLocation(mesh);
 		sContentStorage->Import<ContentModel>(filepath);
 	}
 
 	if (!sAssetStorage->Contains<AssetMaterial>(material)) {
-		const auto& filepath = sAssetStorage->GetFilepath(material);
+		const std::filesystem::path& filepath = sAssetStorage->GetLocation(material);
 		sContentStorage->Import<ContentModel>(filepath);
 	}
 

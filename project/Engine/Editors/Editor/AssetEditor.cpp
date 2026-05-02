@@ -60,7 +60,7 @@ void AssetEditor::ShowAssetMenu() {
 		ImGui::TableSetupColumn("count");
 		ImGui::TableHeadersRow();
 
-		for (const auto& [type, storage] : sAssetStorage->GetStorage()) {
+		for (const auto& [type, storage] : sAssetStorage->GetStage()) {
 			ImGui::TableNextRow();
 
 			{ //!< type
@@ -309,8 +309,8 @@ void AssetEditor::ShowAssetLayout() {
 					if (extensions_.contains(part.extension())) {
 						const auto& [type, function] = extensions_.at(part.extension());
 
-						std::shared_ptr<BaseContent> content = function(part);
-						sContentStorage->TryEmplace(type, content);
+						std::shared_ptr<BaseContent> content = function();
+						sContentStorage->TryEmplace(type, content, part);
 					}
 				}
 

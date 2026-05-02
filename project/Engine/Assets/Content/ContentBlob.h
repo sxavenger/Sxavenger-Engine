@@ -26,18 +26,17 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ContentBlob() = default;
+	//* constructor / destructor *//
+
+	ContentBlob() : BaseContent(Async::Execution::Cpu) {}
+
 	~ContentBlob() override = default;
-
-	void AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) override;
-
-	AsyncExecution GetAsyncExecution() const { return AsyncExecution::None; }
-
-	void AttachUuid() override;
 
 	//* content option *//
 
-	void Load(const std::filesystem::path& filepath, const DxObject::CompileProfile& profile);
+	void Load(MAYBE_UNUSED const DirectXQueueContext* context) override;
+
+	//* parameter option *//
 
 	const DxObject::ShaderBlob& GetBlob() const;
 
@@ -48,6 +47,12 @@ private:
 	//=========================================================================================
 
 	DxObject::ShaderBlob blob_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	DxObject::CompileProfile GetProfile() const;
 
 };
 

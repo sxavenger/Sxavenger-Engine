@@ -27,7 +27,6 @@ struct Surface {
 	float3 position;
 	float3 normal;
 	float3 albedo;
-	float ao;
 	float roughness;
 	float metallic;
 
@@ -39,22 +38,16 @@ struct Surface {
 		
 		MeshVertex vertex = GetWorldVertex(attribute);
 
-		MaterialLib::TextureSampler parameter;
-		parameter.Set(vertex.texcoord, gSampler);
+		MaterialLib::TextureSampler parameter
+			= gMaterial[0].CreateTransformedSampler(vertex.texcoord, gSampler);
 
-		albedo   = gMaterial[0].albedo.GetAlbedo(parameter);
+		albedo   = gMaterial[0].GetAlbedo(parameter);
 		position = vertex.position.xyz;
 
-		float3x3 tbn = float3x3(
-			vertex.tangent,
-			vertex.bitangent,
-			vertex.normal
-		);
-		normal = gMaterial[0].normal.GetNormal(vertex.normal, parameter, tbn);
+		normal = gMaterial[0].GetNormal(vertex.normal, vertex.tangent, vertex.bitangent, parameter);
 
-		ao        = gMaterial[0].properties.ao.GetValue(parameter, 0);
-		roughness = gMaterial[0].properties.roughness.GetValue(parameter, 1);
-		metallic  = gMaterial[0].properties.metallic.GetValue(parameter, 2);
+		roughness = gMaterial[0].GetRoughness(parameter);
+		metallic  = gMaterial[0].GetMetallic(parameter);
 
 		roughness = max(roughness, 0.02f); //!< 0.0fだと計算が不安定になるので、最低値を設定する
 	}
@@ -133,10 +126,10 @@ ANYHIT void mainAnyhit(inout Payload payload, in Attribute attribute) {
 
 	MeshVertex vertex = GetWorldVertex(attribute);
 
-	MaterialLib::TextureSampler parameter;
-	parameter.Set(vertex.texcoord, gSampler);
+	MaterialLib::TextureSampler parameter
+		= gMaterial[0].CreateTransformedSampler(vertex.texcoord, gSampler);
 	
-	float transparency = gMaterial[0].transparency.GetTransparency(parameter);
+	float transparency = gMaterial[0].GetTransparency(parameter);
 	if (transparency <= 0.1f) {
 		IgnoreHit(); //!< 透明度が低い場合は、ヒットを無視する
 	}

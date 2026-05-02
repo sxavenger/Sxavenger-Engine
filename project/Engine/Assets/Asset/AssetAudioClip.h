@@ -32,51 +32,43 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Asset namespace
+// AssetAudioClip class
 ////////////////////////////////////////////////////////////////////////////////////////////
-namespace Asset {
+class AssetAudioClip final
+	: public BaseAsset {
+public:
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// AudioClip class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	class AudioClip final
-		: public BaseAsset {
-	public:
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
 
-		//=========================================================================================
-		// public methods
-		//=========================================================================================
+	//* constructor / destructor *//
 
-		//* constructor / destructor *//
+	AssetAudioClip(const Uuid& id) : BaseAsset(id) {}
 
-		AudioClip(const Uuid& id) : BaseAsset(id) {}
+	~AssetAudioClip() override = default;
 
-		~AudioClip() override = default;
+	//* setup option *//
 
-		//* setup option *//
+	void Setup(IMFSourceReader* reader);
 
-		void Setup(IMFSourceReader* reader);
+	//* audio clip option *//
 
-		//* audio clip option *//
+	const WAVEFORMATEX& GetFormat() const;
 
-		const WAVEFORMATEX& GetFormat() const;
+	const BYTE* GetBufferPointer() const;
 
-		const BYTE* GetBufferPointer() const;
+	const size_t GetBufferSize() const;
 
-		const size_t GetBufferSize() const;
+private:
 
-	private:
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
 
+	WAVEFORMATEX format_ = {}; //!< 波形フォーマット
+	std::vector<BYTE> buffer_; //!< 波形データ
 
-		//=========================================================================================
-		// private variables
-		//=========================================================================================
-
-		WAVEFORMATEX format_ = {}; //!< 波形フォーマット
-		std::vector<BYTE> buffer_; //!< 波形データ
-
-	};
-
-}
+};
 
 SXAVENGER_ENGINE_NAMESPACE_END

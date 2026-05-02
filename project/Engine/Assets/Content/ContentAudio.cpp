@@ -18,38 +18,47 @@ SXAVENGER_ENGINE_USING
 // ContentAudio class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentAudio::AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) {
-	BaseContent::CheckExist();
+void ContentAudio::Attach(const std::filesystem::path& filepath, const std::any& parameter) {
 
-	Load(BaseContent::GetFilepath());
+	//!< 引数の保存
+	BaseContent::Attach(filepath, parameter);
+
+	//!< Uuidの割り当て
+	AttachUuid(filepath);
+
+	//!< Storageに登録
+	sAssetStorage->Register<AssetAudioClip>(id_, filepath);
+
 }
 
-void ContentAudio::AttachUuid() {
-	BaseContent::CheckExist();
-
-	// idを取得
-	AssignUuid();
-
-	// storageに登録
-	auto asset = std::make_shared<AssetAudioClip>(id_);
-	sAssetStorage->Register(asset, BaseContent::GetFilepath());
-}
-
-void ContentAudio::Load(const std::filesystem::path& filepath) {
+void ContentAudio::Load(MAYBE_UNUSED const DirectXQueueContext* context) {
 
 	ComPtr<IMFSourceReader> reader;
-	auto hr = MFCreateSourceReaderFromURL(filepath.generic_wstring().c_str(), nullptr, &reader);
 
-	DxObject::Assert(hr, L"IMFSourceReader create failed.");
+	auto hr = MFCreateSourceReaderFromURL(BaseContent::GetFilepath().generic_wstring().c_str(), nullptr, &reader);
+	DxObject::Assert(hr, L"IMFSourceReader create failed. filepath: " + BaseContent::GetFilepath().wstring());
 
-	// assetの設定
-	auto asset = sAssetStorage->GetAsset<AssetAudioClip>(id_);
+#if 1 //!< 非同期Taskとして委任する場合.
+	System::PushTask(
+		Async::Execution::Cpu,
+		std::format("AssetAudioClip {}", BaseContent::GetFilepath().filename().string()),
+		[this, reader = std::move(reader)](const Async::ExecutionTask*, const DirectXQueueContext*) {
+			std::shared_ptr<AssetAudioClip> asset = sAssetStorage->Get<AssetAudioClip>(id_);
+			asset->Setup(reader.Get());
+		}
+	);
+	
+#else //!< 同一Taskとして実行する場合.
+	std::shared_ptr<AssetAudioClip> asset = sAssetStorage->Get<AssetAudioClip>(id_);
 	asset->Setup(reader.Get());
+#endif
+
+	BaseContent::SetComplete(); //!< 読み込み完了
 }
 
-void ContentAudio::AssignUuid() {
+void ContentAudio::AttachUuid(const std::filesystem::path& filepath) {
 
-	json meta = BaseContent::LoadMeta();
+	json meta = BaseContent::LoadMetaData(filepath);
 
 	if (meta.contains("id")) {
 		//!< idが既に存在する場合は、metaから取得する
@@ -60,6 +69,6 @@ void ContentAudio::AssignUuid() {
 		id_ = Uuid::Generate();
 
 		meta["id"] = id_.Serialize();
-		BaseContent::SaveMeta(meta);
+		BaseContent::SaveMetaData(meta, filepath);
 	}
 }

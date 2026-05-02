@@ -50,7 +50,7 @@ void main(
 		output.position = mul(gTransform.Transform(input.position), kViewProj);
 		output.worldPos = gTransform.Transform(input.position).xyz;
 		
-		output.texcoord = gMaterials[instanceIndex].transform.Transformation(input.texcoord);
+		output.texcoord = gMaterials[instanceIndex].transformation.Transform(input.texcoord);
 		
 		output.normal    = normalize(gTransform.TransformNormal(input.normal));
 		output.tangent   = normalize(gTransform.TransformNormal(input.tangent));

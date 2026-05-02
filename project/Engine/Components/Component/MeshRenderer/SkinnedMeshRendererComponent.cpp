@@ -142,12 +142,12 @@ void SkinnedMeshRendererComponent::InputJson(const json& data) {
 	// referenceMesh, materialのuuidが存在しない場合は, tableから読み込み
 
 	if (!sAssetStorage->Contains<AssetMesh>(referenceMesh)) {
-		const auto& filepath = sAssetStorage->GetFilepath(referenceMesh);
+		const auto& filepath = sAssetStorage->GetLocation(referenceMesh);
 		sContentStorage->Import<ContentModel>(filepath);
 	}
 
 	if (!sAssetStorage->Contains<AssetMesh>(material)) {
-		const auto& filepath = sAssetStorage->GetFilepath(material);
+		const auto& filepath = sAssetStorage->GetLocation(material);
 		sContentStorage->Import<ContentModel>(filepath);
 	}
 

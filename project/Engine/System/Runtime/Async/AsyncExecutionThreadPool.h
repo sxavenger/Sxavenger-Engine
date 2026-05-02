@@ -40,6 +40,15 @@ namespace Async {
 		class TaskQueue {
 		public:
 
+			////////////////////////////////////////////////////////////////////////////////////////////
+			// using
+			////////////////////////////////////////////////////////////////////////////////////////////
+
+			using Queue = std::queue<std::shared_ptr<ExecutionTask>>;
+			 //!< 各Executionごとにタスクを管理するキューコンテナ.
+
+		public:
+
 			//=========================================================================================
 			// public methods
 			//=========================================================================================
@@ -52,16 +61,17 @@ namespace Async {
 
 			bool HasTask(Execution execution) const;
 
+			size_t GetTaskCount(Execution execution) const;
+
+			size_t GetTotalTaskCount() const;
+
 		private:
 
 			//=========================================================================================
 			// private variables
 			//=========================================================================================
 
-			std::array<
-				std::queue<std::shared_ptr<ExecutionTask>>,
-				static_cast<uint8_t>(Execution::Cpu) + 1
-			> queue_;
+			std::array<Queue, static_cast<uint8_t>(Execution::Cpu) + 1> queue_;
 
 		};
 
@@ -80,6 +90,10 @@ namespace Async {
 		//* task option *//
 
 		void PushTask(const std::shared_ptr<ExecutionTask>& task);
+
+		//* gui option *//
+
+		void DebugGui();
 
 	private:
 

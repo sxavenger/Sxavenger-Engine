@@ -29,32 +29,23 @@ class ContentAnimation final
 	: public BaseContent {
 public:
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// using
-	////////////////////////////////////////////////////////////////////////////////////////////
-
-	using Uuids = std::vector<Uuid>;
-
-public:
-
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ContentAnimation()           = default;
+	//* constructor / destructor *//
+
+	ContentAnimation() : BaseContent(Async::Execution::Cpu) {}
+
 	~ContentAnimation() override = default;
-
-	void AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) override;
-
-	AsyncExecution GetAsyncExecution() const { return AsyncExecution::None; }
-
-	void AttachUuid() override;
 
 	//* content option *//
 
-	void Load(const std::filesystem::path& filepath, uint32_t assimpOption);
+	void Attach(const std::filesystem::path& filepath, const std::any& parameter) override;
 
-	//* getter *//
+	void Load(MAYBE_UNUSED const DirectXQueueContext* context) override;
+
+	//* id option *//
 
 	const Uuid& GetAnimation(size_t index) const { return animations_[index]; }
 
@@ -64,17 +55,17 @@ private:
 	// private variables
 	//=========================================================================================
 
-	Uuids animations_;
+	std::vector<Uuid> animations_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	//* helper method *//
+	void AttachUuid(const std::filesystem::path& filepath);
 
-	void AssignUuid();
+	//* load helper methods *//
 
-	void LoadAnimations(const aiScene* aiScene);
+	static std::shared_ptr<Assimp::Importer> LoadImporter(const std::filesystem::path& filepath, uint32_t option = 0);
 
 };
 

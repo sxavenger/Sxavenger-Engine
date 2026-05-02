@@ -10,10 +10,10 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/System.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Font class methods
+// AssetFont class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Asset::Font::Setup(const DirectXQueueContext* context, const stbtt_fontinfo& info, float size) {
+void AssetFont::Setup(const DirectXQueueContext* context, const stbtt_fontinfo& info, float size) {
 
 	// 引数の保存
 	fontSize_ = size;
@@ -38,20 +38,20 @@ void Asset::Font::Setup(const DirectXQueueContext* context, const stbtt_fontinfo
 	StreamLogger::EngineThreadLog(std::format("[AssetFont]: font setup complete. uuid: {}", BaseAsset::SerializeId()));
 }
 
-const DxObject::Descriptor& Asset::Font::GetDescriptorSRV() const {
+const DxObject::Descriptor& AssetFont::GetDescriptorSRV() const {
 	return descriptorSRV_;
 }
 
-const D3D12_GPU_DESCRIPTOR_HANDLE& Asset::Font::GetGPUHandleSRV() const {
+const D3D12_GPU_DESCRIPTOR_HANDLE& AssetFont::GetGPUHandleSRV() const {
 	return GetDescriptorSRV().GetGPUHandle();
 }
 
-const Asset::Font::GlyphInfo& Asset::Font::GetGlyphInfo(wchar_t c) const {
+const AssetFont::GlyphInfo& AssetFont::GetGlyphInfo(wchar_t c) const {
 	StreamLogger::AssertW(glyphs_.contains(c), std::format(L"glyph not found. wchar_t: {}", c));
 	return glyphs_.at(c);
 }
 
-void Asset::Font::CreateAtlasTexture() {
+void AssetFont::CreateAtlasTexture() {
 
 	auto device = System::GetDxDevice()->GetDevice();
 
@@ -97,7 +97,7 @@ void Asset::Font::CreateAtlasTexture() {
 	}
 }
 
-void Asset::Font::LoadGlyph(const stbtt_fontinfo& info, float scale) {
+void AssetFont::LoadGlyph(const stbtt_fontinfo& info, float scale) {
 	for (wchar_t c = L' '; c <= L'~'; ++c) {
 		glyphs_[c] = GenerateGlyphInfo(info, scale, c);
 	}
@@ -113,7 +113,7 @@ void Asset::Font::LoadGlyph(const stbtt_fontinfo& info, float scale) {
 	glyphs_[L'ー'] = GenerateGlyphInfo(info, scale, L'ー');
 }
 
-Asset::Font::GlyphInfo Asset::Font::GenerateGlyphInfo(const stbtt_fontinfo& info, float scale, wchar_t c) {
+AssetFont::GlyphInfo AssetFont::GenerateGlyphInfo(const stbtt_fontinfo& info, float scale, wchar_t c) {
 
 	int32_t width, height, offsetX, offsetY;
 
@@ -166,7 +166,7 @@ Asset::Font::GlyphInfo Asset::Font::GenerateGlyphInfo(const stbtt_fontinfo& info
 	return glyph;
 }
 
-void Asset::Font::UploadAtlasData(const DirectXQueueContext* context) {
+void AssetFont::UploadAtlasData(const DirectXQueueContext* context) {
 
 	auto device      = System::GetDxDevice()->GetDevice();
 	auto commandList = context->GetCommandList();

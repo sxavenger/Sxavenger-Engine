@@ -8,11 +8,12 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/System.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// [Texture] Metadata structure methods
+// [AssetTexture] Metadata structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Asset::Texture::Metadata::Assign(const DirectX::TexMetadata& metadata) {
-	size         = { static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height), static_cast<uint32_t>(metadata.depth) };
+void AssetTexture::Metadata::Assign(const DirectX::TexMetadata& metadata) {
+	size         = { static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height) };
+	depth        = static_cast<uint32_t>(metadata.depth);
 	miplevels    = static_cast<uint32_t>(metadata.mipLevels);
 	format       = metadata.format;
 	miscflags[0] = metadata.miscFlags;
@@ -20,10 +21,10 @@ void Asset::Texture::Metadata::Assign(const DirectX::TexMetadata& metadata) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Texture class methods
+// AssetTexture class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Asset::Texture::Setup(const DirectXQueueContext* context, const DirectX::ScratchImage& image) {
+void AssetTexture::Setup(const DirectXQueueContext* context, const DirectX::ScratchImage& image) {
 	context->RequestQueue(DirectXQueueContext::RenderQueue::Copy); //!< CopyQueue以上を使用
 
 	// metadataの取得
@@ -72,7 +73,7 @@ void Asset::Texture::Setup(const DirectXQueueContext* context, const DirectX::Sc
 	StreamLogger::EngineThreadLog(std::format("[AssetTexture]: texture setup complete. uuid: {}", BaseAsset::SerializeId()));
 }
 
-void Asset::Texture::Transition(const DirectXQueueContext* context) {
+void AssetTexture::Transition(const DirectXQueueContext* context) {
 	if (!BaseAsset::IsComplete()) {
 		return;
 	}
@@ -81,16 +82,16 @@ void Asset::Texture::Transition(const DirectXQueueContext* context) {
 	resource_.Transition(context->GetDxCommand(), D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE);
 }
 
-const DxObject::Descriptor& Asset::Texture::GetDescriptorSRV() const {
+const DxObject::Descriptor& AssetTexture::GetDescriptorSRV() const {
 	BaseAsset::WaitComplete(); // TODO: 仮Textureの設定
 	return descriptorSRV_;
 }
 
-const D3D12_GPU_DESCRIPTOR_HANDLE& Asset::Texture::GetGPUHandleSRV() const {
+const D3D12_GPU_DESCRIPTOR_HANDLE& AssetTexture::GetGPUHandleSRV() const {
 	return GetDescriptorSRV().GetGPUHandle();
 }
 
-DxObject::Resource Asset::Texture::CreateTextureResource(const DirectX::TexMetadata& metadata) {
+DxObject::Resource AssetTexture::CreateTextureResource(const DirectX::TexMetadata& metadata) {
 	DxObject::Resource resource;
 
 	resource = DxObject::Resource::CreateTexture(
@@ -108,7 +109,7 @@ DxObject::Resource Asset::Texture::CreateTextureResource(const DirectX::TexMetad
 	return resource;
 }
 
-ComPtr<ID3D12Resource> Asset::Texture::UploadTextureData(const DirectXQueueContext* context, ID3D12Resource* texture, const DirectX::ScratchImage& image) {
+ComPtr<ID3D12Resource> AssetTexture::UploadTextureData(const DirectXQueueContext* context, ID3D12Resource* texture, const DirectX::ScratchImage& image) {
 
 	auto device = System::GetDxDevice()->GetDevice();
 	auto commandList = context->GetCommandList();
