@@ -37,15 +37,9 @@ enum class AssetState : uint8_t {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetParameter class
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <AssetConcept T>
+template <Asset T>
 class AssetParameter {
 public:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// using
-	////////////////////////////////////////////////////////////////////////////////////////////
-
-	using UAssetType = T;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Parameter variant
@@ -113,15 +107,15 @@ private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// UAssetParameter class template methods
+// AssetParameter class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <AssetConcept T>
+template <Asset T>
 inline AssetState AssetParameter<T>::GetState() const {
 	return static_cast<AssetState>(parameter_.index());
 }
 
-template <AssetConcept T>
+template <Asset T>
 inline void AssetParameter<T>::Set(const std::shared_ptr<T>& asset) {
 	if (asset->HasId()) {
 		parameter_ = asset->GetId(); //!< UAssetのidをセット
@@ -130,11 +124,11 @@ inline void AssetParameter<T>::Set(const std::shared_ptr<T>& asset) {
 	parameter_ = asset; //!< userが作成したUAssetをセット
 }
 
-template <AssetConcept T>
+template <Asset T>
 inline std::shared_ptr<T> AssetParameter<T>::Get() const {
 	switch (GetState()) {
 		case AssetState::Uuid:
-			return sAssetStorage->GetAsset<T>(std::get<Uuid>(parameter_));
+			return sAssetStorage->Get<T>(std::get<Uuid>(parameter_));
 
 		case AssetState::Ptr: //!< std::shared_ptr<T>
 			return std::get<std::shared_ptr<T>>(parameter_);
@@ -144,26 +138,26 @@ inline std::shared_ptr<T> AssetParameter<T>::Get() const {
 	}
 }
 
-template <AssetConcept T>
+template <Asset T>
 inline std::shared_ptr<T> AssetParameter<T>::WaitGet() const {
 	Wait();
 	return Get();
 }
 
-template <AssetConcept T>
+template <Asset T>
 inline std::shared_ptr<T> AssetParameter<T>::Require() const {
 	StreamLogger::AssertA(!Empty(), "AssetParameter is empty.");
 
 	return Get();
 }
 
-template <AssetConcept T>
+template <Asset T>
 inline std::shared_ptr<T> AssetParameter<T>::WaitRequire() const {
 	Wait();
 	return Require();
 }
 
-template <AssetConcept T>
+template <Asset T>
 inline json AssetParameter<T>::Serialize() const {
 	switch (GetState()) {
 		case AssetState::Uuid:
@@ -174,7 +168,7 @@ inline json AssetParameter<T>::Serialize() const {
 	}
 }
 
-template <AssetConcept T>
+template <Asset T>
 inline std::string AssetParameter<T>::GetStr() const {
 	switch (GetState()) {
 		case AssetState::Uuid:
@@ -188,7 +182,7 @@ inline std::string AssetParameter<T>::GetStr() const {
 	}
 }
 
-template <AssetConcept T>
+template <Asset T>
 inline void AssetParameter<T>::Wait() const {
 	if (Empty()) {
 		return;
@@ -202,7 +196,7 @@ inline void AssetParameter<T>::Wait() const {
 	}
 }
 
-template <AssetConcept T>
+template <Asset T>
 bool AssetParameter<T>::operator==(const Uuid& id) const {
 	if (std::holds_alternative<Uuid>(parameter_)) {
 		return std::get<Uuid>(parameter_) == id;

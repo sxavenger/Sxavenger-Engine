@@ -12,9 +12,15 @@
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
+//* lib
+#include <Lib/Geometry/Vector3.h>
+
 //* directx12
 #include <d3dx12.h>
 #include <DirectXTex.h>
+
+//* c++
+#include <array>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -39,9 +45,12 @@ public:
 		//=========================================================================================
 
 		void Assign(const DirectX::TexMetadata& metadata);
-		// todo: resource自体の情報を持たせる.
 
-		bool IsLightness() const { return DirectX::IsSRGB(format); }
+		DxObject::ColorEncoding GetColorEncoding() const {
+			return DirectX::IsSRGB(format) ? DxObject::ColorEncoding::Lightness : DxObject::ColorEncoding::Intensity;
+		}
+
+		bool IsCubemap() const { return (miscflags[0] & DirectX::TEX_MISC_TEXTURECUBE) != 0; }
 
 		//=========================================================================================
 		// public variables
@@ -49,9 +58,11 @@ public:
 
 		Vector2ui size;
 		uint32_t depth;
+
 		uint32_t miplevels;
 		DXGI_FORMAT format;
-		bool isCubemap;
+
+		std::array<uint32_t, 2> miscflags;
 
 	};
 
@@ -61,27 +72,26 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//* constructor / destructor *//
+
 	AssetTexture(const Uuid& id) : BaseAsset(id) {}
-	~AssetTexture() override { Reset(); }
+
+	~AssetTexture() override = default;
+
+	//* setup option *//
 
 	void Setup(const DirectXQueueContext* context, const DirectX::ScratchImage& image);
 
-	void Update(const DirectXQueueContext* context);
+	//* texture option *//
 
-	void Reset();
-
-	//* inspector option *//
-
-	void ShowInspector() override;
-
-	//* getter *//
-	// multi-threadで使用するために, 読み込み時の仮Textureを返すように作成.
+	void Transition(const DirectXQueueContext* context);
 
 	const DxObject::Descriptor& GetDescriptorSRV() const;
 
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const;
 
 	const Metadata& GetMetadata() const { return metadata_; }
+	// hack: metadata読み込みの完了を待つ必要がある
 
 private:
 
@@ -105,6 +115,7 @@ private:
 	//* texture helper methods *//
 
 	static DxObject::Resource CreateTextureResource(const DirectX::TexMetadata& metadata);
+
 	static NODISCARD ComPtr<ID3D12Resource> UploadTextureData(const DirectXQueueContext* context, ID3D12Resource* texture, const DirectX::ScratchImage& image);
 
 };

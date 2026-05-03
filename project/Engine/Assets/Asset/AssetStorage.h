@@ -8,50 +8,40 @@
 #include "AssetTexture.h"
 #include "AssetMesh.h"
 #include "AssetMaterial.h"
-#include "AssetAnimation.h"
 #include "AssetSkeleton.h"
 #include "AssetFont.h"
+#include "AssetAnimationClip.h"
 #include "AssetAudioClip.h"
-
-//* engine
-#include <Engine/Foundation.h>
-#include <Engine/System/Configuration/Configuration.h>
-
-//* lib
-#include <Lib/Adapter/Uuid/Uuid.h>
-
-//* c++
-#include <unordered_map>
-#include <memory>
-#include <typeinfo>
-#include <functional>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
-////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
 // AssetStorage class
-////////////////////////////////////////////////////////////////////////////////////////////
-class AssetStorage {
+//////////////////////////////////////////////////////////////////////////////////////////
+class AssetStorage final {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
 
-	using Storage = std::unordered_map<const std::type_info*, std::unordered_map<Uuid, std::shared_ptr<BaseAsset>>>;
+	using Storage = std::unordered_map<Uuid, std::shared_ptr<BaseAsset>>;
+	using Stage   = std::unordered_map<const std::type_info*, Storage>;
+	//!< 各AssetごとにUuidとAssetの共有ポインタを紐づけるストレージコンテナ.
 
-	using IdTable = std::unordered_map<Uuid, std::pair<std::filesystem::path, std::string>>;
-	
+	using Location = std::unordered_map<Uuid, std::filesystem::path>;
+	//!< AssetのUuidとファイルパスを紐づけるロケーションテーブル.
+
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	void Term() { storage_.clear(); }
+	void Term();
 
 	//* storage option *//
 
@@ -59,43 +49,50 @@ public:
 	//! @tparam T Assetの型
 	//! @param[in] asset 登録するAssetの共有ポインタ
 	//! @param[in] filepath Assetのファイルパス
-	template <AssetConcept T>
+	template <Asset T>
 	void Register(const std::shared_ptr<T>& asset, const std::filesystem::path& filepath);
+
+	//! @brief Assetの登録
+	//! @tparam T Assetの型
+	//! @param[in] uuid Assetのid
+	//! @param[in] filepath Assetのファイルパス
+	template <Asset T>
+	void Register(const Uuid& uuid, const std::filesystem::path& filepath);
+
+	//! @brief Assetの存在確認
+	//! @tparam T Assetの型
+	//! @param[in] id Assetのuuid
+	//! @retval true  Assetが存在する
+	//! @retval false Assetが存在しない
+	template <Asset T>
+	bool Contains(const Uuid& id) const { return Contains(&typeid(T), id); }
 
 	//! @brief Assetの取得
 	//! @tparam T Assetの型
 	//! @param[in] id Assetのuuid
 	//! @retval ptr     取得したAssetの共有ポインタ
 	//! @retval nullptr Assetが存在しない場合
-	template <AssetConcept T>
-	std::shared_ptr<T> GetAsset(const Uuid& id) const;
+	template <Asset T>
+	std::shared_ptr<T> Get(const Uuid& id) const;
 
 	//! @brief Assetの全要素に対して関数を実行
 	//! @tparam T Assetの型
 	//! @param[in] function 実行する関数
-	template <AssetConcept T>
+	template <Asset T>
 	void ForEach(const std::function<void(T* const)>& function) const;
 
-	//! @brief Assetの存在確認
-	//! @tparam T Assetの型
-	//! @param[in] id Assetのuuid
-	//! @retval true  Assetが存在する場合
-	//! @retval false Assetが存在しない場合
-	template <AssetConcept T>
-	bool Contains(const Uuid& id) const { return Contains(&typeid(T), id); }
+	template <Asset T>
+	const Storage& GetStorage();
 
-	template <AssetConcept T>
-	const std::unordered_map<Uuid, std::shared_ptr<BaseAsset>>& GetAssetStorage();
+	const Stage& GetStage() const { return storage_; }
 
-	const Storage& GetStorage() const { return storage_; }
+	//* location option *//
 
-	//* table option *//
+	void SerializeLocation() const;
 
-	void Serialize() const;
+	void DeserializeLocation();
 
-	void Deserialize();
-
-	const std::filesystem::path& GetFilepath(const Uuid& id) const;
+	const std::filesystem::path& GetLocation(const Uuid& id) const;
 
 	//* singleton *//
 
@@ -104,17 +101,18 @@ public:
 private:
 
 	//=========================================================================================
-	// private vaariables
+	// private variables
 	//=========================================================================================
 
 	//* storage *//
 
-	Storage storage_;
+	Stage storage_;
 
-	//* table *//
+	//* location *//
 
-	IdTable table_;
-	static inline const std::filesystem::path kTableFilepath_ = kPackagesDirectory / "intermediate" / "asset_table.uasset";
+	Location location_;
+
+	static inline const std::filesystem::path kLocationFilepath = kPackagesDirectory / "intermediate" / "asset_location.asset";
 
 	//=========================================================================================
 	// private methods
@@ -124,64 +122,72 @@ private:
 		return storage_.contains(type) && storage_.at(type).contains(id);
 	}
 
-	template <AssetConcept T>
+	template <Asset T>
 	static std::shared_ptr<T> Cast(const std::shared_ptr<BaseAsset>& asset) {
 		return std::static_pointer_cast<T>(asset);
 	}
 
+	template <Asset T>
+	static T* Cast(BaseAsset* asset) {
+		return static_cast<T*>(asset);
+	}
+
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// UAssetStorage class template methods
-////////////////////////////////////////////////////////////////////////////////////////////
-template <AssetConcept T>
-inline void AssetStorage::Register(const std::shared_ptr<T>& asset, const std::filesystem::path& filepath) {
+//////////////////////////////////////////////////////////////////////////////////////////
+// AssetStorage class template methods
+//////////////////////////////////////////////////////////////////////////////////////////
+
+template <Asset T>
+void AssetStorage::Register(const std::shared_ptr<T>& asset, const std::filesystem::path& filepath) {
 	constexpr const std::type_info* type = &typeid(T);
 
 	const Uuid& id = asset->GetId();
 
 	storage_[type][id] = asset;
-	table_[id]         = std::make_pair(filepath, type->name());
+	location_[id]      = filepath;
 }
 
-template <AssetConcept T>
-inline std::shared_ptr<T> AssetStorage::GetAsset(const Uuid& id) const {
+template <Asset T>
+void AssetStorage::Register(const Uuid& uuid, const std::filesystem::path& filepath) {
+	AssetStorage::Register<T>(std::make_shared<T>(uuid), filepath);
+}
+
+template <Asset T>
+std::shared_ptr<T> AssetStorage::Get(const Uuid& id) const {
 	constexpr const std::type_info* type = &typeid(T);
 
 	if (!Contains(type, id)) {
 		return nullptr; //!< Assetが存在しない場合はnullptrを返す
 	}
-	// todo: ここをwaitにさせる...?
 
-	return AssetStorage::Cast<T>(storage_.at(type).at(id)); //!< Assetを取得
+	return AssetStorage::Cast<T>(storage_.at(type).at(id));
 }
 
-template <AssetConcept T>
+template <Asset T>
 void AssetStorage::ForEach(const std::function<void(T* const)>& function) const {
 	constexpr const std::type_info* type = &typeid(T);
-
 	if (!storage_.contains(type)) {
 		return; //!< Assetが存在しない場合は何もしない
 	}
 
-	for (const auto& [id, asset] : storage_.at(type)) {
-		if (!asset->IsComplete()) {
-			continue; //!< Assetが未完了の場合はスキップ
-		}
-
-		function(AssetStorage::Cast<T>(asset).get());
+	for (const auto& asset : storage_.at(type) | std::views::values) {
+		function(AssetStorage::Cast<T>(asset.get()));
 	}
 }
 
-template <AssetConcept T>
-inline const std::unordered_map<Uuid, std::shared_ptr<BaseAsset>>& AssetStorage::GetAssetStorage() {
+template <Asset T>
+inline const AssetStorage::Storage& AssetStorage::GetStorage() {
 	constexpr const std::type_info* type = &typeid(T);
-	return storage_[type]; //!< Assetのストレージを返す
+	return storage_[type];
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// singleton instance variable
-////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////
+// instance
+//////////////////////////////////////////////////////////////////////////////////////////
+
 static AssetStorage* const sAssetStorage = AssetStorage::GetInstance();
 
 SXAVENGER_ENGINE_NAMESPACE_END
+
+

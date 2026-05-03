@@ -36,13 +36,21 @@ public:
 	constexpr bool Any(_Mask mask) const { return (mask_ & mask) != 0; }
 	constexpr bool Any(_Bit bit) const { return Any(static_cast<_Mask>(bit)); }
 
-	//* mask option  *//
+	//* mask option *//
 
 	constexpr void Clear() { mask_ = NULL; }
 	constexpr void Clear(_Mask mask) { mask_ &= ~mask; }
 
 	constexpr void Inverse(_Mask mask) { mask_ ^= mask; }
 	constexpr void Inverse(_Bit bit) { Inverse(static_cast<_Mask>(bit)); }
+
+	//* set option *//
+
+	constexpr void Set(_Mask mask) { mask_ |= mask; }
+	constexpr void Set(_Bit bit) { Set(static_cast<_Mask>(bit)); }
+
+	constexpr void Reset(_Mask mask) { mask_ &= ~mask; }
+	constexpr void Reset(_Bit bit) { Reset(static_cast<_Mask>(bit)); }
 
 	//* operator [assign] *//
 

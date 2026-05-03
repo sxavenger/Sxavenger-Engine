@@ -1,76 +1,52 @@
 #include "BaseContent.h"
 SXAVENGER_ENGINE_USING
 
+
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
 #include <Engine/System/Utility/RuntimeLogger.h>
-#include <Engine/System/Runtime/Thread/AsyncThread.h>
-#include <Engine/Editors/EditorEngine.h>
 
-//* external
-#include <imgui.h>
-#include <magic_enum.hpp>
+//* c++
+#include <thread>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseContent class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BaseContent::Execute(const AsyncThread* thread) {
-	AsyncLoad(thread->GetContext());
+void BaseContent::Attach(const std::filesystem::path& filepath, const std::any& parameter) {
+
+	//!< 引数の保存
+	filepath_  = filepath;
+	parameter_ = parameter;
+
 }
 
 void BaseContent::WaitComplete() const {
-	while (!IsComplete()) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(1));
+	while (status_ != Status::Complete) {
 		RuntimeLogger::LogDebug("[BaseContent]", "waiting for content to complete loading... filepath: " + filepath_.generic_string());
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
 }
 
-void BaseContent::SetFilepath(const std::filesystem::path& filepath) {
-	filepath_ = filepath;
-	AsyncTask::SetTag(filepath.generic_string());
-}
-
-const std::filesystem::path& BaseContent::GetFilepath() const {
-	StreamLogger::AssertA(!filepath_.empty(), "asset filepath is empty.");
-	return filepath_;
-}
-
-void BaseContent::ShowInspector() {
-	ImGui::SeparatorText(filepath_.filename().generic_string().c_str());
-	ImGui::Text("status: %s", magic_enum::enum_name(GetStatus()).data());
-	ImGui::Separator();
-}
-
-void BaseContent::CheckExist() const {
-	StreamLogger::AssertA(std::filesystem::exists(GetFilepath()), "File does not exist: " + GetFilepath().generic_string());
-}
-
-void BaseContent::SelectInspector(BaseAsset* asset) {
-	if (auto editor = sEditorEngine->GetEditor<InspectorEditor>()) {
-		editor->SetInspector(asset);
-	}
-}
-
-std::filesystem::path BaseContent::GetMetaPath() const {
-	std::filesystem::path filepath = GetFilepath();
-	filepath += BaseContent::GetMetaExtension();
-	return filepath;
-}
-
-json BaseContent::LoadMeta() const {
-	std::filesystem::path filepath = GetMetaPath();
+json BaseContent::LoadMetaData(const std::filesystem::path& filepath) {
+	std::filesystem::path meta = BaseContent::GetMetaFilepath(filepath);
 
 	json data;
-	JsonHandler::LoadFromJson(filepath, data);
+	JsonHandler::LoadFromJson(meta, data);
 
 	return data;
 }
 
-void BaseContent::SaveMeta(const json& data) const {
-	std::filesystem::path filepath = GetMetaPath();
-	JsonHandler::OverwriteToJson(filepath, data);
+void BaseContent::SaveMetaData(const json& data, const std::filesystem::path& filepath) {
+	std::filesystem::path meta = BaseContent::GetMetaFilepath(filepath);
+	JsonHandler::WriteToJson(meta, data);
+}
+
+std::filesystem::path BaseContent::GetMetaFilepath(const std::filesystem::path& filepath) {
+	std::filesystem::path meta = filepath;
+	meta += kMetaExtension;
+	return meta;
 }

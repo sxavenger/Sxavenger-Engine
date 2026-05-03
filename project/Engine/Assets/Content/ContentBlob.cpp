@@ -11,26 +11,22 @@ SXAVENGER_ENGINE_USING
 // ContentBlob class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentBlob::AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) {
-	BaseContent::CheckExist();
+void ContentBlob::Load(MAYBE_UNUSED const DirectXQueueContext* context) {
 
-	// このcontentはparameter(profile)が設定されているのが前提
-	StreamLogger::AssertA(param_.has_value(), "shader compile profile is not set.");
+	DxObject::CompileProfile profile = GetProfile();
 
-	DxObject::CompileProfile profile = std::any_cast<DxObject::CompileProfile>(param_);
-	Load(BaseContent::GetFilepath(), profile);
-}
+	blob_.Create(BaseContent::GetFilepath(), profile, L"main");
+	//!< entry pointは"main"限定
 
-void ContentBlob::AttachUuid() {
-	BaseContent::CheckExist();
-}
-
-void ContentBlob::Load(const std::filesystem::path& filepath, const DxObject::CompileProfile& profile) {
-	blob_.Create(filepath, profile);
-	//!< entry pointはL"main"限定
+	BaseContent::SetComplete(); //!< 読み込み完了
 }
 
 const DxObject::ShaderBlob& ContentBlob::GetBlob() const {
 	BaseContent::WaitComplete();
 	return blob_;
+}
+
+DxObject::CompileProfile ContentBlob::GetProfile() const {
+	StreamLogger::AssertA(parameter_.has_value(), "compile profile is not specified. filepath: " + BaseContent::GetFilepath().generic_string());
+	return std::any_cast<DxObject::CompileProfile>(parameter_);
 }

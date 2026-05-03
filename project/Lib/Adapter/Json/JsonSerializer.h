@@ -45,15 +45,7 @@ concept JsonSerializePrimitive = std::integral<T> || std::floating_point<T> || s
 template <typename T>
 struct JsonSerializeFormatter {
 public:
-
-	static json Serialize(const T& value) {
-		static_assert(false, "JsonSerializeFormatter::Serialize() : Unsupported type.");
-	}
-
-	static T Deserialize(const json& j) {
-		static_assert(false, "JsonSerializeFormatter::Deserialize() : Unsupported type.");
-	}
-
+	static_assert(requires { typename JsonSerializeFormatter<T>::Serialize; typename JsonSerializeFormatter<T>::Deserialize; }, "JsonSerializeFormatter requires either JsonSerializePrimitive or custom Serialize/Deserialize methods.");
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

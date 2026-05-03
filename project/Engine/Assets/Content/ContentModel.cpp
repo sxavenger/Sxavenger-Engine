@@ -10,126 +10,109 @@ SXAVENGER_ENGINE_USING
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
 
-//* lib
-#include <Lib/Adapter/Json/JsonHandler.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ContentModel class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentModel::AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) {
-	BaseContent::CheckExist();
+void ContentModel::Attach(const std::filesystem::path& filepath, const std::any& parameter) {
 
-	uint32_t option
-		= aiProcess_FlipWindingOrder
-		| aiProcess_FlipUVs
-		| aiProcess_Triangulate
-		| aiProcess_CalcTangentSpace
-		| aiProcess_ImproveCacheLocality;
-	//!< default option
+	//!< 引数の保存
+	BaseContent::Attach(filepath, parameter);
 
-	if (param_.has_value()) {
-		option = std::any_cast<uint32_t>(param_);
-	}
+	uint32_t option = GetOption();
 
-	Load(BaseContent::GetFilepath(), option);
-}
+	//!< sceneの取得
+	std::shared_ptr<Assimp::Importer> importer = ContentModel::LoadImporter(filepath, option);
+	const aiScene* aiScene = importer->GetScene();
 
-void ContentModel::AttachUuid() {
-	BaseContent::CheckExist();
-
-	// sceneの取得
-	Assimp::Importer importer;
-	const aiScene* aiScene = importer.ReadFile(BaseContent::GetFilepath().generic_string().c_str(), 0);
-
-	if (aiScene == nullptr) {
-		StreamLogger::Exception("model load failed. filepath: " + BaseContent::GetFilepath().generic_string(), importer.GetErrorString());
-		return;
-	}
-
-	// idのサイズを確保
+	
 	meshes_.resize(aiScene->mNumMeshes);
-	materials_.resize(aiScene->mNumMaterials);
+	materials_.resize(aiScene->mNumMaterials); //!< idのサイズを確保
 
-	// idを取得
-	AssignUuid();
+	//!< Uuidの割り当て
+	AttachUuid(filepath);
 
-	// storageに登録
-	for (size_t i = 0; i < meshes_.size(); ++i) {
-		auto asset = std::make_shared<AssetMesh>(meshes_[i]);
-		sAssetStorage->Register(asset, BaseContent::GetFilepath());
-	}
+	{ //!< Storageに登録
 
-	for (size_t i = 0; i < materials_.size(); ++i) {
-		auto asset = std::make_shared<AssetMaterial>(materials_[i]);
-		sAssetStorage->Register(asset, BaseContent::GetFilepath());
-	}
+		for (size_t i = 0; i < meshes_.size(); ++i) {
+			sAssetStorage->Register<AssetMesh>(meshes_[i], filepath);
+		}
 
-	{
-		auto asset = std::make_shared<AssetSkeleton>(skeleton_);
-		sAssetStorage->Register(asset, BaseContent::GetFilepath());
+		for (size_t i = 0; i < materials_.size(); ++i) {
+			sAssetStorage->Register<AssetMaterial>(materials_[i], filepath);
+		}
+
+		sAssetStorage->Register<AssetSkeleton>(skeleton_, filepath);
 	}
 	
 }
 
-void ContentModel::ShowInspector() {
-	BaseContent::ShowInspector();
+void ContentModel::Load(MAYBE_UNUSED const DirectXQueueContext* context) {
 
-	// mesh
-	if (ImGui::CollapsingHeader("meshes ## header", ImGuiTreeNodeFlags_DefaultOpen)) {
-		for (size_t i = 0; i < meshes_.size(); ++i) {
-			if (ImGui::Button(std::format("mesh {}", i).c_str())) {
-				BaseContent::SelectInspector(sAssetStorage->GetAsset<AssetMesh>(meshes_[i]).get());
+	uint32_t option = GetOption();
+
+	std::shared_ptr<Assimp::Importer> importer = ContentModel::LoadImporter(BaseContent::GetFilepath(), option);
+
+	//!< sceneからcontentに必要な情報をセットアップ
+	SetupMaterialIndices(importer->GetScene());
+	SetupBornNode(importer->GetScene()->mRootNode);
+
+#if 1 //!< 非同期Taskとして委任する場合.
+	//!< materialのセットアップ
+	for (size_t i = 0; i < materials_.size(); ++i) {
+		System::PushTask(
+			Async::Execution::Compute,
+			std::format("AssetMaterial {}[{}]", BaseContent::GetFilepath().filename().string(), i),
+			[this, i, importer](const Async::ExecutionTask*, const DirectXQueueContext*) {
+				std::shared_ptr<AssetMaterial> asset = sAssetStorage->Get<AssetMaterial>(materials_[i]);
+				asset->Setup(importer->GetScene()->mMaterials[i], BaseContent::GetFilepath().parent_path());
 			}
-		}
+		);
 	}
 
-	// material
-	if (ImGui::CollapsingHeader("materials ## header", ImGuiTreeNodeFlags_DefaultOpen)) {
-		for (size_t i = 0; i < materials_.size(); ++i) {
-			if (ImGui::Button(std::format("material {}", i).c_str())) {
-				BaseContent::SelectInspector(sAssetStorage->GetAsset<AssetMaterial>(materials_[i]).get());
+	//!< meshのセットアップ
+	for (size_t i = 0; i < meshes_.size(); ++i) {
+		System::PushTask(
+			Async::Execution::Compute,
+			std::format("AssetMesh {}[{}]", BaseContent::GetFilepath().filename().string(), i),
+			[this, i, importer](const Async::ExecutionTask*, const DirectXQueueContext* context) {
+				std::shared_ptr<AssetMesh> asset = sAssetStorage->Get<AssetMesh>(meshes_[i]);
+				asset->Setup(context, importer->GetScene()->mMeshes[i]);
 			}
-		}
+		);
 	}
 
-	// skeleton
-	if (ImGui::CollapsingHeader("skeleton ## header", ImGuiTreeNodeFlags_DefaultOpen)) {
-		if (ImGui::Button("skeleton")) {
-			BaseContent::SelectInspector(sAssetStorage->GetAsset<AssetSkeleton>(skeleton_).get());
-		}
+	//!< skeletonのセットアップ
+	{
+		std::shared_ptr<AssetSkeleton> asset = sAssetStorage->Get<AssetSkeleton>(skeleton_);
+		asset->Setup(root_);
 	}
+	
+#else //!< 同一Taskとして実行する場合.
+	//!< materialのセットアップ
+	for (size_t i = 0; i < materials_.size(); ++i) {
+		std::shared_ptr<AssetMaterial> asset = sAssetStorage->Get<AssetMaterial>(materials_[i]);
+		asset->Setup(importer->GetScene()->mMaterials[i], BaseContent::GetFilepath().parent_path());
+	}
+
+	//!< meshのセットアップ
+	for (size_t i = 0; i < meshes_.size(); ++i) {
+		std::shared_ptr<AssetMesh> asset = sAssetStorage->Get<AssetMesh>(meshes_[i]);
+		asset->Setup(context, importer->GetScene()->mMeshes[i]);
+	}
+
+	//!< skeletonのセットアップ
+	{
+		
+	}
+#endif
+
+	BaseContent::SetComplete(); //!< 読み込み完了
 }
 
-void ContentModel::Load(const std::filesystem::path& filepath, uint32_t assimpOption) {
+void ContentModel::AttachUuid(const std::filesystem::path& filepath) {
 
-	// sceneの取得
-	Assimp::Importer importer;
-	const aiScene* aiScene = importer.ReadFile(filepath.generic_string().c_str(), assimpOption);
-
-	if (aiScene == nullptr) {
-		StreamLogger::Exception("model load failed. filepath: " + filepath.generic_string(), importer.GetErrorString());
-		return;
-	}
-
-	// idのサイズを確保
-	meshes_.resize(aiScene->mNumMeshes);
-	materials_.resize(aiScene->mNumMaterials);
-
-	// materialの読み込み
-	LoadMaterials(aiScene, filepath);
-
-	// meshの読み込み
-	LoadMeshes(aiScene);
-
-	// nodeの読み込み
-	LoadSkeleton(aiScene);
-}
-
-void ContentModel::AssignUuid() {
-	//!< multi threadにする場合, thread safeにする必要がある.
-
-	json meta = BaseContent::LoadMeta();
+	json meta = BaseContent::LoadMetaData(filepath);
 
 	//!< meshのid取得
 	if (meta.contains("meshes")) {
@@ -148,7 +131,7 @@ void ContentModel::AssignUuid() {
 			meta["meshes"].emplace_back(mesh.Serialize());
 		}
 
-		BaseContent::SaveMeta(meta);
+		BaseContent::SaveMetaData(meta, filepath);
 	}
 
 	//!< materialのid取得
@@ -168,7 +151,7 @@ void ContentModel::AssignUuid() {
 			meta["materials"].emplace_back(material.Serialize());
 		}
 
-		BaseContent::SaveMeta(meta);
+		BaseContent::SaveMetaData(meta, filepath);
 	}
 
 	//!< skeletonのid取得
@@ -181,40 +164,50 @@ void ContentModel::AssignUuid() {
 		skeleton_ = Uuid::Generate();
 
 		meta["skeleton"] = skeleton_.Serialize();
-		BaseContent::SaveMeta(meta);
+		BaseContent::SaveMetaData(meta, filepath);
 	}
 
 }
 
-void ContentModel::LoadMeshes(const aiScene* aiScene) {
+uint32_t ContentModel::GetOption() {
+
+	uint32_t option
+		= aiProcess_FlipWindingOrder
+		| aiProcess_FlipUVs
+		| aiProcess_Triangulate
+		| aiProcess_CalcTangentSpace
+		| aiProcess_ImproveCacheLocality;
+	//!< default option
+
+	if (BaseContent::GetParameter().has_value()) {
+		option = std::any_cast<uint32_t>(BaseContent::GetParameter());
+	}
+
+	return option;
+}
+
+std::shared_ptr<Assimp::Importer> ContentModel::LoadImporter(const std::filesystem::path& filepath, uint32_t option) {
+	std::shared_ptr<Assimp::Importer> importer = std::make_shared<Assimp::Importer>();
+	importer->ReadFile(filepath.generic_string().c_str(), option);
+
+	if (importer->GetScene() == nullptr) {
+		StreamLogger::Exception("model load failed. filepath: " + filepath.generic_string(), importer->GetErrorString());
+	}
+
+	return importer;
+}
+
+void ContentModel::SetupMaterialIndices(const aiScene* aiScene) {
 	// meshの数だけの要素を確保
 	materialIndices_.resize(aiScene->mNumMeshes);
 
-	for (uint32_t i = 0; i < aiScene->mNumMeshes; ++i) {
-		// meshの取得
-		const aiMesh* mesh = aiScene->mMeshes[i];
-
-		// assetの取得
-		auto asset = sAssetStorage->GetAsset<AssetMesh>(meshes_[i]);
-		asset->Setup(mesh);
-
-		// material indexの格納
-		materialIndices_[i] = mesh->mMaterialIndex;
+	for (size_t i = 0; i < materialIndices_.size(); ++i) {
+		const aiMesh* aiMesh = aiScene->mMeshes[i];
+		materialIndices_[i] = aiMesh->mMaterialIndex;
 	}
 }
 
-void ContentModel::LoadMaterials(const aiScene* aiScene, const std::filesystem::path& filepath) {
-	for (uint32_t i = 0; i < aiScene->mNumMaterials; ++i) {
-		// materialの取得
-		const aiMaterial* material = aiScene->mMaterials[i];
-
-		// assetの取得
-		auto asset = sAssetStorage->GetAsset<AssetMaterial>(materials_[i]);
-		asset->Setup(material, filepath.parent_path());
-	}
-}
-
-BornNode ContentModel::ReadNode(aiNode* node) {
+BornNode ContentModel::ReadNode(const aiNode* node) {
 
 	BornNode result = {};
 
@@ -226,8 +219,8 @@ BornNode ContentModel::ReadNode(aiNode* node) {
 
 	// resultに代入
 	result.transform.scale     = { scale.x, scale.y, scale.z };
-	result.transform.rotate    = ConvertQuaternion(rotate);
-	result.transform.translate = ConvertPosition3(translate);
+	result.transform.rotate    = AssetMesh::ConvertQuaternion(rotate);
+	result.transform.translate = AssetMesh::ConvertVector3(translate);
 
 	// nodeのlocalMatの取得
 	aiMatrix4x4 aiLocalMatrix = node->mTransformation;
@@ -255,27 +248,7 @@ BornNode ContentModel::ReadNode(aiNode* node) {
 	return result;
 }
 
-void ContentModel::LoadSkeleton(const aiScene* aiScene) {
+void ContentModel::SetupBornNode(const aiNode* aiNode) {
 	// nodeの読み込み
-	root_ = ReadNode(aiScene->mRootNode);
-
-	// assetの取得
-	auto asset = sAssetStorage->GetAsset<AssetSkeleton>(skeleton_);
-	asset->Setup(root_);
-}
-
-Vector3f ContentModel::ConvertNormal(const aiVector3D& aiVector) {
-	return { aiVector.x, aiVector.y, -aiVector.z }; //!< 左手座標系に変換
-}
-
-Vector3f ContentModel::ConvertPosition3(const aiVector3D& aiVector) {
-	return { aiVector.x, aiVector.y, -aiVector.z }; //!< 左手座標系に変換
-}
-
-Vector4f ContentModel::ConvertPosition4(const aiVector3D& aiVector) {
-	return { aiVector.x, aiVector.y, -aiVector.z, 1.0f }; //!< 左手座標系に変換
-}
-
-Quaternion ContentModel::ConvertQuaternion(const aiQuaternion& aiQuaternion) {
-	return { -aiQuaternion.x, -aiQuaternion.y, aiQuaternion.z, aiQuaternion.w }; //!< 左手座標系に変換
+	root_ = ReadNode(aiNode);
 }

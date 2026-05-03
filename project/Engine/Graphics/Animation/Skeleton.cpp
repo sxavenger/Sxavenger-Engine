@@ -84,9 +84,9 @@ std::optional<QuaternionTransform> Skeleton::GetTransform(const std::string& joi
 		const auto& nodeAnimation = (*it).second;
 
 		QuaternionTransform transform = {};
-		transform.scale     = CalculateAnimationCurve(nodeAnimation.scale, time);
-		transform.rotate    = CalculateAnimationCurve(nodeAnimation.rotate, time);
-		transform.translate = CalculateAnimationCurve(nodeAnimation.translate, time);
+		transform.scale     = TransformAnimation::CalculateAnimationCurve(nodeAnimation.scale, time);
+		transform.rotate    = TransformAnimation::CalculateAnimationCurve(nodeAnimation.rotate, time);
+		transform.translate = TransformAnimation::CalculateAnimationCurve(nodeAnimation.translate, time);
 
 		return transform;
 	}

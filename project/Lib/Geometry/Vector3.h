@@ -17,10 +17,10 @@
 #include <algorithm>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Vector3 class
+// Vector3 structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <class _Ty>
-class Vector3 {
+template <typename _Ty>
+struct Vector3 {
 public:
 
 	//=========================================================================================
@@ -49,7 +49,7 @@ public:
 	constexpr Vector3& operator/=(const _Ty rhs) noexcept { x /= rhs; y /= rhs; z /= rhs; return *this; }
 
 	//* cast
-	template <class _U>
+	template <typename _U>
 	constexpr operator Vector3<_U>() const noexcept { return { static_cast<_U>(x), static_cast<_U>(y), static_cast<_U>(z) }; }
 
 	//* unary
@@ -78,10 +78,10 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Vector3 - floating_point class
+// Vector3 - floating_point structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <std::floating_point _Ty>
-class Vector3<_Ty> {
+struct Vector3<_Ty> {
 public:
 
 	//=========================================================================================
@@ -109,7 +109,7 @@ public:
 	constexpr Vector3& operator/=(const _Ty rhs) noexcept { x /= rhs; y /= rhs; z /= rhs; return *this; }
 
 	//* cast
-	template <class _U>
+	template <typename _U>
 	operator Vector3<_U>() const noexcept { return { static_cast<_U>(x), static_cast<_U>(y), static_cast<_U>(z) }; }
 
 	//* unary
@@ -230,40 +230,40 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Vector3 class binary operators
+// Vector3 typename binary operators
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector3<_Ty> operator+(const Vector3<_Ty>& lhs, const Vector3<_Ty>& rhs) noexcept {
 	return { lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z };
 }
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector3<_Ty> operator-(const Vector3<_Ty>& lhs, const Vector3<_Ty>& rhs) noexcept {
 	return { lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z };
 }
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector3<_Ty> operator*(const Vector3<_Ty>& lhs, const Vector3<_Ty>& rhs) noexcept {
 	return { lhs.x * rhs.x, lhs.y * rhs.y, lhs.z * rhs.z };
 }
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector3<_Ty> operator*(const Vector3<_Ty>& lhs, const _Ty rhs) noexcept {
 	return { lhs.x * rhs, lhs.y * rhs, lhs.z * rhs };
 }
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector3<_Ty> operator*(const _Ty lhs, const Vector3<_Ty>& rhs) noexcept {
 	return { lhs * rhs.x, lhs * rhs.y, lhs * rhs.z };
 }
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector3<_Ty> operator/(const Vector3<_Ty>& lhs, const Vector3<_Ty>& rhs) noexcept {
 	return { lhs.x / rhs.x, lhs.y / rhs.y, lhs.z / rhs.z };
 }
 
-template <class _Ty>
+template <typename _Ty>
 constexpr Vector3<_Ty> operator/(const Vector3<_Ty>& lhs, const _Ty rhs) noexcept {
 	return { lhs.x / rhs, lhs.y / rhs, lhs.z / rhs };
 }
@@ -271,48 +271,48 @@ constexpr Vector3<_Ty> operator/(const Vector3<_Ty>& lhs, const _Ty rhs) noexcep
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Vector3 formatter structure
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <class T>
+template <typename T>
 struct std::formatter<Vector3<T>> : Sxl::BaseFormatter<Vector3<T>> {};
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // constexpr constants
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector3<_Ty> kOrigin3 = { 0, 0, 0 };
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector3<_Ty> kUnit3 = { 1, 1, 1 };
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector3<_Ty> kUnitX3 = { 1, 0, 0 };
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector3<_Ty> kUnitY3 = { 0, 1, 0 };
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector3<_Ty> kUnitZ3 = { 0, 0, 1 };
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector3<_Ty> kInfinity3 = { std::numeric_limits<_Ty>::infinity(), std::numeric_limits<_Ty>::infinity(), std::numeric_limits<_Ty>::infinity() };
 
 //* directions
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector3<_Ty> kForward3 = kUnitZ3<_Ty>;
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector3<_Ty> kBackward3 = -kUnitZ3<_Ty>;
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector3<_Ty> kUp3 = kUnitY3<_Ty>;
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector3<_Ty> kDown3 = -kUnitY3<_Ty>;
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector3<_Ty> kRight3 = kUnitX3<_Ty>;
 
-template <class _Ty = float>
+template <typename _Ty = float>
 constexpr Vector3<_Ty> kLeft3 = -kUnitX3<_Ty>;
 
 ////////////////////////////////////////////////////////////////////////////////////////////

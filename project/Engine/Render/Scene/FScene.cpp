@@ -47,8 +47,6 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 			return; //!< 透明マテリアルはTLASに登録しない
 		}
 
-		mesh->Update(context); //!< meshの更新
-
 		// instanceの設定
 		DxrObject::TopLevelAS::Instance instance = {};
 

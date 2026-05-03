@@ -15,16 +15,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <std::integral _Ty>
-class Color4Integral; //!< integral color class template
+struct Color4Integral; //!< integral color structure template
 
 template <std::floating_point _Ty>
-class Color4floating; //!< floating-point color class template
+struct Color4floating; //!< floating-point color structure template
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Color4Integral class
+// Color4Integral structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <std::integral _Ty>
-class Color4Integral {
+struct Color4Integral {
 public:
 
 	//=========================================================================================
@@ -87,7 +87,7 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Color4Integral class template methods
+// Color4Integral structure template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <std::integral _Ty>
@@ -101,10 +101,10 @@ constexpr const _Ty& Color4Integral<_Ty>::operator[](size_t index) const noexcep
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Color4floating class
+// Color4floating structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <std::floating_point _Ty>
-class Color4floating {
+struct Color4floating {
 public:
 
 	//=========================================================================================
@@ -128,7 +128,7 @@ public:
 	//!< 演算系のoperatorが必要な場合, 定義する
 	
 	//* cast
-	template <class _U>
+	template <typename _U>
 	constexpr operator Color4floating<_U>() const noexcept {
 		return { static_cast<_U>(r), static_cast<_U>(g), static_cast<_U>(b), static_cast<_U>(a) };
 	}
@@ -187,7 +187,7 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Color4floating class template methods
+// Color4floating structure template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <std::floating_point _Ty>

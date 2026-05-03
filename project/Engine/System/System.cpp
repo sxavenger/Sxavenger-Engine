@@ -6,12 +6,12 @@ SXAVENGER_ENGINE_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
 	//* system origin
-	static std::unique_ptr<DirectXCommon>         sDirectXCommon         = nullptr; //!< DirectX12 system
-	static std::unique_ptr<DirectXQueueContext>   sDirectQueueContext    = nullptr; //!< direct queue context
-	static std::unique_ptr<Performance>           sPerformance           = nullptr; //!< performance system
-	static std::unique_ptr<TimestampCpu>          sTimestampCpu          = nullptr; //!< cpu timestamp system
-	static std::unique_ptr<TimestampGpu>          sTimestampGpu          = nullptr; //!< gpu timestamp system
-	static std::unique_ptr<AsyncThreadCollection> sAsyncThreadCollection = nullptr; //!< async thread system
+	static std::unique_ptr<DirectXCommon>           sDirectXCommon          = nullptr; //!< DirectX12 system
+	static std::unique_ptr<DirectXQueueContext>     sDirectQueueContext     = nullptr; //!< direct queue context
+	static std::unique_ptr<Performance>             sPerformance            = nullptr; //!< performance system
+	static std::unique_ptr<TimestampCpu>            sTimestampCpu           = nullptr; //!< cpu timestamp system
+	static std::unique_ptr<TimestampGpu>            sTimestampGpu           = nullptr; //!< gpu timestamp system
+	static std::unique_ptr<Async::ExecutionThreadPool> sExecutionThreadPool = nullptr; //!< async execution thread system
 
 	//* system user
 	static std::unique_ptr<WindowCollection> sWindowCollection  = nullptr; //!< window collection
@@ -42,8 +42,8 @@ void System::Init() {
 	sTimestampGpu = std::make_unique<TimestampGpu>();
 	sTimestampGpu->Init(sDirectXCommon->GetDevice());
 
-	sAsyncThreadCollection = std::make_unique<AsyncThreadCollection>();
-	sAsyncThreadCollection->Init();
+	sExecutionThreadPool = std::make_unique<Async::ExecutionThreadPool>();
+	sExecutionThreadPool->Init();
 
 	sWindowCollection = std::make_unique<WindowCollection>();
 	sInput            = std::make_unique<Input>();
@@ -58,8 +58,9 @@ void System::Term() {
 
 void System::Shutdown() {
 	sInput->Shutdown();
-	sAsyncThreadCollection->SetTerminate();
-	sAsyncThreadCollection->Shutdown();
+
+	sExecutionThreadPool->NotifyTerminate(false);
+	sExecutionThreadPool->Shutdown();
 }
 
 DXOBJECT Descriptor System::GetDescriptor(DXOBJECT DescriptorType type) {
@@ -206,22 +207,29 @@ TimestampGpu* System::GetTimestampGpu() {
 	return sTimestampGpu.get();
 }
 
-void System::PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task) {
-	sAsyncThreadCollection->PushTask(execution, task);
+void System::PushTask(const std::shared_ptr<Async::ExecutionTask>& task) {
+	sExecutionThreadPool->PushTask(task);
 }
 
-std::shared_ptr<AsyncTask> System::PushTask(AsyncExecution execution, const AsyncTask::Function& function) {
-	std::shared_ptr<AsyncTask> task = std::make_shared<AsyncTask>();
-	task->SetFunction(function);
-	task->SetTag("function task");
+std::shared_ptr<Async::ExecutionTask> System::PushTask(Async::Execution execution, const std::string& tag, const Async::ExecutionTask::ExecutionFunction& function) {
+	std::shared_ptr<Async::ExecutionTask> task = std::make_shared<Async::ExecutionTask>();
+	task->SetTag(tag);
+	task->SetFunction(execution, function);
 
-	sAsyncThreadCollection->PushTask(execution, task);
-
+	sExecutionThreadPool->PushTask(task);
 	return task;
 }
 
-AsyncThreadCollection* System::GetAsyncThreadCollection() {
-	return sAsyncThreadCollection.get();
+std::shared_ptr<Async::ExecutionTask> System::PushTask(Async::Execution execution, const Async::ExecutionTask::ExecutionFunction& function) {
+	std::shared_ptr<Async::ExecutionTask> task = std::make_shared<Async::ExecutionTask>();
+	task->SetFunction(execution, function);
+
+	sExecutionThreadPool->PushTask(task);
+	return task;
+}
+
+Async::ExecutionThreadPool* System::GetExecutionThreadPool() {
+	return sExecutionThreadPool.get();
 }
 
 void System::BeginImGuiFrame() {

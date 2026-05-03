@@ -17,15 +17,10 @@ public:
 	// public methods
 	//=========================================================================================
 
-	//* operator *//
+	//* operator [comparison] *//
 
-	bool operator==(const Uuid& other) const {
-		return data1 == other.data1 && data2 == other.data2 && data3 == other.data3 && data4 == other.data4;
-	}
-
-	bool operator!=(const Uuid& other) const {
-		return !(*this == other);
-	}
+	bool operator==(const Uuid& other) const { return data1 == other.data1 && data2 == other.data2 && data3 == other.data3 && data4 == other.data4; }
+	bool operator!=(const Uuid& other) const { return data1 != other.data1 || data2 != other.data2 || data3 != other.data3 || data4 != other.data4; }
 
 	//* methods *//
 

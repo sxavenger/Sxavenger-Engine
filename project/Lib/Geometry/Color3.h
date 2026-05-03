@@ -12,16 +12,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <std::integral _Ty>
-class Color3Integral; //!< integral color class template
+struct Color3Integral; //!< integral color structure template
 
 template <std::floating_point _Ty>
-class Color3floating; //!< floating-point color class template
+struct Color3floating; //!< floating-point color structure template
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Color3Integral class
+// Color3Integral structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <std::integral _Ty>
-class Color3Integral {
+struct Color3Integral {
 public:
 
 	//=========================================================================================
@@ -43,7 +43,7 @@ public:
 	//!< 演算系のoperatorが必要な場合, 定義する
 
 	//* cast
-	template <class _U>
+	template <typename _U>
 	constexpr operator Color3Integral<_U>() const noexcept {
 		return { static_cast<_U>(r), static_cast<_U>(g), static_cast<_U>(b) };
 	}
@@ -80,7 +80,7 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Color3Integral class template methods
+// Color3Integral structure template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <std::integral _Ty>
@@ -94,10 +94,10 @@ constexpr const _Ty& Color3Integral<_Ty>::operator[](size_t index) const noexcep
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Color3floating class
+// Color3floating structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <std::floating_point _Ty>
-class Color3floating {
+struct Color3floating {
 public:
 
 	//=========================================================================================
@@ -124,7 +124,7 @@ public:
 	constexpr Color3floating& operator/=(const _Ty& rhs) noexcept;
 
 	//* cast
-	template <class _U>
+	template <typename _U>
 	constexpr operator Color3floating<_U>() const noexcept {
 		return { static_cast<_U>(r), static_cast<_U>(g), static_cast<_U>(b) };
 	}
@@ -172,7 +172,7 @@ public:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Color3floating class template methods
+// Color3floating structure template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <std::floating_point _Ty>
@@ -234,7 +234,7 @@ constexpr const _Ty& Color3floating<_Ty>::operator[](size_t index) const noexcep
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Color3floating class binary operators
+// Color3floating structure binary operators
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 template <std::floating_point _Ty>

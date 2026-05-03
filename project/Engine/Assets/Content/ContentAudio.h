@@ -25,18 +25,19 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ContentAudio()           = default;
+	//* constructor / destructor *//
+
+	ContentAudio() : BaseContent(Async::Execution::Cpu) {}
+
 	~ContentAudio() override = default;
-
-	void AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) override;
-
-	AsyncExecution GetAsyncExecution() const { return AsyncExecution::None; }
-
-	void AttachUuid() override;
 
 	//* content option *//
 
-	void Load(const std::filesystem::path& filepath);
+	void Attach(const std::filesystem::path& filepath, const std::any& parameter) override;
+
+	void Load(MAYBE_UNUSED const DirectXQueueContext* context) override;
+
+	//* id option *//
 
 	const Uuid& GetId() const { return id_; }
 
@@ -52,9 +53,7 @@ private:
 	// private methods
 	//=========================================================================================
 
-	//* helper methods *//
-
-	void AssignUuid();
+	void AttachUuid(const std::filesystem::path& filepath);
 
 };
 

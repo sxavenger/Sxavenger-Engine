@@ -41,34 +41,40 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//* constructor / destructor *//
+
 	AssetMesh(const Uuid& id) : BaseAsset(id) {}
+
 	~AssetMesh() override = default;
 
-	void Setup(const aiMesh* mesh);
+	//* setup option *//
 
-	void Update(const DirectXQueueContext* context);
+	void Setup(const DirectXQueueContext* context, const aiMesh* mesh);
 
-	//* inspector option *//
-
-	void ShowInspector() override;
-
-	//* asset option *//
+	//* mesh option *//
 
 	void BindInputAssembler(const DirectXQueueContext* context) const;
 
 	void DrawCall(const DirectXQueueContext* context, UINT instanceCount = 1) const;
 
-	//* getter *//
-
 	const InputMesh& GetInputMesh() const;
-	InputMesh& GetInputMesh();
 
 	const InputMesh::InputVertex* GetInputVertex() const { return GetInputMesh().GetVertex(); }
 	const InputMesh::InputIndex* GetInputIndex() const { return GetInputMesh().GetIndex(); }
 
 	const std::unordered_map<std::string, JointWeightData>& GetJointWeights() const { return jointWeights_; }
+	// hack: meshの読み込みが完了してから取得する.
 
 	const std::string& GetName() const { return name_; }
+	// hack: meshの読み込みが完了してから取得する.
+
+	//* convert methods *//
+
+	static Vector3f ConvertVector3(const aiVector3D& aiVector);
+
+	static Vector4f ConvertVector4(const aiVector3D& aiVector);
+
+	static Quaternion ConvertQuaternion(const aiQuaternion& aiQuaternion);
 
 private:
 
@@ -78,20 +84,12 @@ private:
 
 	//* mesh data
 	InputMesh                                        input_;
-	std::optional<uint32_t>                          materialIndex_;
 	std::unordered_map<std::string, JointWeightData> jointWeights_;
 	std::string                                      name_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
-
-	//* helper convert methods *//
-
-	static Vector3f ConvertNormal(const aiVector3D& aiVector);
-	static Vector3f ConvertPosition3(const aiVector3D& aiVector);
-	static Vector4f ConvertPosition4(const aiVector3D& aiVector);
-	static Quaternion ConvertQuaternion(const aiQuaternion& aiQuaternion);
 
 };
 

@@ -57,47 +57,30 @@ SXAVENGER_ENGINE_USING
 
 void RenderSceneEditor::Init() {
 
+	ContentTexture::Option option = {};
+	option.isGenerateMipmap = false;
+	option.useCompress      = false;
+
 	checkerboard_
-		= sContentStorage->Import<ContentTexture>(
-			"packages/textures/checker_black.png",
-			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
-		)->GetId();
+		= sContentStorage->Import<ContentTexture>("packages/textures/checker_black.png", option)->GetId();
 
 	operationTexture_[static_cast<uint32_t>(GizmoOperation::Translate)]
-		= sContentStorage->Import<ContentTexture>(
-			"packages/textures/icon/operation_translate.png",
-			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
-		)->GetId();
+		= sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_translate.png", option)->GetId();
 
 	operationTexture_[static_cast<uint32_t>(GizmoOperation::Rotate)]
-		= sContentStorage->Import<ContentTexture>(
-			"packages/textures/icon/operation_rotate.png",
-			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
-		)->GetId();
+		= sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_rotate.png", option)->GetId();
 
 	operationTexture_[static_cast<uint32_t>(GizmoOperation::Scale)]
-		= sContentStorage->Import<ContentTexture>(
-			"packages/textures/icon/operation_scale.png",
-			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
-		)->GetId();
+		= sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_scale.png", option)->GetId();
 
 	modeTexture_[SxImGuizmo::World]
-		= sContentStorage->Import<ContentTexture>(
-			"packages/textures/icon/mode_world.png",
-			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
-		)->GetId();
+		= sContentStorage->Import<ContentTexture>("packages/textures/icon/mode_world.png", option)->GetId();
 
 	modeTexture_[SxImGuizmo::Local]
-		= sContentStorage->Import<ContentTexture>(
-			"packages/textures/icon/mode_local.png",
-			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
-		)->GetId();
+		= sContentStorage->Import<ContentTexture>("packages/textures/icon/mode_local.png", option)->GetId();
 
 	gridTexture_
-		= sContentStorage->Import<ContentTexture>(
-			"packages/textures/icon/grid.png",
-			ContentTexture::Option{ .isGenerateMipmap = false, .isCompress = false }
-		)->GetId();
+		= sContentStorage->Import<ContentTexture>("packages/textures/icon/grid.png", option)->GetId();
 
 	camera_ = std::make_unique<PerspectiveCameraActor>();
 	camera_->SetPerspective(PerspectiveCameraActor::Perspective::ThirdPerson);
@@ -123,12 +106,12 @@ void RenderSceneEditor::Init() {
 	config_.tag    = CameraComponent::Tag::Editor;
 	config_.option = FRenderConfig::OptionFlag::Tonemap;
 
-	icons_[static_cast<uint32_t>(Icon::Volume)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_volume.png")->GetId();
-	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_directionalLight.png")->GetId();
-	icons_[static_cast<uint32_t>(Icon::PointLight)]       = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_pointLight.png")->GetId();
-	icons_[static_cast<uint32_t>(Icon::SpotLight)]        = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_spotLight.png")->GetId();
-	icons_[static_cast<uint32_t>(Icon::RectLight)]        = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_rectLight.png")->GetId();
-	icons_[static_cast<uint32_t>(Icon::Camera)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_camera.png")->GetId();
+	icons_[static_cast<uint32_t>(Icon::Volume)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_volume.png", option)->GetId();
+	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_directionalLight.png", option)->GetId();
+	icons_[static_cast<uint32_t>(Icon::PointLight)]       = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_pointLight.png", option)->GetId();
+	icons_[static_cast<uint32_t>(Icon::SpotLight)]        = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_spotLight.png", option)->GetId();
+	icons_[static_cast<uint32_t>(Icon::RectLight)]        = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_rectLight.png", option)->GetId();
+	icons_[static_cast<uint32_t>(Icon::Camera)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_camera.png", option)->GetId();
 	
 	{
 		selectLine_.CreateBlob(kPackagesDirectory / L"shaders/render/geometry/line/Line.vs.hlsl", DxObject::GraphicsShaderType::Vertex);

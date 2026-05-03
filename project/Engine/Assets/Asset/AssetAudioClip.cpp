@@ -61,15 +61,12 @@ void AssetAudioClip::Setup(IMFSourceReader* reader) {
 		buffer->Unlock();
 	}
 
-	BaseAsset::Complete();
+	BaseAsset::SetComplete();
 	StreamLogger::EngineThreadLog(std::format("[AssetAudioClip]: audio clip setup complete. uuid: {}", BaseAsset::GetId().Serialize()));
 }
 
-void AssetAudioClip::ShowInspector() {
-}
-
 const WAVEFORMATEX& AssetAudioClip::GetFormat() const {
-	BaseAsset::WaitComplete();
+	BaseAsset::WaitComplete();	
 	return format_;
 }
 
@@ -82,3 +79,4 @@ const size_t AssetAudioClip::GetBufferSize() const {
 	BaseAsset::WaitComplete();
 	return buffer_.size();
 }
+

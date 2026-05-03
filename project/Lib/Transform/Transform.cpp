@@ -66,7 +66,7 @@ Matrix4x4 Transform2d::ToMatrix() const {
 	return Matrix4x4::MakeAffine({ scale.x, scale.y, 0.0f }, { 0.0f, 0.0f, rotate }, { translate.x, translate.y, 0.0f });
 }
 
-json Transform2d::ParseToJson() const {
+json Transform2d::Serialize() const {
 	json data = json::object();
 	data["translate"] = JsonSerializeFormatter<Vector2f>::Serialize(translate);
 	data["rotate"]    = JsonSerializeFormatter<float>::Serialize(rotate);
@@ -74,10 +74,12 @@ json Transform2d::ParseToJson() const {
 	return data;
 }
 
-void Transform2d::InputJson(const json& data) {
-	translate = JsonSerializeFormatter<Vector2f>::Deserialize(data.at("translate"));
-	rotate    = JsonSerializeFormatter<float>::Deserialize(data.at("rotate"));
-	scale     = JsonSerializeFormatter<Vector2f>::Deserialize(data.at("scale"));
+Transform2d Transform2d::Deserialize(const json& data) {
+	Transform2d transform = {};
+	transform.translate = JsonSerializeFormatter<Vector2f>::Deserialize(data.at("translate"));
+	transform.rotate    = JsonSerializeFormatter<float>::Deserialize(data.at("rotate"));
+	transform.scale     = JsonSerializeFormatter<Vector2f>::Deserialize(data.at("scale"));
+	return transform;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

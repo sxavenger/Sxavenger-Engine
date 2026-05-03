@@ -3,19 +3,20 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* thread
-#include "AsyncTask.h"
-#include "AsyncThread.h"
+//* asset
+#include "BaseAsset.h"
 
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/UI/ISystemDebugGui.h>
+#include <Engine/Graphics/Animation/Animation.h>
+
+//* lib
+#include <Lib/Adapter/Uuid/Uuid.h>
 
 //* external
-#include <magic_enum.hpp>
-
-//* c++
-#include <array>
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -23,37 +24,29 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AsyncThreadCollection class
+// AssetAnimationClip class
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief 非同期スレッドプール管理クラス.
-class AsyncThreadCollection
-	: public ISystemDebugGui {
+class AssetAnimationClip
+	: public BaseAsset {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	AsyncThreadCollection() = default;
-	~AsyncThreadCollection() { Shutdown(); }
+	//* constructor / destructor *//
 
-	void Init();
+	AssetAnimationClip(const Uuid& uuid) : BaseAsset(uuid) {}
 
-	void SetTerminate();
+	~AssetAnimationClip() override = default;
 
-	void Shutdown();
+	//* setup option *//
 
-	//* task option *//
+	void Setup(const aiAnimation* animation);
 
-	//! @brief 指定した実行カテゴリのスレッドプールにタスクを追加する
-	//! @param[in] execution 実行カテゴリ
-	//! @param[in] task      追加するタスク
-	void PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task);
+	//* getter *//
 
-	//* debug gui *//
-
-	//! @brief デバッグGUIの表示
-	void SystemDebugGui() override;
+	const Animation& GetAnimation() const { return animation_; }
 
 private:
 
@@ -61,7 +54,17 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::array<AsyncThreadPool, magic_enum::enum_count<AsyncExecution>()> pools_;
+	Animation animation_;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	//* [assimp] setup helper methods *//
+
+	static TimePointd<TimeUnit::second> GetTime(double time, double ticksPerSeconds);
+
+	static TransformAnimation LoadAnimation(const aiNodeAnim* aiNodeAnimation, double tickPerSeconds);
 
 };
 

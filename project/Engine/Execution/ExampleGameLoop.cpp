@@ -132,7 +132,7 @@ void ExampleGameLoop::InitSystem() {
 #ifndef _DEBUG //!< デバッグビルドでは、シーンのロードに時間がかかるため、ロードしない.
 	{
 		json data;
-		if (JsonHandler::LoadFromJson("assets/scene/sponza_lit.scene", data)) {
+		if (JsonHandler::LoadFromJson("assets/scene/sponza.scene", data)) {
 			sEntityBehaviourStorage->InputJson(data);
 		}
 	}
@@ -155,16 +155,15 @@ void ExampleGameLoop::InitSystem() {
 		BehaviourHelper::DetachBehaviourMaterial(cubes_[i]->GetAddress());
 
 		BehaviourHelper::ModifyBehaviourMaterial(cubes_[i]->GetAddress(), [](AssetMaterial* material) {
-			material->GetBuffer().transparency.SetValue(0.5f);
-			material->GetBuffer().albedo.SetValue(kWhite3<float>);
+			material->GetBuffer().transparency.value = 0.5f;
 		});
 
-		(*cubes_[i])->SetInspectable([](EntityBehaviour* behaviour) {
+		/*(*cubes_[i])->SetInspectable([](EntityBehaviour* behaviour) {
 			BehaviourHelper::ModifyBehaviourMaterial(behaviour, [](AssetMaterial* material) {
 				material->GetBuffer().albedo.SetImGuiCommand();
 				material->GetBuffer().transparency.SetImGuiCommand();
 			});
-		});
+		});*/
 
 		auto collider = (*cubes_[i])->AddComponent<ColliderComponent>();
 		collider->SetTag("cube");
