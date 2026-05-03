@@ -127,7 +127,7 @@ namespace GBuffer {
 
 		//* helper methods *//
 
-		static float GetDepth(uint2 pixel) {
+		static float FetchDepth(uint2 pixel) {
 			return gDepth.Load(uint3(pixel, 0));
 		}
 
@@ -135,7 +135,7 @@ namespace GBuffer {
 			return gDepth.SampleLevel(pointSampler, uv, 0).r;
 		}
 
-		static float3 GetAlbedo(uint2 pixel) {
+		static float3 FetchAlbedo(uint2 pixel) {
 			return gAlbedo.Load(uint3(pixel, 0)).rgb;
 		}
 
@@ -143,7 +143,7 @@ namespace GBuffer {
 			return gAlbedo.SampleLevel(pointSampler, uv, 0).rgb;
 		}
 
-		static float3 GetNormal(uint2 pixel) {
+		static float3 FetchNormal(uint2 pixel) {
 			float3 normal = gNormal.Load(uint3(pixel, 0)).rgb;
 			return normalize(normal * 2.0f - 1.0f); //!< [-1, 1]
 		}
@@ -153,11 +153,11 @@ namespace GBuffer {
 			return normalize(normal * 2.0f - 1.0f); //!< [-1, 1]
 		}
 
-		static float3 GetPosition(uint2 pixel, uint2 resolution, float4x4 mat /* = projectionInv * viewInv */) {
+		static float3 FetchPosition(uint2 pixel, uint2 resolution, float4x4 mat /* = projectionInv * viewInv */) {
 
-			float depth = GetDepth(pixel);
+			float depth = FetchDepth(pixel);
 
-			float2 ndc = float2(pixel) / float2(resolution) * 2.0f - 1.0f; //!< [-1, 1]
+			float2 ndc = float2(pixel + 0.5f) / float2(resolution) * 2.0f - 1.0f; //!< [-1, 1]
 			ndc.y *= -1.0f; //!< [1, -1]
 
 			float4 clip = float4(ndc, depth, 1.0f);
@@ -179,7 +179,7 @@ namespace GBuffer {
 			return world.xyz / world.w;
 		}
 
-		static float3 GetMaterial(uint2 pixel) {
+		static float3 FetchMaterial(uint2 pixel) {
 			return gMaterialARM.Load(uint3(pixel, 0)).rgb;
 		}
 
@@ -191,7 +191,7 @@ namespace GBuffer {
 
 		bool FetchSurface(FetchArgument argument) {
 
-			depth = Surface::GetDepth(argument.pixel);
+			depth = Surface::FetchDepth(argument.pixel);
 
 			if (depth == 1.0f) {
 				//!< object is not exist.
@@ -201,11 +201,11 @@ namespace GBuffer {
 				return false;
 			}
 
-			albedo   = Surface::GetAlbedo(argument.pixel);
-			normal   = Surface::GetNormal(argument.pixel);
-			position = Surface::GetPosition(argument.pixel, argument.resolution, argument.mat);
+			albedo   = Surface::FetchAlbedo(argument.pixel);
+			normal   = Surface::FetchNormal(argument.pixel);
+			position = Surface::FetchPosition(argument.pixel, argument.resolution, argument.mat);
 
-			float3 material = Surface::GetMaterial(argument.pixel);
+			float3 material = Surface::FetchMaterial(argument.pixel);
 			ao        = material.r;
 			roughness = material.g;
 			metallic  = material.b;

@@ -94,8 +94,9 @@ void AssetMaterial::MaterialBuffer::SetEmissiveTexture(std::nullopt_t) {
 
 void AssetMaterial::Setup(const aiMaterial* material, const std::filesystem::path& directory) {
 
-	// albedoの取得
-	textures_[static_cast<uint8_t>(Texture::Albedo)] = GetTextureId(material, aiTextureType_DIFFUSE, directory);
+	// albedo, transparencyの取得
+	textures_[static_cast<uint8_t>(Texture::Albedo)]       = GetTextureId(material, aiTextureType_DIFFUSE, directory);
+	textures_[static_cast<uint8_t>(Texture::Transparency)] = textures_[static_cast<uint8_t>(Texture::Albedo)]; //!< 同一Textureとして使用する.
 
 	// normalの取得
 	if (material->GetTextureCount(aiTextureType_HEIGHT) != 0) { //!< .objの場合
@@ -197,7 +198,7 @@ void AssetMaterial::Update() {
 
 	auto& parameter = buffer_.At();
 
-	// diffuse
+	// albedo
 	if (textures_[static_cast<uint8_t>(Texture::Albedo)].has_value()) {
 		std::shared_ptr<AssetTexture> texture
 			= sAssetStorage->Get<AssetTexture>(textures_[static_cast<uint8_t>(Texture::Albedo)].value());
@@ -208,7 +209,18 @@ void AssetMaterial::Update() {
 		parameter.SetAlbedoTexture(std::nullopt);
 	}
 
-	// bump
+	// transparency
+	if (textures_[static_cast<uint8_t>(Texture::Transparency)].has_value()) {
+		std::shared_ptr<AssetTexture> texture
+			= sAssetStorage->Get<AssetTexture>(textures_[static_cast<uint8_t>(Texture::Transparency)].value());
+
+		parameter.SetTransparencyTexture(texture->GetDescriptorSRV());
+
+	} else {
+		parameter.SetTransparencyTexture(std::nullopt);
+	}
+
+	// normal
 	if (textures_[static_cast<uint8_t>(Texture::Normal)].has_value()) {
 		std::shared_ptr<AssetTexture> texture
 			= sAssetStorage->Get<AssetTexture>(textures_[static_cast<uint8_t>(Texture::Normal)].value());
