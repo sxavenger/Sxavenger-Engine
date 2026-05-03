@@ -43,6 +43,12 @@ public:
 
 	void Unmap();
 
+	//* transition option *//
+
+	void TransitionReadback(DxObject::CommandContext* context);
+
+	void TransitionDefault(DxObject::CommandContext* context);
+
 	//* getter *//
 
 	const std::span<T>& GetSpan() const { return data_; }
@@ -95,6 +101,8 @@ inline void ReadbackDimensionBuffer<T>::Readback(
 		resource_.SetName(L"Readback Dimension Buffer");
 	}
 
+	TransitionReadback(context);
+
 	//!< コピー
 	D3D12_RESOURCE_STATES state = source->Get().GetCurrentState();
 
@@ -106,6 +114,8 @@ inline void ReadbackDimensionBuffer<T>::Readback(
 	);
 
 	source->Get().Transition(context, state);
+
+	TransitionDefault(context);
 
 	Map();
 }
@@ -126,6 +136,16 @@ inline void ReadbackDimensionBuffer<T>::Unmap() {
 	}
 
 	data_ = {};
+}
+
+template<typename T>
+inline void ReadbackDimensionBuffer<T>::TransitionReadback(DxObject::CommandContext* context) {
+	resource_.Transition(context, D3D12_RESOURCE_STATE_COPY_DEST);
+}
+
+template<typename T>
+inline void ReadbackDimensionBuffer<T>::TransitionDefault(DxObject::CommandContext* context) {
+	resource_.Transition(context, BaseDimensionBuffer::GetDefaultState(Category::Readback));
 }
 
 template <typename T>

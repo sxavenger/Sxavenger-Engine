@@ -66,6 +66,10 @@ void AssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scra
 	// metadataの保存
 	metadata_.Assign(metadata);
 
+	// 使用可能状態に遷移
+	resource_.TransitionExplicit(context->GetDxCommand(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_COMMON);
+	//!< HACK: Commonで作成し, 内部でDestで遷移させCommonに手動遷移.
+
 	// textureをuploadさせる.
 	context->ExecuteAllAllocators();
 

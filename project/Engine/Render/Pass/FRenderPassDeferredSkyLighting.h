@@ -3,12 +3,14 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* render
+#include "FRenderConfig.h"
+#include "FBaseRenderPass.h"
+#include "../Buffer/FRenderTargetBuffer.h"
+
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxObjectCommon.h>
-
-//* c++
-#include <concepts>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -16,36 +18,36 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FBaseBuffer class
+// FRenderPassDeferredSkyLighting class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FBaseBuffer {
+//! @brief 環境光の描画Pass
+class FRenderPassDeferredSkyLighting
+	: public FBaseRenderPass {
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	FBaseBuffer()          = default;
-	virtual ~FBaseBuffer() = default;
+	//* render option *//
 
-	virtual void Create(const Vector2ui& resolution) = 0;
-
-	void Resize(const Vector2ui& resolution);
-
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-
-	static const DXGI_FORMAT kColorFormat        = DXGI_FORMAT_R16G16B16A16_FLOAT;
-	static const DXGI_FORMAT kDepthStencilFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+	void Render(const DirectXQueueContext* context, const FRenderConfig& config) override;
 
 private:
 
 	//=========================================================================================
-	// private variables
+	// private methods
 	//=========================================================================================
 
-	Vector2ui resolution_ = {}; //!< 内部バッファの解像度
+	//* environment pass *//
+
+	void BeginEnvironmentPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	void EndEnvironmentPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	void RenderEnvironmentSkyLight(const DirectXQueueContext* context, const FRenderConfig& config);
+
+	void RenderEnvironmentSkyAtmosphere(const DirectXQueueContext* context, const FRenderConfig& config);
 
 };
 

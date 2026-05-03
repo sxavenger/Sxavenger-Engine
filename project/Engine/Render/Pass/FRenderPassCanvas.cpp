@@ -6,6 +6,7 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../Buffer/FMainBuffer.h"
+#include "../Buffer/FDepthStencilBuffer.h"
 #include "../Core/FRenderCore.h"
 #include "../Core/FRenderCoreCanvas.h"
 
@@ -49,8 +50,8 @@ void FRenderPassCanvas::BeginRenderCanvasPass(const DirectXQueueContext* context
 
 	auto commandList = context->GetCommandList();
 
-	FMainBuffer* main          = buffer->GetBuffer<FMainBuffer>();
-	FPriorityTexture* priority = buffer->GetPriority();
+	FMainBuffer* main                 = buffer->GetBuffer<FMainBuffer>();
+	FDepthStencilBuffer* depthStencil = buffer->GetBuffer<FDepthStencilBuffer>();
 
 	static const size_t kBufferCount = 1;
 	std::array<FRenderTexture*, kBufferCount> buffers = {
@@ -65,6 +66,9 @@ void FRenderPassCanvas::BeginRenderCanvasPass(const DirectXQueueContext* context
 		for (size_t i = 0; i < kBufferCount; ++i) {
 			buffers[i]->SetTransitionRenderTarget(barriers);
 		}
+
+		//!< DepthStencilのbarrier設定
+		depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Canvas).SetTransitionDepthWrite(barriers);
 		
 		//!< barrierの発行
 		context->GetDxCommand()->ResourceBarrier(barriers);
@@ -80,14 +84,15 @@ void FRenderPassCanvas::BeginRenderCanvasPass(const DirectXQueueContext* context
 
 		commandList->OMSetRenderTargets(
 			static_cast<UINT>(handles.size()), handles.data(), false,
-			&priority->GetCPUHandleDSV()
+			&depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Canvas).GetCPUHandleDSV()
 		);
 	}
 }
 
 void FRenderPassCanvas::EndRenderCanvasPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
 
-	FMainBuffer* main = buffer->GetBuffer<FMainBuffer>();
+	FMainBuffer* main                 = buffer->GetBuffer<FMainBuffer>();
+	FDepthStencilBuffer* depthStencil = buffer->GetBuffer<FDepthStencilBuffer>();
 
 	static const size_t kBufferCount = 1;
 	std::array<FRenderTexture*, kBufferCount> buffers = {
@@ -101,6 +106,8 @@ void FRenderPassCanvas::EndRenderCanvasPass(const DirectXQueueContext* context, 
 		for (size_t i = 0; i < kBufferCount; ++i) {
 			buffers[i]->SetTransitionDefaultState(barriers);
 		}
+
+		depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Canvas).SetTransitionDefaultState(barriers);
 
 		//!< barrierの発行
 		context->GetDxCommand()->ResourceBarrier(barriers);

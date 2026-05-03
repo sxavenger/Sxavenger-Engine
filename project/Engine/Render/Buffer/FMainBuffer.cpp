@@ -29,7 +29,12 @@ const std::array<DXGI_FORMAT, FMainBuffer::kLayoutCount> FMainBuffer::kFormats =
 
 void FMainBuffer::Create(const Vector2ui& resolution) {
 	for (size_t i = 0; i < kLayoutCount; ++i) {
-		buffers_[i].Create({ resolution, kFormats[i] });
+
+		FRenderTexture::Option option = {};
+		option.resolution = resolution;
+		option.format     = kFormats[i];
+
+		buffers_[i].Create(option);
 
 		std::string name = "FMainBuffer | ";
 		name += magic_enum::enum_name(static_cast<FMainBuffer::Layout>(i));

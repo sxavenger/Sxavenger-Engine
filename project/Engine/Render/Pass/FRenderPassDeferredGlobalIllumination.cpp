@@ -9,6 +9,7 @@ SXAVENGER_ENGINE_USING
 #include "../Buffer/FLightAccumulationBuffer.h"
 #include "../Buffer/FReservoirBuffer.h"
 #include "../Buffer/FScreenSpaceProbeBuffer.h"
+#include "../Buffer/FDepthStencilBuffer.h"
 #include "../Core/FRenderCore.h"
 #include "../Core/FRenderCoreReSTIR.h"
 #include "../Core/FRenderCoreLuxGlobalIllumination.h"
@@ -118,9 +119,9 @@ void FRenderPassDeferredGlobalIllumination::PassLuxProbeTrace(const DirectXQueue
 
 	auto commandList = context->GetCommandList(); //!< CommandListの取得
 
-	FScreenSpaceProbeBuffer* probe     = config.buffer->GetBuffer<FScreenSpaceProbeBuffer>(); //!< ScreenSpaceProbeの取得
-	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
-	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil(); //!< DepthStencilの取得
+	FScreenSpaceProbeBuffer* probe    = config.buffer->GetBuffer<FScreenSpaceProbeBuffer>(); //!< ScreenSpaceProbeの取得
+	FGBuffer* gbuffer                 = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilBuffer* depthStencil = config.buffer->GetBuffer<FDepthStencilBuffer>(); //!< DepthStencilの取得
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreLuxGlobalIllumination>(); //!< RenderCoreの取得.
 	core->GetContext()->SetStateObject(context->GetDxCommand());
@@ -146,10 +147,10 @@ void FRenderPassDeferredGlobalIllumination::PassLuxProbeTrace(const DirectXQueue
 	commandList->SetComputeRoot32BitConstants(5, 2, &config.buffer->GetResolution(), 0); //!< Resolution
 
 	//* GBuffer
-	commandList->SetComputeRootDescriptorTable(6, depthStencil->GetGPUHandleSRV());                                     //!< gDepth
-	commandList->SetComputeRootDescriptorTable(7, gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());      //!< gAlbedo
-	commandList->SetComputeRootDescriptorTable(8, gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());      //!< gNormal
-	commandList->SetComputeRootDescriptorTable(9, gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV()); //!< gMaterialARM
+	commandList->SetComputeRootDescriptorTable(6, depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetGPUHandleSRV()); //!< gDepth
+	commandList->SetComputeRootDescriptorTable(7, gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());                //!< gAlbedo
+	commandList->SetComputeRootDescriptorTable(8, gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());                //!< gNormal
+	commandList->SetComputeRootDescriptorTable(9, gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());           //!< gMaterialARM
 
 	//* light
 	// Directional Light
@@ -178,9 +179,9 @@ void FRenderPassDeferredGlobalIllumination::PassLuxProbeTrace(const DirectXQueue
 
 void FRenderPassDeferredGlobalIllumination::PassLuxHistory(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	FScreenSpaceProbeBuffer* probe     = config.buffer->GetBuffer<FScreenSpaceProbeBuffer>(); //!< ScreenSpaceProbeの取得
-	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
-	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil(); //!< DepthStencilの取得
+	FScreenSpaceProbeBuffer* probe    = config.buffer->GetBuffer<FScreenSpaceProbeBuffer>(); //!< ScreenSpaceProbeの取得
+	FGBuffer* gbuffer                 = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilBuffer* depthStencil = config.buffer->GetBuffer<FDepthStencilBuffer>(); //!< DepthStencilの取得
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreLuxGlobalIllumination>(); //!< RenderCoreの取得.
 	core->SetPipeline(FRenderCoreLuxGlobalIllumination::Process::History, context);
@@ -207,7 +208,7 @@ void FRenderPassDeferredGlobalIllumination::PassLuxHistory(const DirectXQueueCon
 	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 
 	//!< GBufferの設定
-	desc.SetHandle("gDepth",       depthStencil->GetGPUHandleSRV());
+	desc.SetHandle("gDepth",       depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetGPUHandleSRV());
 	desc.SetHandle("gAlbedo",      gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
 	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
 	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
@@ -300,9 +301,9 @@ void FRenderPassDeferredGlobalIllumination::PassReSTIRInitialReservoir(const Dir
 
 	auto commandList = context->GetCommandList(); //!< CommandListの取得
 
-	FReservoirBuffer* reservoir        = config.buffer->GetBuffer<FReservoirBuffer>(); //!< Reservoirの取得
-	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
-	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil(); //!< DepthStencilの取得
+	FReservoirBuffer* reservoir       = config.buffer->GetBuffer<FReservoirBuffer>(); //!< Reservoirの取得
+	FGBuffer* gbuffer                 = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilBuffer* depthStencil = config.buffer->GetBuffer<FDepthStencilBuffer>(); //!< DepthStencilの取得
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreReSTIR>(); //!< RenderCoreの取得.
 	core->GetContext()->SetStateObject(context->GetDxCommand());
@@ -329,10 +330,10 @@ void FRenderPassDeferredGlobalIllumination::PassReSTIRInitialReservoir(const Dir
 	commandList->SetComputeRoot32BitConstants(5, 3, &seed, 0); //!< gSeed
 
 	//* GBuffer
-	commandList->SetComputeRootDescriptorTable(6, depthStencil->GetGPUHandleSRV());                                     //!< gDepth
-	commandList->SetComputeRootDescriptorTable(7, gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());      //!< gAlbedo
-	commandList->SetComputeRootDescriptorTable(8, gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());      //!< gNormal
-	commandList->SetComputeRootDescriptorTable(9, gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV()); //!< gMaterialARM
+	commandList->SetComputeRootDescriptorTable(6, depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetGPUHandleSRV()); //!< gDepth
+	commandList->SetComputeRootDescriptorTable(7, gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());                //!< gAlbedo
+	commandList->SetComputeRootDescriptorTable(8, gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());                //!< gNormal
+	commandList->SetComputeRootDescriptorTable(9, gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());           //!< gMaterialARM
 
 	//* light
 	// Directional Light
@@ -389,7 +390,7 @@ void FRenderPassDeferredGlobalIllumination::PassReSTIRTemporalReuse(const Direct
 void FRenderPassDeferredGlobalIllumination::PassReSTIRSolve(const DirectXQueueContext* context, const FRenderConfig& config) {
 
 	FReservoirBuffer* reservoir                 = config.buffer->GetBuffer<FReservoirBuffer>();         //!< Reservoirの取得
-	FDepthStencilTexture* depthStencil          = config.buffer->GetDepthStencil();                     //!< DepthStencilの取得
+	FDepthStencilBuffer* depthStencil           = config.buffer->GetBuffer<FDepthStencilBuffer>();                     //!< DepthStencilの取得
 	FLightAccumulationBuffer* lightAccumulation = config.buffer->GetBuffer<FLightAccumulationBuffer>(); //!< LightAccumulationBufferの取得
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreReSTIR>(); //!< RenderCoreの取得.
@@ -400,7 +401,7 @@ void FRenderPassDeferredGlobalIllumination::PassReSTIRSolve(const DirectXQueueCo
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 	desc.SetAddress("gReservoir", reservoir->GetReservoir(FReservoirBuffer::Layout::Temporal).GetGPUVirtualAddress());
 	desc.SetAddress("gCamera",    config.camera->GetGPUVirtualAddress());
-	desc.SetHandle("gDepth",      depthStencil->GetGPUHandleSRV());
+	desc.SetHandle("gDepth",      depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetGPUHandleSRV());
 	desc.SetHandle("gIndirect",   lightAccumulation->GetBuffer(FLightAccumulationBuffer::Layout::Indirect).GetGPUHandleUAV());
 
 	core->BindComputeBuffer(FRenderCoreReSTIR::Process::Solve, context, desc);

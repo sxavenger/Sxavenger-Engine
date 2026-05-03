@@ -6,6 +6,7 @@
 
 static const float kShadowDefaultTMax = 10000.0f;
 static const float kShadowDefaultTMin = 0.02f;
+static const uint kShadowMask         = 0b01;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // InlineShadow structure
@@ -41,7 +42,7 @@ struct InlineShadow {
 		q.TraceRayInline(
 			scene,
 			flag,
-			0b01,
+			kShadowMask,
 			desc
 		);
 

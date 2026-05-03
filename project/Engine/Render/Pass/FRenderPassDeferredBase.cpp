@@ -6,6 +6,7 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../Buffer/FGBuffer.h"
+#include "../Buffer/FDepthStencilBuffer.h"
 #include "../Core/FRenderCore.h"
 #include "../Core/FRenderCoreGeometry.h"
 #include "../Core/FRenderCoreTransition.h"
@@ -73,7 +74,7 @@ void FRenderPassDeferredBase::BeginOpaqueMeshRenderPass(const DirectXQueueContex
 	auto commandList = context->GetCommandList();
 
 	FGBuffer* gbuffer                  = buffer->GetBuffer<FGBuffer>();
-	FDepthStencilTexture* depthStencil = buffer->GetDepthStencil();
+	FDepthStencilBuffer* depthStencil = buffer->GetBuffer<FDepthStencilBuffer>();
 
 	static const size_t kBufferCount = 4;
 	std::array<FRenderTexture*, kBufferCount> buffers = {
@@ -93,7 +94,7 @@ void FRenderPassDeferredBase::BeginOpaqueMeshRenderPass(const DirectXQueueContex
 		}
 
 		//!< DepthStencilのbarrier設定
-		depthStencil->SetTransitionDepthWrite(barriers);
+		depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).SetTransitionDepthWrite(barriers);
 
 		//!< barrierの発行
 		context->GetDxCommand()->ResourceBarrier(barriers);
@@ -108,7 +109,7 @@ void FRenderPassDeferredBase::BeginOpaqueMeshRenderPass(const DirectXQueueContex
 
 		commandList->OMSetRenderTargets(
 			static_cast<UINT>(handles.size()), handles.data(), false,
-			&depthStencil->GetCPUHandleDSV()
+			&depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetCPUHandleDSV()
 		);
 	}
 
@@ -121,8 +122,8 @@ void FRenderPassDeferredBase::BeginOpaqueMeshRenderPass(const DirectXQueueContex
 
 void FRenderPassDeferredBase::EndOpaqueMeshRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
 
-	FGBuffer* gbuffer                  = buffer->GetBuffer<FGBuffer>();
-	FDepthStencilTexture* depthStencil = buffer->GetDepthStencil();
+	FGBuffer* gbuffer                 = buffer->GetBuffer<FGBuffer>();
+	FDepthStencilBuffer* depthStencil = buffer->GetBuffer<FDepthStencilBuffer>();
 
 	static const size_t kBufferCount = 4;
 	std::array<FRenderTexture*, kBufferCount> buffers = {
@@ -142,7 +143,7 @@ void FRenderPassDeferredBase::EndOpaqueMeshRenderPass(const DirectXQueueContext*
 		}
 
 		//!< DepthStencilのbarrier設定
-		depthStencil->SetTransitionDefaultState(barriers);
+		depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).SetTransitionDefaultState(barriers);
 
 		//!< barrierの発行
 		context->GetDxCommand()->ResourceBarrier(barriers);
@@ -258,8 +259,8 @@ void FRenderPassDeferredBase::EndMotionVectorPass(const DirectXQueueContext* con
 
 void FRenderPassDeferredBase::PassMotionVector(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>();
-	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil();
+	FGBuffer* gbuffer                 = config.buffer->GetBuffer<FGBuffer>();
+	FDepthStencilBuffer* depthStencil = config.buffer->GetBuffer<FDepthStencilBuffer>();
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreTransition>();
 	core->SetPipeline(FRenderCoreTransition::Transition::MotionVectorTransition, context);
@@ -268,7 +269,7 @@ void FRenderPassDeferredBase::PassMotionVector(const DirectXQueueContext* contex
 	DxObject::BindBufferDesc desc = {};
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 	desc.SetHandle("gMotionVector",   gbuffer->GetBuffer(FGBuffer::Layout::MotionVector).GetGPUHandleUAV());
-	desc.SetHandle("gDepth",          depthStencil->GetGPUHandleSRV());
+	desc.SetHandle("gDepth",          depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetGPUHandleSRV());
 	desc.SetAddress("gCurrentCamera", config.camera->GetGPUVirtualAddress());
 	desc.SetAddress("gPrevCamera",    config.camera->GetPrevGPUVirtualAddress());
 

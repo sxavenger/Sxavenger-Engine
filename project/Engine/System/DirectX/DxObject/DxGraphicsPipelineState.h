@@ -29,18 +29,13 @@
 DXOBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// using
-////////////////////////////////////////////////////////////////////////////////////////////
-using BlendOption = std::variant<BlendMode, D3D12_RENDER_TARGET_BLEND_DESC>;
-
-////////////////////////////////////////////////////////////////////////////////////////////
 // PrimitiveType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class PrimitiveType {
 	PointList,
 	LineList,
 	LineStrip,
-	TrianglList,
+	TriangleList,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -77,8 +72,6 @@ public:
 
 	void SetDSVFormat(DXGI_FORMAT format);
 
-	void CreateDefaultDesc();
-
 	//* getter *//
 
 	D3D12_INPUT_LAYOUT_DESC GetInputLayout() const;
@@ -95,7 +88,7 @@ public:
 
 	//* blends *//
 
-	std::array<BlendOption, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> blends;
+	std::array<D3D12_RENDER_TARGET_BLEND_DESC, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> blends;
 	bool isIndependentBlendEnable = false;
 
 	//* primitive *//
@@ -173,7 +166,6 @@ protected:
 
 	D3D12_SHADER_BYTECODE GetBytecode(GraphicsShaderType type, bool isRequired = false);
 
-	D3D12_RENDER_TARGET_BLEND_DESC GetRenderTargetBlendDesc(const BlendOption& option) const;
 	D3D12_BLEND_DESC GetBlendDesc() const;
 
 	//* methods *//

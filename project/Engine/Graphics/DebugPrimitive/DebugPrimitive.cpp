@@ -354,20 +354,20 @@ void DebugPrimitive::CreatePipeline() {
 		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
 		DxObject::GraphicsPipelineDesc desc = {};
-		desc.CreateDefaultDesc();
-
-		desc.elements.clear();
-		desc.SetElement("POSITION", 0,  DXGI_FORMAT_R32G32B32A32_FLOAT);
-		desc.SetElement("COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		
+		desc.SetElement("POSITION",  0,  DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("COLOR",     0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("THICKNESS", 0, DXGI_FORMAT_R32_FLOAT);
 
-		desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
-		desc.SetPrimitive(DxObject::PrimitiveType::LineList);
-
+		desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME);
 		desc.SetDepthStencil(true);
 
-		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
+		desc.SetPrimitive(DxObject::PrimitiveType::LineList);
+
+		desc.SetRTVFormat(DXGI_FORMAT_R16G16B16A16_FLOAT);
 		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
+
+		desc.SetDSVFormat(DxObject::kDefaultDepthFormat);
 
 		pipeline->CreatePipeline(System::GetDxDevice(), desc);
 	}
@@ -382,19 +382,17 @@ void DebugPrimitive::CreatePipeline() {
 		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
 		DxObject::GraphicsPipelineDesc desc = {};
-		desc.CreateDefaultDesc();
-
-		desc.elements.clear();
+		
 		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("COLOR",     0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("THICKNESS", 0, DXGI_FORMAT_R32_FLOAT);
 
 		desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
-		desc.SetPrimitive(DxObject::PrimitiveType::LineList);
-
 		desc.SetDepthStencil(false);
 
-		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
+		desc.SetPrimitive(DxObject::PrimitiveType::LineList);
+
+		desc.SetRTVFormat(DXGI_FORMAT_R16G16B16A16_FLOAT);
 		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
 
 		pipeline->CreatePipeline(System::GetDxDevice(), desc);
@@ -410,9 +408,7 @@ void DebugPrimitive::CreatePipeline() {
 		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
 		DxObject::GraphicsPipelineDesc desc = {};
-		desc.CreateDefaultDesc();
-
-		desc.elements.clear();
+		
 		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("COLOR",     0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("THICKNESS", 0, DXGI_FORMAT_R32_FLOAT);
@@ -424,6 +420,8 @@ void DebugPrimitive::CreatePipeline() {
 
 		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
 		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
+
+		desc.SetDSVFormat(DxObject::kDefaultDepthFormat);
 
 		pipeline->CreatePipeline(System::GetDxDevice(), desc);
 	}
@@ -438,9 +436,7 @@ void DebugPrimitive::CreatePipeline() {
 		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
 		DxObject::GraphicsPipelineDesc desc = {};
-		desc.CreateDefaultDesc();
-
-		desc.elements.clear();
+		
 		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("COLOR",     0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("THICKNESS", 0, DXGI_FORMAT_R32_FLOAT);

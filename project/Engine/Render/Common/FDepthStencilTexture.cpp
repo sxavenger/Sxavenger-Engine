@@ -9,6 +9,7 @@ SXAVENGER_ENGINE_USING
 
 //* lib
 #include <Lib/Geometry/VectorComparison.h>
+#include <Lib/Adapter/String/EncodedString.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Option structure methods
@@ -18,6 +19,7 @@ bool FDepthStencilTexture::Option::Compatible(const Option& other) const {
 
 	bool compatible = true;
 	compatible &= Comparison::All(resolution == other.resolution);
+	compatible &= format == other.format;
 	compatible &= clearDepth == other.clearDepth;
 	compatible &= clearStencil == other.clearStencil;
 
@@ -35,7 +37,7 @@ void FDepthStencilTexture::Create(const Option& option) {
 	}
 
 	CreateResource(option);
-	CreateDescriptor();
+	CreateDescriptor(option);
 
 	//!< 引数の保存
 	option_ = option;
@@ -44,6 +46,14 @@ void FDepthStencilTexture::Create(const Option& option) {
 
 void FDepthStencilTexture::Reset() {
 	resource_.Reset();
+}
+
+void FDepthStencilTexture::SetName(const std::wstring& name) const {
+	resource_.SetName(name);
+}
+
+void FDepthStencilTexture::SetName(const std::string& name) const {
+	resource_.SetName(EncodedString::Convert(name));
 }
 
 std::optional<D3D12_RESOURCE_BARRIER> FDepthStencilTexture::GetTransitionState(D3D12_RESOURCE_STATES state) {
@@ -138,7 +148,7 @@ void FDepthStencilTexture::CreateResource(const Option& option) {
 	desc.Height           = option.resolution.y;
 	desc.DepthOrArraySize = 1;
 	desc.MipLevels        = 1;
-	desc.Format           = DxObject::kDefaultDepthFormat;
+	desc.Format           = option.format;
 	desc.SampleDesc.Count = 1;
 	desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
@@ -160,7 +170,7 @@ void FDepthStencilTexture::CreateResource(const Option& option) {
 	resource_.SetName(L"FDepthStencilTexture");
 }
 
-void FDepthStencilTexture::CreateDescriptor() {
+void FDepthStencilTexture::CreateDescriptor(const Option& option) {
 
 	auto device = System::GetDxDevice()->GetDevice(); //!< deviceの取り出し
 	
@@ -173,7 +183,7 @@ void FDepthStencilTexture::CreateDescriptor() {
 
 		// descの設定
 		D3D12_DEPTH_STENCIL_VIEW_DESC desc = {};
-		desc.Format        = DxObject::kDefaultDepthFormat;
+		desc.Format        = option.format;
 		desc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 
 		// DSVの生成
@@ -193,7 +203,7 @@ void FDepthStencilTexture::CreateDescriptor() {
 
 		// descの設定
 		D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
-		desc.Format                  = DxObject::kDefaultDepthViewFormat;
+		desc.Format                  = DxObject::ConvertToDepthViewFormat(option.format);
 		desc.ViewDimension           = D3D12_SRV_DIMENSION_TEXTURE2D;
 		desc.Texture2D.MipLevels     = 1;
 		desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;

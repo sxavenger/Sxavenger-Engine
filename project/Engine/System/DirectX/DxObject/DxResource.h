@@ -60,6 +60,11 @@ public:
 		D3D12_RESOURCE_STATES state
 	);
 
+	void TransitionExplicit(
+		DxObject::CommandContext* context,
+		D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after
+	);
+
 	//* getter *//
 
 	ID3D12Resource* Get() const { return resource_.Get(); }

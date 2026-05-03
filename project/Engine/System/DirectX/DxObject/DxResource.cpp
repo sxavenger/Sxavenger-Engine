@@ -93,6 +93,22 @@ void Resource::Transition(DxObject::CommandContext* context, D3D12_RESOURCE_STAT
 	}
 }
 
+void Resource::TransitionExplicit(DxObject::CommandContext* context, D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after) {
+
+	D3D12_RESOURCE_BARRIER barrier = {};
+	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags                  = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource   = resource_.Get();
+	barrier.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+	barrier.Transition.StateBefore = before;
+	barrier.Transition.StateAfter  = after;
+
+	context->GetCommandList()->ResourceBarrier(1, &barrier);
+
+	current_ = after; //!< stateの更新
+
+}
+
 D3D12_GPU_VIRTUAL_ADDRESS Resource::GetGPUVirtualAddress() const {
 	StreamLogger::AssertA(resource_ != nullptr, "resource is null.");
 	return resource_->GetGPUVirtualAddress();

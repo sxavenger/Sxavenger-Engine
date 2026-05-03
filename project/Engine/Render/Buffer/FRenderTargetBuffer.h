@@ -51,12 +51,6 @@ public:
 
 	void ResetBuffer();
 
-	//* depth stencil option *//
-
-	FDepthStencilTexture* GetDepthStencil() const { return depthStencil_.get(); }
-
-	FPriorityTexture* GetPriority() const { return priority_.get(); }
-
 	//* process buffer option *//
 
 	FProcessBuffer* GetProcess() const { return process_.get(); }
@@ -83,11 +77,6 @@ private:
 
 	Sxl::SubclassRegistry<FBaseBuffer> registry_;
 	//!< "FBaseBuffer" を継承したクラスを管理するレジストリ
-
-	//* depth stencil *//
-
-	std::unique_ptr<FDepthStencilTexture> depthStencil_;
-	std::unique_ptr<FPriorityTexture> priority_;
 
 	//* process buffer *//
 

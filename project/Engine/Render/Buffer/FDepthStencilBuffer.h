@@ -3,12 +3,16 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* render
+#include "FBaseBuffer.h"
+#include "../Common/FDepthStencilTexture.h"
+
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxObjectCommon.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
-//* c++
-#include <concepts>
+//* external
+#include <magic_enum.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -16,28 +20,34 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FBaseBuffer class
+// FDepthStencilBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FBaseBuffer {
+class FDepthStencilBuffer final
+	: public FBaseBuffer {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Layout enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Layout : uint8_t {
+		Scene,
+		Canvas,
+	};
+	static inline const size_t kLayoutCount = magic_enum::enum_count<Layout>();
+
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	FBaseBuffer()          = default;
-	virtual ~FBaseBuffer() = default;
+	void Create(const Vector2ui& resolution) override;
 
-	virtual void Create(const Vector2ui& resolution) = 0;
+	//* getter *//
 
-	void Resize(const Vector2ui& resolution);
+	FDepthStencilTexture& GetBuffer(Layout layout) { return buffers_[static_cast<size_t>(layout)]; }
 
-	//=========================================================================================
-	// public variables
-	//=========================================================================================
-
-	static const DXGI_FORMAT kColorFormat        = DXGI_FORMAT_R16G16B16A16_FLOAT;
-	static const DXGI_FORMAT kDepthStencilFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
+	static DXGI_FORMAT GetFormat(Layout layout) { return kFormats[static_cast<size_t>(layout)]; }
 
 private:
 
@@ -45,7 +55,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	Vector2ui resolution_ = {}; //!< 内部バッファの解像度
+	static const std::array<DXGI_FORMAT, kLayoutCount> kFormats;
+
+	std::array<FDepthStencilTexture, kLayoutCount> buffers_ = {};
 
 };
 

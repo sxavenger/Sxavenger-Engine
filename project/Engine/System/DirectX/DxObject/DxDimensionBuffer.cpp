@@ -19,13 +19,11 @@ void BaseDimensionBuffer::Reset() {
 D3D12_RESOURCE_STATES BaseDimensionBuffer::GetDefaultState(Category category) {
 	switch (category) {
 		case Category::Default:
+		case Category::Readback:
 			return D3D12_RESOURCE_STATE_COMMON;
 
 		case Category::Upload:
 			return D3D12_RESOURCE_STATE_GENERIC_READ;
-
-		case Category::Readback:
-			return D3D12_RESOURCE_STATE_COPY_DEST;
 
 		default:
 			SXAVENGER_ENGINE StreamLogger::Exception("invalid category.");

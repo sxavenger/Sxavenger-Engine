@@ -120,12 +120,23 @@ void RenderSceneEditor::Init() {
 		selectLine_.ReflectionRootSignature(System::GetDxDevice());
 
 		DxObject::GraphicsPipelineDesc desc = {};
-		desc.CreateDefaultDesc();
 
+		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT);
+		desc.SetElement("NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT);
+
+		desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 		desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC_LESS_EQUAL);
 
-		desc.SetRTVFormat(0, FBaseBuffer::kColorFormat);
+		desc.SetPrimitive(DxObject::PrimitiveType::TriangleList);
+
 		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
+		desc.SetIndependentBlendEnable(false);
+
+		desc.SetRTVFormat(0, FBaseBuffer::kColorFormat);
+		desc.SetDSVFormat(FBaseBuffer::kDepthStencilFormat);
 
 		selectLine_.CreatePipeline(System::GetDxDevice(), desc);
 

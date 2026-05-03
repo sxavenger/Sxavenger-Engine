@@ -282,6 +282,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Module\Scene\SceneController.h" />
     <ClInclude Include="Engine\Module\Scene\SceneFactory.h" />
     <ClInclude Include="Engine\Render\Buffer\FBaseBuffer.h" />
+    <ClInclude Include="Engine\Render\Buffer\FDepthStencilBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FGBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FLightAccumulationBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FMainBuffer.h" />
@@ -315,6 +316,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredBase.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredGlobalIllumination.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredSkyLighting.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassForwardTransparent.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassLightingComposite.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassPostProcess.h" />
@@ -517,6 +519,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Module\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\Module\Scene\SceneFactory.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FBaseBuffer.cpp" />
+    <ClCompile Include="Engine\Render\Buffer\FDepthStencilBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FGBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FLightAccumulationBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FMainBuffer.cpp" />
@@ -549,6 +552,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredBase.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredGlobalIllumination.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredSkyLighting.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassForwardTransparent.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassLightingComposite.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassPostProcess.cpp" />
