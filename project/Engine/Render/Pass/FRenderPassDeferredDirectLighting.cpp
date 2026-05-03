@@ -56,10 +56,6 @@ void FRenderPassDeferredDirectLighting::Render(const DirectXQueueContext* contex
 		//!< Rect Light
 		PassRectLight(context, config);
 
-		//!< Sky Light
-		//PassSkyLight(context, config);
-		//PassSkyAtmosphere(context, config);
-
 		EndDirectLightingPass(context, config.buffer);
 	}
 
