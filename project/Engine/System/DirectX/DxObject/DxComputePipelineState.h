@@ -59,7 +59,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	std::optional<ShaderBlob> blob_;
+	ShaderBlob blob_;
 
 	//* rootSignature *//
 

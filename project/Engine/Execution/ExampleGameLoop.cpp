@@ -63,13 +63,24 @@ void ExampleGameLoop::InitSystem() {
 	);
 	main_->SetIcon(kPackagesDirectory / "icon" / "SxavengerEngineIcon.ico", { 32, 32 });
 
-	atmosphere_ = std::make_unique<GameObject>();
-	(*atmosphere_)->AddComponent<TransformComponent>();
-	(*atmosphere_)->AddComponent<SkyAtmosphereComponent>();
-	(*atmosphere_)->AddComponent<SkyLightComponent>();
-	(*atmosphere_)->AddComponent<DirectionalLightComponent>();
 
-	(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate = Quaternion::AxisAngle(Vector3f{1.0f, 0.0f, 0.0f}.Normalize(), kPi / 2.0f);
+	{
+		atmosphere_ = std::make_unique<GameObject>();
+		(*atmosphere_)->AddComponent<TransformComponent>();
+		//(*atmosphere_)->AddComponent<SkyAtmosphereComponent>();
+		(*atmosphere_)->AddComponent<DirectionalLightComponent>();
+
+		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate = Quaternion::AxisAngle(Vector3f{ 1.0f, 0.0f, 0.0f }.Normalize(), kPi / 2.0f);
+
+		auto skyLight = (*atmosphere_)->AddComponent<SkyLightComponent>();
+
+		ContentTexture::Option option = {};
+		option.encoding         = ContentTexture::Encoding::Lightness;
+		option.isGenerateMipmap = false;
+
+		skyLight->SetEnvironment(sContentStorage->Import<ContentTexture>("assets/textures/environment/sky_environment.dds", option)->GetId());
+	}
+	
 
 	{
 		camera_ = std::make_unique<PerspectiveCameraActor>();
@@ -221,7 +232,7 @@ void ExampleGameLoop::UpdateSystem() {
 	// LateUpdate
 	//-----------------------------------------------------------------------------------------
 
-	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->Update(System::GetDirectQueueContext());
+	//(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->Update(System::GetDirectQueueContext());
 	//!< TODO: ComponentHelperに移動予定
 
 	//-----------------------------------------------------------------------------------------

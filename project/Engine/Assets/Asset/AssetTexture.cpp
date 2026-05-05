@@ -98,10 +98,13 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& AssetTexture::GetGPUHandleSRV() const {
 DxObject::Resource AssetTexture::CreateTextureResource(const DirectX::TexMetadata& metadata) {
 	DxObject::Resource resource;
 
+	uint32_t depth = metadata.IsCubemap() ? metadata.arraySize : metadata.depth;
+	// HACK: cubemapのみでしかarraySizeが使用されないため, depthの値をcubemapのarraySizeにする.
+
 	resource = DxObject::Resource::CreateTexture(
 		System::GetDxDevice(),
 		static_cast<D3D12_RESOURCE_DIMENSION>(metadata.dimension),
-		Vector3ui{ static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height), static_cast<uint32_t>(metadata.depth) },
+		Vector3ui{ static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height), depth },
 		static_cast<UINT16>(metadata.mipLevels),
 		metadata.format,
 		D3D12_RESOURCE_FLAG_NONE,

@@ -46,11 +46,11 @@ void ComputePipelineState::Dispatch(CommandContext* context, const Vector3ui& th
 }
 
 D3D12_SHADER_BYTECODE ComputePipelineState::GetBytecode() {
-	if (!blob_.has_value()) {
+	if (blob_ == nullptr) {
 		StreamLogger::Exception("blob is not set.");  //!< blobが設定されていない
 	}
 
-	return blob_.value().GetBytecode();
+	return blob_.GetBytecode();
 }
 
 void ComputePipelineState::CreateDirectXRootSignature(Device* device) {
@@ -99,11 +99,11 @@ void ReflectionComputePipelineState::BindComputeBuffer(const CommandContext* con
 }
 
 void ReflectionComputePipelineState::SetBlobToTable() {
-	if (!blob_.has_value()) {
+	if (blob_ == nullptr) {
 		StreamLogger::Exception("blob is not set."); //!< blobが設定されていない.
 		return;
 	}
 
-	ComPtr<ID3D12ShaderReflection> reflection = blob_.value().GetReflection();
+	ComPtr<ID3D12ShaderReflection> reflection = blob_.GetReflection();
 	table_.CreateTable(reflection.Get(), ShaderVisibility::VISIBILITY_ALL);
 }

@@ -28,9 +28,6 @@ void FRenderPassDeferredGlobalIllumination::Init() {
 
 void FRenderPassDeferredGlobalIllumination::Render(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	FLightAccumulationBuffer* lightAccumulation = config.buffer->GetBuffer<FLightAccumulationBuffer>(); //!< Bufferの確保
-	lightAccumulation->GetBuffer(FLightAccumulationBuffer::Layout::Indirect).ClearRenderTarget(context); //!< 間接光のバッファをクリア
-
 	if (config.globalIllumination == FRenderConfig::GlobalIllumination::None) {
 		return; //!< 間接光が無効
 	}

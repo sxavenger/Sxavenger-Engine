@@ -49,6 +49,18 @@ private:
 
 	void RenderEnvironmentSkyAtmosphere(const DirectXQueueContext* context, const FRenderConfig& config);
 
+	//* sky visibility pass *//
+
+	void BeginSkyVisibilityPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	void EndSkyVisibilityPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	void InitalReservoirSkyVisibility(const DirectXQueueContext* context, const FRenderConfig& config);
+
+	void HistorySkyVisibility(const DirectXQueueContext* context, const FRenderConfig& config);
+
+	void SolveSkyVisibility(const DirectXQueueContext* context, const FRenderConfig& config);
+
 };
 
 SXAVENGER_ENGINE_NAMESPACE_END

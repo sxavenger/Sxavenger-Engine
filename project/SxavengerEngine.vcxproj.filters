@@ -957,6 +957,7 @@
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredSkyLighting.h" />
     <ClInclude Include="Engine\Render\Buffer\FDepthStencilBuffer.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreSkyLight.h" />
+    <ClInclude Include="Engine\Render\Buffer\FSkyReservoirBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp">
@@ -1575,5 +1576,6 @@
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredSkyLighting.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FDepthStencilBuffer.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreSkyLight.cpp" />
+    <ClCompile Include="Engine\Render\Buffer\FSkyReservoirBuffer.cpp" />
   </ItemGroup>
 </Project>

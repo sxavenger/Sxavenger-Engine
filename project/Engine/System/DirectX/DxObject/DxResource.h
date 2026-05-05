@@ -107,6 +107,7 @@ public:
 
 	bool operator==(const Resource& rhs) const { return resource_.Get() == rhs.resource_.Get(); }
 	bool operator!=(const Resource& rhs) const { return resource_.Get() != rhs.resource_.Get(); }
+
 	bool operator==(std::nullptr_t) const { return resource_.Get() == nullptr; }
 	bool operator!=(std::nullptr_t) const { return resource_.Get() != nullptr; }
 

@@ -107,6 +107,8 @@ void FRenderPassDeferredDirectLighting::BeginDirectLightingPass(const DirectXQue
 	for (size_t i = 0; i < kBufferCount; ++i) {
 		buffers[i]->ClearRenderTarget(context);
 	}
+
+	lightAccumulation->GetBuffer(FLightAccumulationBuffer::Layout::Indirect).ClearRenderTarget(context); //!< 間接光のバッファもクリアする
 }
 
 void FRenderPassDeferredDirectLighting::EndDirectLightingPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {

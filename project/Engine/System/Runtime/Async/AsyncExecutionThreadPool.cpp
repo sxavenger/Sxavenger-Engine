@@ -173,10 +173,18 @@ void Async::ExecutionThreadPool::DebugGui() {
 std::shared_ptr<Async::ExecutionTask> Async::ExecutionThreadPool::GetTask(const ExecutionThread* thread) {
 
 	std::unique_lock<std::mutex> lock(mutex_);
-	condition_.wait(lock, [this, thread]() { return thread->IsTerminate() || queue_.HasTask(thread->GetExecution()); });
+	condition_.wait(lock, [this, thread]() { return thread->IsTerminate() || !queue_.IsEmpty(); });
 
 	if (thread->IsTerminate()) {
 		return nullptr; //!< threadの終了が通知された場合, タスクを取得せずに終了する.
+	}
+
+	if (!queue_.HasTask(thread->GetExecution())) {
+		if (!queue_.IsEmpty()) {
+			condition_.notify_one(); //!< 他のスレッドがタスクを取得できるように通知する.
+		}
+
+		return nullptr; //!< threadのexecutionに対応するタスクが存在しない場合, タスクを取得せずに終了する.
 	}
 
 	std::shared_ptr<ExecutionTask> task = queue_.Pop(thread->GetExecution()); //!< threadのexecutionに対応するタスクを取得する.

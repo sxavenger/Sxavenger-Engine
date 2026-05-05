@@ -434,6 +434,7 @@ void RenderSceneEditor::ShowSceneMenu() {
 		SxGui::ComboEnum("anti-aliasing",       &config_.antiAliasing);
 		SxGui::ComboEnum("ambient-occlusion",   &config_.ambientOcclusion);
 		SxGui::ComboEnum("global-illumination", &config_.globalIllumination);
+		SxGui::ComboEnum("sky-visibility",      &config_.skyVisibility);
 
 		SxGui::DummyLine();
 		SxGui::Text(std::format("{} Option", SxGui::Icon::CheckBoxOutline));
