@@ -74,8 +74,10 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	Random random;
 	random.seed = seed * uint3(pixel + 1, 1);
 
+	uint sampleIndex = (p + ~random.Generate2u().y ^ random.Generate3u().z);
+
 	//!< directionの決定
-	float2 xi        = Hammersley((p + random.seed.y ^ ~random.seed.z) % kMaxSampleCount, kMaxSampleCount); //!< Test実行でランダムにする.
+	float2 xi        = Hammersley(sampleIndex % kMaxSampleCount, kMaxSampleCount); //!< Test実行でランダムにする.
 	float3 direction = ImportanceSampleCosineWeight(xi, surface.normal);
 	float pdf        = ImportanceSampleCosineWeightPDF(direction, surface.normal);
 
@@ -92,7 +94,8 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	BxDFAlbedo albedo   = BxDFAlbedo::Create(surface.albedo, surface.metallic);
 	BxDFContext context = BxDFContext::Create(surface.normal, v, l);
 
-	float3 color = EvaluateBRDF(albedo, context, surface.roughness) * context.NdotL * radiance * surface.ao / max(pdf, Mathmatic::kEpsilon);
+	//float3 color = EvaluateBRDF(albedo, context, surface.roughness) * context.NdotL * radiance * surface.ao / max(pdf, Mathmatic::kEpsilon);
+	float3 color = Diffuse_Lambert(albedo) * context.NdotL * radiance * surface.ao / max(pdf, Mathmatic::kEpsilon); //!< Lambertのみに変更.
 
 	//!< Sampleの作成
 	ReservoirLib::Sample sample = (ReservoirLib::Sample)0;

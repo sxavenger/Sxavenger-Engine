@@ -40,6 +40,21 @@ struct Random {
 		return float3(seed.xyz >> 8) * 5.96046447754e-08;
 		//!< rcp(2^24)
 	}
+
+	uint Generate1u() {
+		seed.x = Xorshift::xorshift32(seed.x);
+		return seed.x;
+	}
+
+	uint2 Generate2u() {
+		seed.xy = Xorshift::xorshift32(seed.xy);
+		return seed.xy;
+	}
+
+	uint3 Generate3u() {
+		seed.xyz = Xorshift::xorshift32(seed.xyz);
+		return seed.xyz;
+	}
 	
 };
 

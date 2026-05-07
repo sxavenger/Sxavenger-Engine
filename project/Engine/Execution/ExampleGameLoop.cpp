@@ -243,6 +243,14 @@ void ExampleGameLoop::UpdateSystem() {
 	// todo: engine側のgameloopに移動.
 
 	ComponentHelper::UpdateAudio3d();
+
+	DxObject::Resource resource = DxObject::Resource::CreateBuffer(
+		System::GetDxDevice(),
+		D3D12_HEAP_TYPE_UPLOAD,
+		1024,
+		D3D12_RESOURCE_FLAG_NONE,
+		D3D12_RESOURCE_STATE_GENERIC_READ
+	);
 }
 
 void ExampleGameLoop::RenderSystem() {
