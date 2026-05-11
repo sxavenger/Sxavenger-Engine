@@ -394,6 +394,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Lib\Adapter\Time\LocalTimePoint.h" />
     <ClInclude Include="Lib\Adapter\Time\RunTimeTracker.h" />
     <ClInclude Include="Lib\Adapter\Time\TimePoint.h" />
+    <ClInclude Include="Lib\Adapter\TracePoint\TracePoint.h" />
     <ClInclude Include="Lib\Adapter\Uuid\Uuid.h" />
     <ClInclude Include="Lib\CXXAttribute.h" />
     <ClInclude Include="Lib\Easing.h" />

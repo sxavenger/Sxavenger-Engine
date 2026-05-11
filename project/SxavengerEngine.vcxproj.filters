@@ -959,6 +959,7 @@
     <ClInclude Include="Lib\Transform\TransformEuler.h" />
     <ClInclude Include="Lib\Transform\Transform2d.h" />
     <ClInclude Include="Lib\Transform\RectTransform.h" />
+    <ClInclude Include="Lib\Adapter\TracePoint\TracePoint.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp">
