@@ -69,13 +69,13 @@ const Vector2f RectTransformComponent::GetPosition() const {
 
 json RectTransformComponent::ParseToJson() const {
 	json component = json::object();
-	component["transform"] = transform_.ParseToJson();
+	component["transform"] = transform_.Serialize();
 
 	return component;
 }
 
 void RectTransformComponent::InputJson(const json& data) {
-	transform_.InputJson(data.at("transform"));
+	transform_ = RectTransform::Deserialize(data.at("transform"));
 }
 
 void RectTransformComponent::TransferGPU() {

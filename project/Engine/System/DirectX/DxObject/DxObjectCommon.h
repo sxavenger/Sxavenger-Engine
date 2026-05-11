@@ -9,7 +9,7 @@
 
 //* lib
 #include <Lib/CXXAttribute.h>
-#include <Lib/Geometry/Vector3.h>
+#include <Lib/Math/Vector3.h>
 
 //* DirectX12
 #include <d3d12.h>

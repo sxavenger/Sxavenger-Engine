@@ -13,7 +13,7 @@
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
-#include <Lib/Geometry/Vector3.h>
+#include <Lib/Math/Vector2.h>
 
 //* directx12
 #include <d3dx12.h>

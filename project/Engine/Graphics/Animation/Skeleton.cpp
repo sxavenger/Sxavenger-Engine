@@ -75,7 +75,7 @@ uint32_t Skeleton::CreateJoint(const BornNode& node, const std::optional<uint32_
 	return joint.index;
 }
 
-std::optional<QuaternionTransform> Skeleton::GetTransform(const std::string& jointName, const Animation& animation, TimePointd<TimeUnit::second> time) {
+std::optional<TransformQuaternion> Skeleton::GetTransform(const std::string& jointName, const Animation& animation, TimePointd<TimeUnit::second> time) {
 
 	// 対象のJointのAnimationがあれば, 値の適応
 	if (auto it = animation.nodeAnimations.find(jointName); it != animation.nodeAnimations.end()) { //!< animationに対象のJointがある場
@@ -83,7 +83,7 @@ std::optional<QuaternionTransform> Skeleton::GetTransform(const std::string& joi
 		// animationの参照取得
 		const auto& nodeAnimation = (*it).second;
 
-		QuaternionTransform transform = {};
+		TransformQuaternion transform = {};
 		transform.scale     = TransformAnimation::CalculateAnimationCurve(nodeAnimation.scale, time);
 		transform.rotate    = TransformAnimation::CalculateAnimationCurve(nodeAnimation.rotate, time);
 		transform.translate = TransformAnimation::CalculateAnimationCurve(nodeAnimation.translate, time);
@@ -98,7 +98,7 @@ void Skeleton::ApplyAnimation(const Animation& animation, TimePointd<TimeUnit::s
 
 	for (auto& joint : joints) {
 
-		std::optional<QuaternionTransform> transform = GetTransform(joint.name, animation, time);
+		std::optional<TransformQuaternion> transform = GetTransform(joint.name, animation, time);
 
 		if (transform.has_value()) {
 			joint.transform = transform.value();
@@ -114,8 +114,8 @@ void Skeleton::ApplyTransitionAnimation(
 
 	for (auto& joint : joints) {
 
-		std::optional<QuaternionTransform> prevTransform = GetTransform(joint.name, prevAnimation, prevTime);
-		std::optional<QuaternionTransform> currTransform = GetTransform(joint.name, currAnimation, currTime);
+		std::optional<TransformQuaternion> prevTransform = GetTransform(joint.name, prevAnimation, prevTime);
+		std::optional<TransformQuaternion> currTransform = GetTransform(joint.name, currAnimation, currTime);
 
 		if (!(prevTransform.has_value() && currTransform.has_value())) {
 			continue;
@@ -123,11 +123,11 @@ void Skeleton::ApplyTransitionAnimation(
 
 		// 見つからなかった場合, defaultを入れておく
 		if (!prevTransform.has_value()) {
-			prevTransform = QuaternionTransform();
+			prevTransform = {};
 		}
 
 		if (!currTransform.has_value()) {
-			currTransform = QuaternionTransform();
+			currTransform = {};
 		}
 
 		joint.transform.scale     = Vector3f::Lerp(prevTransform.value().scale, currTransform.value().scale, t);

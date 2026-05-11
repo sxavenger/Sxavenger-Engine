@@ -9,7 +9,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/System.h>
 
 //* lib
-#include <Lib/Geometry/GeometryMath.h>
+#include <Lib/Math/GeometryMath.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DebugPrimitive class methods

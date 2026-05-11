@@ -3,18 +3,18 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* light
+#include "../LightCommon.h"
+
 //* component
 #include "../../BaseComponent.h"
 #include "../../Transform/TransformComponent.h"
-
-//* light
-#include "../LightCommon.h"
 
 //* engine
 #include <Engine/Foundation.h>
 
 //* lib
-#include <Lib/Geometry/Color3.h>
+#include <Lib/Math/Color3.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace

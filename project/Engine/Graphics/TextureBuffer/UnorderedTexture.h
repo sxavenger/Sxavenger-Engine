@@ -11,7 +11,7 @@
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
-#include <Lib/Geometry/Vector4.h>
+#include <Lib/Math/Vector4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace

@@ -8,7 +8,7 @@
 #include <Engine/Module/GameObject/GameObject.h>
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
+#include <Lib/Math/Vector2.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ControllableCameraActor class

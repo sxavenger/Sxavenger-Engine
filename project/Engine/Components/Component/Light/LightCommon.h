@@ -9,7 +9,6 @@
 
 //* lib
 #include <Lib/Sxl/Flag.h>
-#include <Lib/Geometry/Color4.h>
 
 //* c++
 #include <memory>

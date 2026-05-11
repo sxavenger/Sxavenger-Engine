@@ -1,6 +1,5 @@
 #include "TransformComponent.h"
 SXAVENGER_ENGINE_USING
-DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -17,9 +16,9 @@ DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 TransformComponent::TransformComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {
-	buffer_ = std::make_unique<ConstantBuffer<TransformationMatrix>>();
+	buffer_ = std::make_unique<DxObject::ConstantBuffer<TransformationMatrix>>();
 	buffer_->Create(System::GetDxDevice());
-	buffer_->At().Init();
+	buffer_->At() = TransformationMatrix::Identity();
 }
 
 void TransformComponent::ShowComponentInspector() {
@@ -72,25 +71,30 @@ const D3D12_GPU_VIRTUAL_ADDRESS TransformComponent::GetGPUVirtualAddress() const
 	return buffer_->GetGPUVirtualAddress();
 }
 
-const Vector3f TransformComponent::GetPosition() const {
-	return Matrix4x4::GetTranslation(mat_);
-}
-
-const Vector3f TransformComponent::GetDirection() const {
-	return transform_.GetForward();
-}
-
 const TransformationMatrix& TransformComponent::GetTransformationMatrix() const {
 	StreamLogger::AssertA(buffer_ != nullptr, "transform buffer is not create.");
 	return buffer_->At();
 }
 
+const Matrix4x4& TransformComponent::GetMatrix() const {
+	StreamLogger::AssertA(buffer_ != nullptr, "transform buffer is not create.");
+	return buffer_->At().mat;
+}
+
+const Vector3f TransformComponent::GetPosition() const {
+	return transformation_.translate;
+}
+
+const Vector3f TransformComponent::GetDirection() const {
+	return transform_.GetForward(); //!< TODO: transformaitonからforwardを計算するように変更.
+}
+
 void TransformComponent::UpdateMatrix() {
-	mat_ = transform_.ToMatrix();
+	transformation_ = transform_.ToTransformation();
 
 	if (const BehaviourAddress& parent = BaseComponent::GetBehaviour()->GetParent()) {
 		if (auto component = parent->GetComponent<TransformComponent>()) {
-			mat_ *= component->mat_;
+			transformation_ *= component->transformation_;
 		}
 	}
 
@@ -109,7 +113,7 @@ bool TransformComponent::HasParent() const {
 
 void TransformComponent::TransferGPU() {
 	if (buffer_ != nullptr) {
-		buffer_->At().Transfer(mat_);
+		buffer_->At().Transfer(transformation_);
 	}
 }
 
@@ -121,5 +125,5 @@ json TransformComponent::ParseToJson() const {
 }
 
 void TransformComponent::InputJson(const json& data) {
-	transform_ = QuaternionTransform::Deserialize(data.at("transform"));
+	transform_ = TransformQuaternion::Deserialize(data.at("transform"));
 }

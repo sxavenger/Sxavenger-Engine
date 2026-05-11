@@ -13,7 +13,7 @@
 #include "DxBindBuffer.h"
 
 //* lib
-#include <Lib/Geometry/Vector3.h>
+#include <Lib/Math/Vector3.h>
 
 //* c++
 #include <filesystem>

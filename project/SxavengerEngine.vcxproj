@@ -80,7 +80,7 @@
       <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\backends;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;Externals\PixEvents\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <Optimization>Disabled</Optimization>
+      <Optimization>Custom</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -294,7 +294,6 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\Buffer\FTransparentBuffer.h" />
     <ClInclude Include="Engine\Render\Common\FDepthStencilTexture.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
-    <ClInclude Include="Engine\Render\Common\FPriorityTexture.h" />
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
     <ClInclude Include="Engine\Render\Common\FRenderTexture.h" />
     <ClInclude Include="Engine\Render\Core\FBaseRenderCore.h" />
@@ -398,15 +397,15 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Lib\Adapter\Uuid\Uuid.h" />
     <ClInclude Include="Lib\CXXAttribute.h" />
     <ClInclude Include="Lib\Easing.h" />
-    <ClInclude Include="Lib\Geometry\Color3.h" />
-    <ClInclude Include="Lib\Geometry\Color4.h" />
-    <ClInclude Include="Lib\Geometry\GeometryMath.h" />
-    <ClInclude Include="Lib\Geometry\Matrix4x4.h" />
-    <ClInclude Include="Lib\Geometry\Quaternion.h" />
-    <ClInclude Include="Lib\Geometry\Vector2.h" />
-    <ClInclude Include="Lib\Geometry\Vector3.h" />
-    <ClInclude Include="Lib\Geometry\Vector4.h" />
-    <ClInclude Include="Lib\Geometry\VectorComparison.h" />
+    <ClInclude Include="Lib\Math\Color3.h" />
+    <ClInclude Include="Lib\Math\Color4.h" />
+    <ClInclude Include="Lib\Math\GeometryMath.h" />
+    <ClInclude Include="Lib\Math\Matrix4x4.h" />
+    <ClInclude Include="Lib\Math\Quaternion.h" />
+    <ClInclude Include="Lib\Math\Vector2.h" />
+    <ClInclude Include="Lib\Math\Vector3.h" />
+    <ClInclude Include="Lib\Math\Vector4.h" />
+    <ClInclude Include="Lib\Math\VectorComparison.h" />
     <ClInclude Include="Lib\Motion\Motion.h" />
     <ClInclude Include="Lib\Sxl\Exception.h" />
     <ClInclude Include="Lib\Sxl\Expected.h" />
@@ -420,7 +419,13 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
     <ClInclude Include="Lib\Sxl\Utility.h" />
     <ClInclude Include="Lib\Traits.h" />
-    <ClInclude Include="Lib\Transform\Transform.h" />
+    <ClInclude Include="Lib\Transform\Basis.h" />
+    <ClInclude Include="Lib\Transform\RectTransform.h" />
+    <ClInclude Include="Lib\Transform\Transform2d.h" />
+    <ClInclude Include="Lib\Transform\Transformation.h" />
+    <ClInclude Include="Lib\Transform\TransformationMatrix.h" />
+    <ClInclude Include="Lib\Transform\TransformEuler.h" />
+    <ClInclude Include="Lib\Transform\TransformQuaternion.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp" />
@@ -533,7 +538,6 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Render\Buffer\FTransparentBuffer.cpp" />
     <ClCompile Include="Engine\Render\Common\FDepthStencilTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
-    <ClCompile Include="Engine\Render\Common\FPriorityTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FRenderTexture.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCore.cpp" />
@@ -626,11 +630,17 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Lib\Adapter\Time\TimePoint.cpp" />
     <ClCompile Include="Lib\Adapter\Uuid\Uuid.cpp" />
     <ClCompile Include="Lib\Easing.cpp" />
-    <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
-    <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
+    <ClCompile Include="Lib\Math\Matrix4x4.cpp" />
+    <ClCompile Include="Lib\Math\Quaternion.cpp" />
     <ClCompile Include="Lib\Motion\Motion.cpp" />
     <ClCompile Include="Lib\Sxl\Exception.cpp" />
-    <ClCompile Include="Lib\Transform\Transform.cpp" />
+    <ClCompile Include="Lib\Transform\Basis.cpp" />
+    <ClCompile Include="Lib\Transform\RectTransform.cpp" />
+    <ClCompile Include="Lib\Transform\Transform2d.cpp" />
+    <ClCompile Include="Lib\Transform\Transformation.cpp" />
+    <ClCompile Include="Lib\Transform\TransformationMatrix.cpp" />
+    <ClCompile Include="Lib\Transform\TransformEuler.cpp" />
+    <ClCompile Include="Lib\Transform\TransformQuaternion.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

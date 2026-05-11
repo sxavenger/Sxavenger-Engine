@@ -11,7 +11,7 @@
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
+#include <Lib/Math/Vector2.h>
 
 //* c++
 #include <optional>

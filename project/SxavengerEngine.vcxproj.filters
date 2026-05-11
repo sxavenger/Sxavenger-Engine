@@ -579,9 +579,6 @@
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h">
       <Filter>Engine\Render\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Common\FPriorityTexture.h">
-      <Filter>Engine\Render\Common</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h">
       <Filter>Engine\Render\Common</Filter>
     </ClInclude>
@@ -885,31 +882,31 @@
     <ClInclude Include="Lib\Easing.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Color3.h">
+    <ClInclude Include="Lib\Math\Color3.h">
       <Filter>Lib\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Color4.h">
+    <ClInclude Include="Lib\Math\Color4.h">
       <Filter>Lib\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\GeometryMath.h">
+    <ClInclude Include="Lib\Math\GeometryMath.h">
       <Filter>Lib\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Matrix4x4.h">
+    <ClInclude Include="Lib\Math\Matrix4x4.h">
       <Filter>Lib\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Quaternion.h">
+    <ClInclude Include="Lib\Math\Quaternion.h">
       <Filter>Lib\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Vector2.h">
+    <ClInclude Include="Lib\Math\Vector2.h">
       <Filter>Lib\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Vector3.h">
+    <ClInclude Include="Lib\Math\Vector3.h">
       <Filter>Lib\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Vector4.h">
+    <ClInclude Include="Lib\Math\Vector4.h">
       <Filter>Lib\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\VectorComparison.h">
+    <ClInclude Include="Lib\Math\VectorComparison.h">
       <Filter>Lib\Geometry</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Motion\Motion.h">
@@ -951,13 +948,17 @@
     <ClInclude Include="Lib\Traits.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Transform\Transform.h">
-      <Filter>Lib\Transform</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredSkyLighting.h" />
     <ClInclude Include="Engine\Render\Buffer\FDepthStencilBuffer.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreSkyLight.h" />
     <ClInclude Include="Engine\Render\Buffer\FSkyReservoirBuffer.h" />
+    <ClInclude Include="Lib\Transform\Basis.h" />
+    <ClInclude Include="Lib\Transform\Transformation.h" />
+    <ClInclude Include="Lib\Transform\TransformQuaternion.h" />
+    <ClInclude Include="Lib\Transform\TransformationMatrix.h" />
+    <ClInclude Include="Lib\Transform\TransformEuler.h" />
+    <ClInclude Include="Lib\Transform\Transform2d.h" />
+    <ClInclude Include="Lib\Transform\RectTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp">
@@ -1284,9 +1285,6 @@
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp">
       <Filter>Engine\Render\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Render\Common\FPriorityTexture.cpp">
-      <Filter>Engine\Render\Common</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp">
       <Filter>Engine\Render\Common</Filter>
     </ClCompile>
@@ -1557,10 +1555,10 @@
     <ClCompile Include="Lib\Easing.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
-    <ClCompile Include="Lib\Geometry\Matrix4x4.cpp">
+    <ClCompile Include="Lib\Math\Matrix4x4.cpp">
       <Filter>Lib\Geometry</Filter>
     </ClCompile>
-    <ClCompile Include="Lib\Geometry\Quaternion.cpp">
+    <ClCompile Include="Lib\Math\Quaternion.cpp">
       <Filter>Lib\Geometry</Filter>
     </ClCompile>
     <ClCompile Include="Lib\Motion\Motion.cpp">
@@ -1569,13 +1567,17 @@
     <ClCompile Include="Lib\Sxl\Exception.cpp">
       <Filter>Lib\Sxl</Filter>
     </ClCompile>
-    <ClCompile Include="Lib\Transform\Transform.cpp">
-      <Filter>Lib\Transform</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredSkyLighting.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FDepthStencilBuffer.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreSkyLight.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FSkyReservoirBuffer.cpp" />
+    <ClCompile Include="Lib\Transform\Basis.cpp" />
+    <ClCompile Include="Lib\Transform\Transformation.cpp" />
+    <ClCompile Include="Lib\Transform\TransformQuaternion.cpp" />
+    <ClCompile Include="Lib\Transform\TransformationMatrix.cpp" />
+    <ClCompile Include="Lib\Transform\TransformEuler.cpp" />
+    <ClCompile Include="Lib\Transform\Transform2d.cpp" />
+    <ClCompile Include="Lib\Transform\RectTransform.cpp" />
   </ItemGroup>
 </Project>

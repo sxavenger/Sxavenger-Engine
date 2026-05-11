@@ -5,7 +5,7 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* lib
-#include <Lib/Geometry/VectorComparison.h>
+#include <Lib/Math/VectorComparison.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FBaseBuffer class methods

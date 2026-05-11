@@ -11,9 +11,9 @@
 #include <Engine/Graphics/Animation/BornNode.h>
 
 //* lib
-#include <Lib/Geometry/Vector3.h>
-#include <Lib/Geometry/Vector4.h>
-#include <Lib/Geometry/Quaternion.h>
+#include <Lib/Math/Vector3.h>
+#include <Lib/Math/Vector4.h>
+#include <Lib/Math/Quaternion.h>
 
 //* external
 #include <assimp/Importer.hpp>

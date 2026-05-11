@@ -28,9 +28,9 @@ void CameraComponent::Camera::Init() {
 	projInv = Matrix4x4::Identity();
 }
 
-void CameraComponent::Camera::TransferView(const Matrix4x4& _world) {
-	world = _world;
-	view  = world.Inverse();
+void CameraComponent::Camera::TransferView(const Transformation& _transformation) {
+	world = _transformation.ToMatrix();
+	view  = _transformation.Inverse().ToMatrix();
 }
 
 void CameraComponent::Camera::TransferProj(const Matrix4x4& _proj) {
@@ -49,7 +49,7 @@ void CameraComponent::Projection::Init() {
 	farZ   = 1024.0f;
 }
 
-Matrix4x4 CameraComponent::Projection::ToProj() const {
+Matrix4x4 CameraComponent::Projection::ToProjection() const {
 	float aspect = sensor.x / sensor.y;
 	float fovY   = 2.0f * std::atan(sensor.y / (2.0f * focal));
 	return Matrix4x4::PerspectiveFov(fovY, aspect, nearZ, farZ);
@@ -130,7 +130,7 @@ void CameraComponent::UpdateView() {
 
 	// transform component から view matrix を取得
 	auto transform = BaseComponent::GetBehaviour()->RequireComponent<TransformComponent>();
-	buffers_[currentIndex_]->At().TransferView(transform->GetMatrix());
+	buffers_[currentIndex_]->At().TransferView(transform->GetTransformation());
 }
 
 void CameraComponent::UpdateProj() {
@@ -139,7 +139,7 @@ void CameraComponent::UpdateProj() {
 	}
 
 	// projection から proj matrix を取得
-	buffers_[currentIndex_]->At().TransferProj(projection_.ToProj());
+	buffers_[currentIndex_]->At().TransferProj(projection_.ToProjection());
 
 	// projection から near, far の距離を取得
 	buffers_[currentIndex_]->At().nearZ = projection_.nearZ;

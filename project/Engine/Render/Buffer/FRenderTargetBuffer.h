@@ -7,7 +7,6 @@
 #include "FBaseBuffer.h"
 #include "FProcessBuffer.h"
 #include "../Common/FDepthStencilTexture.h"
-#include "../Common/FPriorityTexture.h"
 
 //* engine
 #include <Engine/Foundation.h>

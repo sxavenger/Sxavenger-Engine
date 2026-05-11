@@ -11,8 +11,10 @@
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* lib
-#include <Lib/Geometry/Matrix4x4.h>
-#include <Lib/Transform/Transform.h>
+#include <Lib/Math/Matrix4x4.h>
+#include <Lib/Transform/Transformation.h>
+#include <Lib/Transform/TransformationMatrix.h>
+#include <Lib/Transform/TransformQuaternion.h>
 
 //* c++
 #include <memory>
@@ -53,10 +55,14 @@ public:
 	//! @brief 親が存在するか確認
 	bool HasParent() const;
 
-	const QuaternionTransform& GetTransform() const { return transform_; }
-	QuaternionTransform& GetTransform() { return transform_; }
+	const TransformQuaternion& GetTransform() const { return transform_; }
+	TransformQuaternion& GetTransform() { return transform_; }
 
-	const Matrix4x4& GetMatrix() const { return mat_; }
+	const Transformation& GetTransformation() const { return transformation_; }
+
+	const TransformationMatrix& GetTransformationMatrix() const;
+
+	const Matrix4x4& GetMatrix() const;
 
 	const Vector3f GetPosition() const;
 
@@ -64,15 +70,11 @@ public:
 
 	//* operator [accessor] *//
 
-	const QuaternionTransform* operator->() const { return &transform_; }
-	QuaternionTransform* operator->() { return &transform_; }
+	const TransformQuaternion* operator->() const { return &transform_; }
+	TransformQuaternion* operator->() { return &transform_; }
 
-	const QuaternionTransform& operator*() const { return transform_; }
-	QuaternionTransform& operator*() { return transform_; }
-
-	//* transformation option *//
-
-	const TransformationMatrix& GetTransformationMatrix() const;
+	const TransformQuaternion& operator*() const { return transform_; }
+	TransformQuaternion& operator*() { return transform_; }
 
 	//* json option *//
 
@@ -86,10 +88,10 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* transform *//
+	//* transformation *//
 
-	Matrix4x4 mat_                 = Matrix4x4::Identity();
-	QuaternionTransform transform_ = {};
+	TransformQuaternion transform_ = {};
+	Transformation transformation_ = {};
 
 	//* buffer *//
 

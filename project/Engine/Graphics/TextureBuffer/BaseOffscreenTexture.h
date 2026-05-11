@@ -9,7 +9,7 @@
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
+#include <Lib/Math/Vector2.h>
 
 //* c++
 #include <concepts>

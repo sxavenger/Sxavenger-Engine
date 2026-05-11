@@ -46,7 +46,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Render/FPresenter.h>
 
 //* lib
-#include <Lib/Geometry/VectorComparison.h>
+#include <Lib/Math/VectorComparison.h>
 
 //* externals
 #include <magic_enum.hpp>

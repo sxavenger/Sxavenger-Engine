@@ -9,9 +9,9 @@
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
-#include <Lib/Geometry/Vector4.h>
-#include <Lib/Geometry/Vector3.h>
-#include <Lib/Geometry/Color4.h>
+#include <Lib/Math/Vector4.h>
+#include <Lib/Math/Vector3.h>
+#include <Lib/Math/Color4.h>
 
 //* c++
 #include <memory>

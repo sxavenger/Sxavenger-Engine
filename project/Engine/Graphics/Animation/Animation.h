@@ -7,9 +7,9 @@
 #include <Engine/Foundation.h>
 
 //* lib
-#include <Lib/Geometry/Vector3.h>
-#include <Lib/Geometry/Quaternion.h>
-#include <Lib/Geometry/GeometryMath.h>
+#include <Lib/Math/Vector3.h>
+#include <Lib/Math/Quaternion.h>
+#include <Lib/Math/GeometryMath.h>
 #include <Lib/Adapter/Time/TimePoint.h>
 
 //* c++

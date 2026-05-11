@@ -8,10 +8,10 @@
 
 //* lib
 #include <Lib/CXXAttribute.h>
-#include <Lib/Geometry/Vector3.h>
-#include <Lib/Geometry/Matrix4x4.h>
-#include <Lib/Geometry/VectorComparison.h>
-#include <Lib/Geometry/GeometryMath.h>
+#include <Lib/Math/Vector3.h>
+#include <Lib/Math/Matrix4x4.h>
+#include <Lib/Math/VectorComparison.h>
+#include <Lib/Math/GeometryMath.h>
 
 //* c++
 #include <variant>

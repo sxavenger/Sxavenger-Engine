@@ -8,7 +8,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/System.h>
 
 //* lib
-#include <Lib/Geometry/VectorComparison.h>
+#include <Lib/Math/VectorComparison.h>
 #include <Lib/Adapter/String/EncodedString.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////

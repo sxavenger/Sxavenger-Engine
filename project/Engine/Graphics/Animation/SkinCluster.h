@@ -11,7 +11,7 @@
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* lib
-#include <Lib/Transform/Transform.h>
+#include <Lib/Transform/TransformationMatrix.h>
 
 //* c++
 #include <cstdint>
