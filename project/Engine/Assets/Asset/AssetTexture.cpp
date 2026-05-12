@@ -66,6 +66,10 @@ void AssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scra
 	// metadataの保存
 	metadata_.Assign(metadata);
 
+	// 使用可能状態に遷移
+	resource_.TransitionExplicit(context->GetDxCommand(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_COMMON);
+	//!< HACK: Commonで作成し, 内部でDestで遷移させCommonに手動遷移.
+
 	// textureをuploadさせる.
 	context->ExecuteAllAllocators();
 
@@ -94,10 +98,13 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& AssetTexture::GetGPUHandleSRV() const {
 DxObject::Resource AssetTexture::CreateTextureResource(const DirectX::TexMetadata& metadata) {
 	DxObject::Resource resource;
 
+	uint32_t depth = metadata.IsCubemap() ? static_cast<uint32_t>(metadata.arraySize) : static_cast<uint32_t>(metadata.depth);
+	// HACK: cubemapのみでしかarraySizeが使用されないため, depthの値をcubemapのarraySizeにする.
+
 	resource = DxObject::Resource::CreateTexture(
 		System::GetDxDevice(),
 		static_cast<D3D12_RESOURCE_DIMENSION>(metadata.dimension),
-		Vector3ui{ static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height), static_cast<uint32_t>(metadata.depth) },
+		Vector3ui{ static_cast<uint32_t>(metadata.width), static_cast<uint32_t>(metadata.height), depth },
 		static_cast<UINT16>(metadata.mipLevels),
 		metadata.format,
 		D3D12_RESOURCE_FLAG_NONE,

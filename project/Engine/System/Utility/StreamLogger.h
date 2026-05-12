@@ -8,6 +8,7 @@
 
 //* lib
 #include <Lib/CXXAttribute.h>
+#include <Lib/Adapter/TracePoint/TracePoint.h>
 
 //* c++
 #include <mutex>
@@ -43,8 +44,8 @@ public:
 	static void ThreadLog(const std::string& message);
 	static void ThreadLog(const std::wstring& message);
 
-	NORETURN static void Exception(const std::string& label, const std::string& detail = "", const std::source_location& location = std::source_location::current());
-	NORETURN static void Exception(const std::wstring& label, const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
+	NORETURN static void Exception(const std::string& label, const std::string& detail = "", const TracePoint& point = TracePoint());
+	NORETURN static void Exception(const std::wstring& label, const std::wstring& detail = L"", const TracePoint& point = TracePoint());
 
 	//* engine log option *//
 
@@ -56,8 +57,8 @@ public:
 
 	//* engine assertion option *//
 
-	static void AssertA(bool expression, const std::string& label = "", const std::string& detail = "", const std::source_location& location = std::source_location::current());
-	static void AssertW(bool expression, const std::wstring& label = L"", const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
+	static void AssertA(bool expression, const std::string& label = "", const std::string& detail = "", const TracePoint& point = TracePoint());
+	static void AssertW(bool expression, const std::wstring& label = L"", const std::wstring& detail = L"", const TracePoint& point = TracePoint());
 
 private:
 
@@ -141,8 +142,8 @@ private:
 
 	//* output exception helper methods *//
 
-	static ExceptionMessage<std::string> ParseExceptionMessageA(const std::source_location& location, std::thread::id id, const std::string& label, const std::string& detail);
-	static ExceptionMessage<std::wstring> ParseExceptionMessageW(const std::source_location& location, std::thread::id id, const std::wstring& label, const std::wstring& detail);
+	static ExceptionMessage<std::string> ParseExceptionMessageA(const std::string label, const std::string detail, const TracePoint& point);
+	static ExceptionMessage<std::wstring> ParseExceptionMessageW(const std::wstring label, const std::wstring detail, const TracePoint& point);
 
 	static void OpenExceptionWindowA(const ExceptionMessage<std::string>& message);
 	static void OpenExceptionWindowW(const ExceptionMessage<std::wstring>& message);

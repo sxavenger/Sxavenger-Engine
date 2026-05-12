@@ -6,6 +6,7 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* render
 #include "FMainBuffer.h"
+#include "FDepthStencilBuffer.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderTargetBuffer class methods
@@ -16,13 +17,9 @@ void FRenderTargetBuffer::Init(const Vector2ui& resolution) {
 	//!< 解像度の更新
 	resolution_ = resolution;
 
-	//!< DepthStencilの生成
-	depthStencil_ = std::make_unique<FDepthStencilTexture>(resolution_);
-	priority_     = std::make_unique<FPriorityTexture>(resolution_);
-	// TODO: DepthStencil側も解像度変更に対応させる.
-
 	//!< Bufferの生成
 	FRenderTargetBuffer::EnsureBuffer<FMainBuffer>();
+	FRenderTargetBuffer::EnsureBuffer<FDepthStencilBuffer>();
 
 	//!< ProcessBufferの生成
 	process_ = std::make_unique<FProcessBuffer>();
@@ -43,30 +40,31 @@ void FRenderTargetBuffer::ClearMainRenderTarget(const DirectXQueueContext* conte
 	main->GetBuffer(FMainBuffer::Layout::Canvas).ClearRenderTarget(context);
 
 	//!< DepthStencilをクリアする
-	depthStencil_->ClearDepthStencil(context);
-	priority_->ClearDepthStencil(context);
+	FDepthStencilBuffer* depthStencil = FRenderTargetBuffer::EnsureBuffer<FDepthStencilBuffer>();
+	depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).ClearDepthStencil(context);
+	depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Canvas).ClearDepthStencil(context);
 }
 
 void FRenderTargetBuffer::BeginRenderTargetMainScene(const DirectXQueueContext* context) {
 
-	FMainBuffer* main                  = FRenderTargetBuffer::EnsureBuffer<FMainBuffer>();
-	FDepthStencilTexture* depthStencil = GetDepthStencil();
+	FMainBuffer* main                 = FRenderTargetBuffer::EnsureBuffer<FMainBuffer>();
+	FDepthStencilBuffer* depthStencil = FRenderTargetBuffer::EnsureBuffer<FDepthStencilBuffer>();
 
 	main->GetBuffer(FMainBuffer::Layout::Scene).TransitionRenderTarget(context);
-	depthStencil->TransitionDepthWrite(context);
+	depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).TransitionDepthWrite(context);
 
 	context->GetCommandList()->OMSetRenderTargets(
 		1, &main->GetBuffer(FMainBuffer::Layout::Scene).GetCPUHandleRTV(), false,
-		&depthStencil->GetCPUHandleDSV()
+		&depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetCPUHandleDSV()
 	);
 
 }
 
 void FRenderTargetBuffer::EndRenderTargetMainScene(const DirectXQueueContext* context) {
 
-	FMainBuffer* main                  = FRenderTargetBuffer::EnsureBuffer<FMainBuffer>();
-	FDepthStencilTexture* depthStencil = GetDepthStencil();
+	FMainBuffer* main                 = FRenderTargetBuffer::EnsureBuffer<FMainBuffer>();
+	FDepthStencilBuffer* depthStencil = FRenderTargetBuffer::EnsureBuffer<FDepthStencilBuffer>();
 
 	main->GetBuffer(FMainBuffer::Layout::Scene).TransitionDefaultState(context);
-	depthStencil->TransitionDefaultState(context);
+	depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).TransitionDefaultState(context);
 }

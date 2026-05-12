@@ -88,6 +88,14 @@ public:
 		SMAA_1x
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// SkyVisibility enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class SkyVisibility : uint8_t {
+		None,
+		ReSITR_Preview,
+	};
+
 public:
 
 	//=========================================================================================
@@ -136,6 +144,7 @@ public:
 	AmbientOcclusion ambientOcclusion     = AmbientOcclusion::XeGTAO;
 	GlobalIllumination globalIllumination = GlobalIllumination::None;
 	AntiAliasing antiAliasing             = AntiAliasing::FXAA;
+	SkyVisibility skyVisibility           = SkyVisibility::None;
 
 private:
 

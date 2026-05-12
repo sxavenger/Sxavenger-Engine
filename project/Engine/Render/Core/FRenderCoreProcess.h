@@ -13,7 +13,7 @@
 #include <Engine/Module/Pipeline/CustomComputePipeline.h>
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
+#include <Lib/Math/Vector2.h>
 
 //* external
 #include <magic_enum.hpp>

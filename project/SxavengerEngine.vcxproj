@@ -282,6 +282,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Module\Scene\SceneController.h" />
     <ClInclude Include="Engine\Module\Scene\SceneFactory.h" />
     <ClInclude Include="Engine\Render\Buffer\FBaseBuffer.h" />
+    <ClInclude Include="Engine\Render\Buffer\FDepthStencilBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FGBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FLightAccumulationBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FMainBuffer.h" />
@@ -289,10 +290,10 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\Buffer\FRenderTargetBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FReservoirBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.h" />
+    <ClInclude Include="Engine\Render\Buffer\FSkyReservoirBuffer.h" />
     <ClInclude Include="Engine\Render\Buffer\FTransparentBuffer.h" />
     <ClInclude Include="Engine\Render\Common\FDepthStencilTexture.h" />
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h" />
-    <ClInclude Include="Engine\Render\Common\FPriorityTexture.h" />
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h" />
     <ClInclude Include="Engine\Render\Common\FRenderTexture.h" />
     <ClInclude Include="Engine\Render\Core\FBaseRenderCore.h" />
@@ -303,6 +304,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreReSTIR.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreSkyLight.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h" />
     <ClInclude Include="Engine\Render\FMainRender.h" />
     <ClInclude Include="Engine\Render\FPresenter.h" />
@@ -315,6 +317,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredBase.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredGlobalIllumination.h" />
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredSkyLighting.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassForwardTransparent.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassLightingComposite.h" />
     <ClInclude Include="Engine\Render\Pass\FRenderPassPostProcess.h" />
@@ -391,18 +394,19 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Lib\Adapter\Time\LocalTimePoint.h" />
     <ClInclude Include="Lib\Adapter\Time\RunTimeTracker.h" />
     <ClInclude Include="Lib\Adapter\Time\TimePoint.h" />
+    <ClInclude Include="Lib\Adapter\TracePoint\TracePoint.h" />
     <ClInclude Include="Lib\Adapter\Uuid\Uuid.h" />
     <ClInclude Include="Lib\CXXAttribute.h" />
     <ClInclude Include="Lib\Easing.h" />
-    <ClInclude Include="Lib\Geometry\Color3.h" />
-    <ClInclude Include="Lib\Geometry\Color4.h" />
-    <ClInclude Include="Lib\Geometry\GeometryMath.h" />
-    <ClInclude Include="Lib\Geometry\Matrix4x4.h" />
-    <ClInclude Include="Lib\Geometry\Quaternion.h" />
-    <ClInclude Include="Lib\Geometry\Vector2.h" />
-    <ClInclude Include="Lib\Geometry\Vector3.h" />
-    <ClInclude Include="Lib\Geometry\Vector4.h" />
-    <ClInclude Include="Lib\Geometry\VectorComparison.h" />
+    <ClInclude Include="Lib\Math\Color3.h" />
+    <ClInclude Include="Lib\Math\Color4.h" />
+    <ClInclude Include="Lib\Math\GeometryMath.h" />
+    <ClInclude Include="Lib\Math\Matrix4x4.h" />
+    <ClInclude Include="Lib\Math\Quaternion.h" />
+    <ClInclude Include="Lib\Math\Vector2.h" />
+    <ClInclude Include="Lib\Math\Vector3.h" />
+    <ClInclude Include="Lib\Math\Vector4.h" />
+    <ClInclude Include="Lib\Math\VectorComparison.h" />
     <ClInclude Include="Lib\Motion\Motion.h" />
     <ClInclude Include="Lib\Sxl\Exception.h" />
     <ClInclude Include="Lib\Sxl\Expected.h" />
@@ -416,7 +420,13 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h" />
     <ClInclude Include="Lib\Sxl\Utility.h" />
     <ClInclude Include="Lib\Traits.h" />
-    <ClInclude Include="Lib\Transform\Transform.h" />
+    <ClInclude Include="Lib\Transform\Basis.h" />
+    <ClInclude Include="Lib\Transform\RectTransform.h" />
+    <ClInclude Include="Lib\Transform\Transform2d.h" />
+    <ClInclude Include="Lib\Transform\TransformEuler.h" />
+    <ClInclude Include="Lib\Transform\TransformQuaternion.h" />
+    <ClInclude Include="Lib\Transform\Transformation.h" />
+    <ClInclude Include="Lib\Transform\TransformationMatrix.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp" />
@@ -517,6 +527,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Module\Scene\SceneController.cpp" />
     <ClCompile Include="Engine\Module\Scene\SceneFactory.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FBaseBuffer.cpp" />
+    <ClCompile Include="Engine\Render\Buffer\FDepthStencilBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FGBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FLightAccumulationBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FMainBuffer.cpp" />
@@ -524,10 +535,10 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Render\Buffer\FRenderTargetBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FReservoirBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.cpp" />
+    <ClCompile Include="Engine\Render\Buffer\FSkyReservoirBuffer.cpp" />
     <ClCompile Include="Engine\Render\Buffer\FTransparentBuffer.cpp" />
     <ClCompile Include="Engine\Render\Common\FDepthStencilTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp" />
-    <ClCompile Include="Engine\Render\Common\FPriorityTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp" />
     <ClCompile Include="Engine\Render\Common\FRenderTexture.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCore.cpp" />
@@ -537,6 +548,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreReSTIR.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreSkyLight.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp" />
     <ClCompile Include="Engine\Render\FMainRender.cpp" />
     <ClCompile Include="Engine\Render\FPresenter.cpp" />
@@ -549,6 +561,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredBase.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredGlobalIllumination.cpp" />
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredSkyLighting.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassForwardTransparent.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassLightingComposite.cpp" />
     <ClCompile Include="Engine\Render\Pass\FRenderPassPostProcess.cpp" />
@@ -618,11 +631,17 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Lib\Adapter\Time\TimePoint.cpp" />
     <ClCompile Include="Lib\Adapter\Uuid\Uuid.cpp" />
     <ClCompile Include="Lib\Easing.cpp" />
-    <ClCompile Include="Lib\Geometry\Matrix4x4.cpp" />
-    <ClCompile Include="Lib\Geometry\Quaternion.cpp" />
+    <ClCompile Include="Lib\Math\Matrix4x4.cpp" />
+    <ClCompile Include="Lib\Math\Quaternion.cpp" />
     <ClCompile Include="Lib\Motion\Motion.cpp" />
     <ClCompile Include="Lib\Sxl\Exception.cpp" />
-    <ClCompile Include="Lib\Transform\Transform.cpp" />
+    <ClCompile Include="Lib\Transform\Basis.cpp" />
+    <ClCompile Include="Lib\Transform\RectTransform.cpp" />
+    <ClCompile Include="Lib\Transform\Transform2d.cpp" />
+    <ClCompile Include="Lib\Transform\TransformEuler.cpp" />
+    <ClCompile Include="Lib\Transform\TransformQuaternion.cpp" />
+    <ClCompile Include="Lib\Transform\Transformation.cpp" />
+    <ClCompile Include="Lib\Transform\TransformationMatrix.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

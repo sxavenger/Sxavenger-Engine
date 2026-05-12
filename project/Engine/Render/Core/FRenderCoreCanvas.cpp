@@ -7,6 +7,7 @@ DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../Buffer/FMainBuffer.h"
+#include "../Buffer/FDepthStencilBuffer.h"
 
 //* engine
 #include <Engine/System/System.h>
@@ -32,7 +33,7 @@ void FRenderCoreCanvas::CreateDesc() {
 
 	desc_.SetElement("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT);
 	desc_.SetElement("TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT);
-	desc_.SetElement("COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+	desc_.SetElement("COLOR",    0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 
 	desc_.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
 	desc_.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC_LESS_EQUAL);
@@ -40,10 +41,10 @@ void FRenderCoreCanvas::CreateDesc() {
 	desc_.SetBlendMode(0, BlendMode::Normal_AlphaMax);
 	desc_.SetIndependentBlendEnable(false);
 
-	desc_.SetPrimitive(PrimitiveType::TrianglList);
+	desc_.SetPrimitive(PrimitiveType::TriangleList);
 
 	desc_.SetRTVFormat(0, FMainBuffer::GetFormat(FMainBuffer::Layout::Canvas));
-	desc_.SetDSVFormat(kDefaultDepthFormat);
+	desc_.SetDSVFormat(FDepthStencilBuffer::GetFormat(FDepthStencilBuffer::Layout::Canvas));
 
 }
 

@@ -35,7 +35,7 @@ void StreamLogger::Init() {
 		std::ofstream file(kDirectory_ / filename_, std::ofstream::out | std::ofstream::trunc); //!< fileの作成
 		file << "Sxavenger Engine [Sxx Engine] Stream Logger" << "\n";
 		file << "version: " << SXAVENGER_ENGINE_VERSION << "\n";
-		//file << "profile: " << _PROFILE << "\n";
+		file << "profile: " << _PROFILE << "\n";
 	}
 
 	StreamLogger::Log(std::format("[StreamLogger] initialize. filename: {}", filename_.string()));
@@ -63,9 +63,9 @@ void StreamLogger::ThreadLog(const std::wstring& message) {
 	StreamLogger::Log(std::format(L"{} >> {}", label, message));
 }
 
-NORETURN void StreamLogger::Exception(const std::string& label, const std::string& detail, const std::source_location& location) {
+NORETURN void StreamLogger::Exception(const std::string& label, const std::string& detail, const TracePoint& point) {
 
-	ExceptionMessage<std::string> message = StreamLogger::ParseExceptionMessageA(location, std::this_thread::get_id(), label, detail);
+	ExceptionMessage<std::string> message = StreamLogger::ParseExceptionMessageA(label, detail, point);
 
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
@@ -92,9 +92,9 @@ NORETURN void StreamLogger::Exception(const std::string& label, const std::strin
 	StreamLogger::DebugBreak();
 }
 
-NORETURN void StreamLogger::Exception(const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
+NORETURN void StreamLogger::Exception(const std::wstring& label, const std::wstring& detail, const TracePoint& point) {
 
-	ExceptionMessage<std::wstring> message = StreamLogger::ParseExceptionMessageW(location, std::this_thread::get_id(), label, detail);
+	ExceptionMessage<std::wstring> message = StreamLogger::ParseExceptionMessageW(label, detail, point);
 
 	{
 		std::unique_lock<std::mutex> lock(mutex_);
@@ -143,20 +143,20 @@ void StreamLogger::EngineThreadLog(const std::wstring& message) {
 	StreamLogger::Log(std::format(L"{} {} >> {}", tag, label, message));
 }
 
-void StreamLogger::AssertA(bool expression, const std::string& label, const std::string& detail, const std::source_location& location) {
+void StreamLogger::AssertA(bool expression, const std::string& label, const std::string& detail, const TracePoint& point) {
 	if (expression) LIKELY {
 		return;
 	}
 
-	StreamLogger::Exception(label, detail, location);
+	StreamLogger::Exception(label, detail, point);
 }
 
-void StreamLogger::AssertW(bool expression, const std::wstring& label, const std::wstring& detail, const std::source_location& location) {
+void StreamLogger::AssertW(bool expression, const std::wstring& label, const std::wstring& detail, const TracePoint& point) {
 	if (expression) LIKELY {
 		return;
 	}
 
-	StreamLogger::Exception(label, detail, location);
+	StreamLogger::Exception(label, detail, point);
 }
 
 std::filesystem::path StreamLogger::GetStreamLogFilename() {
@@ -236,7 +236,7 @@ void StreamLogger::OutputW(const std::wstring& message) {
 }
 
 void StreamLogger::OutputSeparator() {
-	static const std::string separator = "//=========================================================================================";
+	static const std::string separator = "=========================================================================================";
 	StreamLogger::OutputA(separator);
 }
 
@@ -308,14 +308,14 @@ std::wstring StreamLogger::GetTagMessageW(const std::wstring& tag, const std::ws
 	return message.str();
 }
 
-StreamLogger::ExceptionMessage<std::string> StreamLogger::ParseExceptionMessageA(const std::source_location& location, std::thread::id id, const std::string& label, const std::string& detail) {
+StreamLogger::ExceptionMessage<std::string> StreamLogger::ParseExceptionMessageA(const std::string label, const std::string detail, const TracePoint& point) {
 	ExceptionMessage<std::string> message;
 
-	message.location = StreamLogger::GetLocationMessageA(location);
-	message.thread   = StreamLogger::GetThreadMessageA(id);
+	message.location = StreamLogger::GetLocationMessageA(point.location);
+	message.thread   = StreamLogger::GetThreadMessageA(point.id);
 
 	if (!label.empty()) {
-		message.label  = StreamLogger::GetTagMessageA("label", label);
+		message.label = StreamLogger::GetTagMessageA("label", label);
 	}
 
 	if (!detail.empty()) {
@@ -325,13 +325,14 @@ StreamLogger::ExceptionMessage<std::string> StreamLogger::ParseExceptionMessageA
 	return message;
 }
 
-StreamLogger::ExceptionMessage<std::wstring> StreamLogger::ParseExceptionMessageW(const std::source_location& location, std::thread::id id, const std::wstring& label, const std::wstring& detail) {
+StreamLogger::ExceptionMessage<std::wstring> StreamLogger::ParseExceptionMessageW(const std::wstring label, const std::wstring detail, const TracePoint& point) {
 	ExceptionMessage<std::wstring> message;
-	message.location = StreamLogger::GetLocationMessageW(location);
-	message.thread   = StreamLogger::GetThreadMessageW(id);
+
+	message.location = StreamLogger::GetLocationMessageW(point.location);
+	message.thread   = StreamLogger::GetThreadMessageW(point.id);
 
 	if (!label.empty()) {
-		message.label  = StreamLogger::GetTagMessageW(L"label", label);
+		message.label = StreamLogger::GetTagMessageW(L"label", label);
 	}
 
 	if (!detail.empty()) {

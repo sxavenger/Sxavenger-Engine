@@ -12,7 +12,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Graphics/Graphics.h>
 
 //* lib
-#include <Lib/Geometry/VectorComparison.h>
+#include <Lib/Math/VectorComparison.h>
 
 //* external
 #include <imgui.h>

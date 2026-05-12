@@ -42,12 +42,18 @@ void FRenderCoreTransition::CreatePresent() {
 	presenter_.ReflectionRootSignature(System::GetDxDevice(), D3D12_ROOT_SIGNATURE_FLAG_CBV_SRV_UAV_HEAP_DIRECTLY_INDEXED);
 
 	DxObject::GraphicsPipelineDesc desc = {};
-	desc.CreateDefaultDesc();
 
-	desc.elements.clear();
+	//!< descの設定
+	desc.SetPrimitive(DxObject::PrimitiveType::TriangleList);
 
-	desc.SetDepthStencil(false);
-	desc.SetRTVFormat(0, DxObject::kDefaultScreenViewFormat);
+	desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
+	desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC_ALWAYS);
+
+	desc.SetBlendMode(0, BlendMode::Normal);
+	desc.SetIndependentBlendEnable(false);
+
+	desc.SetRTVFormat(DxObject::kDefaultScreenViewFormat);
+	desc.SetDSVFormat(DxObject::kDefaultDepthFormat);
 
 	presenter_.CreatePipeline(System::GetDxDevice(), desc);
 

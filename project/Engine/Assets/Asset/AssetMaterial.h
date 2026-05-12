@@ -12,10 +12,10 @@
 #include <Engine/System/DirectX/DirectXAlignment.h>
 
 //* lib
-#include <Lib/Geometry/Color3.h>
-#include <Lib/Geometry/Matrix4x4.h>
+#include <Lib/Math/Color3.h>
+#include <Lib/Math/Matrix4x4.h>
 #include <Lib/Sxl/Flag.h>
-#include <Lib/Transform/Transform.h>
+#include <Lib/Transform/Transform2d.h>
 #include <Lib/Adapter/Uuid/Uuid.h>
 
 //* external

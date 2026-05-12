@@ -17,8 +17,8 @@
 #include <windef.h>
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
-#include <Lib/Geometry/Color4.h>
+#include <Lib/Math/Vector2.h>
+#include <Lib/Math/Color4.h>
 #include <Lib/Sxl/Flag.h>
 
 //* c++

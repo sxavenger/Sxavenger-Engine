@@ -5,6 +5,9 @@ DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* DXOBJECT
+#include "DxBlendState.h"
+
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
 
@@ -41,12 +44,12 @@ void GraphicsPipelineDesc::SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_M
 	depthStencilDesc.DepthFunc      = func;
 }
 
-void GraphicsPipelineDesc::SetBlendMode(uint8_t renderTargetIndex, BlendMode mode) {
-	blends[renderTargetIndex] = mode;
-}
-
 void GraphicsPipelineDesc::SetBlendDesc(uint8_t renderTargetIndex, const D3D12_RENDER_TARGET_BLEND_DESC& desc) {
 	blends[renderTargetIndex] = desc;
+}
+
+void GraphicsPipelineDesc::SetBlendMode(uint8_t renderTargetIndex, BlendMode mode) {
+	SetBlendDesc(renderTargetIndex, BlendState::GetDesc(mode));
 }
 
 void GraphicsPipelineDesc::SetIndependentBlendEnable(bool isIndependentEnable) {
@@ -70,7 +73,7 @@ void GraphicsPipelineDesc::SetPrimitive(PrimitiveType type) {
 			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
 			break;
 
-		case PrimitiveType::TrianglList:
+		case PrimitiveType::TriangleList:
 			primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 			break;
@@ -102,26 +105,6 @@ void GraphicsPipelineDesc::SetRTVFormats(uint8_t size, const DXGI_FORMAT formats
 
 void GraphicsPipelineDesc::SetDSVFormat(DXGI_FORMAT format) {
 	dsvFormat = format;
-}
-
-void GraphicsPipelineDesc::CreateDefaultDesc() {
-	ClearElement();
-	SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
-	SetElement("TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT);
-	SetElement("NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT);
-	SetElement("TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT);
-	SetElement("BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT);
-
-	SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
-	SetDepthStencil(true);
-
-	SetBlendMode(0, BlendMode::Normal);
-	SetIndependentBlendEnable(false);
-
-	SetPrimitive(PrimitiveType::TrianglList);
-
-	SetRTVFormat(kDefaultOffscreenFormat);
-	SetDSVFormat(kDefaultDepthFormat);
 }
 
 D3D12_INPUT_LAYOUT_DESC GraphicsPipelineDesc::GetInputLayout() const {
@@ -216,26 +199,14 @@ D3D12_SHADER_BYTECODE GraphicsPipelineState::GetBytecode(GraphicsShaderType type
 	return blobs_[static_cast<uint8_t>(type)].value().GetBytecode();
 }
 
-D3D12_RENDER_TARGET_BLEND_DESC GraphicsPipelineState::GetRenderTargetBlendDesc(const BlendOption& option) const {
-	if (std::holds_alternative<BlendMode>(option)) {
-		BlendMode blendMode = std::get<BlendMode>(option);
-		return BlendState::GetDesc(blendMode);
-
-	} else if (std::holds_alternative<D3D12_RENDER_TARGET_BLEND_DESC>(option)) {
-		return std::get<D3D12_RENDER_TARGET_BLEND_DESC>(option);
-	}
-
-	StreamLogger::Exception("is not define option.");
-}
-
 D3D12_BLEND_DESC GraphicsPipelineState::GetBlendDesc() const {
 	D3D12_BLEND_DESC desc = {};
 	desc.IndependentBlendEnable = pipelineDesc_.isIndependentBlendEnable;
-	desc.RenderTarget[0]        = GetRenderTargetBlendDesc(pipelineDesc_.blends[0]);
+	desc.RenderTarget[0]        = pipelineDesc_.blends[0];
 
 	if (desc.IndependentBlendEnable) {
 		for (uint8_t i = 1; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
-			desc.RenderTarget[i] = GetRenderTargetBlendDesc(pipelineDesc_.blends[i]);
+			desc.RenderTarget[i] = pipelineDesc_.blends[i];
 		}
 	}
 

@@ -1,7 +1,7 @@
 #include "Easing.h"
 
 #include <cmath>
-#include <Lib/Geometry/GeometryMath.h>
+#include <Lib/Math/GeometryMath.h>
 
 /* --- Sine --- */
 float EaseInSine(float t) {

@@ -13,7 +13,7 @@
 #include <Engine/Components/Entity/EntityBehaviour.h>
 
 //* lib
-#include <Lib/Geometry/Color4.h>
+#include <Lib/Math/Color4.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace

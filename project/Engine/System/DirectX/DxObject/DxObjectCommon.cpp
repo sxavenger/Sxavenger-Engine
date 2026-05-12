@@ -106,6 +106,6 @@ std::wstring DXOBJECT GetComError(HRESULT hr) {
 	return _com_error(hr).ErrorMessage();
 }
 
-void DXOBJECT Assert(HRESULT hr, const std::wstring& label, const std::source_location& location) {
-	StreamLogger::AssertW(SUCCEEDED(hr), label, std::format(L"_com_error: {}", GetComError(hr)), location);
+void DXOBJECT Assert(HRESULT hr, const std::wstring& label, const TracePoint& point) {
+	StreamLogger::AssertW(SUCCEEDED(hr), label, std::format(L"_com_error: {}", GetComError(hr)), point);
 }

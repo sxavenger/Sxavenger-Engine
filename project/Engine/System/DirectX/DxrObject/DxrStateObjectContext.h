@@ -15,7 +15,7 @@
 #include <Engine/System/DirectX/DxObject/DxCommandContext.h>
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
+#include <Lib/Math/Vector2.h>
 
 //* directx12
 #include <d3dx12.h>

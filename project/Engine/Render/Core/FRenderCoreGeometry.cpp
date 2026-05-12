@@ -8,6 +8,7 @@ DXOBJECT_USING
 //* render
 #include "../Buffer/FGBuffer.h"
 #include "../Buffer/FTransparentBuffer.h"
+#include "../Buffer/FDepthStencilBuffer.h"
 
 //* engine
 #include <Engine/System/System.h>
@@ -37,13 +38,16 @@ void FRenderCoreGeometry::CreateDesc() {
 	{ //!< deferred
 		auto& desc = descs_[static_cast<uint8_t>(Desc::Deferred)] = {};
 
-		desc.CreateDefaultDesc();
+		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT);
+		desc.SetElement("NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT);
 
-		desc.ClearRTVFormat();
-		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::Albedo));
-		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::Normal));
-		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::MaterialARM));
-		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::Address));
+		desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
+		desc.SetDepthStencil(true);
+
+		desc.SetPrimitive(PrimitiveType::TriangleList);
 
 		D3D12_RENDER_TARGET_BLEND_DESC blend = {};
 		blend.BlendEnable           = false;
@@ -53,30 +57,47 @@ void FRenderCoreGeometry::CreateDesc() {
 		desc.SetBlendDesc(0, blend);
 		desc.SetIndependentBlendEnable(false);
 
+		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::Albedo));
+		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::Normal));
+		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::MaterialARM));
+		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::Address));
+		desc.SetDSVFormat(FDepthStencilBuffer::GetFormat(FDepthStencilBuffer::Layout::Scene));
+
 	}
 
 	{ //* forward prepass
 
 		//!< Forward Opaque Depth Pre-pass.
 		auto& desc = descs_[static_cast<uint8_t>(Desc::ForwardPrepass)] = {};
-
-		desc.CreateDefaultDesc();
 		
-		desc.ClearRTVFormat();
+		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT);
+		desc.SetElement("NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT);
 
+		desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 		desc.SetDepthStencil(true);
+
+		desc.SetPrimitive(PrimitiveType::TriangleList);
+
+		desc.SetDSVFormat(FDepthStencilBuffer::GetFormat(FDepthStencilBuffer::Layout::Scene));
 	}
 
 	{ //* forward transparent
 
 		auto& desc = descs_[static_cast<uint8_t>(Desc::ForwardTransparent)] = {};
 
-		desc.CreateDefaultDesc();
+		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT);
+		desc.SetElement("NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT);
 
-		//!< Transparent Buffer
-		desc.ClearRTVFormat();
-		desc.SetRTVFormat(FTransparentBuffer::GetFormat(FTransparentBuffer::Layout::Accumulate));
-		desc.SetRTVFormat(FTransparentBuffer::GetFormat(FTransparentBuffer::Layout::Revealage));
+		desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
+		desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC_LESS_EQUAL);
+
+		desc.SetPrimitive(PrimitiveType::TriangleList);
 
 		D3D12_RENDER_TARGET_BLEND_DESC accumulation = {};
 		accumulation.BlendEnable           = true;
@@ -104,8 +125,11 @@ void FRenderCoreGeometry::CreateDesc() {
 
 		desc.SetBlendDesc(1, revealage);
 		desc.SetIndependentBlendEnable(true);
+		
+		desc.SetRTVFormat(FTransparentBuffer::GetFormat(FTransparentBuffer::Layout::Accumulate));
+		desc.SetRTVFormat(FTransparentBuffer::GetFormat(FTransparentBuffer::Layout::Revealage));
 
-		desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC_LESS_EQUAL);
+		desc.SetDSVFormat(FDepthStencilBuffer::GetFormat(FDepthStencilBuffer::Layout::Scene));
 	}
 	
 }

@@ -11,7 +11,7 @@
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
+#include <Lib/Math/Vector2.h>
 
 //* c++
 #include <optional>
@@ -46,6 +46,8 @@ public:
 
 		Vector2ui resolution = {};
 
+		DXGI_FORMAT format = DxObject::kDefaultDepthFormat;
+
 		float clearDepth     = 1.0f;
 		uint8_t clearStencil = 0;
 
@@ -63,6 +65,9 @@ public:
 	void Create(const Option& option);
 
 	void Reset();
+
+	void SetName(const std::wstring& name) const;
+	void SetName(const std::string& name) const;
 
 	//* transition option *//
 
@@ -120,7 +125,7 @@ private:
 	//=========================================================================================
 
 	void CreateResource(const Option& option);
-	void CreateDescriptor();
+	void CreateDescriptor(const Option& option);
 
 };
 

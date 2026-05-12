@@ -3,14 +3,25 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* render
+#include "FBaseRenderCore.h"
+
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxResource.h>
-#include <Engine/System/DirectX/DxObject/DxDescriptor.h>
+#include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
+#include <Engine/Module/Pipeline/CustomGraphicsPipeline.h>
+#include <Engine/Module/Pipeline/CustomComputePipeline.h>
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
+#include <Lib/Math/Vector2.h>
+#include <Lib/Adapter/Random/Random.h>
+
+//* external
+#include <magic_enum.hpp>
+
+//* c++
+#include <array>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -18,31 +29,44 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FPriorityTexture class
+// FRenderCoreSkyLight class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FPriorityTexture {
+class FRenderCoreSkyLight final
+	: public FBaseRenderCore {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Option structure
+	// Pipeline enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct Option {
+	enum class Pipeline : uint8_t {
+		InitialReservoir,
+		History,
+		Solve,
+	};
+	static inline const size_t kPipelineCount = magic_enum::enum_count<Pipeline>();
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Seed structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	template <size_t N>
+	struct Seed {
 	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		bool Compatible(const Option& other) const;
+		Seed() { Set(); }
+
+		void Set() { std::generate(seed.begin(), seed.end(), []() { return Random::UniformDistribution<uint32_t>(std::numeric_limits<uint32_t>::lowest(), std::numeric_limits<uint32_t>::max()); }); }
+
+		uint32_t* Data() { return seed.data(); }
 
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
-		Vector2ui resolution = {};
-
-		float clearDepth     = 1.0f;
-		uint8_t clearStencil = 0;
+		std::array<uint32_t, N> seed;
 
 	};
 
@@ -52,21 +76,15 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FPriorityTexture() = default;
-	FPriorityTexture(const Vector2ui& resolution) { Create({ .resolution = resolution }); }
+	void Init() override;
 
-	void Create(const Option& option);
+	//* pipeline option *//
 
-	//* transition option *//
+	void SetPipeline(Pipeline pipeline, const DirectXQueueContext* context) const;
 
-	void ClearDepthStencil(const DirectXQueueContext* context);
+	void BindComputeBuffer(Pipeline pipeline, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
 
-	//* getter *//
-
-	ID3D12Resource* GetResource() const { return resource_.Get(); }
-
-	const DxObject::Descriptor& GetDescriptorDSV() const;
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandleDSV() const;
+	void Dispatch(const DirectXQueueContext* context, const Vector2ui& resolution) const;
 
 private:
 
@@ -74,26 +92,25 @@ private:
 	// private variables
 	//=========================================================================================
 
-	//* DirectX12 *//
+	//* compute pipeline *//
 
-	DxObject::Resource resource_;
-	
-	DxObject::Descriptor descriptorDSV_;
+	std::array<CustomReflectionComputePipeline, kPipelineCount> pipelines_ = {};
 
-	//* option *//
+	static inline const Vector3ui kThreadGroupSize = { 16, 16, 1 };
 
-	Option option_;
+	//* directory *//
 
-	//* default state *//
-
-	static inline constexpr D3D12_RESOURCE_STATES kDefaultState = D3D12_RESOURCE_STATE_DEPTH_WRITE;
+	static inline const std::filesystem::path kDirectory = kPackagesDirectory / "shaders" / "render" / "Sky";
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	void CreateResource(const Option& option);
-	void CreateDescriptor();
+	void CreatePipeline();
+
+	//* helper methods *//
+
+	void CreateComputePipeline(Pipeline pipeline, std::filesystem::path compute);
 
 };
 

@@ -9,7 +9,8 @@
 
 //* lib
 #include <Lib/CXXAttribute.h>
-#include <Lib/Geometry/Vector3.h>
+#include <Lib/Math/Vector3.h>
+#include <Lib/Adapter/TracePoint/TracePoint.h>
 
 //* DirectX12
 #include <d3d12.h>
@@ -18,7 +19,6 @@
 //* c++
 #include <cstdint>
 #include <variant>
-#include <source_location>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -156,6 +156,25 @@ constexpr DXGI_FORMAT ConvertToSRGB(DXGI_FORMAT format) {
 	}
 }
 
+constexpr DXGI_FORMAT ConvertToDepthViewFormat(DXGI_FORMAT format) {
+	switch (format) {
+		case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
+			return DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
+
+		case DXGI_FORMAT_D32_FLOAT:
+			return DXGI_FORMAT_R32_FLOAT;
+
+		case DXGI_FORMAT_D24_UNORM_S8_UINT:
+			return DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+
+		case DXGI_FORMAT_D16_UNORM:
+			return DXGI_FORMAT_R16_UNORM;
+
+		default:
+			return format;
+	}
+}
+
 NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
 	ID3D12Device* device,
 	D3D12_HEAP_TYPE heapType,
@@ -175,7 +194,7 @@ CompileProfile ToProfile(GraphicsShaderType type);
 
 std::wstring GetComError(HRESULT hr);
 
-void Assert(HRESULT hr, const std::wstring& label, const std::source_location& location = std::source_location::current());
+void Assert(HRESULT hr, const std::wstring& label, const TracePoint& point = TracePoint());
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Configs
@@ -189,6 +208,6 @@ constexpr const DXGI_FORMAT kDefaultScreenViewFormat = ConvertToSRGB(kDefaultScr
 constexpr const DXGI_FORMAT kDefaultOffscreenFormat  = kDefaultScreenFormat;                //!< offscreenで使われるformat
 
 constexpr const DXGI_FORMAT kDefaultDepthFormat     = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
-constexpr const DXGI_FORMAT kDefaultDepthViewFormat = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
+constexpr const DXGI_FORMAT kDefaultDepthViewFormat = ConvertToDepthViewFormat(kDefaultDepthFormat);
 
 DXOBJECT_NAMESPACE_END

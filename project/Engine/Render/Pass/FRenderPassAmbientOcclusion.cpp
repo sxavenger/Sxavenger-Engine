@@ -6,6 +6,7 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../Buffer/FGBuffer.h"
+#include "../Buffer/FDepthStencilBuffer.h"
 #include "../Core/FRenderCore.h"
 #include "../Core/FRenderCoreProcess.h"
 
@@ -74,9 +75,9 @@ void FRenderPassAmbientOcclusion::EndAntiAliasingPass(const DirectXQueueContext*
 
 void FRenderPassAmbientOcclusion::PassAntiAliasing_XeGTAO(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	FProcessBuffer* process            = config.buffer->GetProcess();
-	FDepthStencilTexture* depthStencil = config.buffer->GetDepthStencil();
-	FGBuffer* gbuffer                  = config.buffer->GetBuffer<FGBuffer>();
+	FProcessBuffer* process           = config.buffer->GetProcess();
+	FDepthStencilBuffer* depthStencil = config.buffer->GetBuffer<FDepthStencilBuffer>();
+	FGBuffer* gbuffer                 = config.buffer->GetBuffer<FGBuffer>();
 
 	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreProcess>(); //!< RenderCoreの確保.
 
@@ -88,7 +89,7 @@ void FRenderPassAmbientOcclusion::PassAntiAliasing_XeGTAO(const DirectXQueueCont
 	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 
 	//!< GBufferの設定
-	desc.SetHandle("gDepth",  depthStencil->GetGPUHandleSRV());
+	desc.SetHandle("gDepth",  depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetGPUHandleSRV());
 	desc.SetHandle("gNormal", gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
 
 	{ //!< Prefilter Depth Pass

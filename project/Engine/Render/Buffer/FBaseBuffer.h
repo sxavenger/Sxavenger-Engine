@@ -36,7 +36,8 @@ public:
 	// public variables
 	//=========================================================================================
 
-	static const DXGI_FORMAT kColorFormat = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	static const DXGI_FORMAT kColorFormat        = DXGI_FORMAT_R16G16B16A16_FLOAT;
+	static const DXGI_FORMAT kDepthStencilFormat = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
 
 private:
 

@@ -14,6 +14,7 @@ SXAVENGER_ENGINE_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetFont::Setup(const DirectXQueueContext* context, const stbtt_fontinfo& info, float size) {
+	context->RequestQueue(DirectXQueueContext::RenderQueue::Copy); //!< コピー以上を要求
 
 	// 引数の保存
 	fontSize_ = size;
@@ -73,7 +74,7 @@ void AssetFont::CreateAtlasTexture() {
 			System::GetDxDevice(),
 			prop,
 			desc,
-			D3D12_RESOURCE_STATE_COPY_DEST
+			D3D12_RESOURCE_STATE_COMMON
 		);
 
 		resource_.SetName(L"Asset | Font Atlas Texture");
@@ -171,6 +172,8 @@ void AssetFont::UploadAtlasData(const DirectXQueueContext* context) {
 	auto device      = System::GetDxDevice()->GetDevice();
 	auto commandList = context->GetCommandList();
 
+	//resource_.Transition(context->GetDxCommand(), D3D12_RESOURCE_STATE_COPY_DEST);
+
 	size_t bufferSize = kAtlasSize.x * kAtlasSize.y;
 
 	ComPtr<ID3D12Resource> intermediate = DxObject::CreateBufferResource(
@@ -206,7 +209,8 @@ void AssetFont::UploadAtlasData(const DirectXQueueContext* context) {
 	commandList->CopyTextureRegion(&dst, 0, 0, 0, &src, nullptr);
 
 	// 使用可能状態に遷移
-	resource_.Transition(context->GetDxCommand(), D3D12_RESOURCE_STATE_COMMON);
+	resource_.TransitionExplicit(context->GetDxCommand(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_COMMON);
+	//!< HACK: Commonで作成し, 内部でDestで遷移させCommonに手動遷移.
 
 	// commandの実行
 	context->ExecuteAllAllocators();

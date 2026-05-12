@@ -78,6 +78,8 @@ void TimestampGpu::ReadTimestamp(const DirectXQueueContext* context) {
 		return;
 	}
 
+	readback_.TransitionReadback(context->GetDxCommand());
+
 	// timestampの記録を取得
 	context->GetCommandList()->ResolveQueryData(
 		query_.Get(),

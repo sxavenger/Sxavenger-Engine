@@ -10,7 +10,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/System.h>
 
 //* lib
-#include <Lib/Geometry/Vector4.h>
+#include <Lib/Math/Vector4.h>
 
 //* c++
 #include <span>

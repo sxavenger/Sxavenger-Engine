@@ -45,7 +45,7 @@ void CustomComputePipeline::RegisterBlob() {
 		SetBlob(content_.value().WaitGet()->GetBlob());
 
 	} else {
-		blob_ = std::nullopt;
+		blob_ = nullptr;
 	}
 }
 
@@ -70,7 +70,7 @@ void CustomReflectionComputePipeline::RegisterBlob() {
 		SetBlob(content_.value().WaitGet()->GetBlob());
 
 	} else {
-		blob_ = std::nullopt;
+		blob_ = nullptr;
 	}
 }
 

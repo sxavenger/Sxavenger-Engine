@@ -14,6 +14,9 @@ DXOBJECT_USING
 #include <Engine/System/System.h>
 #include <Engine/Graphics/Graphics.h>
 
+//* lib
+#include <Lib/Math/GeometryMath.h>
+
 //* externals
 #include <magic_enum.hpp>
 

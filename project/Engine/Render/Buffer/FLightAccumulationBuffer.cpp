@@ -26,7 +26,12 @@ const std::array<DXGI_FORMAT, FLightAccumulationBuffer::kLayoutCount> FLightAccu
 
 void FLightAccumulationBuffer::Create(const Vector2ui& resolution) {
 	for (size_t i = 0; i < kLayoutCount; ++i) {
-		buffers_[i].Create({ resolution, kFormats[i] });
+
+		FRenderTexture::Option option = {};
+		option.resolution = resolution;
+		option.format     = kFormats[i];
+
+		buffers_[i].Create(option);
 
 		std::string name = "FLightAccumulationBuffer | ";
 		name += magic_enum::enum_name(static_cast<FLightAccumulationBuffer::Layout>(i));

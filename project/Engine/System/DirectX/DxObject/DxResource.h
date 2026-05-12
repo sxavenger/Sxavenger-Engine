@@ -60,6 +60,11 @@ public:
 		D3D12_RESOURCE_STATES state
 	);
 
+	void TransitionExplicit(
+		DxObject::CommandContext* context,
+		D3D12_RESOURCE_STATES before, D3D12_RESOURCE_STATES after
+	);
+
 	//* getter *//
 
 	ID3D12Resource* Get() const { return resource_.Get(); }
@@ -102,6 +107,7 @@ public:
 
 	bool operator==(const Resource& rhs) const { return resource_.Get() == rhs.resource_.Get(); }
 	bool operator!=(const Resource& rhs) const { return resource_.Get() != rhs.resource_.Get(); }
+
 	bool operator==(std::nullptr_t) const { return resource_.Get() == nullptr; }
 	bool operator!=(std::nullptr_t) const { return resource_.Get() != nullptr; }
 

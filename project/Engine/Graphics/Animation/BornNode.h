@@ -7,8 +7,8 @@
 #include <Engine/Foundation.h>
 
 //* lib
-#include <Lib/Geometry/Matrix4x4.h>
-#include <Lib/Transform/Transform.h>
+#include <Lib/Math/Matrix4x4.h>
+#include <Lib/Transform/TransformQuaternion.h>
 
 //* c++
 #include <string>
@@ -30,7 +30,7 @@ public:
 	// public variables
 	//=========================================================================================
 
-	QuaternionTransform transform;
+	TransformQuaternion transform;
 	Matrix4x4           localMatrix;
 
 	std::string name;

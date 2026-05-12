@@ -7,6 +7,7 @@ DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 //* render
 #include "../Buffer/FLightAccumulationBuffer.h"
+#include "../Buffer/FDepthStencilBuffer.h"
 
 //* engine
 #include <Engine/System/System.h>
@@ -51,7 +52,7 @@ void FRenderCoreDirectLight::CreateDesc() {
 		blend.BlendOpAlpha          = D3D12_BLEND_OP_MAX;
 
 		//!< descの設定
-		desc.SetPrimitive(PrimitiveType::TrianglList);
+		desc.SetPrimitive(PrimitiveType::TriangleList);
 
 		desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 		desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC_GREATER); //!< Depthが1.0以外に書き込み
@@ -60,7 +61,7 @@ void FRenderCoreDirectLight::CreateDesc() {
 		desc.SetIndependentBlendEnable(false);
 
 		desc.SetRTVFormat(0, FLightAccumulationBuffer::GetFormat(FLightAccumulationBuffer::Layout::Direct));
-		desc.SetDSVFormat(kDefaultDepthFormat);
+		desc.SetDSVFormat(FDepthStencilBuffer::GetFormat(FDepthStencilBuffer::Layout::Scene));
 	}
 
 	{ //!< Back
@@ -80,7 +81,7 @@ void FRenderCoreDirectLight::CreateDesc() {
 		blend.BlendOpAlpha          = D3D12_BLEND_OP_MAX;
 
 		//!< descの設定
-		desc.SetPrimitive(PrimitiveType::TrianglList);
+		desc.SetPrimitive(PrimitiveType::TriangleList);
 
 		desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 		desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC_EQUAL); //!< Depthが1.0に書き込み
@@ -89,7 +90,7 @@ void FRenderCoreDirectLight::CreateDesc() {
 		desc.SetIndependentBlendEnable(false);
 
 		desc.SetRTVFormat(0, FLightAccumulationBuffer::GetFormat(FLightAccumulationBuffer::Layout::Direct));
-		desc.SetDSVFormat(kDefaultDepthFormat);
+		desc.SetDSVFormat(FDepthStencilBuffer::GetFormat(FDepthStencilBuffer::Layout::Scene));
 	}
 
 	{ //!< Aerial
@@ -109,7 +110,7 @@ void FRenderCoreDirectLight::CreateDesc() {
 		blend.BlendOpAlpha          = D3D12_BLEND_OP_MAX;
 
 		//!< descの設定
-		desc.SetPrimitive(PrimitiveType::TrianglList);
+		desc.SetPrimitive(PrimitiveType::TriangleList);
 
 		desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 		desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC_GREATER); //!< Depthが1.0以外に書き込み
@@ -118,7 +119,7 @@ void FRenderCoreDirectLight::CreateDesc() {
 		desc.SetIndependentBlendEnable(false);
 
 		desc.SetRTVFormat(0, FLightAccumulationBuffer::GetFormat(FLightAccumulationBuffer::Layout::Direct));
-		desc.SetDSVFormat(kDefaultDepthFormat);
+		desc.SetDSVFormat(FDepthStencilBuffer::GetFormat(FDepthStencilBuffer::Layout::Scene));
 	}
 
 }

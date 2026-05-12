@@ -32,7 +32,12 @@ const std::array<DXGI_FORMAT, FGBuffer::kLayoutCount> FGBuffer::kFormats = {
 
 void FGBuffer::Create(const Vector2ui& resolution) {
 	for (size_t i = 0; i < kLayoutCount; ++i) {
-		buffers_[i].Create({ resolution, kFormats[i] });
+
+		FRenderTexture::Option option = {};
+		option.resolution = resolution;
+		option.format     = kFormats[i];
+
+		buffers_[i].Create(option);
 
 		// nameの設定
 		std::string name = "FGBuffer | ";

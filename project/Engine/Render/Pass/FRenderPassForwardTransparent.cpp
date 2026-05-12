@@ -7,6 +7,7 @@ SXAVENGER_ENGINE_USING
 //* render
 #include "../Buffer/FTransparentBuffer.h"
 #include "../Buffer/FMainBuffer.h"
+#include "../Buffer/FDepthStencilBuffer.h"
 #include "../Core/FRenderCore.h"
 #include "../Core/FRenderCoreGeometry.h"
 #include "../Core/FRenderCoreTransition.h"
@@ -76,14 +77,14 @@ void FRenderPassForwardTransparent::BeginDepthPrepass(const DirectXQueueContext*
 
 	auto commandList = context->GetCommandList();
 
-	FDepthStencilTexture* depthStencil = buffer->GetDepthStencil();
+	FDepthStencilBuffer* depthStencil = buffer->GetBuffer<FDepthStencilBuffer>();
 
 	{ //!< barrierの設定
 
 		std::vector<D3D12_RESOURCE_BARRIER> barriers;
 
 		//!< DepthStencilのbarrier設定
-		depthStencil->SetTransitionDepthWrite(barriers);
+		depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).SetTransitionDepthWrite(barriers);
 
 		//!< barrierの発行
 		context->GetDxCommand()->ResourceBarrier(barriers);
@@ -93,7 +94,7 @@ void FRenderPassForwardTransparent::BeginDepthPrepass(const DirectXQueueContext*
 
 		commandList->OMSetRenderTargets(
 			0, nullptr, false,
-			&depthStencil->GetCPUHandleDSV()
+			&depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetCPUHandleDSV()
 		);
 	}
 
@@ -101,14 +102,14 @@ void FRenderPassForwardTransparent::BeginDepthPrepass(const DirectXQueueContext*
 
 void FRenderPassForwardTransparent::EndDepthPrepass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
 
-	FDepthStencilTexture* depthStencil = buffer->GetDepthStencil();
+	FDepthStencilBuffer* depthStencil = buffer->GetBuffer<FDepthStencilBuffer>();
 
 	{ //!< barrierの設定
 
 		std::vector<D3D12_RESOURCE_BARRIER> barriers;
 
 		//!< DepthStencilのbarrier設定
-		depthStencil->SetTransitionDefaultState(barriers);
+		depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).SetTransitionDefaultState(barriers);
 
 		//!< barrierの発行
 		context->GetDxCommand()->ResourceBarrier(barriers);
@@ -121,7 +122,7 @@ void FRenderPassForwardTransparent::BeginTransparentMeshRenderPass(const DirectX
 	auto commandList = context->GetCommandList();
 
 	FTransparentBuffer* transparentBuffer = buffer->GetBuffer<FTransparentBuffer>();
-	FDepthStencilTexture* depthStencil    = buffer->GetDepthStencil();
+	FDepthStencilBuffer* depthStencil    = buffer->GetBuffer<FDepthStencilBuffer>();
 
 	static const size_t	kBufferCount = FTransparentBuffer::kLayoutCount;
 	std::array<FRenderTexture*, kBufferCount> buffers = {
@@ -139,7 +140,7 @@ void FRenderPassForwardTransparent::BeginTransparentMeshRenderPass(const DirectX
 		}
 
 		//!< DepthStencilのbarrier設定
-		depthStencil->SetTransitionDepthRead(barriers);
+		depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).SetTransitionDepthRead(barriers);
 
 		//!< barrierの発行
 		context->GetDxCommand()->ResourceBarrier(barriers);
@@ -154,7 +155,7 @@ void FRenderPassForwardTransparent::BeginTransparentMeshRenderPass(const DirectX
 
 		commandList->OMSetRenderTargets(
 			static_cast<UINT>(handles.size()), handles.data(), false,
-			&depthStencil->GetCPUHandleDSV()
+			&depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetCPUHandleDSV()
 		);
 	}
 
@@ -167,7 +168,7 @@ void FRenderPassForwardTransparent::BeginTransparentMeshRenderPass(const DirectX
 void FRenderPassForwardTransparent::EndTransparentMeshRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
 
 	FTransparentBuffer* transparentBuffer = buffer->GetBuffer<FTransparentBuffer>();
-	FDepthStencilTexture* depthStencil    = buffer->GetDepthStencil();
+	FDepthStencilBuffer* depthStencil     = buffer->GetBuffer<FDepthStencilBuffer>();
 
 	static const size_t	kBufferCount = FTransparentBuffer::kLayoutCount;
 	std::array<FRenderTexture*, kBufferCount> buffers = {
@@ -184,7 +185,7 @@ void FRenderPassForwardTransparent::EndTransparentMeshRenderPass(const DirectXQu
 		}
 
 		//!< DepthStencilのbarrier設定
-		depthStencil->SetTransitionDefaultState(barriers);
+		depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).SetTransitionDefaultState(barriers);
 
 		//!< barrierの発行
 		context->GetDxCommand()->ResourceBarrier(barriers);

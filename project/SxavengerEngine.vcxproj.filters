@@ -202,11 +202,14 @@
     <Filter Include="Lib\Adapter\Time">
       <UniqueIdentifier>{AA635815-965C-7767-BF8E-5CECABE65673}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lib\Adapter\TracePoint">
+      <UniqueIdentifier>{54DBD7F7-40D5-004A-2942-975A15DB66B6}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Lib\Adapter\Uuid">
       <UniqueIdentifier>{92225915-7E1B-7867-A74D-5DEC93A55773}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lib\Geometry">
-      <UniqueIdentifier>{F790A372-E3F3-3217-8C79-6BCD78BBFE99}</UniqueIdentifier>
+    <Filter Include="Lib\Math">
+      <UniqueIdentifier>{755AF919-6127-5425-8A40-42CD766C89B3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Lib\Motion">
       <UniqueIdentifier>{C135B77E-ADED-F8CB-16F5-D12702CC93BC}</UniqueIdentifier>
@@ -549,6 +552,9 @@
     <ClInclude Include="Engine\Render\Buffer\FBaseBuffer.h">
       <Filter>Engine\Render\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FDepthStencilBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Render\Buffer\FGBuffer.h">
       <Filter>Engine\Render\Buffer</Filter>
     </ClInclude>
@@ -570,6 +576,9 @@
     <ClInclude Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.h">
       <Filter>Engine\Render\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FSkyReservoirBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Render\Buffer\FTransparentBuffer.h">
       <Filter>Engine\Render\Buffer</Filter>
     </ClInclude>
@@ -577,9 +586,6 @@
       <Filter>Engine\Render\Common</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h">
-      <Filter>Engine\Render\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Render\Common\FPriorityTexture.h">
       <Filter>Engine\Render\Common</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h">
@@ -610,6 +616,9 @@
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreReSTIR.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreSkyLight.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h">
@@ -646,6 +655,9 @@
       <Filter>Engine\Render\Pass</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredGlobalIllumination.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredSkyLighting.h">
       <Filter>Engine\Render\Pass</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassForwardTransparent.h">
@@ -876,6 +888,9 @@
     <ClInclude Include="Lib\Adapter\Time\TimePoint.h">
       <Filter>Lib\Adapter\Time</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\Adapter\TracePoint\TracePoint.h">
+      <Filter>Lib\Adapter\TracePoint</Filter>
+    </ClInclude>
     <ClInclude Include="Lib\Adapter\Uuid\Uuid.h">
       <Filter>Lib\Adapter\Uuid</Filter>
     </ClInclude>
@@ -885,32 +900,32 @@
     <ClInclude Include="Lib\Easing.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Color3.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Color3.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Color4.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Color4.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\GeometryMath.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\GeometryMath.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Matrix4x4.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Matrix4x4.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Quaternion.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Quaternion.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Vector2.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Vector2.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Vector3.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Vector3.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Vector4.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Vector4.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\VectorComparison.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\VectorComparison.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Motion\Motion.h">
       <Filter>Lib\Motion</Filter>
@@ -951,7 +966,25 @@
     <ClInclude Include="Lib\Traits.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Transform\Transform.h">
+    <ClInclude Include="Lib\Transform\Basis.h">
+      <Filter>Lib\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Transform\RectTransform.h">
+      <Filter>Lib\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Transform\Transform2d.h">
+      <Filter>Lib\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Transform\TransformEuler.h">
+      <Filter>Lib\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Transform\TransformQuaternion.h">
+      <Filter>Lib\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Transform\Transformation.h">
+      <Filter>Lib\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Transform\TransformationMatrix.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1250,6 +1283,9 @@
     <ClCompile Include="Engine\Render\Buffer\FBaseBuffer.cpp">
       <Filter>Engine\Render\Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FDepthStencilBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Render\Buffer\FGBuffer.cpp">
       <Filter>Engine\Render\Buffer</Filter>
     </ClCompile>
@@ -1271,6 +1307,9 @@
     <ClCompile Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.cpp">
       <Filter>Engine\Render\Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FSkyReservoirBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Render\Buffer\FTransparentBuffer.cpp">
       <Filter>Engine\Render\Buffer</Filter>
     </ClCompile>
@@ -1278,9 +1317,6 @@
       <Filter>Engine\Render\Common</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp">
-      <Filter>Engine\Render\Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Render\Common\FPriorityTexture.cpp">
       <Filter>Engine\Render\Common</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp">
@@ -1308,6 +1344,9 @@
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreReSTIR.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreSkyLight.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp">
@@ -1344,6 +1383,9 @@
       <Filter>Engine\Render\Pass</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredGlobalIllumination.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredSkyLighting.cpp">
       <Filter>Engine\Render\Pass</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FRenderPassForwardTransparent.cpp">
@@ -1553,11 +1595,11 @@
     <ClCompile Include="Lib\Easing.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
-    <ClCompile Include="Lib\Geometry\Matrix4x4.cpp">
-      <Filter>Lib\Geometry</Filter>
+    <ClCompile Include="Lib\Math\Matrix4x4.cpp">
+      <Filter>Lib\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Lib\Geometry\Quaternion.cpp">
-      <Filter>Lib\Geometry</Filter>
+    <ClCompile Include="Lib\Math\Quaternion.cpp">
+      <Filter>Lib\Math</Filter>
     </ClCompile>
     <ClCompile Include="Lib\Motion\Motion.cpp">
       <Filter>Lib\Motion</Filter>
@@ -1565,7 +1607,25 @@
     <ClCompile Include="Lib\Sxl\Exception.cpp">
       <Filter>Lib\Sxl</Filter>
     </ClCompile>
-    <ClCompile Include="Lib\Transform\Transform.cpp">
+    <ClCompile Include="Lib\Transform\Basis.cpp">
+      <Filter>Lib\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Transform\RectTransform.cpp">
+      <Filter>Lib\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Transform\Transform2d.cpp">
+      <Filter>Lib\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Transform\TransformEuler.cpp">
+      <Filter>Lib\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Transform\TransformQuaternion.cpp">
+      <Filter>Lib\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Transform\Transformation.cpp">
+      <Filter>Lib\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Transform\TransformationMatrix.cpp">
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />

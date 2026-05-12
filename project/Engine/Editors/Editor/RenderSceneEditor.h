@@ -16,8 +16,8 @@
 #include <Engine/Render/Pass/FRenderConfig.h>
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
-#include <Lib/Geometry/Vector3.h>
+#include <Lib/Math/Vector2.h>
+#include <Lib/Math/Vector3.h>
 
 //* external
 #include <imgui.h>
