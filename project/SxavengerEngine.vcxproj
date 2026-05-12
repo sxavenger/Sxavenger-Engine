@@ -80,7 +80,7 @@
       <PreprocessorDefinitions>_PROFILE="$(Configuration)";NOMINMAX;_DEVELOPMENT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.;Externals\nlohmann;Externals\meshoptimizer;Externals\imgui;Externals\imgui\backends;Externals\DirectXTex;Externals\assimp\include;Externals\magic_enum;Externals\stb;Externals\mono\include;Externals\PixEvents\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <Optimization>Custom</Optimization>
+      <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -423,10 +423,10 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Lib\Transform\Basis.h" />
     <ClInclude Include="Lib\Transform\RectTransform.h" />
     <ClInclude Include="Lib\Transform\Transform2d.h" />
-    <ClInclude Include="Lib\Transform\Transformation.h" />
-    <ClInclude Include="Lib\Transform\TransformationMatrix.h" />
     <ClInclude Include="Lib\Transform\TransformEuler.h" />
     <ClInclude Include="Lib\Transform\TransformQuaternion.h" />
+    <ClInclude Include="Lib\Transform\Transformation.h" />
+    <ClInclude Include="Lib\Transform\TransformationMatrix.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp" />
@@ -638,10 +638,10 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Lib\Transform\Basis.cpp" />
     <ClCompile Include="Lib\Transform\RectTransform.cpp" />
     <ClCompile Include="Lib\Transform\Transform2d.cpp" />
-    <ClCompile Include="Lib\Transform\Transformation.cpp" />
-    <ClCompile Include="Lib\Transform\TransformationMatrix.cpp" />
     <ClCompile Include="Lib\Transform\TransformEuler.cpp" />
     <ClCompile Include="Lib\Transform\TransformQuaternion.cpp" />
+    <ClCompile Include="Lib\Transform\Transformation.cpp" />
+    <ClCompile Include="Lib\Transform\TransformationMatrix.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>

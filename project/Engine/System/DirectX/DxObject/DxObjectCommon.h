@@ -10,6 +10,7 @@
 //* lib
 #include <Lib/CXXAttribute.h>
 #include <Lib/Math/Vector3.h>
+#include <Lib/Adapter/TracePoint/TracePoint.h>
 
 //* DirectX12
 #include <d3d12.h>
@@ -18,7 +19,6 @@
 //* c++
 #include <cstdint>
 #include <variant>
-#include <source_location>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -194,7 +194,7 @@ CompileProfile ToProfile(GraphicsShaderType type);
 
 std::wstring GetComError(HRESULT hr);
 
-void Assert(HRESULT hr, const std::wstring& label, const std::source_location& location = std::source_location::current());
+void Assert(HRESULT hr, const std::wstring& label, const TracePoint& point = TracePoint());
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Configs

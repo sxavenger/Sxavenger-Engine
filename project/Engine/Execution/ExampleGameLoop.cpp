@@ -140,7 +140,7 @@ void ExampleGameLoop::InitSystem() {
 		text->SetText(t);
 	}
 
-#ifndef _RELEASE //!< デバッグビルドでは、シーンのロードに時間がかかるため、ロードしない.
+#ifndef _DEBUG //!< デバッグビルドでは、シーンのロードに時間がかかるため、ロードしない.
 	{
 		json data;
 		if (JsonHandler::LoadFromJson("assets/scene/sponza.scene", data)) {
