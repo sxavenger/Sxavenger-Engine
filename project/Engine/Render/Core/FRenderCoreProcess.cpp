@@ -76,6 +76,11 @@ void FRenderCoreProcess::CreatePipeline() {
 		//!< LUT
 		CreatePipeline(PostProcess::LUT_Convert, "LUT/ConvertLUTTexture.cs.hlsl", desc);
 		CreatePipeline(PostProcess::LUT,         "LUT/LUT.cs.hlsl", desc);
+
+		//!< PostFx
+		CreatePipeline(PostProcess::PostFxBrightness,   "PostFx/PostFxBrightness.cs.hlsl", desc);
+		CreatePipeline(PostProcess::PostFxSaturation,   "PostFx/PostFxSaturation.cs.hlsl", desc);
+		CreatePipeline(PostProcess::PostFxColorfulness, "PostFx/PostFxColorfulness.cs.hlsl", desc);
 	}
 
 	{ //!< Composite Process

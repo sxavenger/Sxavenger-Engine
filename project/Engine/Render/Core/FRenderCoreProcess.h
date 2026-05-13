@@ -68,6 +68,9 @@ public:
 		Vignette,
 		LUT_Convert,
 		LUT,
+		PostFxBrightness,
+		PostFxSaturation,
+		PostFxColorfulness,
 	};
 	static const size_t kPostProcessCount = magic_enum::enum_count<PostProcess>();
 

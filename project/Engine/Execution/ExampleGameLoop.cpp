@@ -94,6 +94,7 @@ void ExampleGameLoop::InitSystem() {
 		exposure->GetParameter().compensation    = -5.0f;
 
 		layer->AddPostProcess<PostProcessRadialBlur>();
+		layer->AddPostProcess<PostProcessPostFx>();
 
 		auto collider = (*camera_)->AddComponent<ColliderComponent>();
 		collider->SetTag("camera");

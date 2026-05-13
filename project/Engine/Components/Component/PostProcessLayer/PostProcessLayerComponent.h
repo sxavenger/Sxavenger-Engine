@@ -19,6 +19,7 @@
 #include "PostProcessRadialBlur.h"
 //#include "PostProcessMotionBlur.h" MotionVectorの実装をしてから
 #include "PostProcessChromaticAberration.h"
+#include "PostProcessPostFx.h"
 
 //* engine
 #include <Engine/Foundation.h>

@@ -470,6 +470,7 @@ void RenderSceneEditor::ShowGameMenu() {
 		SxGui::ComboEnum("anti-aliasing",       &config.antiAliasing);
 		SxGui::ComboEnum("ambient-occlusion",   &config.ambientOcclusion);
 		SxGui::ComboEnum("global-illumination", &config.globalIllumination);
+		SxGui::ComboEnum("sky-visibility",      &config.skyVisibility);
 
 		for (const auto& [value, name] : magic_enum::enum_entries<FRenderConfig::OptionFlag>()) {
 			if (value == FRenderConfig::OptionFlag::Default) {

@@ -987,6 +987,7 @@
     <ClInclude Include="Lib\Transform\TransformationMatrix.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessPostFx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp">
@@ -1629,5 +1630,6 @@
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessPostFx.cpp" />
   </ItemGroup>
 </Project>
