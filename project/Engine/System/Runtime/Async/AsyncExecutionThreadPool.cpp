@@ -171,6 +171,7 @@ void Async::ExecutionThreadPool::DebugGui() {
 }
 
 std::shared_ptr<Async::ExecutionTask> Async::ExecutionThreadPool::GetTask(const ExecutionThread* thread) {
+	// TODO: QueueSystemのバグ修正
 
 	std::unique_lock<std::mutex> lock(mutex_);
 	condition_.wait(lock, [this, thread]() { return thread->IsTerminate() || !queue_.IsEmpty(); });
