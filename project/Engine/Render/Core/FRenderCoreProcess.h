@@ -71,6 +71,7 @@ public:
 		PostFxBrightness,
 		PostFxSaturation,
 		PostFxColorfulness,
+		Posterize,
 	};
 	static const size_t kPostProcessCount = magic_enum::enum_count<PostProcess>();
 

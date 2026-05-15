@@ -81,6 +81,9 @@ void FRenderCoreProcess::CreatePipeline() {
 		CreatePipeline(PostProcess::PostFxBrightness,   "PostFx/PostFxBrightness.cs.hlsl", desc);
 		CreatePipeline(PostProcess::PostFxSaturation,   "PostFx/PostFxSaturation.cs.hlsl", desc);
 		CreatePipeline(PostProcess::PostFxColorfulness, "PostFx/PostFxColorfulness.cs.hlsl", desc);
+
+		//!< Posterize
+		CreatePipeline(PostProcess::Posterize, "Posterize/Posterize.cs.hlsl", desc);
 	}
 
 	{ //!< Composite Process

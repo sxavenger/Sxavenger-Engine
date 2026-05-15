@@ -95,6 +95,7 @@ void ExampleGameLoop::InitSystem() {
 
 		layer->AddPostProcess<PostProcessRadialBlur>();
 		layer->AddPostProcess<PostProcessPostFx>();
+		layer->AddPostProcess<PostProcessPosterize>();
 
 		auto collider = (*camera_)->AddComponent<ColliderComponent>();
 		collider->SetTag("camera");

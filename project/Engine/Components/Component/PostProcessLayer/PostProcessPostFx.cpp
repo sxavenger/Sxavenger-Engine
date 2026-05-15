@@ -14,20 +14,15 @@ SXAVENGER_ENGINE_USING
 // Parameter structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void PostProcessPostFx::Parameter::Init() {
-	brightness   = 0.0f;
-	saturation   = 0.0f;
-	colorfulness = 0.0f;
-	clarity      = 0.0f;
-	lumaSharpen  = 0.0f;
-}
-
-void PostProcessPostFx::Parameter::SetImGuiCommand() {
-	SxGui::DragScalar<float>("brightness",   &brightness,   0.01f, -1.0f, 1.0f);
-	SxGui::DragScalar<float>("saturation",   &saturation,   0.01f, -1.0f, 1.0f);
-	SxGui::DragScalar<float>("colorfulness", &colorfulness, 0.01f, 0.0f, 1.0f);
-	SxGui::DragScalar<float>("clarity",      &clarity,      0.01f, 0.0f, 1.0f);
-	SxGui::DragScalar<float>("lumaSharpen",  &lumaSharpen,  0.01f, 0.0f, 1.0f);
+PostProcessPostFx::Parameter PostProcessPostFx::Parameter::Default() {
+	Parameter parameter = {};
+	parameter.brightness   = 0.0f;
+	parameter.saturation   = 0.0f;
+	parameter.colorfulness = 0.0f;
+	parameter.clarity      = 0.0f;
+	parameter.lumaSharpen  = 0.0f;
+	
+	return parameter;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -35,9 +30,8 @@ void PostProcessPostFx::Parameter::SetImGuiCommand() {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void PostProcessPostFx::Init() {
-	parameter_ = std::make_unique<DxObject::ConstantBuffer<Parameter>>();
-	parameter_->Create(System::GetDxDevice());
-	parameter_->At().Init();
+	parameter_.Create(System::GetDxDevice());
+	parameter_.At() = Parameter::Default();
 
 	name_ = "PostFx";
 }
@@ -56,7 +50,7 @@ void PostProcessPostFx::Process(const DirectXQueueContext* context, const Proces
 	desc.Set32bitConstants("Information", 1, &info.weight);
 
 	//!< parameterの設定
-	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
+	desc.SetAddress("gParameter", parameter_.GetGPUVirtualAddress());
 
 	{ //!< Brightness
 
@@ -111,5 +105,12 @@ void PostProcessPostFx::Process(const DirectXQueueContext* context, const Proces
 }
 
 void PostProcessPostFx::ShowInspectorImGui() {
-	parameter_->At().SetImGuiCommand();
+
+	auto& parameter = parameter_.At();
+
+	SxGui::SliderScalar<float>("brightness",   &parameter.brightness,   -1.0f, 1.0f);
+	SxGui::SliderScalar<float>("saturation",   &parameter.saturation,   -1.0f, 1.0f);
+	SxGui::SliderScalar<float>("colorfulness", &parameter.colorfulness, 0.0f, 1.0f);
+	SxGui::SliderScalar<float>("clarity",      &parameter.clarity,      0.0f, 1.0f);
+	SxGui::SliderScalar<float>("lumaSharpen",  &parameter.lumaSharpen,  0.0f, 1.0f);
 }

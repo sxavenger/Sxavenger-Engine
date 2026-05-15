@@ -19,16 +19,26 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// PostProcessPostFx class
+// PostProcessPosterize class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class PostProcessPostFx
+class PostProcessPosterize
 	: public BasePostProcess {
 public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Mode enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Mode : uint32_t {
+		Ceil,  //!< 切り上げ [std::ceil](https://cpprefjp.github.io/reference/cmath/ceil.html)
+		Floor, //!< 切り捨て [std::floor](https://cpprefjp.github.io/reference/cmath/floor.html)
+		Round, //!< 四捨五入 [std::round](https://cpprefjp.github.io/reference/cmath/round.html)
+	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Parameter {
+	public:
 
 		//=========================================================================================
 		// public methods
@@ -40,11 +50,11 @@ public:
 		// public variables
 		//=========================================================================================
 
-		float brightness;   //!< 輝度 [-1.0 ~ 1.0]
-		float saturation;   //!< 飽和度 [-1.0 ~ 1.0]
-		float colorfulness; //!< 彩度 [0.0 ~ 1.0]
-		float clarity;      //!< 明瞭度 [0.0 ~ 1.0]
-		float lumaSharpen;  //!< [0.0 ~ 1.0]
+		float coordinateLevel;
+		Mode coordinateMode;
+
+		float colorLevel;
+		Mode colorMode;
 
 	};
 
