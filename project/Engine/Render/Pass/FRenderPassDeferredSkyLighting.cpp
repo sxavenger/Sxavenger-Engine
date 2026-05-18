@@ -70,6 +70,10 @@ void FRenderPassDeferredSkyLighting::Render(const DirectXQueueContext* context, 
 
 		InitalReservoirSkyVisibility(context, config);
 
+		if (config.skyVisibility == FRenderConfig::SkyVisibility::ReSITR_Preview1) {
+			SpatialReservoirSkyVisibility(context, config);
+		}
+
 		HistorySkyVisibility(context, config);
 
 		SolveSkyVisibility(context, config);
@@ -266,7 +270,77 @@ void FRenderPassDeferredSkyLighting::InitalReservoirSkyVisibility(const DirectXQ
 
 }
 
+void FRenderPassDeferredSkyLighting::SpatialReservoirSkyVisibility(const DirectXQueueContext* context, const FRenderConfig& config) {
+
+	FSkyReservoirBuffer* reservoir       = config.buffer->GetBuffer<FSkyReservoirBuffer>(); //!< SkyReservoirBufferの取得
+	FGBuffer* gbuffer                    = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
+	FDepthStencilBuffer* depthStencil    = config.buffer->GetBuffer<FDepthStencilBuffer>(); //!< DepthStencilの取得
+
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreSkyLight>();
+	core->SetPipeline(FRenderCoreSkyLight::Pipeline::SpatialReservoir, context);
+
+	//!< parameterの設定
+	DxObject::BindBufferDesc desc = {};
+
+	//!< 共通parameterの設定
+	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
+	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+	desc.SetAddress("gScene", config.scene->GetTopLevelAS().GetGPUVirtualAddress());
+
+	//!< GBufferの設定
+	desc.SetHandle("gDepth",       depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetGPUHandleSRV());
+	desc.SetHandle("gAlbedo",      gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
+	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
+	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
+
+	{ //!< 1回目のSpatial
+
+		reservoir->GetReservoir(FSkyReservoirBuffer::LayoutReservoir::Spatial0).TransitionUnordered(context->GetDxCommand()); //!< Reservoirのbarrier設定
+
+		//!< 回数の設定
+		static uint32_t recursion = 1;
+		desc.Set32bitConstants("ATrous", 1, &recursion);
+
+		//!< Seedの設定
+		FRenderCoreSkyLight::Seed<3> seed = {};
+		desc.Set32bitConstants("Seed", 3, seed.Data());
+
+		//!< Reservoirの設定
+		desc.SetAddress("gSourceReservoir",      reservoir->GetReservoir(FSkyReservoirBuffer::LayoutReservoir::Initial).GetGPUVirtualAddress());
+		desc.SetAddress("gDestinationReservoir", reservoir->GetReservoir(FSkyReservoirBuffer::LayoutReservoir::Spatial0).GetGPUVirtualAddress());
+
+		core->BindComputeBuffer(FRenderCoreSkyLight::Pipeline::SpatialReservoir, context, desc);
+		core->Dispatch(context, config.buffer->GetResolution());
+
+		reservoir->GetReservoir(FSkyReservoirBuffer::LayoutReservoir::Spatial0).TransitionDefault(context->GetDxCommand()); //!< Reservoirのbarrier設定
+	}
+
+	{ //!< 2回目のSpatial
+
+		reservoir->GetReservoir(FSkyReservoirBuffer::LayoutReservoir::Spatial1).TransitionUnordered(context->GetDxCommand()); //!< Reservoirのbarrier設定
+
+		//!< 回数の設定
+		static uint32_t recursion = 2;
+		desc.Set32bitConstants("ATrous", 1, &recursion);
+
+		//!< Seedの設定
+		FRenderCoreSkyLight::Seed<3> seed = {};
+		desc.Set32bitConstants("Seed", 3, seed.Data());
+
+		//!< Reservoirの設定
+		desc.SetAddress("gSourceReservoir",      reservoir->GetReservoir(FSkyReservoirBuffer::LayoutReservoir::Spatial0).GetGPUVirtualAddress());
+		desc.SetAddress("gDestinationReservoir", reservoir->GetReservoir(FSkyReservoirBuffer::LayoutReservoir::Spatial1).GetGPUVirtualAddress());
+
+		core->BindComputeBuffer(FRenderCoreSkyLight::Pipeline::SpatialReservoir, context, desc);
+		core->Dispatch(context, config.buffer->GetResolution());
+
+		reservoir->GetReservoir(FSkyReservoirBuffer::LayoutReservoir::Spatial1).TransitionDefault(context->GetDxCommand()); //!< Reservoirのbarrier設定
+	}
+}
+
 void FRenderPassDeferredSkyLighting::HistorySkyVisibility(const DirectXQueueContext* context, const FRenderConfig& config) {
+
+	FSkyReservoirBuffer::LayoutReservoir type = (config.skyVisibility == FRenderConfig::SkyVisibility::ReSITR_Preview) ? FSkyReservoirBuffer::LayoutReservoir::Initial : FSkyReservoirBuffer::LayoutReservoir::Spatial1; //!< Reservoirの種類の決定
 
 	FSkyReservoirBuffer* reservoir = config.buffer->GetBuffer<FSkyReservoirBuffer>(); //!< SkyReservoirBufferの取得
 
@@ -282,7 +356,7 @@ void FRenderPassDeferredSkyLighting::HistorySkyVisibility(const DirectXQueueCont
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 
 	//!< Reservoirの設定
-	desc.SetAddress("gReservoir", reservoir->GetReservoir(FSkyReservoirBuffer::LayoutReservoir::Initial).GetGPUVirtualAddress());
+	desc.SetAddress("gReservoir", reservoir->GetReservoir(type).GetGPUVirtualAddress());
 
 	//!< Historyの設定
 	desc.SetHandle("gHistory", reservoir->GetBuffer(FSkyReservoirBuffer::LayoutTexture::History).GetGPUHandleUAV());

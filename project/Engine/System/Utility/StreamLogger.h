@@ -90,14 +90,14 @@ private:
 
 	static inline std::mutex mutex_ = {};
 
-	static inline const std::thread::id kMainThreadId_ = std::this_thread::get_id();
+	static inline const std::thread::id kMainThreadId = std::this_thread::get_id();
 
 	//* log file *//
 
-	static inline const std::filesystem::path kDirectory_ = "Logs";
-	static inline const std::ofstream::openmode mode_     = std::ofstream::out | std::ofstream::app;
+	static inline const std::filesystem::path kDirectory = "Logs";
+	static inline const std::ofstream::openmode kMode     = std::ofstream::out | std::ofstream::app;
 
-	static std::filesystem::path filename_;
+	static const std::filesystem::path kFilename;
 
 	static inline bool isInitialized_ = false;
 

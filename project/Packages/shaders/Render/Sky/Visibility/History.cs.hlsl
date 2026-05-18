@@ -35,14 +35,18 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	float alpha = 0.0f;
 
-	if (previous_luminance > current_luminance) {
+	if (previous_luminance < current_luminance) {
 		alpha = 0.85f; //!< 前のフレームの方が明るい場合は、前のフレームを重視する
 
 	} else {
 		alpha = 0.95f; //!< 今のフレームの方が明るい場合は、今のフレームを重視する
 	}
 
+#if 1
 	gHistory[pixel].rgb = lerp(previous, current, 1.0f - alpha);
+#else
+	gHistory[pixel].rgb = current;
+#endif
 	gHistory[pixel].a   = 1.0f;
 	
 }

@@ -108,9 +108,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	reservoir.Update(sample, w, random.Generate1d());
 
-	// p_hat
-	float p_hat = dot(reservoir.sample.radiance, ACES::AP1_RGB2Y);
-	reservoir.w = (p_hat > 0.0f && reservoir.m > 0) ? reservoir.weight / (reservoir.m * p_hat) : 0.0f;
+	reservoir.Normalize();
 
 	gInitialReservoir[p] = reservoir;
 

@@ -57,6 +57,8 @@ private:
 
 	void InitalReservoirSkyVisibility(const DirectXQueueContext* context, const FRenderConfig& config);
 
+	void SpatialReservoirSkyVisibility(const DirectXQueueContext* context, const FRenderConfig& config);
+
 	void HistorySkyVisibility(const DirectXQueueContext* context, const FRenderConfig& config);
 
 	void SolveSkyVisibility(const DirectXQueueContext* context, const FRenderConfig& config);

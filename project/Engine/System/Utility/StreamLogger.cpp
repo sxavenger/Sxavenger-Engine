@@ -18,7 +18,7 @@ SXAVENGER_ENGINE_USING
 // static variable
 //=========================================================================================
 
-std::filesystem::path StreamLogger::filename_ = GetStreamLogFilename();
+const std::filesystem::path StreamLogger::kFilename = GetStreamLogFilename();
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // StreamLogger class methods
@@ -29,16 +29,16 @@ void StreamLogger::Init() {
 		return;
 	}
 
-	std::filesystem::create_directories(kDirectory_); //!< directoryの作成
+	std::filesystem::create_directories(kDirectory); //!< directoryの作成
 
 	{
-		std::ofstream file(kDirectory_ / filename_, std::ofstream::out | std::ofstream::trunc); //!< fileの作成
+		std::ofstream file(kDirectory / kFilename, std::ofstream::out | std::ofstream::trunc); //!< fileの作成
 		file << "Sxavenger Engine [Sxx Engine] Stream Logger" << "\n";
 		file << "version: " << SXAVENGER_ENGINE_VERSION << "\n";
 		file << "profile: " << _PROFILE << "\n";
 	}
 
-	StreamLogger::Log(std::format("[StreamLogger] initialize. filename: {}", filename_.string()));
+	StreamLogger::Log(std::format("[StreamLogger] initialize. filename: {}", kFilename.string()));
 
 	isInitialized_ = true;
 }
@@ -182,7 +182,7 @@ std::string StreamLogger::GetThreadLabelA(const std::thread::id id) {
 
 	std::ostringstream tag;
 
-	if (id == kMainThreadId_) {
+	if (id == kMainThreadId) {
 		tag << "[main thread]";
 
 	} else {
@@ -195,7 +195,7 @@ std::string StreamLogger::GetThreadLabelA(const std::thread::id id) {
 std::wstring StreamLogger::GetThreadLabelW(const std::thread::id id) {
 	std::wostringstream tag;
 
-	if (id == kMainThreadId_) {
+	if (id == kMainThreadId) {
 		tag << L"[main thread]";
 
 	} else {
@@ -216,12 +216,12 @@ void StreamLogger::OutputConsoleW(const std::wstring& message) {
 }
 
 void StreamLogger::OutputFileA(const std::string& message) {
-	std::ofstream file(kDirectory_ / filename_, mode_);
+	std::ofstream file(kDirectory / kFilename, kMode);
 	file << message << "\n";
 }
 
 void StreamLogger::OutputFileW(const std::wstring& message) {
-	std::wofstream file(kDirectory_ / filename_, mode_);
+	std::wofstream file(kDirectory / kFilename, kMode);
 	file << message << "\n";
 }
 
@@ -268,7 +268,7 @@ std::string StreamLogger::GetThreadMessageA(const std::thread::id id) {
 	std::ostringstream message;
 	message << "[thread]" << "\n";
 
-	if (id == kMainThreadId_) {
+	if (id == kMainThreadId) {
 		message << " main thread\n";
 
 	} else {
@@ -282,7 +282,7 @@ std::wstring StreamLogger::GetThreadMessageW(const std::thread::id id) {
 	std::wostringstream message;
 	message << L"[thread]" << L"\n";
 
-	if (id == kMainThreadId_) {
+	if (id == kMainThreadId) {
 		message << L" main thread\n";
 
 	} else {

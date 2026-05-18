@@ -33,6 +33,7 @@ void FRenderCoreSkyLight::Dispatch(const DirectXQueueContext* context, const Vec
 
 void FRenderCoreSkyLight::CreatePipeline() {
 	CreateComputePipeline(Pipeline::InitialReservoir, L"Visibility/InitialReservoir.cs.hlsl");
+	CreateComputePipeline(Pipeline::SpatialReservoir, L"Visibility/SpatialReservoir.cs.hlsl");
 	CreateComputePipeline(Pipeline::History,          L"Visibility/History.cs.hlsl");
 	CreateComputePipeline(Pipeline::Solve,            L"Visibility/Solve.cs.hlsl");
 }

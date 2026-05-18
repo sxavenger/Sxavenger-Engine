@@ -94,6 +94,7 @@ public:
 	enum class SkyVisibility : uint8_t {
 		None,
 		ReSITR_Preview,
+		ReSITR_Preview1,
 	};
 
 public:
