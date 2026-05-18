@@ -12,6 +12,7 @@ SXAVENGER_ENGINE_USING
 #include "Armature/ArmatureComponent.h"
 #include "MeshRenderer/MeshRendererComponent.h"
 #include "MeshRenderer/SkinnedMeshRendererComponent.h"
+#include "DecalRenderer/DecalRendererComponent.h"
 #include "CanvasRenderer/SpriteRendererComponent.h"
 #include "CanvasRenderer/TextRendererComponent.h"
 #include "Light/Punctual/DirectionalLightComponent.h"
@@ -101,6 +102,7 @@ void ComponentHelper::RegisterComponents() {
 	sComponentStorage->RegisterFactory<ArmatureComponent>();
 	sComponentStorage->RegisterFactory<MeshRendererComponent>();
 	sComponentStorage->RegisterFactory<SkinnedMeshRendererComponent>();
+	sComponentStorage->RegisterFactory<DecalRendererComponent>();
 	sComponentStorage->RegisterFactory<SpriteRendererComponent>();
 	sComponentStorage->RegisterFactory<TextRendererComponent>();
 	sComponentStorage->RegisterFactory<DirectionalLightComponent>();

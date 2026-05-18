@@ -3,57 +3,39 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* geometry
-#include "GeometryRenderTarget.hlsli"
-
 //* library
 #include "../../Library/Address.hlsli"
-#include "../../Library/WeightedBlendedOIT.hlsli" //!< transparency pass
-
-//* content
-#include "../../Content/Mesh.hlsli"
-#include "../../Content/Material.hlsli"
 
 //* component
 #include "../../Component/CameraComponent.hlsli"
 #include "../../Component/TransformComponent.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// intermediate structure
+// intermediate structures
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-struct GeometryPSInput {
+struct DecalPSInput {
 
 	//=========================================================================================
 	// public variables
 	//=========================================================================================
-	
-	float4 position  : SV_Position;
-	float2 texcoord  : TEXCOORD0;
-	float3 normal    : NORMAL0;
-	float3 worldPos  : POSITION0;
-	float3 tangent   : TANGENT0;
-	float3 bitangent : BITANGENT0;
-	
-	uint instanceId  : INSTANCEID;
-	float clip       : SV_ClipDistance;
 
+	float4 position : SV_Position;
+	float clip      : SV_ClipDistance;
+	
 };
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// common method
-////////////////////////////////////////////////////////////////////////////////////////////
-
-float3x3 GetTangentSpaceMatrix(float3 normal, float3 tangent, float3 bitangent) {
-	return float3x3(tangent, bitangent, normal);
-}
-
 //=========================================================================================
-// common buffer
+// buffers
 //=========================================================================================
 
 ConstantBuffer<CameraComponent> gCamera : register(b0, space2);
 static const float4x4 kViewProj = gCamera.GetViewProj();
 
 ConstantBuffer<TransformComponent> gTransform : register(b1, space2);
-ConstantBuffer<Address> AddressBuffer : register(b2, space2);
+
+cbuffer Dimension : register(b2, space2) {
+	uint2 dimension;
+};
+
+ConstantBuffer<Address> AddressBuffer : register(b3, space2);

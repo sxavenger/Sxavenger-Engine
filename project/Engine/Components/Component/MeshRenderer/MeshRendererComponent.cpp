@@ -24,8 +24,11 @@ void MeshRendererComponent::ShowComponentInspector() {
 	SxGui::ComboEnum("mode", &mode_);
 
 	if (ImGui::BeginCombo("mesh", mesh_.GetStr().c_str())) {
-		for (const auto& id : sAssetStorage->GetStorage<AssetMesh>() | std::views::keys) {
-			if (ImGui::Selectable(id.Serialize().c_str(), mesh_ == id)) {
+		for (const auto& [id, asset] : sAssetStorage->GetStorage<AssetMesh>()) {
+
+			std::string label = std::format("{} # {}", asset->GetName(), id.Serialize());
+
+			if (ImGui::Selectable(label.c_str(), mesh_ == id)) {
 				mesh_ = id; //!< 選択されたmeshを設定
 			}
 		}
@@ -33,8 +36,10 @@ void MeshRendererComponent::ShowComponentInspector() {
 	}
 
 	if (ImGui::BeginCombo("material", material_.GetStr().c_str())) {
-		for (const auto& id : sAssetStorage->GetStorage<AssetMaterial>() | std::views::keys) {
-			if (ImGui::Selectable(id.Serialize().c_str(), material_ == id)) {
+		for (const auto& [id, asset] : sAssetStorage->GetStorage<AssetMaterial>()) {
+			std::string label = std::format("{} # {}", asset->GetName(), id.Serialize());
+
+			if (ImGui::Selectable(label.c_str(), material_ == id)) {
 				material_ = id; //!< 選択されたmaterialを設定
 			}
 		}

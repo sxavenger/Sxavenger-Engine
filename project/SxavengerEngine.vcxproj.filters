@@ -989,6 +989,8 @@
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessPostFx.h" />
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessPosterize.h" />
+    <ClInclude Include="Engine\Components\Component\DecalRenderer\DecalRendererComponent.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreDecal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp">
@@ -1633,5 +1635,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessPostFx.cpp" />
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessPosterize.cpp" />
+    <ClCompile Include="Engine\Components\Component\DecalRenderer\DecalRendererComponent.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreDecal.cpp" />
   </ItemGroup>
 </Project>

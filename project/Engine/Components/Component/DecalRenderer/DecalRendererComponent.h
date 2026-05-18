@@ -3,15 +3,14 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* component
+#include "../BaseComponent.h"
+#include "../Transform/TransformComponent.h"
+
 //* engine
 #include <Engine/Foundation.h>
-
-//* lib
-#include <Lib/Adapter/Uuid/Uuid.h>
-
-//* c++
-#include <optional>
-#include <concepts>
+#include <Engine/Assets/Asset/AssetTexture.h>
+#include <Engine/Assets/Asset/AssetParameter.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -19,18 +18,16 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// BaseAsset class
+// DecalRendererComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class BaseAsset {
+//! @brief デカールの描画component.
+class DecalRendererComponent final
+	: public BaseComponent {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Status enum class
+	// DecalRendererComponent class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class Status : bool {
-		None,     //!< 初期状態
-		Complete, //!< 使用可能な状態
-	};
 
 public:
 
@@ -38,38 +35,31 @@ public:
 	// public methods
 	//=========================================================================================
 
-	//* constructor / destructor *//
+	DecalRendererComponent(EntityBehaviour* behaviour) : BaseComponent(behaviour) {}
+	~DecalRendererComponent() override = default;
 
-	BaseAsset(const Uuid& id) : id_(id) {}
-	BaseAsset(std::nullopt_t) : id_(std::nullopt) {}
+	void ShowComponentInspector() override;
 
-	virtual ~BaseAsset() = default;
+	//* component option *//
 
-	//* asset option *//
+	void SetTexture(const AssetParameter<AssetTexture>& texture) { texture_ = texture; }
 
-	bool HasId() const { return id_.has_value(); }
+	const AssetParameter<AssetTexture>& GetTexture() const { return texture_; }
 
-	const Uuid& GetId() const;
+	//* behaviour option *//
 
-	std::string SerializeId() const;
+	//! @brief TransformComponentを取得
+	const TransformComponent* GetTransform() const;
 
-	const std::string& GetName() const { return name_; }
+	//! @brief TransformComponentを取得
+	//! @throw TransformComponentがEntityに存在しない場合に例外をスローする
+	const TransformComponent* RequireTransform() const;
 
-	void SetName(const std::string& name) { name_ = name; }
+	//* json option *//
 
-	//* status option *//
+	json ParseToJson() const override;
 
-	bool IsComplete() const { return status_ == Status::Complete; }
-
-	void WaitComplete() const;
-
-protected:
-
-	//=========================================================================================
-	// protected methods
-	//=========================================================================================
-
-	void SetComplete() { status_ = Status::Complete; }
+	void InputJson(const json& data) override;
 
 private:
 
@@ -77,17 +67,14 @@ private:
 	// private variables
 	//=========================================================================================
 
-	const std::optional<Uuid> id_; //!< Assetに紐図いているuuid.
-	std::string name_ = "Asset";   //!< Assetの名前.
+	AssetParameter<AssetTexture> texture_ = nullptr;
 
-	Status status_ = Status::None; //!< Assetの状態.
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void PushDecalLine() const;
 
 };
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// concept
-////////////////////////////////////////////////////////////////////////////////////////////
-template <class T>
-concept Asset = std::derived_from<T, BaseAsset>;
 
 SXAVENGER_ENGINE_NAMESPACE_END
