@@ -31,6 +31,7 @@ void ContentTexture::Load(MAYBE_UNUSED const DirectXQueueContext* context) {
 	DirectX::ScratchImage image = LoadContent(context, BaseContent::GetFilepath(), ContentTexture::GetOption());
 
 	std::shared_ptr<AssetTexture> asset = sAssetStorage->Get<AssetTexture>(id_);
+	asset->SetName(BaseContent::GetFilepath().filename().string());
 	asset->Setup(context, image);
 
 	BaseContent::SetComplete(); //!< 読み込み完了

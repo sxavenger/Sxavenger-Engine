@@ -209,6 +209,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Components\Component\Collider\CollisionManager.h" />
     <ClInclude Include="Engine\Components\Component\ComponentHelper.h" />
     <ClInclude Include="Engine\Components\Component\ComponentStorage.h" />
+    <ClInclude Include="Engine\Components\Component\DecalRenderer\DecalRendererComponent.h" />
     <ClInclude Include="Engine\Components\Component\Light\Environment\SkyAtmosphereComponent.h" />
     <ClInclude Include="Engine\Components\Component\Light\Environment\SkyLightComponent.h" />
     <ClInclude Include="Engine\Components\Component\Light\LightCommon.h" />
@@ -301,6 +302,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Render\Core\FBaseRenderCore.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCore.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreCanvas.h" />
+    <ClInclude Include="Engine\Render\Core\FRenderCoreDecal.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreDirectLight.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h" />
     <ClInclude Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.h" />
@@ -466,6 +468,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Components\Component\Collider\CollisionManager.cpp" />
     <ClCompile Include="Engine\Components\Component\ComponentHelper.cpp" />
     <ClCompile Include="Engine\Components\Component\ComponentStorage.cpp" />
+    <ClCompile Include="Engine\Components\Component\DecalRenderer\DecalRendererComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\Light\Environment\SkyAtmosphereComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\Light\Environment\SkyLightComponent.cpp" />
     <ClCompile Include="Engine\Components\Component\Light\LightCommon.cpp" />
@@ -547,6 +550,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Render\Common\FRenderTexture.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCore.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreCanvas.cpp" />
+    <ClCompile Include="Engine\Render\Core\FRenderCoreDecal.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreDirectLight.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp" />
     <ClCompile Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.cpp" />

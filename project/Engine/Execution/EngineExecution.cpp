@@ -56,7 +56,7 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 		CreateWhite1x1();
 		CreateCheckerboard();
 
-		
+		LoadContent();
 	});
 
 	context->SetProcess(Execution::Process::Init, std::numeric_limits<uint32_t>::max(), [this]() {
@@ -162,6 +162,10 @@ void EngineExecution::CreateCheckerboard() {
 	System::ExecuteAllAllocator();
 
 	Graphics::RegisterTexture("checkerboard", std::move(checker));
+}
+
+void EngineExecution::LoadContent() {
+	sContentStorage->Import<ContentTexture>("packages/textures/uvchecker.png");
 }
 
 void EngineExecution::UpdateAsset() {

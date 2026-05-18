@@ -49,6 +49,14 @@ private:
 
 	void RenderSkinnedMesh(const DirectXQueueContext* context, const FRenderConfig& config);
 
+	//* decal render pass *//
+
+	void BeginDecalRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	void EndDecalRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	void RenderDecal(const DirectXQueueContext* context, const FRenderConfig& config);
+
 	//* motion vector pass *//
 
 	void BeginMotionVectorPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);

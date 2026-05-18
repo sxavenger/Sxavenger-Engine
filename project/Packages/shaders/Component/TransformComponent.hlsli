@@ -41,5 +41,9 @@ struct TransformComponent {
 	float GetMaxScale() {
 		return max(length(mat[0].xyz), max(length(mat[1].xyz), length(mat[2].xyz)));
 	}
+
+	float4x4 GetMatInverse() {
+		return transpose(matInverseTransopse);
+	}
 	
 };

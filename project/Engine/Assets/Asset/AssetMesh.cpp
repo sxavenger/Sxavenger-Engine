@@ -8,9 +8,10 @@ SXAVENGER_ENGINE_USING
 void AssetMesh::Setup(const DirectXQueueContext* context, const aiMesh* mesh) {
 	context->RequestQueue(DirectXQueueContext::RenderQueue::Compute); //!< ComputeQueue以上を使用
 
-	// meshの解析
 	// nameの設定
-	name_ = mesh->mName.C_Str();
+	BaseAsset::SetName(mesh->mName.C_Str());
+
+	// meshの解析
 
 	// InputAssemblerの設定
 	auto& ia = input_;

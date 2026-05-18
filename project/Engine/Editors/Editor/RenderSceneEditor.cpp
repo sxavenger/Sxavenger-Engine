@@ -24,6 +24,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/Components/Component/Transform/TransformComponent.h> 
 #include <Engine/Components/Component/Transform/RectTransformComponent.h>
 #include <Engine/Components/Component/Camera/CameraComponent.h>
+#include <Engine/Components/Component/DecalRenderer/DecalRendererComponent.h>
 #include <Engine/Components/Component/Light/Punctual/DirectionalLightComponent.h>
 #include <Engine/Components/Component/Light/Punctual/PointLightComponent.h>
 #include <Engine/Components/Component/Light/Punctual/SpotLightComponent.h>
@@ -106,6 +107,7 @@ void RenderSceneEditor::Init() {
 	config_.tag    = CameraComponent::Tag::Editor;
 	config_.option = FRenderConfig::OptionFlag::Tonemap;
 
+	icons_[static_cast<uint32_t>(Icon::Decal)]            = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_decal.png", option)->GetId();
 	icons_[static_cast<uint32_t>(Icon::Volume)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_volume.png", option)->GetId();
 	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_directionalLight.png", option)->GetId();
 	icons_[static_cast<uint32_t>(Icon::PointLight)]       = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_pointLight.png", option)->GetId();
@@ -779,6 +781,22 @@ void RenderSceneEditor::ShowIconScene() {
 		return;
 	}
 
+	// Decal
+	sComponentStorage->ForEach<DecalRendererComponent>([&](DecalRendererComponent* component) {
+
+		auto transform = component->GetTransform();
+
+		if (transform == nullptr) {
+			return;
+		}
+
+		Color4f color = component->IsActive()
+			? Color4f{ 1.0f, 1.0f, 1.0f, 1.0f }
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+
+		RenderIcon(component->GetBehaviour(), Icon::Decal, transform->GetPosition(), color);
+	});
+
 	// Post Process Layer
 	sComponentStorage->ForEach<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
 		
@@ -798,39 +816,49 @@ void RenderSceneEditor::ShowIconScene() {
 	// Directional Light
 	sComponentStorage->ForEach<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
 
+		auto transform = component->RequireTransform();
+
 		Color4f color = component->IsActive()
 			? Color4f(component->GetParameter().color, 1.0f)
 			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 
-		RenderIcon(component->GetBehaviour(), Icon::DirectionalLight, component->RequireTransform()->GetPosition(), color);
+		RenderIcon(component->GetBehaviour(), Icon::DirectionalLight, transform->GetPosition(), color);
 	});
 
 	// Point Light
 	sComponentStorage->ForEach<PointLightComponent>([&](PointLightComponent* component) {
 
+		auto transform = component->RequireTransform();
+
 		Color4f color = component->IsActive()
 			? Color4f(component->GetParameter().color, 1.0f)
 			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 
-		RenderIcon(component->GetBehaviour(), Icon::PointLight, component->RequireTransform()->GetPosition(), color);
+		RenderIcon(component->GetBehaviour(), Icon::PointLight, transform->GetPosition(), color);
 	});
 
 	// Spot Light
 	sComponentStorage->ForEach<SpotLightComponent>([&](SpotLightComponent* component) {
 
+		auto transform = component->RequireTransform();
+
 		Color4f color = component->IsActive()
 			? Color4f(component->GetParameter().color, 1.0f)
 			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 
-		RenderIcon(component->GetBehaviour(), Icon::SpotLight, component->RequireTransform()->GetPosition(), color);
+		RenderIcon(component->GetBehaviour(), Icon::SpotLight, transform->GetPosition(), color);
 	});
 
 	// Rect Light
 	sComponentStorage->ForEach<RectLightComponent>([&](RectLightComponent* component) {
+
+		auto transform = component->RequireTransform();
+
 		Color4f color = component->IsActive()
 			? Color4f(component->GetParameter().color, 1.0f)
 			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
-		RenderIcon(component->GetBehaviour(), Icon::RectLight, component->RequireTransform()->GetPosition(), color);
+
+		RenderIcon(component->GetBehaviour(), Icon::RectLight, transform->GetPosition(), color);
 	});
 
 	// Camera
@@ -841,7 +869,7 @@ void RenderSceneEditor::ShowIconScene() {
 
 		Color4f color = component->IsActive()
 			? Color4f{ 1.0f, 1.0f, 1.0f, 1.0f }
-		: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 
 		RenderIcon(component->GetBehaviour(), Icon::Camera, Matrix4x4::GetTranslation(component->GetCamera().world), color);
 	});

@@ -32,14 +32,166 @@
 								"isEnable": true,
 								"mask": 255,
 								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
-								"mesh": "f776817b-2299-4e5a-aa614118610ef1c3",
+								"mesh": "d4d9b6e1-59ee-430d-98962b8ad0866a9d",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-34"
+						"name": "meshes[0]-36"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "a767a43b-a60c-410e-8c670a371e207b68",
+								"mesh": "9dd26a28-ec4b-4c25-8b9f1d293b9e30b0",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-89"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "09d70621-d1fb-4499-9e0aed102f258ca5",
+								"mesh": "7aee9633-5d40-4145-bdd6978d5142e4fa",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-46"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "9e6b4f98-5db6-4b62-aa350e46bec3ab1e",
+								"mesh": "2bba392c-36a5-4614-a390a3d96feef2e1",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-77"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "2d7d43cc-7219-4dac-b84fb96a166b0b74",
+								"mesh": "7a377e02-6d50-4242-95fae200cc23c6bb",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-96"
 					},
 					{
 						"children": [],
@@ -70,14 +222,14 @@
 								"isEnable": true,
 								"mask": 255,
 								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
-								"mesh": "8aa2900a-ded7-4429-b45957e6da9de1c0",
+								"mesh": "73d69aa8-72e3-4dbc-8e815468185e4db3",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-16"
+						"name": "meshes[0]-8"
 					},
 					{
 						"children": [],
@@ -107,53 +259,15 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "59415591-20cd-4f7a-bdfa7f5634e32a42",
-								"mesh": "aca4b16b-3be5-47b0-be8615d95f428e5e",
+								"material": "2ea9f37f-2a1f-4288-8ea27655bd2b66b0",
+								"mesh": "e16c7225-1c83-4591-a24569dcbd7b8888",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-0"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "835fb4a8-ac92-4187-9da70c2c69f238ac",
-								"mesh": "cf7b305f-516b-434d-a6b188d6a70a432d",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-7"
+						"name": "meshes[0]-3"
 					},
 					{
 						"children": [],
@@ -221,15 +335,91 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
+								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
+								"mesh": "8952fcd2-c3ea-47e8-867c87f1d8ec6317",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-10"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "ef8a8073-3e97-4238-9407cb29a7f39ba8",
+								"mesh": "2a2b7999-c22d-41d9-bca8be81849ec76d",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-92"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
 								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
-								"mesh": "629ebb91-b9c5-43b1-84d7b6380fa24e8d",
+								"mesh": "f776817b-2299-4e5a-aa614118610ef1c3",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-30"
+						"name": "meshes[0]-34"
 					},
 					{
 						"children": [],
@@ -260,14 +450,14 @@
 								"isEnable": true,
 								"mask": 255,
 								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
-								"mesh": "cd6a7434-4316-4722-8454a213f740ef71",
+								"mesh": "3c3a63a4-0371-4cde-b2beaa5fb6234485",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-19"
+						"name": "meshes[0]-31"
 					},
 					{
 						"children": [],
@@ -297,15 +487,15 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "09d70621-d1fb-4499-9e0aed102f258ca5",
-								"mesh": "11f08410-dcc0-48a4-a9da4978c2f842a8",
+								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
+								"mesh": "8aa2900a-ded7-4429-b45957e6da9de1c0",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-9"
+						"name": "meshes[0]-16"
 					},
 					{
 						"children": [],
@@ -335,15 +525,53 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
-								"mesh": "f50d18b8-229b-4b68-aac3372c02774a5c",
+								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
+								"mesh": "71fdb4cd-0c02-4ed7-92f3b1d33fb3bb6a",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-27"
+						"name": "meshes[0]-26"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "6993ee3d-b9f1-413d-b5c3425f1038608b",
+								"mesh": "5a6c7fa5-4526-4bf2-a118125d52f15640",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-62"
 					},
 					{
 						"children": [],
@@ -411,6 +639,348 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
+								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
+								"mesh": "c867dccd-540a-400b-bf0e4aef0905749d",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-18"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "59415591-20cd-4f7a-bdfa7f5634e32a42",
+								"mesh": "aca4b16b-3be5-47b0-be8615d95f428e5e",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-0"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
+								"mesh": "629ebb91-b9c5-43b1-84d7b6380fa24e8d",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-30"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "09d70621-d1fb-4499-9e0aed102f258ca5",
+								"mesh": "11f08410-dcc0-48a4-a9da4978c2f842a8",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-9"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "fddc1224-be51-4c91-8ede14d0feb3b0f8",
+								"mesh": "96db2abb-a3f6-49e9-aa15d2233c6d89f0",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-13"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
+								"mesh": "cd6a7434-4316-4722-8454a213f740ef71",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-19"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "fddc1224-be51-4c91-8ede14d0feb3b0f8",
+								"mesh": "6203bbee-82b5-4083-947914fafd4c6a22",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-15"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "835fb4a8-ac92-4187-9da70c2c69f238ac",
+								"mesh": "cf7b305f-516b-434d-a6b188d6a70a432d",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-7"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
+								"mesh": "ef4bffec-84ad-4599-bdd25410c28d3fc3",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-14"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
 								"material": "1bf9eb01-b70b-46d6-b981763797102c37",
 								"mesh": "04007c55-97d9-452c-b19e78a6d3df4059",
 								"mode": "Opaque",
@@ -420,6 +990,348 @@
 						"isActive": true,
 						"isRenamable": true,
 						"name": "meshes[0]-60"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "fddc1224-be51-4c91-8ede14d0feb3b0f8",
+								"mesh": "feaff1b3-31f1-46b0-8c3a1bf578e9ccae",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-37"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
+								"mesh": "f50d18b8-229b-4b68-aac3372c02774a5c",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-27"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "69b195e1-855e-49a3-bc55afc5602066bc",
+								"mesh": "fb82010b-fd60-4eb2-a03ce1b6c5cca8bb",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-40"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
+								"mesh": "8c16b476-138c-4595-87ebeb6209664608",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-24"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "bfd626dc-7c33-47a2-acff9b9e50947539",
+								"mesh": "c8101b0b-eb9e-4f6e-8e30acc070af27e1",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-12"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
+								"mesh": "c4efb1bd-e871-4ef4-891b3c19836d1176",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-22"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "fddc1224-be51-4c91-8ede14d0feb3b0f8",
+								"mesh": "089ca3f0-6b18-44bd-b36ce60699fc95e7",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-100"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
+								"mesh": "1360fbda-fca2-41b3-9e21a8dba3c7c7bd",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-5"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "2d7d43cc-7219-4dac-b84fb96a166b0b74",
+								"mesh": "d4a2393e-7682-4184-a759c34217bd275a",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-98"
 					},
 					{
 						"children": [],
@@ -525,6 +1437,272 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
+								"material": "d5ace778-45fd-4486-9db37d2f8381cbc6",
+								"mesh": "515fff82-90c5-478b-a58c247d09ef51d3",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-61"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "fddc1224-be51-4c91-8ede14d0feb3b0f8",
+								"mesh": "619ebe76-7b50-47fe-859d64aa7e092a62",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-4"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "59415591-20cd-4f7a-bdfa7f5634e32a42",
+								"mesh": "bf59a921-f032-4312-8e162b2aca05bd69",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-53"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
+								"mesh": "17cc6a7c-1a89-44a7-925eef80f2ca8023",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-21"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "c927b144-d711-4817-a18a8be5e86b946e",
+								"mesh": "af2092ab-a08f-448c-882667ec8f96ab69",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-72"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "9e6b4f98-5db6-4b62-aa350e46bec3ab1e",
+								"mesh": "84cfe45b-fe0c-4088-8e509ca07307a668",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-73"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
+								"mesh": "624d6412-4a6f-41e2-a55afd53dfad686f",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-17"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
 								"material": "0dd5c23c-4e47-4e07-b7a1a1a986e72030",
 								"mesh": "59772796-cd28-4a82-a15f5eedb713ab57",
 								"mode": "Opaque",
@@ -601,15 +1779,53 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "6993ee3d-b9f1-413d-b5c3425f1038608b",
-								"mesh": "5a6c7fa5-4526-4bf2-a118125d52f15640",
+								"material": "c3567e55-392a-49f6-b04f83eeea8128cb",
+								"mesh": "08e0c6a9-c700-4ff8-99e437d7061e78ad",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-62"
+						"name": "meshes[0]-71"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "c4270be8-3ccd-4cab-a1f3488ceb121b27",
+								"mesh": "4acbd22c-8e56-4a31-b2cc069bcb749212",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-74"
 					},
 					{
 						"children": [],
@@ -715,15 +1931,15 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "fddc1224-be51-4c91-8ede14d0feb3b0f8",
-								"mesh": "619ebe76-7b50-47fe-859d64aa7e092a62",
+								"material": "ef8a8073-3e97-4238-9407cb29a7f39ba8",
+								"mesh": "d7473651-7a6f-439c-b71a5e923a127118",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-4"
+						"name": "meshes[0]-88"
 					},
 					{
 						"children": [],
@@ -791,129 +2007,15 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
-								"mesh": "71fdb4cd-0c02-4ed7-92f3b1d33fb3bb6a",
+								"material": "1bf9eb01-b70b-46d6-b981763797102c37",
+								"mesh": "31de1b41-3d23-43e7-b4129821cc2c22ee",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-26"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "a767a43b-a60c-410e-8c670a371e207b68",
-								"mesh": "9dd26a28-ec4b-4c25-8b9f1d293b9e30b0",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-89"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "d5ace778-45fd-4486-9db37d2f8381cbc6",
-								"mesh": "515fff82-90c5-478b-a58c247d09ef51d3",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-61"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "fddc1224-be51-4c91-8ede14d0feb3b0f8",
-								"mesh": "96db2abb-a3f6-49e9-aa15d2233c6d89f0",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-13"
+						"name": "meshes[0]-56"
 					},
 					{
 						"children": [],
@@ -981,15 +2083,15 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "ef8a8073-3e97-4238-9407cb29a7f39ba8",
-								"mesh": "d7473651-7a6f-439c-b71a5e923a127118",
+								"material": "69b195e1-855e-49a3-bc55afc5602066bc",
+								"mesh": "ae9af468-6967-4557-86178982c9c59328",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-88"
+						"name": "meshes[0]-38"
 					},
 					{
 						"children": [],
@@ -1020,90 +2122,14 @@
 								"isEnable": true,
 								"mask": 255,
 								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
-								"mesh": "3c3a63a4-0371-4cde-b2beaa5fb6234485",
+								"mesh": "35f3f4de-11e2-461f-8537c969ab7fda7e",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-31"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "2ea9f37f-2a1f-4288-8ea27655bd2b66b0",
-								"mesh": "e16c7225-1c83-4591-a24569dcbd7b8888",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-3"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
-								"mesh": "1360fbda-fca2-41b3-9e21a8dba3c7c7bd",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-5"
+						"name": "meshes[0]-33"
 					},
 					{
 						"children": [],
@@ -1134,14 +2160,14 @@
 								"isEnable": true,
 								"mask": 255,
 								"material": "fddc1224-be51-4c91-8ede14d0feb3b0f8",
-								"mesh": "089ca3f0-6b18-44bd-b36ce60699fc95e7",
+								"mesh": "76cbebf6-7392-4785-86b2ac38e5e503c2",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-100"
+						"name": "meshes[0]-41"
 					},
 					{
 						"children": [],
@@ -1209,15 +2235,15 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "69b195e1-855e-49a3-bc55afc5602066bc",
-								"mesh": "ae9af468-6967-4557-86178982c9c59328",
+								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
+								"mesh": "c920b76a-0f50-4333-b0f73f3ec6cf7423",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-38"
+						"name": "meshes[0]-28"
 					},
 					{
 						"children": [],
@@ -1247,15 +2273,129 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "2d7d43cc-7219-4dac-b84fb96a166b0b74",
-								"mesh": "d4a2393e-7682-4184-a759c34217bd275a",
+								"material": "9e6b4f98-5db6-4b62-aa350e46bec3ab1e",
+								"mesh": "978e095f-e94a-4b3c-96262e9caa833f80",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-98"
+						"name": "meshes[0]-79"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "c3567e55-392a-49f6-b04f83eeea8128cb",
+								"mesh": "3b4e0a7f-55f2-432a-8a379a2fec62f769",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-64"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "fddc1224-be51-4c91-8ede14d0feb3b0f8",
+								"mesh": "750e0df5-83f3-436d-a293a405a2f4eac9",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-45"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
+								"material": "bfd626dc-7c33-47a2-acff9b9e50947539",
+								"mesh": "aeb2b785-ef62-4cc7-ab923d27d0006037",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-44"
 					},
 					{
 						"children": [],
@@ -1361,44 +2501,6 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "9e6b4f98-5db6-4b62-aa350e46bec3ab1e",
-								"mesh": "2bba392c-36a5-4614-a390a3d96feef2e1",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-77"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
 								"material": "6993ee3d-b9f1-413d-b5c3425f1038608b",
 								"mesh": "01e4d03a-0059-44cf-89c74e92a8caf9d5",
 								"mode": "Opaque",
@@ -1437,167 +2539,15 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
-								"mesh": "624d6412-4a6f-41e2-a55afd53dfad686f",
+								"material": "8ac95251-5bd1-4704-9cd095f7f2662eef",
+								"mesh": "ac53b1b7-47c6-42ec-a631ffbee9fbc7c0",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-17"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "fddc1224-be51-4c91-8ede14d0feb3b0f8",
-								"mesh": "750e0df5-83f3-436d-a293a405a2f4eac9",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-45"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "fddc1224-be51-4c91-8ede14d0feb3b0f8",
-								"mesh": "6203bbee-82b5-4083-947914fafd4c6a22",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-15"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "59415591-20cd-4f7a-bdfa7f5634e32a42",
-								"mesh": "bf59a921-f032-4312-8e162b2aca05bd69",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-53"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
-								"mesh": "73d69aa8-72e3-4dbc-8e815468185e4db3",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-8"
+						"name": "meshes[0]-57"
 					},
 					{
 						"children": [],
@@ -1703,167 +2653,15 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "9e6b4f98-5db6-4b62-aa350e46bec3ab1e",
-								"mesh": "84cfe45b-fe0c-4088-8e509ca07307a668",
+								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
+								"mesh": "26015eda-f53a-4e96-ab72fcb7bb328856",
 								"mode": "Opaque",
 								"stencil": 0
 							}
 						],
 						"isActive": true,
 						"isRenamable": true,
-						"name": "meshes[0]-73"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
-								"mesh": "8c16b476-138c-4595-87ebeb6209664608",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-24"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "1bf9eb01-b70b-46d6-b981763797102c37",
-								"mesh": "31de1b41-3d23-43e7-b4129821cc2c22ee",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-56"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
-								"mesh": "c867dccd-540a-400b-bf0e4aef0905749d",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-18"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "9e6b4f98-5db6-4b62-aa350e46bec3ab1e",
-								"mesh": "978e095f-e94a-4b3c-96262e9caa833f80",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-79"
+						"name": "meshes[0]-25"
 					},
 					{
 						"children": [],
@@ -1931,538 +2729,6 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "09d70621-d1fb-4499-9e0aed102f258ca5",
-								"mesh": "7aee9633-5d40-4145-bdd6978d5142e4fa",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-46"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
-								"mesh": "c920b76a-0f50-4333-b0f73f3ec6cf7423",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-28"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "c3567e55-392a-49f6-b04f83eeea8128cb",
-								"mesh": "08e0c6a9-c700-4ff8-99e437d7061e78ad",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-71"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
-								"mesh": "8952fcd2-c3ea-47e8-867c87f1d8ec6317",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-10"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
-								"mesh": "c4efb1bd-e871-4ef4-891b3c19836d1176",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-22"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "bfd626dc-7c33-47a2-acff9b9e50947539",
-								"mesh": "c8101b0b-eb9e-4f6e-8e30acc070af27e1",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-12"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
-								"mesh": "d4d9b6e1-59ee-430d-98962b8ad0866a9d",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-36"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "bfd626dc-7c33-47a2-acff9b9e50947539",
-								"mesh": "aeb2b785-ef62-4cc7-ab923d27d0006037",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-44"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
-								"mesh": "35f3f4de-11e2-461f-8537c969ab7fda7e",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-33"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
-								"mesh": "26015eda-f53a-4e96-ab72fcb7bb328856",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-25"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "c4270be8-3ccd-4cab-a1f3488ceb121b27",
-								"mesh": "4acbd22c-8e56-4a31-b2cc069bcb749212",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-74"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
-								"mesh": "ef4bffec-84ad-4599-bdd25410c28d3fc3",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-14"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "8ac95251-5bd1-4704-9cd095f7f2662eef",
-								"mesh": "ac53b1b7-47c6-42ec-a631ffbee9fbc7c0",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-57"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "fddc1224-be51-4c91-8ede14d0feb3b0f8",
-								"mesh": "76cbebf6-7392-4785-86b2ac38e5e503c2",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-41"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
 								"material": "ef8a8073-3e97-4238-9407cb29a7f39ba8",
 								"mesh": "c77a4996-2f01-4128-9c8448cc27ea5fc4",
 								"mode": "Opaque",
@@ -2472,44 +2738,6 @@
 						"isActive": true,
 						"isRenamable": true,
 						"name": "meshes[0]-84"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "5edc2751-82d9-4eaa-95f25486378af62c",
-								"mesh": "17cc6a7c-1a89-44a7-925eef80f2ca8023",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-21"
 					},
 					{
 						"children": [],
@@ -2653,44 +2881,6 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "fddc1224-be51-4c91-8ede14d0feb3b0f8",
-								"mesh": "feaff1b3-31f1-46b0-8c3a1bf578e9ccae",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-37"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
 								"material": "3d6d5acf-7892-42ec-95b9d976390ff3df",
 								"mesh": "2d229f59-d36c-42c7-92b84cd6ecc5dac3",
 								"mode": "Opaque",
@@ -2738,82 +2928,6 @@
 						"isActive": true,
 						"isRenamable": true,
 						"name": "meshes[0]-47"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "69b195e1-855e-49a3-bc55afc5602066bc",
-								"mesh": "fb82010b-fd60-4eb2-a03ce1b6c5cca8bb",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-40"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "ef8a8073-3e97-4238-9407cb29a7f39ba8",
-								"mesh": "2a2b7999-c22d-41d9-bca8be81849ec76d",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-92"
 					},
 					{
 						"children": [],
@@ -2995,6 +3109,44 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
+								"material": "ef8a8073-3e97-4238-9407cb29a7f39ba8",
+								"mesh": "ea8fa602-9453-41fe-be33fb1907e8e2a7",
+								"mode": "Opaque",
+								"stencil": 0
+							}
+						],
+						"isActive": true,
+						"isRenamable": true,
+						"name": "meshes[0]-82"
+					},
+					{
+						"children": [],
+						"components": [
+							{
+								"component": "class SxxEngine::TransformComponent",
+								"transform": {
+									"rotate": {
+										"w": 1.0,
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									},
+									"scale": {
+										"x": 1.0,
+										"y": 1.0,
+										"z": 1.0
+									},
+									"translate": {
+										"x": 0.0,
+										"y": 0.0,
+										"z": 0.0
+									}
+								}
+							},
+							{
+								"component": "class SxxEngine::MeshRendererComponent",
+								"isEnable": true,
+								"mask": 255,
 								"material": "d5ace778-45fd-4486-9db37d2f8381cbc6",
 								"mesh": "05f2fc0c-034c-44d0-ada7d553b1b1f152",
 								"mode": "Opaque",
@@ -3118,44 +3270,6 @@
 						"isActive": true,
 						"isRenamable": true,
 						"name": "meshes[0]-63"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "c3567e55-392a-49f6-b04f83eeea8128cb",
-								"mesh": "3b4e0a7f-55f2-432a-8a379a2fec62f769",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-64"
 					},
 					{
 						"children": [],
@@ -3413,44 +3527,6 @@
 								"component": "class SxxEngine::MeshRendererComponent",
 								"isEnable": true,
 								"mask": 255,
-								"material": "c927b144-d711-4817-a18a8be5e86b946e",
-								"mesh": "af2092ab-a08f-448c-882667ec8f96ab69",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-72"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
 								"material": "c4270be8-3ccd-4cab-a1f3488ceb121b27",
 								"mesh": "2f7696d2-ea60-4acc-9f2c05244e3e0b1e",
 								"mode": "Opaque",
@@ -3498,44 +3574,6 @@
 						"isActive": true,
 						"isRenamable": true,
 						"name": "meshes[0]-80"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "ef8a8073-3e97-4238-9407cb29a7f39ba8",
-								"mesh": "ea8fa602-9453-41fe-be33fb1907e8e2a7",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-82"
 					},
 					{
 						"children": [],
@@ -3764,44 +3802,6 @@
 						"isActive": true,
 						"isRenamable": true,
 						"name": "meshes[0]-95"
-					},
-					{
-						"children": [],
-						"components": [
-							{
-								"component": "class SxxEngine::TransformComponent",
-								"transform": {
-									"rotate": {
-										"w": 1.0,
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									},
-									"scale": {
-										"x": 1.0,
-										"y": 1.0,
-										"z": 1.0
-									},
-									"translate": {
-										"x": 0.0,
-										"y": 0.0,
-										"z": 0.0
-									}
-								}
-							},
-							{
-								"component": "class SxxEngine::MeshRendererComponent",
-								"isEnable": true,
-								"mask": 255,
-								"material": "2d7d43cc-7219-4dac-b84fb96a166b0b74",
-								"mesh": "7a377e02-6d50-4242-95fae200cc23c6bb",
-								"mode": "Opaque",
-								"stencil": 0
-							}
-						],
-						"isActive": true,
-						"isRenamable": true,
-						"name": "meshes[0]-96"
 					},
 					{
 						"children": [],
@@ -4094,6 +4094,44 @@
 										"component": "class SxxEngine::MeshRendererComponent",
 										"isEnable": true,
 										"mask": 255,
+										"material": "b91904fc-4931-4900-8adf7aba74157f56",
+										"mesh": "2e9018c9-fd82-4c69-a5559d3cef87574e",
+										"mode": "Opaque",
+										"stencil": 0
+									}
+								],
+								"isActive": true,
+								"isRenamable": true,
+								"name": "SM_ColorCalibrator-2"
+							},
+							{
+								"children": [],
+								"components": [
+									{
+										"component": "class SxxEngine::TransformComponent",
+										"transform": {
+											"rotate": {
+												"w": 1.0,
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											},
+											"scale": {
+												"x": 1.0,
+												"y": 1.0,
+												"z": 1.0
+											},
+											"translate": {
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											}
+										}
+									},
+									{
+										"component": "class SxxEngine::MeshRendererComponent",
+										"isEnable": true,
+										"mask": 255,
 										"material": "53e32305-56de-4f93-93c93aa3eda78397",
 										"mesh": "b814a749-eb17-44a6-a40968a3fc8471d4",
 										"mode": "Opaque",
@@ -4103,6 +4141,44 @@
 								"isActive": true,
 								"isRenamable": true,
 								"name": "SM_ColorCalibrator-3"
+							},
+							{
+								"children": [],
+								"components": [
+									{
+										"component": "class SxxEngine::TransformComponent",
+										"transform": {
+											"rotate": {
+												"w": 1.0,
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											},
+											"scale": {
+												"x": 1.0,
+												"y": 1.0,
+												"z": 1.0
+											},
+											"translate": {
+												"x": 0.0,
+												"y": 0.0,
+												"z": 0.0
+											}
+										}
+									},
+									{
+										"component": "class SxxEngine::MeshRendererComponent",
+										"isEnable": true,
+										"mask": 255,
+										"material": "50856d28-20ae-4ad1-beac703032efb354",
+										"mesh": "ccb0ddd6-3288-47b9-a1d6a73bd1f269d0",
+										"mode": "Opaque",
+										"stencil": 0
+									}
+								],
+								"isActive": true,
+								"isRenamable": true,
+								"name": "SM_ColorCalibrator-4"
 							},
 							{
 								"children": [],
@@ -4179,82 +4255,6 @@
 								"isActive": true,
 								"isRenamable": true,
 								"name": "SM_ColorCalibrator-1"
-							},
-							{
-								"children": [],
-								"components": [
-									{
-										"component": "class SxxEngine::TransformComponent",
-										"transform": {
-											"rotate": {
-												"w": 1.0,
-												"x": 0.0,
-												"y": 0.0,
-												"z": 0.0
-											},
-											"scale": {
-												"x": 1.0,
-												"y": 1.0,
-												"z": 1.0
-											},
-											"translate": {
-												"x": 0.0,
-												"y": 0.0,
-												"z": 0.0
-											}
-										}
-									},
-									{
-										"component": "class SxxEngine::MeshRendererComponent",
-										"isEnable": true,
-										"mask": 255,
-										"material": "b91904fc-4931-4900-8adf7aba74157f56",
-										"mesh": "2e9018c9-fd82-4c69-a5559d3cef87574e",
-										"mode": "Opaque",
-										"stencil": 0
-									}
-								],
-								"isActive": true,
-								"isRenamable": true,
-								"name": "SM_ColorCalibrator-2"
-							},
-							{
-								"children": [],
-								"components": [
-									{
-										"component": "class SxxEngine::TransformComponent",
-										"transform": {
-											"rotate": {
-												"w": 1.0,
-												"x": 0.0,
-												"y": 0.0,
-												"z": 0.0
-											},
-											"scale": {
-												"x": 1.0,
-												"y": 1.0,
-												"z": 1.0
-											},
-											"translate": {
-												"x": 0.0,
-												"y": 0.0,
-												"z": 0.0
-											}
-										}
-									},
-									{
-										"component": "class SxxEngine::MeshRendererComponent",
-										"isEnable": true,
-										"mask": 255,
-										"material": "50856d28-20ae-4ad1-beac703032efb354",
-										"mesh": "ccb0ddd6-3288-47b9-a1d6a73bd1f269d0",
-										"mode": "Opaque",
-										"stencil": 0
-									}
-								],
-								"isActive": true,
-								"isRenamable": true,
-								"name": "SM_ColorCalibrator-4"
 							}
 						],
 						"components": [
@@ -4339,5 +4339,38 @@
 		"isActive": true,
 		"isRenamable": true,
 		"name": "macbeth_chart_scene"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 0.8915684223175049,
+						"x": 0.0,
+						"y": -0.452886164188385,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 3.0,
+						"y": 3.0,
+						"z": 3.440000057220459
+					},
+					"translate": {
+						"x": -4.14546012878418,
+						"y": 2.2367541790008545,
+						"z": 7.352621555328369
+					}
+				}
+			},
+			{
+				"component": "class SxxEngine::DecalRendererComponent",
+				"texture": "1fe0030d-1cce-4466-b245bb96fc58c91e"
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "Behaviour"
 	}
 ]

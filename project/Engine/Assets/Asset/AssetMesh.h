@@ -65,9 +65,6 @@ public:
 	const std::unordered_map<std::string, JointWeightData>& GetJointWeights() const { return jointWeights_; }
 	// hack: meshの読み込みが完了してから取得する.
 
-	const std::string& GetName() const { return name_; }
-	// hack: meshの読み込みが完了してから取得する.
-
 	//* convert methods *//
 
 	static Vector3f ConvertVector3(const aiVector3D& aiVector);
@@ -85,7 +82,6 @@ private:
 	//* mesh data
 	InputMesh                                        input_;
 	std::unordered_map<std::string, JointWeightData> jointWeights_;
-	std::string                                      name_;
 
 	//=========================================================================================
 	// private methods
