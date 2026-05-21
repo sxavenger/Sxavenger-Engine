@@ -82,7 +82,7 @@ public:
 
 	void Build(
 		DxObject::Device* device, const DxObject::CommandContext* context,
-		const D3D12_RAYTRACING_GEOMETRY_DESC& geomDesc
+		const D3D12_RAYTRACING_GEOMETRY_DESC& geometry
 	);
 
 	void Update(DxObject::CommandContext* context);
@@ -97,7 +97,7 @@ protected:
 	// protected methods
 	//=========================================================================================
 
-	D3D12_RAYTRACING_GEOMETRY_DESC geomDesc_;
+	D3D12_RAYTRACING_GEOMETRY_DESC geometry_;
 
 };
 
