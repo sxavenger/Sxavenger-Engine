@@ -42,7 +42,7 @@ void Mono::Instance::Reset() {
 	handle_ = std::nullopt;
 }
 
-void Mono::Instance::CallMethod(const std::string& name) {
+void Mono::Instance::CallFunction(const std::string& name) {
 
 	std::string function = info_.GetName() + "::" + name;
 

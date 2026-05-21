@@ -9,6 +9,8 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
+#include <Engine/Assets/Asset/AssetAnimationClip.h>
+#include <Engine/Assets/Asset/AssetParameter.h>
 #include <Engine/Module/GameObject/GameObject.h>
 #include <Engine/Module/Actor/ControllableCameraActor.h>
 #include <Engine/Module/Actor/PerspectiveCameraActor.h>
@@ -54,10 +56,10 @@ private:
 	std::unique_ptr<GameObject> demoText_;
 	std::unique_ptr<GameObject> instructionText_;
 
-	//* cubes *//
+	//* human *//
 
-	std::array<std::unique_ptr<GameObject>, 4> cubes_;
-
+	std::unique_ptr<GameObject> human_;
+	AssetParameter<AssetAnimationClip> clip_;
 
 	//=========================================================================================
 	// private methods

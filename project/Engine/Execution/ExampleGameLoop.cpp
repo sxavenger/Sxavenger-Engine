@@ -7,6 +7,7 @@ SXAVENGER_ENGINE_USING
 //* engine
 #include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/System.h>
+#include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
 #include <Engine/Assets/Content/ContentStorage.h>
 #include <Engine/Components/Component/Transform/TransformComponent.h>
 #include <Engine/Components/Component/Light/Environment/SkyAtmosphereComponent.h>
@@ -67,18 +68,10 @@ void ExampleGameLoop::InitSystem() {
 	{
 		atmosphere_ = std::make_unique<GameObject>();
 		(*atmosphere_)->AddComponent<TransformComponent>();
-		//(*atmosphere_)->AddComponent<SkyAtmosphereComponent>();
+		(*atmosphere_)->AddComponent<SkyAtmosphereComponent>();
 		(*atmosphere_)->AddComponent<DirectionalLightComponent>();
 
 		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate = Quaternion::AxisAngle(Vector3f{ 1.0f, 0.0f, 0.0f }.Normalize(), kPi / 2.0f);
-
-		auto skyLight = (*atmosphere_)->AddComponent<SkyLightComponent>();
-
-		ContentTexture::Option option = {};
-		option.encoding         = ContentTexture::Encoding::Lightness;
-		option.isGenerateMipmap = false;
-
-		skyLight->SetEnvironment(sContentStorage->Import<ContentTexture>("assets/textures/environment/sky_environment.dds", option)->GetId());
 	}
 	
 
@@ -145,45 +138,11 @@ void ExampleGameLoop::InitSystem() {
 #ifndef _DEBUG //!< デバッグビルドでは、シーンのロードに時間がかかるため、ロードしない.
 	{
 		json data;
-		if (JsonHandler::LoadFromJson("assets/scene/sponza.scene", data)) {
+		if (JsonHandler::LoadFromJson("assets/scene/showcase.scene", data)) {
 			sEntityBehaviourStorage->InputJson(data);
 		}
 	}
 #endif
-
-	for (size_t i = 0; i < cubes_.size(); ++i) {
-		cubes_[i] = std::make_unique<GameObject>();
-		(*cubes_[i])->SetName(std::format("cube[{}]", i));
-
-		auto& transform = (*cubes_[i])->AddComponent<TransformComponent>()->GetTransform();
-		transform.translate = { 0.0f, 0.0f, static_cast<float>(i) * 2.0f };
-
-		BehaviourHelper::CreateStaticMeshBehaviour(
-			cubes_[i]->GetAddress(),
-			sContentStorage->Import<ContentModel>("assets/models/primitive/cube.obj")
-		);
-
-		BehaviourHelper::SetMeshRendererMode(cubes_[i]->GetAddress(), MeshRendererCommon::Mode::Translucent);
-
-		BehaviourHelper::DetachBehaviourMaterial(cubes_[i]->GetAddress());
-
-		BehaviourHelper::ModifyBehaviourMaterial(cubes_[i]->GetAddress(), [](AssetMaterial* material) {
-			material->GetBuffer().transparency.value = 0.5f;
-		});
-
-		/*(*cubes_[i])->SetInspectable([](EntityBehaviour* behaviour) {
-			BehaviourHelper::ModifyBehaviourMaterial(behaviour, [](AssetMaterial* material) {
-				material->GetBuffer().albedo.SetImGuiCommand();
-				material->GetBuffer().transparency.SetImGuiCommand();
-			});
-		});*/
-
-		auto collider = (*cubes_[i])->AddComponent<ColliderComponent>();
-		collider->SetTag("cube");
-		//collider->SetBoundingCapsule();
-		collider->SetBoundingAABB({ .min = { -0.5f, -0.5f, -0.5f }, .max = { 0.5f, 0.5f, 0.5f } });
-
-	}
 
 	sCollisionManager->SetOnCollisionFunctionEnter("camera", "cube",
 		[](MAYBE_UNUSED ColliderComponent* const camera, MAYBE_UNUSED ColliderComponent* const cube, const CollisionDetection::Penetration& penetration) {
@@ -191,6 +150,19 @@ void ExampleGameLoop::InitSystem() {
 		camera->GetBehaviour()->GetComponent<TransformComponent>()->GetTransform().translate += penetration.direction * penetration.distance;
 		camera->SetCollisionState(cube, ColliderComponent::History::Current, std::nullopt);
 	});
+
+	
+	{
+		human_ = std::make_unique<GameObject>();
+		(*human_)->SetName("human");
+
+		BehaviourHelper::CreateSkinnedMeshBehaviour(human_->GetAddress(), sContentStorage->Import<ContentModel>("assets/models/human/walking.gltf"));
+
+		clip_ = sContentStorage->Import<ContentAnimation>("assets/models/human/walking.gltf")->GetAnimation(0);
+	}
+
+	auto instance = System::CreateMonoInstance("", "Test");
+	instance.CallFunction("Start");
 }
 
 void ExampleGameLoop::TermSystem() {
@@ -206,11 +178,6 @@ void ExampleGameLoop::UpdateSystem() {
 
 	auto keyboard = System::GetKeyboardInput();
 
-	/*if (keyboard->IsTrigger(KeyId::KEY_P)) {
-		auto& config = FMainRender::GetInstance()->GetConfig();
-		config.option.Inverse(FBaseRenderPass::Config::Option::IndirectLighting);
-	}*/
-
 	if (keyboard->IsPress(KeyId::KEY_LEFT)) {
 		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate *= Quaternion::AxisAngle(Vector3f{ 1.0f, 1.0f, 0.0f }.Normalize(), 0.01f);
 	}
@@ -218,6 +185,10 @@ void ExampleGameLoop::UpdateSystem() {
 	if (keyboard->IsPress(KeyId::KEY_RIGHT)) {
 		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate *= Quaternion::AxisAngle(Vector3f{ 1.0f, 1.0f, 0.0f }.Normalize(), -0.01f);
 	}
+
+	static DeltaTimePointd<TimeUnit::second> time = 0.0f;
+	time.AddDeltaTime();
+	BehaviourHelper::ApplyAnimation(human_->GetAddress(), clip_.WaitGet()->GetAnimation(), time, true);
 
 	performance_->Update();
 
@@ -234,7 +205,7 @@ void ExampleGameLoop::UpdateSystem() {
 	// LateUpdate
 	//-----------------------------------------------------------------------------------------
 
-	//(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->Update(System::GetDirectQueueContext());
+	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->Update(System::GetDirectQueueContext());
 	//!< TODO: ComponentHelperに移動予定
 
 	//-----------------------------------------------------------------------------------------
@@ -245,14 +216,6 @@ void ExampleGameLoop::UpdateSystem() {
 	// todo: engine側のgameloopに移動.
 
 	ComponentHelper::UpdateAudio3d();
-
-	DxObject::Resource resource = DxObject::Resource::CreateBuffer(
-		System::GetDxDevice(),
-		D3D12_HEAP_TYPE_UPLOAD,
-		1024,
-		D3D12_RESOURCE_FLAG_NONE,
-		D3D12_RESOURCE_STATE_GENERIC_READ
-	);
 }
 
 void ExampleGameLoop::RenderSystem() {

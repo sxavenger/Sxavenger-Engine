@@ -2,7 +2,7 @@
 DXROBJECT_USING
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AccelerationStructureBuffers structure
+// AccelerationStructureBuffers structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void AccelerationStructureBuffers::Create(
@@ -15,35 +15,37 @@ void AccelerationStructureBuffers::Create(
 	D3D12_RAYTRACING_ACCELERATION_STRUCTURE_PREBUILD_INFO info = {};
 	device->GetRaytracingAccelerationStructurePrebuildInfo(&inputs, &info);
 
-	// buffer生成
-	scratch = DxObject::CreateBufferResource(
-		device,
-		D3D12_HEAP_TYPE_DEFAULT,
-		info.ScratchDataSizeInBytes,
-		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
-		D3D12_RESOURCE_STATE_COMMON
-	);
-	scratch->SetName(L"AccelerationStructureBuffers::scratch");
+	AccelerationStructureBuffers::CreateAccelerationStructureBuffer(devices, info);
+	AccelerationStructureBuffers::CreateScratchBuffer(devices, info);
+}
 
-	asbuffer = DxObject::CreateBufferResource(
+void AccelerationStructureBuffers::CreateAccelerationStructureBuffer(DxObject::Device* device, const D3D12_RAYTRACING_ACCELERATION_STRUCTURE_PREBUILD_INFO& info) {
+	asbuffer = DxObject::Resource::CreateBuffer(
 		device,
 		D3D12_HEAP_TYPE_DEFAULT,
 		info.ResultDataMaxSizeInBytes,
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
 		D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE
 	);
-	asbuffer->SetName(L"AccelerationStructureBuffers::asbuffer");
+	asbuffer.SetName(L"Acceleration Structure Buffer | Acceleration Structure Buffer");
+}
 
-	if (inputs.Flags & D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE) {
-		update = DxObject::CreateBufferResource(
-			device,
-			D3D12_HEAP_TYPE_DEFAULT,
-			info.UpdateScratchDataSizeInBytes,
-			D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
-			D3D12_RESOURCE_STATE_COMMON
-		);
-		update->SetName(L"AccelerationStructureBuffers::update");
+void AccelerationStructureBuffers::CreateScratchBuffer(DxObject::Device* device, const D3D12_RAYTRACING_ACCELERATION_STRUCTURE_PREBUILD_INFO& info) {
+
+	size_t size = info.ScratchDataSizeInBytes;
+
+	if (info.UpdateScratchDataSizeInBytes > 0) {
+		size = std::max(size, info.UpdateScratchDataSizeInBytes); //!< update用のscratch bufferも必要な場合, そちらのサイズも考慮する
 	}
+
+	scratch = DxObject::Resource::CreateBuffer(
+		device,
+		D3D12_HEAP_TYPE_DEFAULT,
+		size,
+		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
+		D3D12_RESOURCE_STATE_COMMON
+	);
+	scratch.SetName(L"Acceleration Structure Buffer | Scratch Buffer");
 }
 
 
@@ -72,8 +74,8 @@ void BottomLevelAS::Build(
 	AccelerationStructureBuffers::Create(device, buildDesc.Inputs);
 
 	// bufferの設定
-	buildDesc.ScratchAccelerationStructureData = scratch->GetGPUVirtualAddress();
-	buildDesc.DestAccelerationStructureData    = asbuffer->GetGPUVirtualAddress();
+	buildDesc.ScratchAccelerationStructureData = scratch.GetGPUVirtualAddress();
+	buildDesc.DestAccelerationStructureData    = asbuffer.GetGPUVirtualAddress();
 
 	// build descの設定
 	context->GetCommandList()->BuildRaytracingAccelerationStructure(
@@ -100,9 +102,9 @@ void BottomLevelAS::Update(DxObject::CommandContext* context) {
 		| D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PERFORM_UPDATE
 		| D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_TRACE;
 
-	buildASDesc.SourceAccelerationStructureData  = asbuffer->GetGPUVirtualAddress();
-	buildASDesc.DestAccelerationStructureData    = asbuffer->GetGPUVirtualAddress();
-	buildASDesc.ScratchAccelerationStructureData = update->GetGPUVirtualAddress();
+	buildASDesc.SourceAccelerationStructureData  = asbuffer.GetGPUVirtualAddress();
+	buildASDesc.DestAccelerationStructureData    = asbuffer.GetGPUVirtualAddress();
+	buildASDesc.ScratchAccelerationStructureData = scratch.GetGPUVirtualAddress();
 
 	context->GetCommandList()->BuildRaytracingAccelerationStructure(
 		&buildASDesc, 0, nullptr
@@ -164,8 +166,8 @@ void TopLevelAS::Build(DxObject::Device* device, DxObject::CommandContext* conte
 	AccelerationStructureBuffers::Create(device, desc.Inputs);
 
 	// bufferの設定
-	desc.ScratchAccelerationStructureData = scratch->GetGPUVirtualAddress();
-	desc.DestAccelerationStructureData    = asbuffer->GetGPUVirtualAddress();
+	desc.ScratchAccelerationStructureData = scratch.GetGPUVirtualAddress();
+	desc.DestAccelerationStructureData    = asbuffer.GetGPUVirtualAddress();
 
 	// build descの設定
 	context->GetCommandList()->BuildRaytracingAccelerationStructure(
@@ -193,9 +195,9 @@ void TopLevelAS::Update(DxObject::CommandContext* context) {
 		| D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PERFORM_UPDATE
 		| D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_PREFER_FAST_TRACE;
 
-	desc.SourceAccelerationStructureData  = asbuffer->GetGPUVirtualAddress();
-	desc.DestAccelerationStructureData    = asbuffer->GetGPUVirtualAddress();
-	desc.ScratchAccelerationStructureData = update->GetGPUVirtualAddress();
+	desc.SourceAccelerationStructureData  = asbuffer.GetGPUVirtualAddress();
+	desc.DestAccelerationStructureData    = asbuffer.GetGPUVirtualAddress();
+	desc.ScratchAccelerationStructureData = scratch.GetGPUVirtualAddress();
 
 	context->GetCommandList()->BuildRaytracingAccelerationStructure(
 		&desc, 0, nullptr

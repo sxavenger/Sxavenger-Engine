@@ -11,6 +11,7 @@
 //* DXOBJECT
 #include <Engine/System/DirectX/DxObject/DxDevice.h>
 #include <Engine/System/DirectX/DxObject/DxCommandContext.h>
+#include <Engine/System/DirectX/DxObject/DxResource.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* lib
@@ -29,6 +30,7 @@ DXROBJECT_NAMESPACE_BEGIN
 // AccelerationStructureBuffers structure
 ////////////////////////////////////////////////////////////////////////////////////////////
 struct AccelerationStructureBuffers {
+public:
 
 	//=========================================================================================
 	// public methods
@@ -43,9 +45,24 @@ struct AccelerationStructureBuffers {
 	// public variables
 	//=========================================================================================
 
-	ComPtr<ID3D12Resource> scratch;
-	ComPtr<ID3D12Resource> asbuffer;
-	ComPtr<ID3D12Resource> update;
+	DxObject::Resource scratch;
+	DxObject::Resource asbuffer;
+
+private:
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void CreateAccelerationStructureBuffer(
+		DxObject::Device* device,
+		const D3D12_RAYTRACING_ACCELERATION_STRUCTURE_PREBUILD_INFO& info
+	);
+
+	void CreateScratchBuffer(
+		DxObject::Device* device,
+		const D3D12_RAYTRACING_ACCELERATION_STRUCTURE_PREBUILD_INFO& info
+	);
 
 };
 
@@ -72,7 +89,7 @@ public:
 
 	//* getter *//
 
-	D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return asbuffer->GetGPUVirtualAddress(); }
+	D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return asbuffer.GetGPUVirtualAddress(); }
 
 protected:
 
@@ -128,7 +145,7 @@ public:
 
 	//* getter *//
 
-	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return asbuffer->GetGPUVirtualAddress(); }
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return asbuffer.GetGPUVirtualAddress(); }
 
 	const std::list<Instance>& GetInstances() const { return instances_; }
 

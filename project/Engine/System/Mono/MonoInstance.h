@@ -63,7 +63,7 @@ namespace Mono {
 
 		void Reset();
 
-		void CallMethod(const std::string& name);
+		void CallFunction(const std::string& name);
 
 		//* operator [assign] *//
 
