@@ -6,17 +6,15 @@ DXROBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void AccelerationStructureBuffers::Create(
-	DxObject::Device* devices,
+	DxObject::Device* device,
 	const D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS& inputs) {
-
-	auto device = devices->GetDevice();
 
 	// 必要なメモリ数を求める
 	D3D12_RAYTRACING_ACCELERATION_STRUCTURE_PREBUILD_INFO info = {};
-	device->GetRaytracingAccelerationStructurePrebuildInfo(&inputs, &info);
+	device->GetDevice()->GetRaytracingAccelerationStructurePrebuildInfo(&inputs, &info);
 
-	AccelerationStructureBuffers::CreateAccelerationStructureBuffer(devices, info);
-	AccelerationStructureBuffers::CreateScratchBuffer(devices, info);
+	AccelerationStructureBuffers::CreateAccelerationStructureBuffer(device, info);
+	AccelerationStructureBuffers::CreateScratchBuffer(device, info);
 }
 
 void AccelerationStructureBuffers::CreateAccelerationStructureBuffer(DxObject::Device* device, const D3D12_RAYTRACING_ACCELERATION_STRUCTURE_PREBUILD_INFO& info) {
@@ -31,17 +29,10 @@ void AccelerationStructureBuffers::CreateAccelerationStructureBuffer(DxObject::D
 }
 
 void AccelerationStructureBuffers::CreateScratchBuffer(DxObject::Device* device, const D3D12_RAYTRACING_ACCELERATION_STRUCTURE_PREBUILD_INFO& info) {
-
-	size_t size = info.ScratchDataSizeInBytes;
-
-	if (info.UpdateScratchDataSizeInBytes > 0) {
-		size = std::max(size, info.UpdateScratchDataSizeInBytes); //!< update用のscratch bufferも必要な場合, そちらのサイズも考慮する
-	}
-
 	scratch = DxObject::Resource::CreateBuffer(
 		device,
 		D3D12_HEAP_TYPE_DEFAULT,
-		size,
+		std::max(info.ScratchDataSizeInBytes, info.UpdateScratchDataSizeInBytes), //!< update用のscratchのサイズも考慮する
 		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
 		D3D12_RESOURCE_STATE_COMMON
 	);
@@ -122,7 +113,6 @@ void BottomLevelAS::Update(DxObject::CommandContext* context) {
 	barrier.UAV.pResource = asbuffer.Get();
 
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -197,9 +187,9 @@ void TopLevelAS::Update(DxObject::CommandContext* context) {
 
 	// input情報の設定
 	D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS inputs = {};
-	inputs.Type = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
-	inputs.DescsLayout = D3D12_ELEMENTS_LAYOUT_ARRAY;
-	inputs.NumDescs = static_cast<UINT>(instances_.size());
+	inputs.Type          = D3D12_RAYTRACING_ACCELERATION_STRUCTURE_TYPE_TOP_LEVEL;
+	inputs.DescsLayout   = D3D12_ELEMENTS_LAYOUT_ARRAY;
+	inputs.NumDescs      = static_cast<UINT>(instances_.size());
 	inputs.InstanceDescs = descs_->GetGPUVirtualAddress();
 	inputs.Flags
 		= D3D12_RAYTRACING_ACCELERATION_STRUCTURE_BUILD_FLAG_ALLOW_UPDATE
