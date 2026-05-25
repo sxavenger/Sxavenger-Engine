@@ -53,9 +53,6 @@ private:
 
 	std::unique_ptr<PerformanceActor> performance_;
 
-	std::unique_ptr<GameObject> demoText_;
-	std::unique_ptr<GameObject> instructionText_;
-
 	//* human *//
 
 	std::unique_ptr<GameObject> human_;

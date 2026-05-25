@@ -35,7 +35,11 @@ void AssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scra
 
 	// resourceの生成
 	resource_         = CreateTextureResource(metadata);
+
+	resource_.Transition(context->GetDxCommand(), D3D12_RESOURCE_STATE_COPY_DEST); //!< UploadのためDESTに遷移.
 	auto intermediate = UploadTextureData(context, resource_.Get(), image);
+
+	resource_.Transition(context->GetDxCommand(), D3D12_RESOURCE_STATE_COMMON);
 
 	{ //!< SRVの生成
 

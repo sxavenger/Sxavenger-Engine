@@ -2520,7 +2520,7 @@
 					"translate": {
 						"x": -1.029051423072815,
 						"y": 0.7094346284866333,
-						"z": 2.164818286895752
+						"z": 2.156221866607666
 					}
 				}
 			}
@@ -2724,5 +2724,126 @@
 		"isActive": true,
 		"isRenamable": true,
 		"name": "cube[2]"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 1.0,
+						"x": 0.0,
+						"y": 0.0,
+						"z": 0.0
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": -2.759124994277954,
+						"y": 3.7704789638519287,
+						"z": 0.6744180917739868
+					}
+				}
+			},
+			{
+				"color": {
+					"b": 0.6056721806526184,
+					"g": 0.8470324277877808,
+					"r": 0.8860759735107422
+				},
+				"component": "class SxxEngine::PointLightComponent",
+				"intensity": 50.0,
+				"radius": 19.899999618530273,
+				"shadow_flag": 16,
+				"shadow_strength": 0.8059999942779541,
+				"unit": "Candela"
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "Point Light"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 0.9321864247322083,
+						"x": 0.2889416515827179,
+						"y": -0.21009288728237152,
+						"z": -0.05832195654511452
+					},
+					"scale": {
+						"x": 1.0,
+						"y": 1.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": 3.1088905334472656,
+						"y": 4.464443206787109,
+						"z": -3.379976987838745
+					}
+				}
+			},
+			{
+				"color": {
+					"b": 0.9535865187644958,
+					"g": 0.889413058757782,
+					"r": 0.8409265279769897
+				},
+				"component": "class SxxEngine::SpotLightComponent",
+				"coneAngle": {
+					"x": 0.5879999995231628,
+					"y": 0.767944872379303
+				},
+				"intensity": 50.0,
+				"radius": 14.899999618530273,
+				"shadow_flag": 16,
+				"shadow_strength": 0.7950000166893005,
+				"unit": "Candela"
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "Spot Light"
+	},
+	{
+		"children": [],
+		"components": [
+			{
+				"component": "class SxxEngine::TransformComponent",
+				"transform": {
+					"rotate": {
+						"w": 0.9780309200286865,
+						"x": -2.1262265281762893e-09,
+						"y": -0.20845988392829895,
+						"z": -9.975614112534004e-09
+					},
+					"scale": {
+						"x": 2.0,
+						"y": 2.0,
+						"z": 1.0
+					},
+					"translate": {
+						"x": -0.8526163101196289,
+						"y": 0.6245602369308472,
+						"z": 1.4941718578338623
+					}
+				}
+			},
+			{
+				"component": "class SxxEngine::DecalRendererComponent",
+				"texture": "2bc8068a-486c-4c01-a2e0ca82c18d3d51"
+			}
+		],
+		"isActive": true,
+		"isRenamable": true,
+		"name": "Behaviour"
 	}
 ]

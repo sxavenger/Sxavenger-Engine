@@ -34,6 +34,9 @@
     <Filter Include="Engine\Components\Component\Collider">
       <UniqueIdentifier>{6F4D3E08-5B34-0000-0485-661DF04A7966}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Components\Component\DecalRenderer">
+      <UniqueIdentifier>{917214C7-FD8C-7768-46AF-87FCB2089F6F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Components\Component\Light">
       <UniqueIdentifier>{997B1D92-05EA-7211-4ED3-2D11BA8068AD}</UniqueIdentifier>
     </Filter>
@@ -333,6 +336,9 @@
     <ClInclude Include="Engine\Components\Component\ComponentStorage.h">
       <Filter>Engine\Components\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Components\Component\DecalRenderer\DecalRendererComponent.h">
+      <Filter>Engine\Components\Component\DecalRenderer</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Components\Component\Light\Environment\SkyAtmosphereComponent.h">
       <Filter>Engine\Components\Component\Light\Environment</Filter>
     </ClInclude>
@@ -388,6 +394,12 @@
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessLocalExposure.h">
+      <Filter>Engine\Components\Component\PostProcessLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessPostFx.h">
+      <Filter>Engine\Components\Component\PostProcessLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessPosterize.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessRadialBlur.h">
@@ -601,6 +613,9 @@
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreCanvas.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreDecal.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreDirectLight.h">
@@ -987,10 +1002,6 @@
     <ClInclude Include="Lib\Transform\TransformationMatrix.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessPostFx.h" />
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessPosterize.h" />
-    <ClInclude Include="Engine\Components\Component\DecalRenderer\DecalRendererComponent.h" />
-    <ClInclude Include="Engine\Render\Core\FRenderCoreDecal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp">
@@ -1098,6 +1109,9 @@
     <ClCompile Include="Engine\Components\Component\ComponentStorage.cpp">
       <Filter>Engine\Components\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Components\Component\DecalRenderer\DecalRendererComponent.cpp">
+      <Filter>Engine\Components\Component\DecalRenderer</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Components\Component\Light\Environment\SkyAtmosphereComponent.cpp">
       <Filter>Engine\Components\Component\Light\Environment</Filter>
     </ClCompile>
@@ -1147,6 +1161,12 @@
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessLocalExposure.cpp">
+      <Filter>Engine\Components\Component\PostProcessLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessPostFx.cpp">
+      <Filter>Engine\Components\Component\PostProcessLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessPosterize.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessRadialBlur.cpp">
@@ -1333,6 +1353,9 @@
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreCanvas.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreDecal.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreDirectLight.cpp">
@@ -1633,9 +1656,5 @@
       <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessPostFx.cpp" />
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessPosterize.cpp" />
-    <ClCompile Include="Engine\Components\Component\DecalRenderer\DecalRendererComponent.cpp" />
-    <ClCompile Include="Engine\Render\Core\FRenderCoreDecal.cpp" />
   </ItemGroup>
 </Project>

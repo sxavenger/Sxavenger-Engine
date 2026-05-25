@@ -6,7 +6,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 //
-// http://go.microsoft.com/fwlink/?LinkId=248926
+// https://go.microsoft.com/fwlink/?LinkId=248926
 //-------------------------------------------------------------------------------------
 
 #include "DirectXTexP.h"
@@ -219,7 +219,7 @@ namespace
             }
         }
 
-        if (!formatFound)
+        if (!formatFound || (size < 3))
         {
             return E_FAIL;
         }
@@ -227,7 +227,7 @@ namespace
         // Get orientation
         char orientation[256] = {};
 
-        const size_t len = FindEOL(info, std::min<size_t>(sizeof(orientation), size - 1));
+        const size_t len = FindEOL(info, std::min<size_t>(sizeof(orientation) - 1, size));
         if (len == size_t(-1)
             || len <= 2)
         {
@@ -236,7 +236,7 @@ namespace
 
         strncpy_s(orientation, info, len);
 
-        if (orientation[0] != '-' && orientation[1] != 'Y')
+        if (orientation[0] != '-' || orientation[1] != 'Y')
         {
             // We only support the -Y +X orientation (see top of file)
             return (static_cast<unsigned long>(((orientation[0] == '+' || orientation[0] == '-') && (orientation[1] == 'X' || orientation[1] == 'Y'))))
@@ -794,7 +794,7 @@ HRESULT DirectX::LoadFromHDRMemory(const uint8_t* pSource, size_t size, TexMetad
                         sourcePtr += 2;
                         pixelLen -= 2;
                     }
-                    else if ((size < size_t(runLen) + 1) || ((pixelCount + size_t(runLen)) > mdata.width))
+                    else if ((pixelLen < size_t(runLen) + 1) || ((pixelCount + size_t(runLen)) > mdata.width))
                     {
                         image.Release();
                         return E_FAIL;

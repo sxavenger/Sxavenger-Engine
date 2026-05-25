@@ -6,7 +6,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 //
-// http://go.microsoft.com/fwlink/?LinkId=248926
+// https://go.microsoft.com/fwlink/?LinkId=248926
 //-------------------------------------------------------------------------------------
 
 #pragma once
@@ -47,7 +47,7 @@ struct IWICImagingFactory;
 struct IWICMetadataQueryReader;
 #endif
 
-#define DIRECTX_TEX_VERSION 209
+#define DIRECTX_TEX_VERSION 211
 
 #if defined(_WIN32) && defined(DIRECTX_TEX_EXPORT)
 #ifdef __GNUC__
@@ -103,7 +103,7 @@ namespace DirectX
 
     enum CP_FLAGS : uint32_t
     {
-        CP_FLAGS_NONE = 0x0,
+        CP_FLAGS_NONE = 0,
         // Normal operation
 
         CP_FLAGS_LEGACY_DWORD = 0x1,
@@ -142,6 +142,10 @@ namespace DirectX
         _Out_ size_t& rowPitch, _Out_ size_t& slicePitch, _In_ CP_FLAGS flags = CP_FLAGS_NONE) noexcept;
 
     DIRECTX_TEX_API size_t __cdecl ComputeScanlines(_In_ DXGI_FORMAT fmt, _In_ size_t height) noexcept;
+
+    DIRECTX_TEX_API bool __cdecl CalculateMipLevels(_In_ size_t width, _In_ size_t height, _Inout_ size_t& mipLevels) noexcept;
+    DIRECTX_TEX_API bool __cdecl CalculateMipLevels3D(_In_ size_t width, _In_ size_t height, _In_ size_t depth,
+        _Inout_ size_t& mipLevels) noexcept;
 
     DIRECTX_TEX_API DXGI_FORMAT __cdecl MakeSRGB(_In_ DXGI_FORMAT fmt) noexcept;
     DIRECTX_TEX_API DXGI_FORMAT __cdecl MakeLinear(_In_ DXGI_FORMAT fmt) noexcept;
@@ -227,7 +231,7 @@ namespace DirectX
 
     enum DDS_FLAGS : uint32_t
     {
-        DDS_FLAGS_NONE = 0x0,
+        DDS_FLAGS_NONE = 0,
 
         DDS_FLAGS_LEGACY_DWORD = 0x1,
         // Assume pitch is DWORD aligned instead of BYTE aligned (used by some legacy DDS files)
@@ -277,7 +281,7 @@ namespace DirectX
 
     enum TGA_FLAGS : uint32_t
     {
-        TGA_FLAGS_NONE = 0x0,
+        TGA_FLAGS_NONE = 0,
 
         TGA_FLAGS_BGR = 0x1,
         // 24bpp files are returned as BGRX; 32bpp files are returned as BGRA
@@ -300,7 +304,7 @@ namespace DirectX
 
     enum WIC_FLAGS : uint32_t
     {
-        WIC_FLAGS_NONE = 0x0,
+        WIC_FLAGS_NONE = 0,
 
         WIC_FLAGS_FORCE_RGB = 0x1,
         // Loads DXGI 1.1 BGR formats as DXGI_FORMAT_R8G8B8A8_UNORM to avoid use of optional WDDM 1.1 formats
@@ -718,7 +722,7 @@ namespace DirectX
 
     enum TEX_FR_FLAGS : uint32_t
     {
-        TEX_FR_ROTATE0 = 0x0,
+        TEX_FR_ROTATE0 = 0,
         TEX_FR_ROTATE90 = 0x1,
         TEX_FR_ROTATE180 = 0x2,
         TEX_FR_ROTATE270 = 0x3,

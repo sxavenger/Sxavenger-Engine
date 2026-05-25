@@ -71,7 +71,7 @@ void ExampleGameLoop::InitSystem() {
 		(*atmosphere_)->AddComponent<SkyAtmosphereComponent>();
 		(*atmosphere_)->AddComponent<DirectionalLightComponent>();
 
-		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate = Quaternion::AxisAngle(Vector3f{ 1.0f, 0.0f, 0.0f }.Normalize(), kPi / 2.0f);
+		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate = Quaternion::AxisAngle(Vector3f{ 12.0f, -1.0f, 0.0f }.Normalize(), kPi / 4.0f);
 	}
 	
 
@@ -86,9 +86,9 @@ void ExampleGameLoop::InitSystem() {
 		exposure->GetParameter().maxLogLuminance = 10.0f;
 		exposure->GetParameter().compensation    = -5.0f;
 
-		layer->AddPostProcess<PostProcessRadialBlur>();
+		layer->AddPostProcess<PostProcessRadialBlur>(false);
 		layer->AddPostProcess<PostProcessPostFx>();
-		layer->AddPostProcess<PostProcessPosterize>();
+		layer->AddPostProcess<PostProcessPosterize>(false);
 
 		auto collider = (*camera_)->AddComponent<ColliderComponent>();
 		collider->SetTag("camera");
@@ -98,47 +98,11 @@ void ExampleGameLoop::InitSystem() {
 	performance_ = std::make_unique<PerformanceActor>();
 	performance_->SetPosition({ 1190.0f, 0.0f });
 
-	{
-		demoText_ = std::make_unique<GameObject>();
-		(*demoText_)->SetName("demo text");
-
-		auto& transform = (*demoText_)->AddComponent<RectTransformComponent>()->GetTransform();
-		transform.scale     = { 400.0f, 50.0f };
-		transform.pivot     = { 0.0f, 0.0f };
-		transform.translate = { 16.0f, 0.0f };
-
-		auto text = (*demoText_)->AddComponent<TextRendererComponent>();
-		text->SetFont(sContentStorage->Import<ContentFont>("packages/font/MPLUSRounded1c-Regular.ttf")->GetId());
-		text->SetSize(32.0f);
-		text->SetText(L"Sxavenger Engine Demo");
-	}
-
-	{
-		instructionText_ = std::make_unique<GameObject>();
-		(*instructionText_)->SetName("text");
-
-		auto& transform = (*instructionText_)->AddComponent<RectTransformComponent>()->GetTransform();
-		transform.scale     = { 400.0f, 200.0f };
-		transform.pivot     = { 0.0f, 1.0f };
-		transform.translate = { 16.0f, 760.0f };
-
-		auto text = (*instructionText_)->AddComponent<TextRendererComponent>();
-		text->SetFont(sContentStorage->Import<ContentFont>("packages/font/MPLUSRounded1c-Regular.ttf")->GetId());
-		text->SetSize(20.0f);
-
-		std::wstring t = L"";
-		t += L"[みぎクリック] : してんいどう\n";
-		t += L"[P]          : パストレーシングモード\n";
-		t += L"[<][>]       : たいようのいどう\n";
-		t += L"[ESC]        : ゲームしゅうりょう\n";
-
-		text->SetText(t);
-	}
 
 #ifndef _DEBUG //!< デバッグビルドでは、シーンのロードに時間がかかるため、ロードしない.
 	{
 		json data;
-		if (JsonHandler::LoadFromJson("assets/scene/showcase.scene", data)) {
+		if (JsonHandler::LoadFromJson("assets/scene/sponza_lit.scene", data)) {
 			sEntityBehaviourStorage->InputJson(data);
 		}
 	}

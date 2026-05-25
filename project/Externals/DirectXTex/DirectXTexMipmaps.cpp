@@ -6,7 +6,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 //
-// http://go.microsoft.com/fwlink/?LinkId=248926
+// https://go.microsoft.com/fwlink/?LinkId=248926
 //-------------------------------------------------------------------------------------
 
 #include "DirectXTexP.h"
@@ -356,7 +356,7 @@ namespace
 }
 
 _Use_decl_annotations_
-bool DirectX::Internal::CalculateMipLevels(
+bool DirectX::CalculateMipLevels(
     size_t width,
     size_t height,
     size_t& mipLevels) noexcept
@@ -379,7 +379,7 @@ bool DirectX::Internal::CalculateMipLevels(
 }
 
 _Use_decl_annotations_
-bool DirectX::Internal::CalculateMipLevels3D(
+bool DirectX::CalculateMipLevels3D(
     size_t width,
     size_t height,
     size_t depth,
