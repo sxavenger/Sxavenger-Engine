@@ -6,6 +6,7 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/Configuration/Configuration.h>
 
 //* c++
 #include <stack>
@@ -25,6 +26,10 @@ SXAVENGER_ENGINE_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void DirectXPixEvent::Init() {
+	if (!Configuration::GetConfig().enablePix) {
+		return; //!< pixが有効でない場合は何もしない.
+	}
+
 	DirectXPixEvent::InitLibraryDirectory();
 
 	//!< moduleの読み込み. (DirectX12の生成前に行う)

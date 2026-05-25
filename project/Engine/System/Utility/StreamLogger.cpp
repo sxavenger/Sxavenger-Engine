@@ -86,10 +86,10 @@ NORETURN void StreamLogger::Exception(const std::string& label, const std::strin
 		StreamLogger::OutputA(message.thread);
 
 		StreamLogger::OutputSeparator();
-	}
 
-	StreamLogger::OpenExceptionWindowA(message);
-	StreamLogger::DebugBreak();
+		StreamLogger::OpenExceptionWindowA(message);
+		StreamLogger::DebugBreak();
+	}
 }
 
 NORETURN void StreamLogger::Exception(const std::wstring& label, const std::wstring& detail, const TracePoint& point) {
@@ -115,10 +115,10 @@ NORETURN void StreamLogger::Exception(const std::wstring& label, const std::wstr
 		StreamLogger::OutputW(message.thread);
 
 		StreamLogger::OutputSeparator();
-	}
 
-	StreamLogger::OpenExceptionWindowW(message);
-	StreamLogger::DebugBreak();
+		StreamLogger::OpenExceptionWindowW(message);
+		StreamLogger::DebugBreak();
+	}
 }
 
 void StreamLogger::EngineLog(const std::string& message) {

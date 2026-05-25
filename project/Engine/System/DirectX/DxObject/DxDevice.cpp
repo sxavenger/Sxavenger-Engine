@@ -55,6 +55,23 @@ void Device::CheckDeviceStatus() const {
 	DxObject::Assert(hr, L"device removed.");
 }
 
+void Device::CheckInfoQueueMessage() const {
+	std::string out;
+	const UINT64 n = infoQueue_->GetNumStoredMessagesAllowedByRetrievalFilter();
+	for (UINT64 i = 0; i < n; ++i) {
+		SIZE_T bytes = 0;
+		if (FAILED(infoQueue_->GetMessage(i, nullptr, &bytes))) continue;
+
+		std::vector<std::byte> mem(bytes);
+		auto* m = reinterpret_cast<D3D12_MESSAGE*>(mem.data());
+		if (FAILED(infoQueue_->GetMessage(i, m, &bytes))) continue;
+
+		StreamLogger::EngineLog(std::format("[DXOBEJCT Device] info queue message | severity: {}, description: {}", (int)m->Severity, m->pDescription ? m->pDescription : ""));
+	}
+
+	infoQueue_->ClearStoredMessages();
+}
+
 void Device::CreateDebugLayer() {
 #ifdef _DEVELOPMENT
 

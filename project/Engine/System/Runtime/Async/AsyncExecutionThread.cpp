@@ -25,15 +25,24 @@ void Async::ExecutionThread::Create(Execution execution, const GetTaskFunction& 
 
 	//!< 引数の保存
 	execution_ = execution;
-	main_      = main;
+	
+	if (execution_ != Execution::Cpu) {
+		//!< contextの作成
+		context_ = std::make_unique<DirectXQueueContext>();
+		context_->Init(1, GetRenderQueue(execution_));
+
+		std::wstringstream id;
+		id << thread_.get_id();
+		context_->SetName(std::format(L"Async ExecutionThread [id: {}]", id.str()));
+	}
 
 	//!< threadの作成
-	thread_ = std::thread([this]() {
+	thread_ = std::thread([this, main]() {
 		StreamLogger::EngineThreadLog(std::format("[Async::ExecutionThread<Execution::{}>] begin execution thread.", magic_enum::enum_name(execution_)));
 
 		// main loop
 		while (!isTerminate_) {
-			std::shared_ptr<ExecutionTask> task = main_(this);
+			std::shared_ptr<ExecutionTask> task = main(this);
 
 			if (task == nullptr) {
 				continue; //!< taskがnullptrの場合はループの先頭に戻る.
@@ -69,16 +78,6 @@ void Async::ExecutionThread::Create(Execution execution, const GetTaskFunction& 
 		state_ = State::Terminate;
 		StreamLogger::EngineThreadLog(std::format("[Async::ExecutionThread<Execution::{}>] terminate execution thread.", magic_enum::enum_name(execution_)));
 	});
-
-	if (execution_ != Execution::Cpu) {
-		//!< contextの作成
-		context_ = std::make_unique<DirectXQueueContext>();
-		context_->Init(1, GetRenderQueue(execution_));
-
-		std::wstringstream id;
-		id << thread_.get_id();
-		context_->SetName(std::format(L"Async ExecutionThread [id: {}]", id.str()));
-	}
 
 	ExecutionThread::SetName(std::format("ExecutionThread<Execution::{}>", magic_enum::enum_name(execution_)));
 }

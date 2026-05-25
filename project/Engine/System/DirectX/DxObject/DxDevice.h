@@ -43,6 +43,8 @@ public:
 
 	void CheckDeviceStatus() const;
 
+	void CheckInfoQueueMessage() const;
+
 	//* getter *//
 
 	ID3D12Device8* GetDevice() const { return device_.Get(); }

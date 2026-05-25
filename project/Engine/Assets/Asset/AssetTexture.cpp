@@ -30,16 +30,9 @@ void AssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scra
 	// metadataの取得
 	const DirectX::TexMetadata& metadata = image.GetMetadata();
 
-	// deviceの取得
-	auto device = System::GetDxDevice()->GetDevice();
-
 	// resourceの生成
 	resource_         = CreateTextureResource(metadata);
-
-	resource_.Transition(context->GetDxCommand(), D3D12_RESOURCE_STATE_COPY_DEST); //!< UploadのためDESTに遷移.
 	auto intermediate = UploadTextureData(context, resource_.Get(), image);
-
-	resource_.Transition(context->GetDxCommand(), D3D12_RESOURCE_STATE_COMMON);
 
 	{ //!< SRVの生成
 
@@ -60,7 +53,7 @@ void AssetTexture::Setup(const DirectXQueueContext* context, const DirectX::Scra
 		}
 
 		//!< SRVの生成
-		device->CreateShaderResourceView(
+		System::GetDxDevice()->GetDevice()->CreateShaderResourceView(
 			resource_.Get(),
 			&desc,
 			descriptorSRV_.GetCPUHandle()
@@ -102,7 +95,7 @@ const D3D12_GPU_DESCRIPTOR_HANDLE& AssetTexture::GetGPUHandleSRV() const {
 DxObject::Resource AssetTexture::CreateTextureResource(const DirectX::TexMetadata& metadata) {
 	DxObject::Resource resource;
 
-	uint32_t depth = metadata.IsCubemap() ? static_cast<uint32_t>(metadata.arraySize) : static_cast<uint32_t>(metadata.depth);
+	uint32_t depth = std::max(static_cast<uint32_t>(metadata.depth), static_cast<uint32_t>(metadata.arraySize)); //!< depthとarraySizeの大きい方をdepthにする.
 	// HACK: cubemapのみでしかarraySizeが使用されないため, depthの値をcubemapのarraySizeにする.
 
 	resource = DxObject::Resource::CreateTexture(
@@ -126,14 +119,15 @@ ComPtr<ID3D12Resource> AssetTexture::UploadTextureData(const DirectXQueueContext
 	auto commandList = context->GetCommandList();
 
 	std::vector<D3D12_SUBRESOURCE_DATA> subresource;
-	DirectX::PrepareUpload(device, image.GetImages(), image.GetImageCount(), image.GetMetadata(), subresource);
+	auto hr = DirectX::PrepareUpload(device, image.GetImages(), image.GetImageCount(), image.GetMetadata(), subresource);
+	StreamLogger::AssertA(SUCCEEDED(hr), "[AssetTexture]: failed to prepare upload texture data.");
 
 	uint64_t intermediateSize = GetRequiredIntermediateSize(texture, 0, UINT(subresource.size()));
 	ComPtr<ID3D12Resource> intermediateResource = DxObject::CreateBufferResource(device, D3D12_HEAP_TYPE_UPLOAD, intermediateSize, D3D12_RESOURCE_FLAG_NONE, D3D12_RESOURCE_STATE_COPY_SOURCE);
+	intermediateResource->SetName(L"Asset | intermediate upload resource");
 
 	UpdateSubresources(commandList, texture, intermediateResource.Get(), 0, 0, UINT(subresource.size()), subresource.data());
-
-	intermediateResource->SetName(L"Asset | intermediate upload resource");
+	
 	return intermediateResource;
 
 }

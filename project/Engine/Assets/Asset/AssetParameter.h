@@ -146,9 +146,16 @@ inline std::shared_ptr<T> AssetParameter<T>::WaitGet() const {
 
 template <Asset T>
 inline std::shared_ptr<T> AssetParameter<T>::Require() const {
-	StreamLogger::AssertA(!Empty(), "AssetParameter is empty.");
+	switch (GetState()) {
+		case AssetState::Uuid:
+			return sAssetStorage->Require<T>(std::get<Uuid>(parameter_));
 
-	return Get();
+		case AssetState::Ptr: //!< std::shared_ptr<T>
+			return std::get<std::shared_ptr<T>>(parameter_);
+
+		default:
+			StreamLogger::Exception("[AssetParameter] failed to require asset. asset is empty.");
+	}
 }
 
 template <Asset T>
@@ -189,6 +196,10 @@ inline void AssetParameter<T>::Wait() const {
 	}
 
 	std::shared_ptr<BaseAsset> asset = Get();
+
+	if (asset == nullptr) {
+		return;
+	}
 
 	while (!asset->IsComplete()) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));

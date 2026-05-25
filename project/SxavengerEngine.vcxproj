@@ -387,6 +387,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\System\UI\SxImGui.h" />
     <ClInclude Include="Engine\System\UI\SxImGuizmo.h" />
     <ClInclude Include="Engine\System\Utility\ComPtr.h" />
+    <ClInclude Include="Engine\System\Utility\CrashHandler.h" />
     <ClInclude Include="Engine\System\Utility\RuntimeLogger.h" />
     <ClInclude Include="Engine\System\Utility\StreamLogger.h" />
     <ClInclude Include="Engine\System\WinApp\WinApp.h" />
@@ -627,6 +628,7 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\System\UI\SxGuiInternal.cpp" />
     <ClCompile Include="Engine\System\UI\SxImGui.cpp" />
     <ClCompile Include="Engine\System\UI\SxImGuizmo.cpp" />
+    <ClCompile Include="Engine\System\Utility\CrashHandler.cpp" />
     <ClCompile Include="Engine\System\Utility\RuntimeLogger.cpp" />
     <ClCompile Include="Engine\System\Utility\StreamLogger.cpp" />
     <ClCompile Include="Engine\System\WinApp\WinApp.cpp" />

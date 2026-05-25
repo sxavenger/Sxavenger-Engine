@@ -99,9 +99,9 @@ bool MeshRendererComponent::IsEnable() const {
 }
 
 std::shared_ptr<AssetMesh> MeshRendererComponent::GetMesh() const {
-	return mesh_.Require();
+	return mesh_.WaitRequire();
 }
 
 std::shared_ptr<AssetMaterial> MeshRendererComponent::GetMaterial() const {
-	return material_.Require();
+	return material_.WaitRequire();
 }

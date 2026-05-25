@@ -75,6 +75,9 @@ public:
 	template <Asset T>
 	std::shared_ptr<T> Get(const Uuid& id) const;
 
+	template <Asset T>
+	std::shared_ptr<T> Require(const Uuid& id) const;
+
 	//! @brief Assetの全要素に対して関数を実行
 	//! @tparam T Assetの型
 	//! @param[in] function 実行する関数
@@ -124,7 +127,9 @@ private:
 
 	template <Asset T>
 	static std::shared_ptr<T> Cast(const std::shared_ptr<BaseAsset>& asset) {
-		return std::static_pointer_cast<T>(asset);
+		std::shared_ptr<T> pointer = std::static_pointer_cast<T>(asset);
+		StreamLogger::AssertA(pointer != nullptr, "[AssetStorage] failed to cast asset.");
+		return pointer;
 	}
 
 	template <Asset T>
@@ -162,6 +167,13 @@ std::shared_ptr<T> AssetStorage::Get(const Uuid& id) const {
 	}
 
 	return AssetStorage::Cast<T>(storage_.at(type).at(id));
+}
+
+template<Asset T>
+inline std::shared_ptr<T> AssetStorage::Require(const Uuid& id) const {
+	std::shared_ptr<T> asset = Get<T>(id);
+	StreamLogger::AssertA(asset != nullptr, "[AssetStorage] asset not found. uuid: " + id.Serialize());
+	return asset;
 }
 
 template <Asset T>

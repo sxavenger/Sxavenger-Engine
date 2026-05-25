@@ -74,7 +74,6 @@ namespace Async {
 			//=========================================================================================
 
 			std::array<Queue, static_cast<uint8_t>(Execution::Cpu) + 1> queue_;
-			//std::mutex mutex_; //!< キューへのアクセスを保護するミューテックス.
 
 		};
 

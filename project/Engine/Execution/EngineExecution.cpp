@@ -6,6 +6,7 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/Utility/CrashHandler.h>
 #include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/System.h>
 #include <Engine/Graphics/Graphics.h>
@@ -28,6 +29,7 @@ void EngineExecution::Init(Execution::Context* context) {
 	SetProcess(context);
 
 	StreamLogger::Init();
+	CrashHandler::Install();
 	Configuration::Load();
 	System::Init();
 	Graphics::Init();

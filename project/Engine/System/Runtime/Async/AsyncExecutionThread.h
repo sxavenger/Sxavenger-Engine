@@ -98,8 +98,6 @@ namespace Async {
 
 		State state_ = State::Wait;
 
-		GetTaskFunction main_;
-
 		//* context *//
 
 		std::unique_ptr<DirectXQueueContext> context_;

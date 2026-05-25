@@ -64,7 +64,6 @@ void ExampleGameLoop::InitSystem() {
 	);
 	main_->SetIcon(kPackagesDirectory / "icon" / "SxavengerEngineIcon.ico", { 32, 32 });
 
-
 	{
 		atmosphere_ = std::make_unique<GameObject>();
 		(*atmosphere_)->AddComponent<TransformComponent>();
@@ -99,7 +98,7 @@ void ExampleGameLoop::InitSystem() {
 	performance_->SetPosition({ 1190.0f, 0.0f });
 
 
-#ifndef _DEBUG //!< デバッグビルドでは、シーンのロードに時間がかかるため、ロードしない.
+#ifndef _DEVELOPMENT //!< デバッグビルドでは、シーンのロードに時間がかかるため、ロードしない.
 	{
 		json data;
 		if (JsonHandler::LoadFromJson("assets/scene/sponza_lit.scene", data)) {
@@ -115,7 +114,7 @@ void ExampleGameLoop::InitSystem() {
 		camera->SetCollisionState(cube, ColliderComponent::History::Current, std::nullopt);
 	});
 
-	
+
 	{
 		human_ = std::make_unique<GameObject>();
 		(*human_)->SetName("human");
@@ -124,9 +123,6 @@ void ExampleGameLoop::InitSystem() {
 
 		clip_ = sContentStorage->Import<ContentAnimation>("assets/models/human/walking.gltf")->GetAnimation(0);
 	}
-
-	auto instance = System::CreateMonoInstance("", "Test");
-	instance.CallFunction("Start");
 }
 
 void ExampleGameLoop::TermSystem() {
