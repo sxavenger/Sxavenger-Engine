@@ -57,9 +57,11 @@ namespace Async {
 
 			std::shared_ptr<ExecutionTask> Pop(Execution execution);
 
-			bool IsEmpty() const;
+			bool Empty() const;
 
 			bool HasTask(Execution execution) const;
+
+			Execution GetFrontExecution() const;
 
 			size_t GetTaskCount(Execution execution) const;
 
@@ -73,6 +75,33 @@ namespace Async {
 
 			std::array<Queue, static_cast<uint8_t>(Execution::Cpu) + 1> queue_;
 			//std::mutex mutex_; //!< キューへのアクセスを保護するミューテックス.
+
+		};
+
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// ThreadCondition class
+		////////////////////////////////////////////////////////////////////////////////////////////
+		class ThreadCondition {
+		public:
+
+			//=========================================================================================
+			// public methods
+			//=========================================================================================
+
+			void Notify(Execution execution);
+
+			void NotifyAll();
+
+			void Wait(Execution execution, const std::function<bool()>& predicate);
+
+		private:
+
+			//=========================================================================================
+			// private variables
+			//=========================================================================================
+
+			std::mutex mutex_;
+			std::array<std::condition_variable, static_cast<uint8_t>(Execution::Cpu) + 1> conditions_;
 
 		};
 
@@ -104,10 +133,8 @@ namespace Async {
 
 		std::list<ExecutionThread> threads_;
 
-		std::mutex mutex_;
-		std::condition_variable condition_;
-
 		TaskQueue queue_;
+		ThreadCondition condition_;
 
 		bool isTerminate_ = false;
 

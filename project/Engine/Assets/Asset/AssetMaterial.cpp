@@ -28,7 +28,7 @@ void AssetMaterial::MaterialBuffer::Init() {
 	*this = MaterialBuffer{};
 }
 
-void AssetMaterial::MaterialBuffer::SetAlbedoTexture(const DxObject::Descriptor& descriptor) {
+void AssetMaterial::MaterialBuffer::SetAlbedoTexture(const DxObject::ReferenceDescriptor& descriptor) {
 	albedo.index = descriptor.GetIndex();
 	flags.Set(TextureFlag::Albedo);
 }
@@ -38,7 +38,16 @@ void AssetMaterial::MaterialBuffer::SetAlbedoTexture(std::nullopt_t) {
 	flags.Reset(TextureFlag::Albedo);
 }
 
-void AssetMaterial::MaterialBuffer::SetTransparencyTexture(const DxObject::Descriptor& descriptor) {
+void AssetMaterial::MaterialBuffer::SetAlbedoTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor) {
+	if (descriptor.has_value()) {
+		SetAlbedoTexture(descriptor.value());
+
+	} else {
+		SetAlbedoTexture(std::nullopt);
+	}
+}
+
+void AssetMaterial::MaterialBuffer::SetTransparencyTexture(const DxObject::ReferenceDescriptor& descriptor) {
 	transparency.index = descriptor.GetIndex();
 	flags.Set(TextureFlag::Transparency);
 }
@@ -48,7 +57,16 @@ void AssetMaterial::MaterialBuffer::SetTransparencyTexture(std::nullopt_t) {
 	flags.Reset(TextureFlag::Transparency);
 }
 
-void AssetMaterial::MaterialBuffer::SetNormalTexture(const DxObject::Descriptor& descriptor) {
+void AssetMaterial::MaterialBuffer::SetTransparencyTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor) {
+	if (descriptor.has_value()) {
+		SetTransparencyTexture(descriptor.value());
+
+	} else {
+		SetTransparencyTexture(std::nullopt);
+	}
+}
+
+void AssetMaterial::MaterialBuffer::SetNormalTexture(const DxObject::ReferenceDescriptor& descriptor) {
 	normal.index = descriptor.GetIndex();
 	flags.Set(TextureFlag::Normal);
 }
@@ -58,7 +76,16 @@ void AssetMaterial::MaterialBuffer::SetNormalTexture(std::nullopt_t) {
 	flags.Reset(TextureFlag::Normal);
 }
 
-void AssetMaterial::MaterialBuffer::SetRoughnessTexture(const DxObject::Descriptor& descriptor) {
+void AssetMaterial::MaterialBuffer::SetNormalTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor) {
+	if (descriptor.has_value()) {
+		SetNormalTexture(descriptor.value());
+
+	} else {
+		SetNormalTexture(std::nullopt);
+	}
+}
+
+void AssetMaterial::MaterialBuffer::SetRoughnessTexture(const DxObject::ReferenceDescriptor& descriptor) {
 	roughness.index = descriptor.GetIndex();
 	flags.Set(TextureFlag::Roughness);
 }
@@ -68,7 +95,16 @@ void AssetMaterial::MaterialBuffer::SetRoughnessTexture(std::nullopt_t) {
 	flags.Reset(TextureFlag::Roughness);
 }
 
-void AssetMaterial::MaterialBuffer::SetMetallicTexture(const DxObject::Descriptor& descriptor) {
+void AssetMaterial::MaterialBuffer::SetRoughnessTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor) {
+	if (descriptor.has_value()) {
+		SetRoughnessTexture(descriptor.value());
+
+	} else {
+		SetRoughnessTexture(std::nullopt);
+	}
+}
+
+void AssetMaterial::MaterialBuffer::SetMetallicTexture(const DxObject::ReferenceDescriptor& descriptor) {
 	metallic.index = descriptor.GetIndex();
 	flags.Set(TextureFlag::Metallic);
 }
@@ -78,7 +114,16 @@ void AssetMaterial::MaterialBuffer::SetMetallicTexture(std::nullopt_t) {
 	flags.Reset(TextureFlag::Metallic);
 }
 
-void AssetMaterial::MaterialBuffer::SetEmissiveTexture(const DxObject::Descriptor& descriptor) {
+void AssetMaterial::MaterialBuffer::SetMetallicTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor) {
+	if (descriptor.has_value()) {
+		SetMetallicTexture(descriptor.value());
+
+	} else {
+		SetMetallicTexture(std::nullopt);
+	}
+}
+
+void AssetMaterial::MaterialBuffer::SetEmissiveTexture(const DxObject::ReferenceDescriptor& descriptor) {
 	emissive.index = descriptor.GetIndex();
 	flags.Set(TextureFlag::Emissive);
 }
@@ -86,6 +131,14 @@ void AssetMaterial::MaterialBuffer::SetEmissiveTexture(const DxObject::Descripto
 void AssetMaterial::MaterialBuffer::SetEmissiveTexture(std::nullopt_t) {
 	emissive.index = NULL;
 	flags.Reset(TextureFlag::Emissive);
+}
+
+void AssetMaterial::MaterialBuffer::SetEmissiveTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor) {
+	if (descriptor.has_value()) {
+		SetEmissiveTexture(descriptor.value());
+	} else {
+		SetEmissiveTexture(std::nullopt);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -202,70 +255,22 @@ void AssetMaterial::Update() {
 	auto& parameter = buffer_.At();
 
 	// albedo
-	if (textures_[static_cast<uint8_t>(Texture::Albedo)].has_value()) {
-		std::shared_ptr<AssetTexture> texture
-			= sAssetStorage->Get<AssetTexture>(textures_[static_cast<uint8_t>(Texture::Albedo)].value());
-
-		parameter.SetAlbedoTexture(texture->GetDescriptorSRV());
-
-	} else {
-		parameter.SetAlbedoTexture(std::nullopt);
-	}
+	parameter.SetAlbedoTextureOptional(AssetMaterial::GetTextureDescriptor(Texture::Albedo));
 
 	// transparency
-	if (textures_[static_cast<uint8_t>(Texture::Transparency)].has_value()) {
-		std::shared_ptr<AssetTexture> texture
-			= sAssetStorage->Get<AssetTexture>(textures_[static_cast<uint8_t>(Texture::Transparency)].value());
-
-		parameter.SetTransparencyTexture(texture->GetDescriptorSRV());
-
-	} else {
-		parameter.SetTransparencyTexture(std::nullopt);
-	}
+	parameter.SetTransparencyTextureOptional(AssetMaterial::GetTextureDescriptor(Texture::Transparency));
 
 	// normal
-	if (textures_[static_cast<uint8_t>(Texture::Normal)].has_value()) {
-		std::shared_ptr<AssetTexture> texture
-			= sAssetStorage->Get<AssetTexture>(textures_[static_cast<uint8_t>(Texture::Normal)].value());
-
-		parameter.SetNormalTexture(texture->GetDescriptorSRV());
-
-	} else {
-		parameter.SetNormalTexture(std::nullopt);
-	}
+	parameter.SetNormalTextureOptional(AssetMaterial::GetTextureDescriptor(Texture::Normal));
 
 	// roughness
-	if (textures_[static_cast<uint8_t>(Texture::Roughness)].has_value()) {
-		std::shared_ptr<AssetTexture> texture
-			= sAssetStorage->Get<AssetTexture>(textures_[static_cast<uint8_t>(Texture::Roughness)].value());
-
-		parameter.SetRoughnessTexture(texture->GetDescriptorSRV());
-
-	} else {
-		parameter.SetRoughnessTexture(std::nullopt);
-	}
+	parameter.SetRoughnessTextureOptional(AssetMaterial::GetTextureDescriptor(Texture::Roughness));
 
 	// metallic
-	if (textures_[static_cast<uint8_t>(Texture::Metallic)].has_value()) {
-		std::shared_ptr<AssetTexture> texture
-			= sAssetStorage->Get<AssetTexture>(textures_[static_cast<uint8_t>(Texture::Metallic)].value());
-
-		parameter.SetMetallicTexture(texture->GetDescriptorSRV());
-
-	} else {
-		parameter.SetMetallicTexture(std::nullopt);
-	}
+	parameter.SetMetallicTextureOptional(AssetMaterial::GetTextureDescriptor(Texture::Metallic));
 
 	// emissive
-	if (textures_[static_cast<uint8_t>(Texture::Emissive)].has_value()) {
-		std::shared_ptr<AssetTexture> texture
-			= sAssetStorage->Get<AssetTexture>(textures_[static_cast<uint8_t>(Texture::Emissive)].value());
-
-		parameter.SetEmissiveTexture(texture->GetDescriptorSRV());
-
-	} else {
-		parameter.SetEmissiveTexture(std::nullopt);
-	}
+	parameter.SetEmissiveTextureOptional(AssetMaterial::GetTextureDescriptor(Texture::Emissive));
 
 	// transform
 	parameter.SetTransformation(transform_.ToMatrix());
@@ -332,5 +337,19 @@ std::optional<Uuid> AssetMaterial::GetTextureId(const json& data, bool isIntensi
 	option.isGenerateMipmap = true;
 
 	return sContentStorage->Import<ContentTexture>(filepath, option)->GetId(); //!< ContentStorageからIdを取得して返す
+}
+
+std::optional<DxObject::ReferenceDescriptor> AssetMaterial::GetTextureDescriptor(Texture texture) const {
+
+	if (textures_[static_cast<uint8_t>(texture)].has_value()) {
+		std::shared_ptr<AssetTexture> asset
+			= sAssetStorage->Get<AssetTexture>(textures_[static_cast<uint8_t>(texture)].value());
+
+		if (asset->IsComplete()) {
+			return asset->GetDescriptorSRV();
+		}
+	}
+
+	return std::nullopt;
 }
 

@@ -32,6 +32,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	friend class DescriptorPool;
 	friend class DescriptorHeaps;
+	friend struct ReferenceDescriptor;
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Handle structure
@@ -118,6 +119,57 @@ private:
 	//* parameter *//
 
 	std::optional<Handle> handle_ = std::nullopt;
+
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ReferenceDescriptor structure
+////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief Descriptorの参照を保管するクラス.
+struct ReferenceDescriptor {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	ReferenceDescriptor()  = default;
+	~ReferenceDescriptor() = default;
+
+	//* descriptor option *//
+
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandle() const;
+
+	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandle() const;
+
+	uint32_t GetIndex() const;
+
+	bool HasHandle() const { return handle_.has_value(); }
+
+	//* operator [move] *//
+
+	ReferenceDescriptor(ReferenceDescriptor&&) noexcept            = default;
+	ReferenceDescriptor& operator=(ReferenceDescriptor&&) noexcept = default;
+
+	//* operator [copy] *//
+
+	ReferenceDescriptor(const ReferenceDescriptor&) noexcept            = default;
+	ReferenceDescriptor& operator=(const ReferenceDescriptor&) noexcept = default;
+
+	//* operator [conversion] *//
+
+	ReferenceDescriptor(const Descriptor& descriptor);
+	ReferenceDescriptor& operator=(const Descriptor& descriptor);
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	//* parameter *//
+
+	std::optional<Descriptor::Handle> handle_ = std::nullopt;
 
 };
 

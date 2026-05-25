@@ -170,23 +170,29 @@ public:
 
 		//* texture option *//
 
-		void SetAlbedoTexture(const DxObject::Descriptor& descriptor);
+		void SetAlbedoTexture(const DxObject::ReferenceDescriptor& descriptor);
 		void SetAlbedoTexture(std::nullopt_t);
+		void SetAlbedoTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor);
 
-		void SetTransparencyTexture(const DxObject::Descriptor& descriptor);
+		void SetTransparencyTexture(const DxObject::ReferenceDescriptor& descriptor);
 		void SetTransparencyTexture(std::nullopt_t);
+		void SetTransparencyTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor);
 
-		void SetNormalTexture(const DxObject::Descriptor& descriptor);
+		void SetNormalTexture(const DxObject::ReferenceDescriptor& descriptor);
 		void SetNormalTexture(std::nullopt_t);
+		void SetNormalTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor);
 
-		void SetRoughnessTexture(const DxObject::Descriptor& descriptor);
+		void SetRoughnessTexture(const DxObject::ReferenceDescriptor& descriptor);
 		void SetRoughnessTexture(std::nullopt_t);
+		void SetRoughnessTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor);
 
-		void SetMetallicTexture(const DxObject::Descriptor& descriptor);
+		void SetMetallicTexture(const DxObject::ReferenceDescriptor& descriptor);
 		void SetMetallicTexture(std::nullopt_t);
+		void SetMetallicTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor);
 
-		void SetEmissiveTexture(const DxObject::Descriptor& descriptor);
+		void SetEmissiveTexture(const DxObject::ReferenceDescriptor& descriptor);
 		void SetEmissiveTexture(std::nullopt_t);
+		void SetEmissiveTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor);
 
 		//* transformation option *//
 
@@ -271,6 +277,10 @@ private:
 	static Transform2d GetTransform2d(const aiMaterial* aiMaterial);
 
 	static std::optional<Uuid> GetTextureId(const json& data, bool isIntensity = false);
+
+	//* update helper methods *//
+
+	std::optional<DxObject::ReferenceDescriptor> GetTextureDescriptor(Texture texture) const;
 
 };
 

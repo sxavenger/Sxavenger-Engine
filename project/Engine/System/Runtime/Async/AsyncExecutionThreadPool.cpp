@@ -15,7 +15,7 @@ SXAVENGER_ENGINE_USING
 #include <numeric>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// TaskQueue class
+// TaskQueue class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void Async::ExecutionThreadPool::TaskQueue::Push(const std::shared_ptr<ExecutionTask>& task) {
@@ -37,7 +37,7 @@ std::shared_ptr<Async::ExecutionTask> Async::ExecutionThreadPool::TaskQueue::Pop
 	return nullptr; //!< 取得可能なタスクが存在しない.
 }
 
-bool Async::ExecutionThreadPool::TaskQueue::IsEmpty() const {
+bool Async::ExecutionThreadPool::TaskQueue::Empty() const {
 	return std::ranges::all_of(queue_, [](const std::queue<std::shared_ptr<ExecutionTask>>& q) { return q.empty(); });
 }
 
@@ -51,12 +51,43 @@ bool Async::ExecutionThreadPool::TaskQueue::HasTask(Execution execution) const {
 	return false; //!< executionに対応するキューおよび下位のキューにタスクが存在しない.
 }
 
+Async::Execution Async::ExecutionThreadPool::TaskQueue::GetFrontExecution() const {
+	for (uint8_t i = 0; i <= static_cast<uint8_t>(Execution::Cpu); ++i) {
+		if (!queue_[i].empty()) {
+			return static_cast<Execution>(i); //!< 最も優先度の高いタスクのexecutionを返す.
+		}
+	}
+
+	StreamLogger::Exception("[Async::ExecutionThreadPool::TaskQueue] no task in queue."); //!< キューにタスクが存在しない場合は例外を投げる.
+}
+
 size_t Async::ExecutionThreadPool::TaskQueue::GetTaskCount(Execution execution) const {
 	return queue_[static_cast<uint8_t>(execution)].size();
 }
 
 size_t Async::ExecutionThreadPool::TaskQueue::GetTotalTaskCount() const {
 	return std::accumulate(queue_.begin(), queue_.end(), size_t{}, [](size_t x, const Queue& queue) { return x + queue.size(); });
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ThreadCondition class methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void Async::ExecutionThreadPool::ThreadCondition::Notify(Execution execution) {
+	for (uint8_t i = static_cast<uint8_t>(execution); i <= static_cast<uint8_t>(Execution::Cpu); ++i) {
+		conditions_[i].notify_one(); //!< executionに対応する条件変数および下位の条件変数に通知する.
+	}
+}
+
+void Async::ExecutionThreadPool::ThreadCondition::NotifyAll() {
+	for (auto& condition : conditions_) {
+		condition.notify_all(); //!< 全ての条件変数に通知する.
+	}
+}
+
+void Async::ExecutionThreadPool::ThreadCondition::Wait(Execution execution, const std::function<bool()>& predicate) {
+	std::unique_lock<std::mutex> lock(mutex_);
+	conditions_[static_cast<uint8_t>(execution)].wait(lock, predicate); //!< executionに対応する条件変数で待機する.
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,7 +111,7 @@ void Async::ExecutionThreadPool::NotifyTerminate(bool isWaitForQueue) {
 	if (isWaitForQueue) {
 		StreamLogger::EngineThreadLog("[Async::ExecutionThreadPool] notify terminate. (wait for queue)");
 
-		while (!queue_.IsEmpty()) { //!< キューが空になるまで待機する.
+		while (!queue_.Empty()) { //!< キューが空になるまで待機する.
 			std::this_thread::sleep_for(std::chrono::milliseconds(1)); //!< 1ms待機してから再度確認する.
 		}
 
@@ -92,7 +123,7 @@ void Async::ExecutionThreadPool::NotifyTerminate(bool isWaitForQueue) {
 		thread.SetTerminate(); //!< threadの終了を通知する.
 	});
 
-	condition_.notify_all(); //!< 全てのスレッドに通知する.
+	condition_.NotifyAll(); //!< 全てのスレッドに通知する.
 
 	isTerminate_ = true;
 }
@@ -108,7 +139,7 @@ void Async::ExecutionThreadPool::PushTask(const std::shared_ptr<ExecutionTask>& 
 		std::format("[Async::ExecutionThreadPool] task pushed. execution: {}, tag: {}", magic_enum::enum_name(task->GetExecution()), task->GetTag())
 	);
 
-	condition_.notify_one();
+	condition_.Notify(task->GetExecution());
 }
 
 void Async::ExecutionThreadPool::DebugGui() {
@@ -171,27 +202,18 @@ void Async::ExecutionThreadPool::DebugGui() {
 }
 
 std::shared_ptr<Async::ExecutionTask> Async::ExecutionThreadPool::GetTask(const ExecutionThread* thread) {
-	// TODO: QueueSystemのバグ修正
+	// FIXME: thisのptrが崩壊する?s
 
-	std::unique_lock<std::mutex> lock(mutex_);
-	condition_.wait(lock, [this, thread]() { return thread->IsTerminate() || !queue_.IsEmpty(); });
+	condition_.Wait(thread->GetExecution(), [this, thread]() { return thread->IsTerminate() || queue_.HasTask(thread->GetExecution()); });
 
 	if (thread->IsTerminate()) {
 		return nullptr; //!< threadの終了が通知された場合, タスクを取得せずに終了する.
 	}
 
-	if (!queue_.HasTask(thread->GetExecution())) {
-		if (!queue_.IsEmpty()) {
-			condition_.notify_one(); //!< 他のスレッドがタスクを取得できるように通知する.
-		}
-
-		return nullptr; //!< threadのexecutionに対応するタスクが存在しない場合, タスクを取得せずに終了する.
-	}
-
 	std::shared_ptr<ExecutionTask> task = queue_.Pop(thread->GetExecution()); //!< threadのexecutionに対応するタスクを取得する.
 
-	if (!queue_.IsEmpty()) {
-		condition_.notify_one(); //!< 他のスレッドがタスクを取得できるように通知する.
+	if (!queue_.Empty()) {
+		condition_.Notify(queue_.GetFrontExecution()); //!< 他のスレッドがタスクを取得できるように通知する.
 	}
 
 	if (task != nullptr) {

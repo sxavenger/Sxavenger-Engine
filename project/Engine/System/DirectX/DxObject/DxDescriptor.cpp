@@ -70,3 +70,30 @@ Descriptor& Descriptor::operator=(Descriptor&& other) noexcept {
 	return *this;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////
+// ReferenceDescriptor structure
+////////////////////////////////////////////////////////////////////////////////////////////
+
+const D3D12_CPU_DESCRIPTOR_HANDLE& ReferenceDescriptor::GetCPUHandle() const {
+	StreamLogger::AssertA(handle_.has_value(), "reference descriptor is not valid.");
+	return handle_->GetCPUHandle();
+}
+
+const D3D12_GPU_DESCRIPTOR_HANDLE& ReferenceDescriptor::GetGPUHandle() const {
+	StreamLogger::AssertA(handle_.has_value(), "reference descriptor is not valid.");
+	return handle_->GetGPUHandle();
+}
+
+uint32_t ReferenceDescriptor::GetIndex() const {
+	StreamLogger::AssertA(handle_.has_value(), "reference descriptor is not valid.");
+	return handle_->GetIndex();
+}
+
+ReferenceDescriptor::ReferenceDescriptor(const Descriptor& descriptor) {
+	handle_ = descriptor.handle_;
+}
+
+ReferenceDescriptor& ReferenceDescriptor::operator=(const Descriptor& descriptor) {
+	handle_ = descriptor.handle_;
+	return *this;
+}
