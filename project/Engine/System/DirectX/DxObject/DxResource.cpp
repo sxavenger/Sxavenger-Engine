@@ -1,4 +1,3 @@
-#include "Resource.h"
 #include "DxResource.h"
 SXAVENGER_ENGINE_USING
 DXOBJECT_USING

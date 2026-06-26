@@ -1,4 +1,3 @@
-#include "Device.h"
 #include "DxDevice.h"
 SXAVENGER_ENGINE_USING
 DXOBJECT_USING
