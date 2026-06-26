@@ -65,7 +65,7 @@ void ExampleGameLoop::InitSystem() {
 	main_->SetIcon(kPackagesDirectory / "icon" / "SxavengerEngineIcon.ico", { 32, 32 });
 
 	{
-		atmosphere_ = std::make_unique<GameObject>();
+		atmosphere_ = std::make_unique<GameObject>("atmosphere");
 		(*atmosphere_)->AddComponent<TransformComponent>();
 		(*atmosphere_)->AddComponent<SkyAtmosphereComponent>();
 		(*atmosphere_)->AddComponent<DirectionalLightComponent>();
@@ -98,7 +98,7 @@ void ExampleGameLoop::InitSystem() {
 	performance_->SetPosition({ 1190.0f, 0.0f });
 
 
-#ifndef _DEVELOPMENT //!< デバッグビルドでは、シーンのロードに時間がかかるため、ロードしない.
+#ifndef _DEBUG //!< デバッグビルドでは、シーンのロードに時間がかかるため、ロードしない.
 	{
 		json data;
 		if (JsonHandler::LoadFromJson("assets/scene/sponza_lit.scene", data)) {

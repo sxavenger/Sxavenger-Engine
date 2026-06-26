@@ -22,9 +22,7 @@ DXOBJECT_NAMESPACE_BEGIN
 class CommandContext {
 public:
 
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
+
 
 	CommandContext()  = default;
 	~CommandContext() { Term(); }

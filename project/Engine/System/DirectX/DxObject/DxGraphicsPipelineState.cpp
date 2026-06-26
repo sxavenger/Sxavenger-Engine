@@ -36,6 +36,7 @@ void GraphicsPipelineDesc::ClearElement() {
 void GraphicsPipelineDesc::SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode) {
 	rasterizerDesc.CullMode = cullMode;
 	rasterizerDesc.FillMode = fillMode;
+	rasterizerDesc.DepthClipEnable = true;
 }
 
 void GraphicsPipelineDesc::SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_MASK writeMask, D3D12_COMPARISON_FUNC func) {

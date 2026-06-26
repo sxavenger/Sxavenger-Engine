@@ -57,7 +57,7 @@ void main(
 		output.bitangent = normalize(gTransform.TransformNormal(input.bitangent));
 
 		output.instanceId = instanceIndex;
-		output.clip       = output.position.z; //!< near分のclip
+		//output.clip       = output.position.z; //!< near分のclip
 
 		vertices[groupThreadId] = output;
 		

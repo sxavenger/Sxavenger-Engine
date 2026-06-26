@@ -56,7 +56,7 @@ void DirectXWindowContext::Window::Create(const Parameter& parameter, Sxl::Flag<
 	//!< windowスタイルの設定
 	style = flag;
 
-	AdjustWindowRect(&rect, style.Get(), false); //!< ウィンドウサイズの調整
+	AdjustWindowRect(&rect, style.Get(), false);
 
 	//!< ウィンドウを生成
 	hwnd = CreateWindow(
@@ -318,7 +318,7 @@ void DirectXWindowContext::Init(
 	parameter_.clearColor = color;    //!< ウィンドウのクリアカラー
 
 	window_.Create(parameter_, style); //!< windowの設定
-	SetWindowLongPtr(window_.hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this)); //!< instanceの設定
+	SetWindowLongPtr(window_.hwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this)); //!< instanceの設定 
 
 	//!< swapchainの生成
 	swapChain_ = std::make_unique<DxObject::SwapChain>();
