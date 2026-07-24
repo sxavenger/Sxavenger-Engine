@@ -134,6 +134,10 @@ void Async::ExecutionThreadPool::Shutdown() {
 }
 
 void Async::ExecutionThreadPool::PushTask(const std::shared_ptr<ExecutionTask>& task) {
+	// producer(タスク投入)側の処理.
+	// キューに積んだだけではワーカースレッドは待機状態(condition variableでWait)のままなので,
+	// 積んだ後に必ずNotifyして, そのexecutionを処理可能なスレッドを起こす必要がある.
+	// Notifyは対象executionとそれ以下(下位優先度)のスレッドへ通知し, 上位スレッドが空いていれば下位タスクも拾えるようにする.
 	queue_.Push(task); //!< タスクをキューに追加する.
 	StreamLogger::EngineThreadLog(
 		std::format("[Async::ExecutionThreadPool] task pushed. execution: {}, tag: {}", magic_enum::enum_name(task->GetExecution()), task->GetTag())
@@ -202,8 +206,11 @@ void Async::ExecutionThreadPool::DebugGui() {
 }
 
 std::shared_ptr<Async::ExecutionTask> Async::ExecutionThreadPool::GetTask(const ExecutionThread* thread) {
+	// consumer(ワーカースレッド)側の処理.
 	// FIXME: thisのptrが崩壊する?s
 
+	// 処理できるタスクが来る(またはスレッド終了が通知される)までCPUを消費せずに待機する.
+	// 述語を満たさない限りWaitで眠り, PushTask/NotifyTerminateからのNotifyで起床する.
 	condition_.Wait(thread->GetExecution(), [this, thread]() { return thread->IsTerminate() || queue_.HasTask(thread->GetExecution()); });
 
 	if (thread->IsTerminate()) {
@@ -212,6 +219,8 @@ std::shared_ptr<Async::ExecutionTask> Async::ExecutionThreadPool::GetTask(const 
 
 	std::shared_ptr<ExecutionTask> task = queue_.Pop(thread->GetExecution()); //!< threadのexecutionに対応するタスクを取得する.
 
+	// Notifyは1タスクにつき1スレッドしか起こさない(notify_one)ため, 複数タスクが残っている場合は取りこぼしが起きる.
+	// 自分が1つ取り出した後もキューが残っていれば, 次のスレッドを連鎖的に起こして残タスクを処理させる.
 	if (!queue_.Empty()) {
 		condition_.Notify(queue_.GetFrontExecution()); //!< 他のスレッドがタスクを取得できるように通知する.
 	}

@@ -29,6 +29,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetFont class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief stb_truetypeでフォントをラスタライズし, グリフアトラステクスチャとして保持するAsset
 class AssetFont final
 	: public BaseAsset {
 public:
@@ -36,6 +37,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// GlyphInfo structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief 1文字分のアトラス上のUV/サイズ/オフセット/送り幅を保持する構造体
 	struct GlyphInfo {
 	public:
 
@@ -62,16 +64,29 @@ public:
 
 	//* setup option *//
 
+	//! @brief フォント情報からグリフを生成し, アトラステクスチャをGPUへ構築する
+	//! @param[in] context DirectXのキューコンテキスト
+	//! @param[in] info    stb_truetypeのフォント情報
+	//! @param[in] size    ラスタライズするフォントサイズ(px)
 	void Setup(const DirectXQueueContext* context, const stbtt_fontinfo& info, float size);
 
 	//* font option *//
 
+	//! @brief アトラステクスチャのSRV Descriptorを取得する
+	//! @return SRVのDescriptorへの参照
 	const DxObject::Descriptor& GetDescriptorSRV() const;
 
+	//! @brief アトラステクスチャのSRV GPUハンドルを取得する
+	//! @return SRVのGPUディスクリプタハンドルへの参照
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandleSRV() const;
 
+	//! @brief ラスタライズしたフォントサイズを取得する
+	//! @return フォントサイズ(px)
 	float GetFontSize() const { return fontSize_; }
 
+	//! @brief 指定文字のグリフ情報を取得する
+	//! @param[in] c 対象の文字
+	//! @return グリフ情報への参照
 	const GlyphInfo& GetGlyphInfo(wchar_t c) const;
 
 private:

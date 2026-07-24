@@ -31,6 +31,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreLuxGlobalIllumination class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief レイトレーシングによるグローバルイルミネーション(Lux)のシェーダーテーブルとパイプラインを管理するRenderCore
 class FRenderCoreLuxGlobalIllumination final
 	: public FBaseRenderCore {
 public:
@@ -38,6 +39,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// RaygenerationExportType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief RayGenerationシェーダーのエクスポート種別
 	enum class RaygenerationExportType : uint32_t {
 		Default,
 	};
@@ -46,6 +48,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// MissExportType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief Missシェーダーのエクスポート種別
 	enum class MissExportType : uint32_t {
 		Default,
 	};
@@ -54,6 +57,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// HitgroupExportType enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief HitGroupシェーダーのエクスポート種別
 	enum class HitgroupExportType : uint32_t {
 		Mesh,
 		Emissive,
@@ -63,6 +67,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Setting structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief GIのダウンスケール率やサンプル設定を保持する構造体
 	struct Setting {
 	public:
 
@@ -70,8 +75,14 @@ public:
 		// public methods
 		//=========================================================================================
 
+		//! @brief 設定を反映した描画解像度を算出する
+		//! @param[in] resolution 元の解像度
+		//! @return 算出した解像度
 		Vector2ui CalculateResolution(const Vector2ui& resolution) const;
 
+		//! @brief ダウンスケール後の解像度を算出する
+		//! @param[in] resolution 元の解像度
+		//! @return ダウンスケール後の解像度
 		Vector2ui CalculateDownscaledResolution(const Vector2ui& resolution) const;
 
 		//=========================================================================================
@@ -88,6 +99,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Process enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief レイトレ結果を解決するコンピュート処理段階
 	enum class Process : uint8_t {
 		History,
 		Solve,
@@ -100,28 +112,52 @@ public:
 	// public variables
 	//=========================================================================================
 
+	//! @brief レイトレ用エクスポートグループとパイプラインを生成・初期化する (FBaseRenderCoreのoverride)
 	void Init() override;
 
 	//* export option *//
 
+	//! @brief 指定種別のRayGenerationエクスポートグループを取得する
+	//! @param[in] raygeneration 対象種別
+	//! @return エクスポートグループへのポインタ
 	const DxrObject::ExportGroup* GetExportGroup(RaygenerationExportType raygeneration) const;
 
+	//! @brief 指定種別のMissエクスポートグループを取得する
+	//! @param[in] miss 対象種別
+	//! @return エクスポートグループへのポインタ
 	const DxrObject::ExportGroup* GetExportGroup(MissExportType miss) const;
 
+	//! @brief 指定種別のHitGroupエクスポートグループを取得する
+	//! @param[in] hitgroup 対象種別
+	//! @return エクスポートグループへのポインタ
 	const DxrObject::ExportGroup* GetExportGroup(HitgroupExportType hitgroup) const;
 
 	//* context option *//
 
+	//! @brief TLASに合わせてシェーダーテーブルを更新する
+	//! @param[in] topLevelAS トップレベル加速構造
 	void UpdateShaderTable(const DxrObject::TopLevelAS* topLevelAS);
 
+	//! @brief レイトレ用ステートオブジェクトコンテキストを取得する
+	//! @return コンテキストへのポインタ
 	DxrObject::StateObjectContext* GetContext() const { return context_.get(); }
 
 	//* pipeline option *//
 
+	//! @brief 指定処理段階のパイプラインを設定する
+	//! @param[in] process 対象の処理段階
+	//! @param[in] context DirectXのキューコンテキスト
 	void SetPipeline(Process process, const DirectXQueueContext* context) const;
 
+	//! @brief 指定処理段階へコンピュート用バッファをバインドする
+	//! @param[in] process 対象の処理段階
+	//! @param[in] context DirectXのキューコンテキスト
+	//! @param[in] desc    バインドするバッファ記述子
 	void BindComputeBuffer(Process process, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
 
+	//! @brief 設定中のパイプラインをディスパッチする
+	//! @param[in] context    DirectXのキューコンテキスト
+	//! @param[in] resolution 処理対象の解像度
 	void Dispatch(const DirectXQueueContext* context, const Vector2ui& resolution) const;
 
 private:

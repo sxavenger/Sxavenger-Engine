@@ -22,6 +22,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FReservoirBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief ReSTIRの各段階(Initial/Temporal/Spatial)のReservoirをGPUバッファとして保持するバッファ
 class FReservoirBuffer final
 	: public FBaseBuffer {
 public:
@@ -31,6 +32,8 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Reservoir structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief ReSTIRのReservoir(サンプルと重み情報)を保持するGPU構造体
+	//! @tparam N サンプルデータの要素数
 	template <size_t N>
 	struct GPU_BUFFER_ALIGNAS BaseReservoir {
 	public:
@@ -53,6 +56,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Moment structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief Reservoirのモーメント(オフセット/index)情報を保持する構造体
 	struct Moment {
 	public:
 
@@ -64,6 +68,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Layout enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief ReSTIRのReservoir再利用段階
 	enum class Layout : uint8_t {
 		Initial,
 		Temporal,
@@ -77,12 +82,19 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//! @brief 指定解像度で全段階分のReservoirバッファを生成する
+	//! @param[in] resolution バッファの解像度
 	void Create(const Vector2ui& resolution) override;
 
 	//* getter *//
 
+	//! @brief 指定段階のReservoirバッファを取得する
+	//! @param[in] layout 取得する段階
+	//! @return 対応するReservoirバッファへの参照
 	DxObject::UnorderedDimensionBuffer<Reservoir>& GetReservoir(Layout layout) { return reservoirs_[static_cast<size_t>(layout)]; }
 
+	//! @brief モーメントバッファを取得する
+	//! @return モーメントバッファへの参照
 	DxObject::UnorderedDimensionBuffer<Moment>& GetMoment() { return moment_; }
 
 private:

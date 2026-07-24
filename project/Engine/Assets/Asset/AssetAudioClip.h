@@ -34,6 +34,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetAudioClip class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief Media Foundationで音声を読み込み, 波形フォーマットとPCMデータを保持するAsset
 class AssetAudioClip final
 	: public BaseAsset {
 public:
@@ -50,14 +51,22 @@ public:
 
 	//* setup option *//
 
+	//! @brief Media FoundationのソースリーダーからPCMデータを読み込む
+	//! @param[in] reader デコード済み音声を供給するソースリーダー
 	void Setup(IMFSourceReader* reader);
 
 	//* audio clip option *//
 
+	//! @brief 波形フォーマットを取得する
+	//! @return WAVEFORMATEXへの参照
 	const WAVEFORMATEX& GetFormat() const;
 
+	//! @brief 波形データ先頭へのポインタを取得する
+	//! @return PCMデータの先頭ポインタ
 	const BYTE* GetBufferPointer() const;
 
+	//! @brief 波形データのバイトサイズを取得する
+	//! @return PCMデータのサイズ(byte)
 	const size_t GetBufferSize() const;
 
 private:

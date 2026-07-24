@@ -30,6 +30,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreProcess class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief ポストプロセス/合成処理(トーンマップ/AA/GTAO/Bloom等)のコンピュートパイプラインを管理するRenderCore
 class FRenderCoreProcess final
 	: public FBaseRenderCore {
 public:
@@ -37,6 +38,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// CompositeProcess enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief 合成段階で実行する処理(トーンマップ/アンチエイリアス/AO)の種別
 	enum class CompositeProcess : uint8_t {
 		Tonemap,
 		FXAA,
@@ -54,6 +56,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// PostProcess enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief ユーザー指定で適用するポストエフェクトの種別
 	enum class PostProcess : uint32_t {
 		GrayScale,
 		Bloom_Luminance,
@@ -82,22 +85,40 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//! @brief 全パイプラインを生成・初期化する (FBaseRenderCoreのoverride)
 	void Init() override;
 
 	//* process option *//
 
+	//! @brief 現在設定中のコンピュートパイプラインをディスパッチする
+	//! @param[in] context    DirectXのキューコンテキスト
+	//! @param[in] resolution 処理対象の解像度 (スレッドグループ数の算出に使用)
 	void Dispatch(const DirectXQueueContext* context, const Vector2ui& resolution) const;
 
 	//* post process option *//
 
+	//! @brief 指定ポストエフェクトのパイプラインを設定する
+	//! @param[in] process 対象のポストエフェクト
+	//! @param[in] context DirectXのキューコンテキスト
 	void SetPipeline(PostProcess process, const DirectXQueueContext* context) const;
 
+	//! @brief 指定ポストエフェクトへコンピュート用バッファをバインドする
+	//! @param[in] process 対象のポストエフェクト
+	//! @param[in] context DirectXのキューコンテキスト
+	//! @param[in] desc    バインドするバッファ記述子
 	void BindComputeBuffer(PostProcess process, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
 
 	//* composite process option *//
 
+	//! @brief 指定合成処理のパイプラインを設定する
+	//! @param[in] process 対象の合成処理
+	//! @param[in] context DirectXのキューコンテキスト
 	void SetPipeline(CompositeProcess process, const DirectXQueueContext* context) const;
 
+	//! @brief 指定合成処理へコンピュート用バッファをバインドする
+	//! @param[in] process 対象の合成処理
+	//! @param[in] context DirectXのキューコンテキスト
+	//! @param[in] desc    バインドするバッファ記述子
 	void BindComputeBuffer(CompositeProcess process, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
 
 private:

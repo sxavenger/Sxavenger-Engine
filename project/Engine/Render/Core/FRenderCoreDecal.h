@@ -30,6 +30,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreDecal class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief デカール(投影テクスチャ)描画用のパイプラインを管理するRenderCore
 class FRenderCoreDecal final
 	: public FBaseRenderCore {
 public:
@@ -37,6 +38,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Desc enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief PSO記述子の種別
 	enum class Desc : uint8_t {
 		Decal,
 	};
@@ -45,6 +47,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Pipeline enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief デカール描画パイプラインの種別
 	enum class Pipeline : uint32_t {
 		Decal,
 	};
@@ -56,14 +59,25 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//! @brief 全パイプラインを生成・初期化する (FBaseRenderCoreのoverride)
 	void Init() override;
 
 	//* pipeline option *//
 
+	//! @brief 指定パイプラインをコマンドリストへ設定する
+	//! @param[in] pipeline   設定するパイプライン
+	//! @param[in] context    DirectXのキューコンテキスト
+	//! @param[in] resolution ビューポート解像度
 	void SetPipeline(Pipeline pipeline, const DirectXQueueContext* context, const Vector2ui& resolution) const;
 
+	//! @brief 指定パイプラインへ描画用バッファをバインドする
+	//! @param[in] pipeline 対象パイプライン
+	//! @param[in] context  DirectXのキューコンテキスト
+	//! @param[in] desc     バインドするバッファ記述子
 	void BindGraphicsBuffer(Pipeline pipeline, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
 
+	//! @brief デカール描画のドローコールを発行する
+	//! @param[in] context DirectXのキューコンテキスト
 	void DrawCall(const DirectXQueueContext* context);
 
 private:

@@ -23,6 +23,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ContentCondition enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief ContentObserverが監視するContentの状態
 enum class ContentCondition : uint8_t {
 	Unregistered, //!< 未登録
 	Expired,      //!< 期限切れ
@@ -32,6 +33,8 @@ enum class ContentCondition : uint8_t {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ContentObserver class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief Contentをweak_ptrで監視し, 破棄済みなら再読み込みして取得する監視ハンドル
+//! @tparam T 監視対象のContent型
 template <Content T>
 class ContentObserver {
 public:
@@ -43,26 +46,44 @@ public:
 	ContentObserver() = default;
 	ContentObserver(const std::shared_ptr<T>& content) { Register(content); }
 
+	//! @brief 監視対象を解除し, 保持情報をクリアする
 	void Reset();
 
+	//! @brief 監視対象のContentを登録する
+	//! @param[in] content 監視するContent
 	void Register(const std::shared_ptr<T>& content);
 
+	//! @brief 記録済みのファイルパス/パラメータから強制的に再読み込みする
 	void Reload();
 
+	//! @brief 監視対象の現在の状態を取得する
+	//! @return Contentの状態
 	ContentCondition GetCondition() const;
 
 	//* operator [assign] *//
 
+	//! @brief 監視対象のContentを登録する (代入演算子版)
 	void operator=(const std::shared_ptr<T>& content) { Register(content); }
 
 	//* getter *//
 
+	//! @brief 監視対象が期限切れ(破棄済み)かを返す
+	//! @retval true  期限切れ
+	//! @retval false それ以外
 	bool IsExpired() const { return GetCondition() == ContentCondition::Expired; }
 
+	//! @brief Contentを取得する. 期限切れなら再読み込みしてから返す
+	//! @return Contentのshared_ptr
 	std::shared_ptr<T> Acquire();
+	//! @brief Acquireした上で読み込み完了を待って返す
+	//! @return Contentのshared_ptr
 	std::shared_ptr<T> WaitAcquire();
 
+	//! @brief Contentを取得する. 期限切れの場合はアサートする
+	//! @return Contentのshared_ptr
 	std::shared_ptr<T> Get() const;
+	//! @brief Getした上で読み込み完了を待って返す
+	//! @return Contentのshared_ptr
 	std::shared_ptr<T> WaitGet() const;
 
 private:

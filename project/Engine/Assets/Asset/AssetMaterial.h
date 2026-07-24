@@ -36,6 +36,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetMaterial class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief マテリアルの各種パラメータ(色/テクスチャ/UV変換等)を保持し, GPUへ転送するAsset
 class AssetMaterial final
 	: public BaseAsset {
 public:
@@ -43,6 +44,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Texture enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief マテリアルが持つテクスチャの種類
 	enum class Texture : uint8_t {
 		Albedo,
 		Transparency,
@@ -55,6 +57,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// UVTransformation structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief テクスチャのUV座標に適用する変換行列を保持する構造体
 	struct UVTransformation {
 	public:
 
@@ -69,6 +72,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Albedo structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief アルベド(基本色)の値とテクスチャindexを保持する構造体
 	struct Albedo {
 	public:
 
@@ -84,6 +88,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Transparency structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief 透明度の値とテクスチャindexを保持する構造体
 	struct Transparency {
 	public:
 
@@ -99,6 +104,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Normal structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief 法線マップのテクスチャindexを保持する構造体
 	struct Normal {
 	public:
 
@@ -113,6 +119,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// [Helper] Property structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief スカラー値とテクスチャindexを持つ汎用プロパティ構造体 (roughness/metallic等で使用)
 	struct Property {
 	public:
 
@@ -128,6 +135,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Emissive structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief 自己発光の色/テクスチャindex/強度を保持する構造体
 	struct Emissive {
 	public:
 
@@ -144,12 +152,14 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// MaterialBuffer structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief GPUの定数バッファへ転送するマテリアルパラメータの本体. 各テクスチャの有無をフラグで管理する
 	struct MaterialBuffer {
 	public:
 
 		////////////////////////////////////////////////////////////////////////////////////////////
 		// TextureFlag enum class
 		////////////////////////////////////////////////////////////////////////////////////////////
+		//! @brief 各テクスチャが設定されているかをbitで表すフラグ
 		enum class TextureFlag : uint32_t {
 			None         = 0,
 			Albedo       = 1 << 0,
@@ -166,36 +176,69 @@ public:
 		// public methods
 		//=========================================================================================
 
+		//! @brief 各パラメータを既定値へ初期化する
 		void Init();
 
 		//* texture option *//
 
+		//! @brief アルベドテクスチャのindexを設定し, 対応するフラグを立てる
+		//! @param[in] descriptor テクスチャのディスクリプタ
 		void SetAlbedoTexture(const DxObject::ReferenceDescriptor& descriptor);
+		//! @brief アルベドテクスチャを未設定にし, フラグを下ろす
 		void SetAlbedoTexture(std::nullopt_t);
+		//! @brief アルベドテクスチャを設定する (optionalが無効なら未設定として扱う)
+		//! @param[in] descriptor テクスチャのディスクリプタ (無効値可)
 		void SetAlbedoTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor);
 
+		//! @brief 透明度テクスチャのindexを設定し, 対応するフラグを立てる
+		//! @param[in] descriptor テクスチャのディスクリプタ
 		void SetTransparencyTexture(const DxObject::ReferenceDescriptor& descriptor);
+		//! @brief 透明度テクスチャを未設定にし, フラグを下ろす
 		void SetTransparencyTexture(std::nullopt_t);
+		//! @brief 透明度テクスチャを設定する (optionalが無効なら未設定として扱う)
+		//! @param[in] descriptor テクスチャのディスクリプタ (無効値可)
 		void SetTransparencyTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor);
 
+		//! @brief 法線テクスチャのindexを設定し, 対応するフラグを立てる
+		//! @param[in] descriptor テクスチャのディスクリプタ
 		void SetNormalTexture(const DxObject::ReferenceDescriptor& descriptor);
+		//! @brief 法線テクスチャを未設定にし, フラグを下ろす
 		void SetNormalTexture(std::nullopt_t);
+		//! @brief 法線テクスチャを設定する (optionalが無効なら未設定として扱う)
+		//! @param[in] descriptor テクスチャのディスクリプタ (無効値可)
 		void SetNormalTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor);
 
+		//! @brief ラフネステクスチャのindexを設定し, 対応するフラグを立てる
+		//! @param[in] descriptor テクスチャのディスクリプタ
 		void SetRoughnessTexture(const DxObject::ReferenceDescriptor& descriptor);
+		//! @brief ラフネステクスチャを未設定にし, フラグを下ろす
 		void SetRoughnessTexture(std::nullopt_t);
+		//! @brief ラフネステクスチャを設定する (optionalが無効なら未設定として扱う)
+		//! @param[in] descriptor テクスチャのディスクリプタ (無効値可)
 		void SetRoughnessTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor);
 
+		//! @brief メタリックテクスチャのindexを設定し, 対応するフラグを立てる
+		//! @param[in] descriptor テクスチャのディスクリプタ
 		void SetMetallicTexture(const DxObject::ReferenceDescriptor& descriptor);
+		//! @brief メタリックテクスチャを未設定にし, フラグを下ろす
 		void SetMetallicTexture(std::nullopt_t);
+		//! @brief メタリックテクスチャを設定する (optionalが無効なら未設定として扱う)
+		//! @param[in] descriptor テクスチャのディスクリプタ (無効値可)
 		void SetMetallicTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor);
 
+		//! @brief エミッシブテクスチャのindexを設定し, 対応するフラグを立てる
+		//! @param[in] descriptor テクスチャのディスクリプタ
 		void SetEmissiveTexture(const DxObject::ReferenceDescriptor& descriptor);
+		//! @brief エミッシブテクスチャを未設定にし, フラグを下ろす
 		void SetEmissiveTexture(std::nullopt_t);
+		//! @brief エミッシブテクスチャを設定する (optionalが無効なら未設定として扱う)
+		//! @param[in] descriptor テクスチャのディスクリプタ (無効値可)
 		void SetEmissiveTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor);
 
 		//* transformation option *//
 
+		//! @brief UV変換行列を設定する
+		//! @param[in] mat UVに適用する変換行列
 		void SetTransformation(const Matrix4x4& mat) { transformation.mat = mat; }
 
 		//=========================================================================================
@@ -229,21 +272,36 @@ public:
 
 	//* setup option *//
 
+	//! @brief assimpのaiMaterialからマテリアルパラメータを読み込む
+	//! @param[in] material  読み込み元のassimpマテリアル
+	//! @param[in] directory テクスチャ解決の基準となるディレクトリ
 	void Setup(const aiMaterial* material, const std::filesystem::path& directory); //!< assimp用setup
 
+	//! @brief jsonからマテリアルパラメータを読み込む
+	//! @param[in] data 読み込み元のjsonデータ
 	void Setup(const json& data); //!< json用setup
 
 	//* material option *//
 
+	//! @brief 保持しているテクスチャindex等を反映し, GPUバッファを最新状態に更新する
 	void Update();
 
+	//! @brief マテリアル定数バッファのGPU仮想アドレスを取得する
+	//! @return 定数バッファのGPU仮想アドレス
 	D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return buffer_.GetGPUVirtualAddress(); }
 
+	//! @brief マテリアルバッファ本体を取得する
+	//! @return MaterialBufferへの参照
 	MaterialBuffer& GetBuffer() { return buffer_.At(); }
+	//! @brief マテリアルバッファ本体を取得する (const版)
+	//! @return MaterialBufferへのconst参照
 	const MaterialBuffer& GetBuffer() const { return buffer_.At(); }
 
 	//* operator [copy] *//
 
+	//! @brief パラメータをコピーする (バッファは各インスタンス固有のため内容のみ複製する)
+	//! @param[in] other コピー元マテリアル
+	//! @return 自身への参照
 	AssetMaterial& operator=(const AssetMaterial& other);
 
 private:

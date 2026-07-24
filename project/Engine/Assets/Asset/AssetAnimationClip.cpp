@@ -25,10 +25,13 @@ void AssetAnimationClip::Setup(const aiAnimation* animation) {
 }
 
 TimePointd<TimeUnit::second> AssetAnimationClip::GetTime(double time, double ticksPerSeconds) {
+	// assimpのキー時刻は「ティック」単位のため, ticksPerSecondで割って秒単位へ正規化する.
 	return { time / ticksPerSeconds };
 }
 
 TransformAnimation AssetAnimationClip::LoadAnimation(const aiNodeAnim* aiNodeAnimation, double tickPerSeconds) {
+	// assimp(右手座標系)のキーフレームを本エンジンの左手座標系へ変換しながら取り込む.
+	// translateはzを反転, rotate(quaternion)はx/yを反転してzを保持する(左手系での回転の向きを合わせるため).
 
 	TransformAnimation animation;
 

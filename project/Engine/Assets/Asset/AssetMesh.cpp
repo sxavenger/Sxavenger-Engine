@@ -21,6 +21,8 @@ void AssetMesh::Setup(const DirectXQueueContext* context, const aiMesh* mesh) {
 	auto index  = ia.GetIndex();
 
 	// verticesの解析
+	// assimpは右手座標系で頂点を読み込むため, エンジンの左手座標系に合わせてz成分を反転(Convert*)して格納する.
+	// また各属性はメッシュによって存在しない場合があるため, Has*()で有無を確認してから取り込む.
 	for (uint32_t element = 0; element < mesh->mNumVertices; ++element) {
 
 		//!< position
@@ -34,14 +36,16 @@ void AssetMesh::Setup(const DirectXQueueContext* context, const aiMesh* mesh) {
 		}
 
 		//!< texcoord
+		// UVは反転不要なため, x/yをそのまま取り込む.
 		if (mesh->HasTextureCoords(0)) {
 			const aiVector3D& texcoord  = mesh->mTextureCoords[0][element];
 			(*vertex)[element].texcoord = { texcoord.x, texcoord.y };
 		}
 
+		// 法線マッピング用のtangent/bitangent. 法線同様に左手座標系へ変換する.
 		if (mesh->HasTangentsAndBitangents()) {
 			//!< fixme: 左手座標系に変換
-			
+
 			const aiVector3D& tangent  = mesh->mTangents[element];
 			(*vertex)[element].tangent = ConvertVector3(tangent); //!< 左手座標系に変換
 
@@ -59,6 +63,7 @@ void AssetMesh::Setup(const DirectXQueueContext* context, const aiMesh* mesh) {
 		StreamLogger::AssertA(aiFace.mNumIndices == 3, "mesh is not triangle."); //!< 三角形のみの対応
 
 		// indexの解析
+		// 左手座標系では三角形の巻き順(ワインディング)が反転するため, インデックスを 1,2,0 に並べ替えて表裏を合わせる.
 		(*index)[faceIndex] = { aiFace.mIndices[1], aiFace.mIndices[2], aiFace.mIndices[0] }; //!< 左手座標系に変換
 	}
 

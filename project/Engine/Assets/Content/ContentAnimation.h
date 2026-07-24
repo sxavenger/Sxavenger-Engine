@@ -25,6 +25,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ContentAnimation class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief assimpでアニメーションを読み込み, アニメーションクリップAsset化するContent
 class ContentAnimation final
 	: public BaseContent {
 public:
@@ -41,12 +42,17 @@ public:
 
 	//* content option *//
 
+	//! @brief 読み込み対象ファイルとパラメータを関連付ける (BaseContentのoverride)
 	void Attach(const std::filesystem::path& filepath, const std::any& parameter) override;
 
+	//! @brief アニメーションを読み込み, クリップAssetを生成・登録する (BaseContentのoverride)
 	void Load(MAYBE_UNUSED const DirectXQueueContext* context) override;
 
 	//* id option *//
 
+	//! @brief 指定indexのアニメーションクリップAssetのuuidを取得する
+	//! @param[in] index アニメーションのindex
+	//! @return クリップAssetのuuid
 	const Uuid& GetAnimation(size_t index) const { return animations_[index]; }
 
 private:

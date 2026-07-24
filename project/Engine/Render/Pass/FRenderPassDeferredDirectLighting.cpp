@@ -139,6 +139,9 @@ void FRenderPassDeferredDirectLighting::EndDirectLightingPass(const DirectXQueue
 }
 
 void FRenderPassDeferredDirectLighting::PassUnlit(const DirectXQueueContext* context, const FRenderConfig& config) {
+	// Deferredライティングでは, GBufferに書き込まれた幾何情報を入力として,
+	// ライト種別ごとにフルスクリーンパスを実行し, 結果をLight Accumulation Bufferへ加算していく.
+	// Unlitパスはライトの影響を受けない要素(emissive等)を最初に書き込む基準となる.
 
 	FGBuffer* gbuffer                 = config.buffer->GetBuffer<FGBuffer>(); //!< GBufferの取得
 	FDepthStencilBuffer* depthStencil = config.buffer->GetBuffer<FDepthStencilBuffer>(); //!< DepthStencilの取得
@@ -186,6 +189,8 @@ void FRenderPassDeferredDirectLighting::PassDirectionalLight(const DirectXQueueC
 	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
 	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
 
+	// シーン内の有効なDirectionalLightを1つずつ処理する.
+	// ライトごとにtransform/parameterを差し替えて描画し, 各ライトの寄与をバッファへ加算するため個別のドローが必要.
 	sComponentStorage->ForEachActive<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
 
 		//!< componentのparameterの設定
@@ -220,6 +225,7 @@ void FRenderPassDeferredDirectLighting::PassPointLight(const DirectXQueueContext
 	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
 	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
 
+	// 有効なPointLightごとに寄与を加算する. (処理の意図はPassDirectionalLightと同様)
 	sComponentStorage->ForEachActive<PointLightComponent>([&](PointLightComponent* component) {
 
 		//!< componentのparameterの設定
@@ -254,6 +260,7 @@ void FRenderPassDeferredDirectLighting::PassSpotLight(const DirectXQueueContext*
 	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
 	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
 
+	// 有効なSpotLightごとに寄与を加算する. (処理の意図はPassDirectionalLightと同様)
 	sComponentStorage->ForEachActive<SpotLightComponent>([&](SpotLightComponent* component) {
 
 		//!< componentのparameterの設定

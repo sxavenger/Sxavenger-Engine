@@ -363,6 +363,9 @@ void ContentTexture::Compress(const std::filesystem::path& filepath, const Optio
 		return; //!< 既に圧縮formatの場合は何もしない
 	}
 
+	// 圧縮フォーマットの選択:
+	// LDR(通常の8bitカラー)はBC7が高品質かつRGBAを扱えるため既定とする. sRGBならsRGB版フォーマットへ変換する.
+	// HDR(float)はBC7では表現できないため, HDR専用のBC6Hを使う (BC6HはsRGBの概念を持たないためMakeSRGBは適用しない).
 	DXGI_FORMAT compressFormat = DXGI_FORMAT_BC7_UNORM;
 
 	if (option.encoding == Encoding::Lightness) {

@@ -14,6 +14,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FBaseRenderCore class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 描画機能ごとのパイプライン(PSO/RootSignature等)を保持するRenderCoreの基底クラス
 class FBaseRenderCore {
 public:
 
@@ -24,6 +25,7 @@ public:
 	FBaseRenderCore()          = default;
 	virtual ~FBaseRenderCore() = default;
 
+	//! @brief パイプライン等を初期化する (派生クラスで実装)
 	virtual void Init() = 0;
 
 private:

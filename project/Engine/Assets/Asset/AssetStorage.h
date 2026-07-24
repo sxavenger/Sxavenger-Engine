@@ -21,6 +21,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 //////////////////////////////////////////////////////////////////////////////////////////
 // AssetStorage class
 //////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 型ごとにuuidとAssetを紐づけて一元管理するストレージ (シングルトン)
 class AssetStorage final {
 public:
 
@@ -41,6 +42,7 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//! @brief 全Assetを破棄し, ストレージを空にする
 	void Term();
 
 	//* storage option *//
@@ -75,6 +77,10 @@ public:
 	template <Asset T>
 	std::shared_ptr<T> Get(const Uuid& id) const;
 
+	//! @brief Assetの取得. 存在しない場合はアサートする
+	//! @tparam T Assetの型
+	//! @param[in] id Assetのuuid
+	//! @return 取得したAssetの共有ポインタ
 	template <Asset T>
 	std::shared_ptr<T> Require(const Uuid& id) const;
 
@@ -84,21 +90,33 @@ public:
 	template <Asset T>
 	void ForEach(const std::function<void(T* const)>& function) const;
 
+	//! @brief 指定した型のストレージを取得する
+	//! @tparam T Assetの型
+	//! @return 該当型のストレージへの参照
 	template <Asset T>
 	const Storage& GetStorage();
 
+	//! @brief 全型を含むステージ全体を取得する
+	//! @return ステージへの参照
 	const Stage& GetStage() const { return storage_; }
 
 	//* location option *//
 
+	//! @brief uuidとファイルパスの対応表をファイルへ保存する
 	void SerializeLocation() const;
 
+	//! @brief uuidとファイルパスの対応表をファイルから読み込む
 	void DeserializeLocation();
 
+	//! @brief 指定uuidに対応するファイルパスを取得する
+	//! @param[in] id Assetのuuid
+	//! @return 対応するファイルパス
 	const std::filesystem::path& GetLocation(const Uuid& id) const;
 
 	//* singleton *//
 
+	//! @brief シングルトンインスタンスを取得する
+	//! @return インスタンスへのポインタ
 	static AssetStorage* GetInstance();
 
 private:

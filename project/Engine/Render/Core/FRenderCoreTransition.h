@@ -26,6 +26,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreTransition class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief バッファ間の中間変換処理と最終presentのパイプラインを管理するRenderCore
 class FRenderCoreTransition final
 	: public FBaseRenderCore {
 public:
@@ -33,6 +34,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Transition enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief 中間バッファ変換処理の種別
 	enum class Transition : uint8_t {
 		MotionVectorTransition,
 		AlbedoWhiteTransition,
@@ -49,21 +51,36 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//! @brief 全パイプラインを生成・初期化する (FBaseRenderCoreのoverride)
 	void Init() override;
 
 	//* transition option *//
 
+	//! @brief 指定変換処理のパイプラインを設定する
+	//! @param[in] transition 対象の変換処理
+	//! @param[in] context    DirectXのキューコンテキスト
 	void SetPipeline(Transition transition, const DirectXQueueContext* context) const;
 
+	//! @brief 指定変換処理へコンピュート用バッファをバインドする
+	//! @param[in] transition 対象の変換処理
+	//! @param[in] context    DirectXのキューコンテキスト
+	//! @param[in] desc       バインドするバッファ記述子
 	void BindComputeBuffer(
 		Transition transition, const DirectXQueueContext* context,
 		const DxObject::BindBufferDesc& desc
 	) const;
 
+	//! @brief 設定中の変換処理をディスパッチする
+	//! @param[in] context    DirectXのキューコンテキスト
+	//! @param[in] resolution 処理対象の解像度
 	void Dispatch(const DirectXQueueContext* context, const Vector2ui& resolution) const;
 
 	//* present option *//
 
+	//! @brief 指定テクスチャを最終出力(スワップチェーン)へ描画する
+	//! @param[in] context    DirectXのキューコンテキスト
+	//! @param[in] resolution 出力解像度
+	//! @param[in] handle     表示するテクスチャのSRV GPUハンドル
 	void Present(const DirectXQueueContext* context, const Vector2ui& resolution, const D3D12_GPU_DESCRIPTOR_HANDLE& handle) const;
 
 private:

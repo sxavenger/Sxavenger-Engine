@@ -27,6 +27,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreCanvas class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief スプライト/テキストなど2D Canvas描画用のパイプラインを管理するRenderCore
 class FRenderCoreCanvas final
 	: public FBaseRenderCore {
 public:
@@ -34,6 +35,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Pipeline enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief Canvas描画パイプラインの種別
 	enum class Pipeline : uint8_t {
 		Sprite,
 		Text
@@ -46,12 +48,21 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//! @brief 全パイプラインを生成・初期化する (FBaseRenderCoreのoverride)
 	void Init() override;
 
 	//* pipeline option *//
 
+	//! @brief 指定パイプラインをコマンドリストへ設定する
+	//! @param[in] pipeline   設定するパイプライン
+	//! @param[in] context    DirectXのキューコンテキスト
+	//! @param[in] resolution ビューポート解像度
 	void SetPipeline(Pipeline pipeline, const DirectXQueueContext* context, const Vector2ui& resolution) const;
 
+	//! @brief 指定パイプラインへ描画用バッファをバインドする
+	//! @param[in] pipeline 対象パイプライン
+	//! @param[in] context  DirectXのキューコンテキスト
+	//! @param[in] desc     バインドするバッファ記述子
 	void BindGraphicsBuffer(Pipeline pipeline, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
 
 private:

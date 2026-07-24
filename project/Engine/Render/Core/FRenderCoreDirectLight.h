@@ -26,6 +26,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreDirectLight class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 各ライト種別(Unlit/Punctual/Rect/Sky)のライティングパイプラインを管理するRenderCore
 class FRenderCoreDirectLight final
 	: public FBaseRenderCore {
 public:
@@ -33,6 +34,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Type enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief ライティングパスの種別
 	enum class Type : uint8_t {
 		//!< Unlit
 		Unlit,
@@ -56,6 +58,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Desc enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief 深度テスト方針ごとのPSO記述子種別
 	enum class Desc : uint8_t {
 		Front, //!< Depthが1.0以外に書き込み. [Depth < 1.0]
 		Back,  //!< Depthが1.0に書き込み. [Depth == 1.0]
@@ -69,16 +72,28 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//! @brief 全ライトパイプラインを生成・初期化する (FBaseRenderCoreのoverride)
 	void Init() override;
 
 	//* pipeline option *//
 
+	//! @brief 指定ライト種別のパイプラインをコマンドリストへ設定する
+	//! @param[in] type       ライト種別
+	//! @param[in] context    DirectXのキューコンテキスト
+	//! @param[in] resolution ビューポート解像度
 	void SetPipeline(Type type, const DirectXQueueContext* context, const Vector2ui& resolution) const;
 
+	//! @brief 指定ライト種別へ描画用バッファをバインドする
+	//! @param[in] type    ライト種別
+	//! @param[in] context DirectXのキューコンテキスト
+	//! @param[in] desc    バインドするバッファ記述子
 	void BindGraphicsBuffer(Type type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const;
 
 	//* input assembler option *//
 
+	//! @brief フルスクリーン描画のドローコールを発行する
+	//! @param[in] context       DirectXのキューコンテキスト
+	//! @param[in] instanceCount インスタンス数
 	void DrawCall(const DirectXQueueContext* context, UINT instanceCount = 1) const;
 
 private:

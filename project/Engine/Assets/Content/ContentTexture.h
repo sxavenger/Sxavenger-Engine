@@ -25,6 +25,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ContentTexture class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 各種フォーマットの画像ファイルを読み込み, テクスチャAsset化するContent
 class ContentTexture final
 	: public BaseContent {
 public:
@@ -32,6 +33,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Encoding enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief テクスチャの色空間エンコード形式
 	enum class Encoding : bool {
 		Lightness, //!< sRGB
 		Intensity, //!< Linear
@@ -40,6 +42,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Option structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief テクスチャ読み込み時のオプション(エンコード/ミップ生成/圧縮)
 	struct Option {
 	public:
 
@@ -69,12 +72,16 @@ public:
 
 	//* content option *//
 
+	//! @brief 読み込み対象ファイルとパラメータを関連付ける (BaseContentのoverride)
 	void Attach(const std::filesystem::path& filepath, const std::any& parameter) override;
 
+	//! @brief 画像を読み込み, テクスチャAssetを生成・登録する (BaseContentのoverride)
 	void Load(MAYBE_UNUSED const DirectXQueueContext* context) override;
 
 	//* id option *//
 
+	//! @brief 生成したテクスチャAssetのuuidを取得する
+	//! @return テクスチャAssetのuuid
 	const Uuid& GetId() const { return id_; }
 
 private:

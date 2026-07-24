@@ -24,6 +24,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ContentFont class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief フォントファイルを読み込み, フォントAsset化するContent
 class ContentFont final
 	: public BaseContent {
 public:
@@ -40,12 +41,16 @@ public:
 
 	//* content option *//
 
+	//! @brief 読み込み対象ファイルとパラメータを関連付ける (BaseContentのoverride)
 	void Attach(const std::filesystem::path& filepath, const std::any& parameter) override;
 
+	//! @brief フォントを読み込み, フォントAssetを生成・登録する (BaseContentのoverride)
 	void Load(MAYBE_UNUSED const DirectXQueueContext* context) override;
 
 	//* id option *//
 
+	//! @brief 生成したフォントAssetのuuidを取得する
+	//! @return フォントAssetのuuid
 	const Uuid& GetId() const { return id_; }
 
 private:

@@ -18,6 +18,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ContentBlob class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief シェーダーファイルをコンパイルし, シェーダーBlobとして保持するContent
 class ContentBlob final
 	: public BaseContent {
 public:
@@ -34,10 +35,13 @@ public:
 
 	//* content option *//
 
+	//! @brief シェーダーをコンパイルしBlobを生成する (BaseContentのoverride)
 	void Load(MAYBE_UNUSED const DirectXQueueContext* context) override;
 
 	//* parameter option *//
 
+	//! @brief コンパイル済みシェーダーBlobを取得する
+	//! @return シェーダーBlobへの参照
 	const DxObject::ShaderBlob& GetBlob() const;
 
 private:

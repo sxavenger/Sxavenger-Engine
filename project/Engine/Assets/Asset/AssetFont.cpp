@@ -124,10 +124,13 @@ AssetFont::GlyphInfo AssetFont::GenerateGlyphInfo(const stbtt_fontinfo& info, fl
 	);
 
 	if (!bitmap) { //!< 文字が見つからない場合
+		// フォントにグリフが無い文字は豆腐(□)で代替する. 再帰は必ず存在する文字で1段のみ.
 		return GenerateGlyphInfo(info, scale, L'□');
 	}
 
 	// アトラスに配置
+	// 1枚のアトラステクスチャにグリフを左→右へ敷き詰める. 右端に収まらなくなったら次の段へ改行する.
+	// maxHeight_はその段で最も高いグリフ分だけ改行するために保持している (段内のグリフ同士が重ならないようにするため).
 	if (static_cast<uint32_t>(current_.x + width) >= kAtlasSize.x) {
 		current_.x = 0;
 		current_.y += maxHeight_;

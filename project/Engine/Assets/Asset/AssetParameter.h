@@ -28,6 +28,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetState class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief AssetParameterが現在保持している値の種別
 enum class AssetState : uint8_t {
 	Monostate, //!< monostate:          空の状態
 	Uuid,      //!< Uuid:               uassetのid
@@ -37,6 +38,8 @@ enum class AssetState : uint8_t {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // AssetParameter class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief Assetをuuid参照または直接shared_ptrのいずれかで保持する汎用パラメータ
+//! @tparam T 対象のAsset型
 template <Asset T>
 class AssetParameter {
 public:
@@ -44,6 +47,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Parameter variant
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief 空/uuid参照/直接ポインタの3状態を表すvariant
 	using Parameter = std::variant<std::monostate, Uuid, std::shared_ptr<T>>;
 	//! monostate: 空の状態
 	//! Uuid: uassetのid
@@ -60,22 +64,44 @@ public:
 	AssetParameter(const std::shared_ptr<T>& asset) { Set(asset); }
 	AssetParameter(const Uuid& id) { Set(id); }
 
+	//! @brief 現在保持している値の種別を取得する
+	//! @return 保持状態
 	AssetState GetState() const;
 
+	//! @brief 値が未設定かを返す
+	//! @retval true  空
+	//! @retval false 値を保持している
 	bool Empty() const { return GetState() == AssetState::Monostate; }
 
+	//! @brief 保持している値を空にする
 	void Reset() { parameter_ = std::monostate{}; }
 
+	//! @brief 直接shared_ptrでAssetを設定する
+	//! @param[in] asset 設定するAsset
 	void Set(const std::shared_ptr<T>& asset);
+	//! @brief uuid参照でAssetを設定する
+	//! @param[in] id AssetのUuid
 	void Set(const Uuid& id) { parameter_ = id; }
 
+	//! @brief Assetを取得する (未設定/未解決ならnullptr)
+	//! @return Assetのshared_ptr
 	std::shared_ptr<T> Get() const;
+	//! @brief 読み込み完了を待ってからAssetを取得する
+	//! @return Assetのshared_ptr
 	std::shared_ptr<T> WaitGet() const;
+	//! @brief Assetを取得する. 取得できない場合は例外を投げる
+	//! @return Assetのshared_ptr
 	std::shared_ptr<T> Require() const;
+	//! @brief 読み込み完了を待ってからRequireする
+	//! @return Assetのshared_ptr
 	std::shared_ptr<T> WaitRequire() const;
 
+	//! @brief uuid参照時のみuuidをjsonへシリアライズする
+	//! @return jsonデータ (それ以外はnull)
 	json Serialize() const;
 
+	//! @brief 現在の状態を表す文字列を取得する (デバッグ用)
+	//! @return 状態を表す文字列
 	std::string GetStr() const;
 
 	//* operator *//

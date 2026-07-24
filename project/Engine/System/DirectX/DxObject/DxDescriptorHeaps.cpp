@@ -47,8 +47,10 @@ void DescriptorPool::Term() {
 }
 
 Descriptor DescriptorPool::GetDescriptor() {
+	// Descriptorの確保/解放はメインスレッドだけでなく非同期のロード用スレッド等からも呼ばれる.
+	// index管理用のallocator_はスレッドセーフではないため, 同一indexの二重払い出しやカウンタ破壊を防ぐ目的でmutexで排他する.
 	std::unique_lock<std::mutex> lock(mutex_);
-	
+
 	Descriptor::Handle handle(type_);
 
 	//!< indexの取得
@@ -71,6 +73,7 @@ Descriptor DescriptorPool::GetDescriptor() {
 }
 
 void DescriptorPool::DeleteDescriptor(Descriptor& descriptor) {
+	// GetDescriptor()と同じallocator_を操作するため, 解放側でも同じmutexで排他し, 確保と解放の競合を防ぐ.
 	std::unique_lock<std::mutex> lock(mutex_);
 
 	{

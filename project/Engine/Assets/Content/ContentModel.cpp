@@ -171,6 +171,10 @@ void ContentModel::AttachUuid(const std::filesystem::path& filepath) {
 
 uint32_t ContentModel::GetOption() {
 
+	// assimpのポストプロセスフラグ:
+	// FlipWindingOrder / FlipUVs は, 右手座標系のassimpデータを本エンジンの左手座標系・DirectXのUV原点(左上)へ合わせるために必要.
+	// Triangulate で全ポリゴンを三角形化(描画は三角形前提), CalcTangentSpace で法線マッピング用のtangentを生成,
+	// ImproveCacheLocality で頂点キャッシュ効率を最適化する.
 	uint32_t option
 		= aiProcess_FlipWindingOrder
 		| aiProcess_FlipUVs
@@ -223,6 +227,8 @@ BornNode ContentModel::ReadNode(const aiNode* node) {
 	result.transform.translate = AssetMesh::ConvertVector3(translate);
 
 	// nodeのlocalMatの取得
+	// assimpの行列は行優先(row-major)なのに対し, 本エンジンの行列は列優先で扱うため,
+	// Transposeして格納レイアウトを合わせてからそのままメモリコピーする.
 	aiMatrix4x4 aiLocalMatrix = node->mTransformation;
 	aiLocalMatrix.Transpose();
 

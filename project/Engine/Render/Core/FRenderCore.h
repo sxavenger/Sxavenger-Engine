@@ -22,6 +22,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCore class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 各種RenderCoreと共通ルックアップテクスチャ(BRDF LUT/SMAA)を束ねて管理するハブ (シングルトン)
 class FRenderCore final {
 public:
 
@@ -29,26 +30,40 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//! @brief 共通リソースを初期化する
 	void Init();
 
+	//! @brief 保持しているRenderCoreを破棄する
 	void Term();
 
+	//! @brief 指定型のRenderCoreを取得する. 無ければ生成・初期化する
+	//! @tparam T FBaseRenderCore派生の型
+	//! @return RenderCoreへのポインタ
 	template <typename T> requires std::derived_from<T, FBaseRenderCore>
 	T* EnsureRenderCore();
 
+	//! @brief 指定型のRenderCoreを保持しているかを返す
+	//! @tparam T FBaseRenderCore派生の型
+	//! @retval true  保持している
+	//! @retval false 保持していない
 	template <typename T> requires std::derived_from<T, FBaseRenderCore>
 	bool HasRenderCore() const { return registry_.Contains<T>(); }
 
 	//* singleton *//
 
+	//! @brief シングルトンインスタンスを取得する
+	//! @return インスタンスへのポインタ
 	static FRenderCore* GetInstance();
 
 	//* getter *//
 
+	//! @brief 事前計算済みBRDF LUTのSRV GPUハンドルを取得する
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetBRDFLut() const { return brdfLut_.WaitGet()->GetGPUHandleSRV(); }
 
+	//! @brief SMAAのエリアテクスチャのSRV GPUハンドルを取得する
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetSMAAAreaTexture() const { return smaaArea_.WaitGet()->GetGPUHandleSRV(); }
 
+	//! @brief SMAAのサーチテクスチャのSRV GPUハンドルを取得する
 	const D3D12_GPU_DESCRIPTOR_HANDLE& GetSMAASearchTexture() const { return smaaSearch_.WaitGet()->GetGPUHandleSRV(); }
 
 private:
