@@ -42,6 +42,7 @@ void FRenderCoreProcess::CreatePipeline() {
 	desc.SetSamplerLinear("gLUTSampler", DxObject::SamplerMode::Clamp);
 	desc.SetSamplerLinear("gLinearSampler", DxObject::SamplerMode::Clamp);
 	desc.SetSamplerPoint("gPointSampler", DxObject::SamplerMode::Clamp);
+	desc.SetSamplerLinear("gWarpSampler", DxObject::SamplerMode::Wrap);
 
 
 	{ //!< Post Process
@@ -84,6 +85,9 @@ void FRenderCoreProcess::CreatePipeline() {
 
 		//!< Posterize
 		CreatePipeline(PostProcess::Posterize, "Posterize/Posterize.cs.hlsl", desc);
+
+		//!< Sketch
+		CreatePipeline(PostProcess::Sketch, "Sketch/Sketch.cs.hlsl", desc);
 	}
 
 	{ //!< Composite Process

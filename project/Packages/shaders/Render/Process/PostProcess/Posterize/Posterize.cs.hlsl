@@ -26,44 +26,51 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		return; //!< texture size over
 	}
 
+	float2 texcoord = float2(pixel + 0.5f) / dimension;
+
 	//* coordinate posterize *//
 
-	float2 texcoord = float2(pixel + 0.5f) / dimension;
+	float2 posterized_texcoord = texcoord;
 
 	switch (gParameter.coordinateMode) {
 		case PosterizeMode::Ceil:
-			texcoord = ceil(texcoord * gParameter.coordinateLevel) / gParameter.coordinateLevel;
+			posterized_texcoord = ceil(texcoord * gParameter.coordinateLevel) / gParameter.coordinateLevel;
 			break;
 		
 		case PosterizeMode::Floor:
-			texcoord = floor(texcoord * gParameter.coordinateLevel) / gParameter.coordinateLevel;
+			posterized_texcoord = floor(texcoord * gParameter.coordinateLevel) / gParameter.coordinateLevel;
 			break;
 		
 		case PosterizeMode::Round:
-			texcoord = round(texcoord * gParameter.coordinateLevel) / gParameter.coordinateLevel;
+			posterized_texcoord = round(texcoord * gParameter.coordinateLevel) / gParameter.coordinateLevel;
 			break;
 	}
 
-	float3 color       = gInput.SampleLevel(gSampler, texcoord, 0).rgb;
-	float transparency = gInput.SampleLevel(gSampler, texcoord, 0).a;
+	float3 color       = gInput.SampleLevel(gSampler, posterized_texcoord, 0).rgb;
+	float transparency = gInput.SampleLevel(gSampler, posterized_texcoord, 0).a;
 
 	//* color posterize *//
 
+	float3 posterized_color = color;
+
 	switch (gParameter.colorMode) {
 		case PosterizeMode::Ceil:
-			color = ceil(color * gParameter.colorLevel) / gParameter.colorLevel;
+			posterized_color = ceil(color * gParameter.colorLevel) / gParameter.colorLevel;
 			break;
 		
 		case PosterizeMode::Floor:
-			color = floor(color * gParameter.colorLevel) / gParameter.colorLevel;
+			posterized_color = floor(color * gParameter.colorLevel) / gParameter.colorLevel;
 			break;
 		
 		case PosterizeMode::Round:
-			color = round(color * gParameter.colorLevel) / gParameter.colorLevel;
+			posterized_color = round(color * gParameter.colorLevel) / gParameter.colorLevel;
 			break;
 	}
 
-	gOutput[pixel].rgb = color;
+	//!< 明るさ補正
+	posterized_color = posterized_color + gParameter.colorBrightnessMin * color;
+
+	gOutput[pixel].rgb = posterized_color;
 	gOutput[pixel].a   = transparency;
 
 }

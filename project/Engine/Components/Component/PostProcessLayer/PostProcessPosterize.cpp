@@ -16,10 +16,11 @@ SXAVENGER_ENGINE_USING
 
 PostProcessPosterize::Parameter PostProcessPosterize::Parameter::Default() {
 	Parameter parameter;
-	parameter.coordinateLevel = 100.0f;
-	parameter.coordinateMode  = Mode::Round;
-	parameter.colorLevel      = 10.0f;
-	parameter.colorMode       = Mode::Round;
+	parameter.coordinateLevel    = 100.0f;
+	parameter.coordinateMode     = Mode::Round;
+	parameter.colorLevel         = 10.0f;
+	parameter.colorMode          = Mode::Round;
+	parameter.colorBrightnessMin = 0.0f;
 
 	return parameter;
 }
@@ -77,5 +78,7 @@ void PostProcessPosterize::ShowInspectorImGui() {
 
 	SxGui::DragScalar<float>("color level", &parameter.colorLevel, 0.1f, kEpsilon);
 	SxGui::ComboEnum("color mode", &parameter.colorMode);
+
+	SxGui::DragScalar<float>("color brightness min", &parameter.colorBrightnessMin, 0.1f, 0.0f);
 
 }
