@@ -5,43 +5,78 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "../FRenderCore.h"
+#include "../Buffer/FMainBuffer.h"
+#include "../Core/FRenderCore.h"
+#include "../Core/FRenderCoreProcess.h"
+
+//* engine
+#include <Engine/System/Utility/RuntimeLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassTonemap class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FRenderPassTonemap::Render(const DirectXQueueContext* context, const Config& config) {
+void FRenderPassTonemap::Render(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	if (!config.option.Test(FBaseRenderPass::Config::Option::Tonemap)) {
-		return;
+	if (!config.option.Test(FRenderConfig::OptionFlag::Tonemap)) {
+		return; //!< tonemapオプションが有効でない場合は処理しない
 	}
 
-	context->BeginEvent(L"RenderPass - Tonemap");
+	if (!config.buffer->HasBuffer<FMainBuffer>()) {
+		RuntimeLogger::LogError("[FRenderPass - Tonemap]", "FMainBuffer not found in RenderTargetBuffer.");
+		return; //!< bufferにFMainBufferがない場合は処理しない
+	}
 
-	FRenderCore::GetInstance()->GetProcess()->SetPipeline(
-		FRenderCoreProcess::CompositeType::Tonemap, context
-	);
+	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreProcess>(); //!< RenderCoreの確保
 
-	config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->TransitionBeginUnordered(context);
+	FBaseRenderPass::BeginRenderPass(context, "Tonemap", config);
 
-	DxObject::BindBufferDesc parameter = {};
-	// common
-	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
-	parameter.SetHandle("gTexture", config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleUAV());
+	{ //!< Tonemap Pass
 
-	parameter.Set32bitConstants("ColorSpaceBuffer", 1, &config.colorSpace);
+		BeginTonemapPass(context, config.buffer);
 
-	FRenderCore::GetInstance()->GetProcess()->BindComputeBuffer(
-		FRenderCoreProcess::CompositeType::Tonemap, context, parameter
-	);
+		PassTonemap(context, config);
 
-	FRenderCore::GetInstance()->GetProcess()->Dispatch(context, config.buffer->GetSize());
+		EndTonemapPass(context, config.buffer);
+	}
 
-	config.buffer->GetGBuffer(FMainGBuffer::Layout::Scene)->TransitionEndUnordered(context);
+	FBaseRenderPass::EndRenderPass(context);
+
+}
+
+void FRenderPassTonemap::BeginTonemapPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	FMainBuffer* main = buffer->GetBuffer<FMainBuffer>();
+
+	//!< Scene Bufferのbarrier設定
+	main->GetBuffer(FMainBuffer::Layout::Scene).TransitionUnorderedAccess(context);
+
+}
+
+void FRenderPassTonemap::EndTonemapPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	FMainBuffer* main = buffer->GetBuffer<FMainBuffer>();
+
+	//!< Scene Bufferのbarrier設定
+	main->GetBuffer(FMainBuffer::Layout::Scene).TransitionDefaultState(context);
+
+}
+
+void FRenderPassTonemap::PassTonemap(const DirectXQueueContext* context, const FRenderConfig& config) {
+
+	FMainBuffer* main = config.buffer->GetBuffer<FMainBuffer>();
+
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreProcess>();
+	core->SetPipeline(FRenderCoreProcess::CompositeProcess::Tonemap, context);
+
+	//!< parameterの設定
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
+	desc.Set32bitConstants("ColorSpaceBuffer", 1, &config.colorSpace);
+	desc.SetHandle("gTexture", main->GetBuffer(FMainBuffer::Layout::Scene).GetGPUHandleUAV());
+
+	core->BindComputeBuffer(FRenderCoreProcess::CompositeProcess::Tonemap, context, desc);
+	core->Dispatch(context, config.buffer->GetResolution());
 
 	// TODO: slope, toe, shoulder... をparameterで調整可能に
-
-	context->EndEvent();
-
 }

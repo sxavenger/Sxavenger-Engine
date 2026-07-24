@@ -5,7 +5,7 @@
 #include "../DeferredBufferIndex.hlsli"
 
 //* library
-#include "../../Library/Math.hlsli"
+#include "../../Library/Mathmatic.hlsli"
 #include "../../Library/BRDF.hlsli"
 
 //* component
@@ -91,7 +91,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		weight_sum   += weight;
 	}
 
-	indirect_sum /= max(weight_sum, kEpsilon);
+	indirect_sum /= max(weight_sum, Mathmatic::kEpsilon);
 
-	gIndirect[pixel] = float4(indirect_sum * surface.albedo / kPi, 1.0f);
+	gIndirect[pixel] = float4(indirect_sum * surface.albedo / Mathmatic::kPi, 1.0f);
 }

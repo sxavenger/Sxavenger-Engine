@@ -6,8 +6,10 @@ DXROBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Utility/Convert.h>
 #include <Engine/System/Utility/StreamLogger.h>
+
+//* lib
+#include <Lib/Adapter/String/EncodedString.h>
 
 //* c++
 #include <ranges>
@@ -18,7 +20,7 @@ DXROBJECT_USING
 
 void StateObjectDesc::AddExport(const DxrObject::ExportGroup* expt) {
 	ExportType type = expt->GetType();
-	exports_[static_cast<size_t>(type)].emplace(ToString(expt->GetName()), expt);
+	exports_[static_cast<size_t>(type)].emplace(EncodedString::Convert(expt->GetName()), expt);
 	strides_[static_cast<size_t>(type)] = std::max(strides_[static_cast<size_t>(type)], expt->GetBufferStride());
 }
 
@@ -212,22 +214,22 @@ void StateObjectContext::SetStateObject(DxObject::CommandContext* context) const
 	context->GetCommandList()->SetPipelineState1(stateObject_.Get());
 }
 
-void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const Vector2ui& size) const {
+void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const Vector2ui& resolution) const {
 
 	D3D12_DISPATCH_RAYS_DESC desc = dispatchDesc_;
-	desc.Width  = size.x;
-	desc.Height = size.y;
+	desc.Width  = resolution.x;
+	desc.Height = resolution.y;
 	desc.Depth  = 1;
 
 	context->GetCommandList()->DispatchRays(&desc);
 }
 
-void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const Vector3ui& size) const {
+void StateObjectContext::DispatchRays(DxObject::CommandContext* context, const Vector3ui& resolution) const {
 
 	D3D12_DISPATCH_RAYS_DESC desc = dispatchDesc_;
-	desc.Width  = size.x;
-	desc.Height = size.y;
-	desc.Depth  = size.z;
+	desc.Width  = resolution.x;
+	desc.Height = resolution.y;
+	desc.Depth  = resolution.z;
 
 	context->GetCommandList()->DispatchRays(&desc);
 
@@ -393,7 +395,10 @@ uint8_t* StateObjectContext::WriteExport(uint8_t* dst, UINT size, const ExportGr
 
 	// exportのid書き込み
 	auto id = properties_->GetShaderIdentifier(expt->GetName().c_str());
-	StreamLogger::AssertW(id != nullptr, L"export identifier not found. export name: " + expt->GetName());
+
+	if (id == nullptr) {
+		return end; //!< idが存在しない場合
+	}
 
 	dst += WriteIdentifier(dst, id);
 

@@ -31,7 +31,7 @@ PerformanceActor::PerformanceActor() {
 
 void PerformanceActor::Update() {
 
-	auto text = (*this)->AddComponent<SXAVENGER_ENGINE TextRendererComponent>();
+	auto text = (*this)->GetComponent<SXAVENGER_ENGINE TextRendererComponent>();
 
 	TimePointd<TimeUnit::second> time = SXAVENGER_ENGINE System::GetDeltaTimed();
 	double fps = 1.0 / time.time;

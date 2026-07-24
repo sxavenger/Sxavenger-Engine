@@ -12,13 +12,16 @@
 #include "BasePostProcess.h"
 #include "PostProcessLocalExposure.h"
 #include "PostProcessAutoExposure.h"
-#include "PostProcessBloom.h"
-#include "PostProcessDoF.h"
+//#include "PostProcessBloom.h" Blur系の処理を追加してから
+//#include "PostProcessDoF.h" Blur系の処理を追加してから
 #include "PostProcessLUT.h"
 #include "PostProcessGrayScale.h"
 #include "PostProcessRadialBlur.h"
-#include "PostProcessMotionBlur.h"
+//#include "PostProcessMotionBlur.h" MotionVectorの実装をしてから
 #include "PostProcessChromaticAberration.h"
+#include "PostProcessPostFx.h"
+#include "PostProcessPosterize.h"
+#include "PostProcessSketch.h"
 
 //* engine
 #include <Engine/Foundation.h>

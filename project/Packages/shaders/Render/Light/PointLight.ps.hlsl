@@ -21,8 +21,8 @@ PSOutput main(PSInput input) {
 	PSOutput output = (PSOutput)0;
 	
 	//* Deferred Pass情報の取得
-	Surface surface;
-	surface.GetSurface(input.position.xy);
+	GBuffer::Surface surface;
+	surface.FetchSurface(GBuffer::FetchArgument::Create(input.position.xy, dimension, gCamera.projInv, gCamera.world));
 
 	//* Lightの情報を取得
 	float3 l = gParameters[input.instanceId].GetDirectionFromSurface(gTransforms[input.instanceId].GetPosition(), surface.position); //!< lightの方向ベクトル
@@ -41,7 +41,7 @@ PSOutput main(PSInput input) {
 	float3 color_mask = gParameters[input.instanceId].GetColorMask();
 	float light_mask  = gParameters[input.instanceId].GetLightMask(gScene, gTransforms[input.instanceId].GetPosition(), surface.position);
 
-	output.color.rgb = EvaluateBRDF(albedo, context, surface.roughness) * context.NdotL * color_mask * light_mask;
+	output.color.rgb = EvaluateBRDF(albedo, context, surface.roughness) * context.NdotL * color_mask * light_mask * surface.ao;
 	// todo: specularFactorを追加
 
 	output.color.a = 1.0f;

@@ -6,6 +6,9 @@
 //* engine
 #include <Engine/Foundation.h>
 
+//* lib
+#include <Lib/Adapter/Time/LocalTimePoint.h>
+
 //* c++
 #include <cstdint>
 #include <string>
@@ -25,11 +28,11 @@ class RuntimeLogger final {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
-	// Type enum class
+	// Level enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class Type : uint8_t {
-		Default,
-		Comment,
+	enum class Level : uint8_t {
+		Information,
+		Debug,
 		Warning,
 		Error,
 	};
@@ -44,7 +47,7 @@ public:
 		// public methods
 		//=========================================================================================
 
-		Data(Type _type, const std::string& _category, const std::string& _label);
+		Data(Level _level, const std::string& _category, const std::string& _label);
 
 		void Timestamp();
 
@@ -54,12 +57,13 @@ public:
 		// public variables
 		//=========================================================================================
 
-		Type type = Type::Comment;
+		Level level = Level::Information;
 
 		std::string category;
 		std::string label;
 
-		std::chrono::zoned_time<std::chrono::seconds> timestamp;
+		LocalTimePoint timestamp;
+
 		size_t count = 0;
 
 	};
@@ -72,12 +76,15 @@ public:
 
 	//* log methods *//
 
-	static void Log(Type type, const std::string& category, const std::string& label);
+	static void Log(Level level, const std::string& category, const std::string& label);
 
-	static void LogDefault(const std::string& category, const std::string& label);
-	static void LogComment(const std::string& category, const std::string& label);
-	static void LogWarning(const std::string& category, const std::string& label);
-	static void LogError(const std::string& category, const std::string& label);
+	static void LogInformation(const std::string& category, const std::string& label) { RuntimeLogger::Log(Level::Information, category, label); }
+
+	static void LogDebug(const std::string& category, const std::string& label) { RuntimeLogger::Log(Level::Debug, category, label); }
+
+	static void LogWarning(const std::string& category, const std::string& label) { RuntimeLogger::Log(Level::Warning, category, label); }
+
+	static void LogError(const std::string& category, const std::string& label) { RuntimeLogger::Log(Level::Error, category, label); }
 
 	//* getter *//
 
@@ -91,7 +98,7 @@ private:
 
 	static inline std::list<Data> logs_;
 
-	static inline size_t limit_ = 128;
+	static inline size_t limit_ = 1 << 10; //!< ログの最大件数
 
 	//=========================================================================================
 	// private methods

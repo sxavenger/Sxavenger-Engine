@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 #include "PostProcess.hlsli"
 
+//* library
+#include "../../../Library/RandomLib.hlsli"
+
 //=========================================================================================
 // buffers
 //=========================================================================================
@@ -20,6 +23,8 @@ struct Parameter {
 	
 	float2 center;
 	float intensity;
+	uint quality;
+	uint isStochastic;
 
 	//=========================================================================================
 	// public methods
@@ -34,26 +39,32 @@ ConstantBuffer<Parameter> gParameter : register(b0);
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)]
+[numthreads(NUM_THREADS_X, NUM_THREADS_Y, 1)]
 void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispathThreadId.xy;
 
-	if (CheckOverTexture(index.xy)) {
+	if (CheckOverDimension(index.xy)) {
 		return;
 	}
 
-	float2 uv        = float2(index) / size * 2.0f - 1.0f; // [-1.0 ~ 1.0]
+	float2 uv        = (float2(index) + 0.5f) / dimension * 2.0f - 1.0f; // [-1.0 ~ 1.0]
 	float2 direction = uv - gParameter.center;
+
+	float noise = 0.0f;
+
+	if (gParameter.isStochastic) {
+		noise = PseudoRandom(index) * 2.0f - 1.0f;
+	}
 
 	float4 color = float4(0.0f, 0.0f, 0.0f, 0.0f);
 	
-	for (uint i = 0; i < 8; ++i) {
-		float2 texcoord = uv + direction * (gParameter.GetIntensity() * blendWeight) * i;
+	for (uint i = 0; i < gParameter.quality; ++i) {
+		float2 texcoord = uv + direction * (gParameter.GetIntensity() * blendWeight) * (i + noise);
 		color += gInput.SampleLevel(gSampler, (texcoord + float2(1.0f, 1.0f)) * 0.5f, 0);
 	}
 
-	color *= rcp(8.0f);
+	color /= gParameter.quality;
 
 	gOutput[index] = color;
 

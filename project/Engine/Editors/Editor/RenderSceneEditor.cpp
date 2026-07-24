@@ -7,28 +7,47 @@ SXAVENGER_ENGINE_USING
 //* editor
 #include "../EditorEngine.h"
 
-//* engine
+//* engine [system]
 #include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/UI/SxImGuizmo.h>
+#include <Engine/System/DirectX/DirectXPixEvent.h>
+
+//* engine [graphics]
 #include <Engine/Graphics/Graphics.h>
+
+//* engine [assets]
 #include <Engine/Assets/Asset/AssetStorage.h>
 #include <Engine/Assets/Content/ContentStorage.h>
+
+//* engine [components]
 #include <Engine/Components/Component/Transform/TransformComponent.h> 
 #include <Engine/Components/Component/Transform/RectTransformComponent.h>
 #include <Engine/Components/Component/Camera/CameraComponent.h>
+#include <Engine/Components/Component/DecalRenderer/DecalRendererComponent.h>
 #include <Engine/Components/Component/Light/Punctual/DirectionalLightComponent.h>
 #include <Engine/Components/Component/Light/Punctual/PointLightComponent.h>
 #include <Engine/Components/Component/Light/Punctual/SpotLightComponent.h>
+#include <Engine/Components/Component/Light/Rect/RectLightComponent.h>
 #include <Engine/Components/Component/PostProcessLayer/PostProcessLayerComponent.h>
 #include <Engine/Components/Component/ComponentHelper.h>
 #include <Engine/Components/Entity/EntityBehaviour.h>
+#include <Engine/Components/Entity/BehaviourHelper.h>
+
+//* engine [module]
 #include <Engine/Module/Exporter/TextureExporter.h>
+
+//* engine [render]
+#include <Engine/Render/Buffer/FMainBuffer.h>
+#include <Engine/Render/Buffer/FGBuffer.h>
+#include <Engine/Render/Buffer/FLightAccumulationBuffer.h>
+#include <Engine/Render/Buffer/FTransparentBuffer.h>
+#include <Engine/Render/Core/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
-#include <Engine/Render/FRenderCore.h>
+#include <Engine/Render/FPresenter.h>
 
 //* lib
-#include <Lib/Geometry/VectorComparision.h>
+#include <Lib/Math/VectorComparison.h>
 
 //* externals
 #include <magic_enum.hpp>
@@ -39,20 +58,39 @@ SXAVENGER_ENGINE_USING
 
 void RenderSceneEditor::Init() {
 
-	checkerboard_ = sContentStorage->Import<ContentTexture>("packages/textures/checker_black.png")->GetId();
+	ContentTexture::Option option = {};
+	option.isGenerateMipmap = false;
+	option.useCompress      = false;
 
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)] = sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_translate.png")->GetId();
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)]    = sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_rotate.png")->GetId();
-	operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)]     = sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_scale.png")->GetId();
+	checkerboard_
+		= sContentStorage->Import<ContentTexture>("packages/textures/checker_black.png", option)->GetId();
 
-	modeTexture_[SxImGuizmo::World] = sContentStorage->Import<ContentTexture>("packages/textures/icon/mode_world.png")->GetId();
-	modeTexture_[SxImGuizmo::Local] = sContentStorage->Import<ContentTexture>("packages/textures/icon/mode_local.png")->GetId();
+	operationTexture_[static_cast<uint32_t>(GizmoOperation::Translate)]
+		= sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_translate.png", option)->GetId();
 
-	gridTexture_ = sContentStorage->Import<ContentTexture>("packages/textures/icon/grid.png")->GetId();
+	operationTexture_[static_cast<uint32_t>(GizmoOperation::Rotate)]
+		= sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_rotate.png", option)->GetId();
 
-	camera_ = std::make_unique<GameObject>("editor camera");
-	(*camera_)->AddComponent<TransformComponent>();
-	(*camera_)->AddComponent<CameraComponent>();
+	operationTexture_[static_cast<uint32_t>(GizmoOperation::Scale)]
+		= sContentStorage->Import<ContentTexture>("packages/textures/icon/operation_scale.png", option)->GetId();
+
+	modeTexture_[SxImGuizmo::World]
+		= sContentStorage->Import<ContentTexture>("packages/textures/icon/mode_world.png", option)->GetId();
+
+	modeTexture_[SxImGuizmo::Local]
+		= sContentStorage->Import<ContentTexture>("packages/textures/icon/mode_local.png", option)->GetId();
+
+	gridTexture_
+		= sContentStorage->Import<ContentTexture>("packages/textures/icon/grid.png", option)->GetId();
+
+	camera_ = std::make_unique<PerspectiveCameraActor>();
+	camera_->SetPerspective(PerspectiveCameraActor::Perspective::ThirdPerson);
+	camera_->SetPoint(kOrigin3<float>);
+	camera_->SetDistance(12.0f);
+	camera_->SetAngle({ 0.0f, kPi / 16.0f });
+	camera_->Update();
+
+	(*camera_)->SetName("editor camera");
 
 	auto camera = (*camera_)->GetComponent<CameraComponent>();
 	camera->SetTag(CameraComponent::Tag::Editor);
@@ -60,21 +98,53 @@ void RenderSceneEditor::Init() {
 	camera->UpdateProj();
 	UpdateView();
 
-	textures_ = std::make_unique<FRenderTargetBuffer>();
-	textures_->Create(Configuration::GetConfig().resolution);
+	buffer_ = std::make_unique<FRenderTargetBuffer>();
+	buffer_->Init(Configuration::GetConfig().resolution);
 
 	config_ = {};
-	config_.buffer = textures_.get();
+	config_.name   = "Editor";
+	config_.buffer = buffer_.get();
 	config_.tag    = CameraComponent::Tag::Editor;
-	config_.option = FBaseRenderPass::Config::Option::Tonemap;
+	config_.option = FRenderConfig::OptionFlag::Tonemap;
 
-	icons_[static_cast<uint32_t>(Icon::Volume)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_volume.png")->GetId();
-	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_directionalLight.png")->GetId();
-	icons_[static_cast<uint32_t>(Icon::PointLight)]       = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_pointLight.png")->GetId();
-	icons_[static_cast<uint32_t>(Icon::SpotLight)]        = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_spotLight.png")->GetId();
-	icons_[static_cast<uint32_t>(Icon::Camera)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_camera.png")->GetId();
+	icons_[static_cast<uint32_t>(Icon::Decal)]            = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_decal.png", option)->GetId();
+	icons_[static_cast<uint32_t>(Icon::Volume)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_volume.png", option)->GetId();
+	icons_[static_cast<uint32_t>(Icon::DirectionalLight)] = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_directionalLight.png", option)->GetId();
+	icons_[static_cast<uint32_t>(Icon::PointLight)]       = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_pointLight.png", option)->GetId();
+	icons_[static_cast<uint32_t>(Icon::SpotLight)]        = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_spotLight.png", option)->GetId();
+	icons_[static_cast<uint32_t>(Icon::RectLight)]        = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_rectLight.png", option)->GetId();
+	icons_[static_cast<uint32_t>(Icon::Camera)]           = sContentStorage->Import<ContentTexture>("packages/textures/icon/scene_camera.png", option)->GetId();
 	
+	{
+		selectLine_.CreateBlob(kPackagesDirectory / L"shaders/render/geometry/line/Line.vs.hlsl", DxObject::GraphicsShaderType::Vertex);
+		selectLine_.CreateBlob(kPackagesDirectory / L"shaders/render/geometry/line/Line.gs.hlsl", DxObject::GraphicsShaderType::Geometry);
+		selectLine_.CreateBlob(kPackagesDirectory / L"shaders/render/geometry/line/Line.ps.hlsl", DxObject::GraphicsShaderType::Pixel);
+		selectLine_.ReflectionRootSignature(System::GetDxDevice());
 
+		DxObject::GraphicsPipelineDesc desc = {};
+
+		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT);
+		desc.SetElement("NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT);
+
+		desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
+		desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC_LESS_EQUAL);
+
+		desc.SetPrimitive(DxObject::PrimitiveType::TriangleList);
+
+		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
+		desc.SetIndependentBlendEnable(false);
+
+		desc.SetRTVFormat(0, FBaseBuffer::kColorFormat);
+		desc.SetDSVFormat(FBaseBuffer::kDepthStencilFormat);
+
+		selectLine_.CreatePipeline(System::GetDxDevice(), desc);
+
+		picker_.CreateBlob(kPackagesDirectory / L"shaders/editor/Picker.cs.hlsl");
+		picker_.ReflectionPipeline(System::GetDxDevice());
+	}
 }
 
 void RenderSceneEditor::ShowMainMenu() {
@@ -84,7 +154,6 @@ void RenderSceneEditor::ShowMainMenu() {
 
 		ShowSceneMenu();
 		ShowGameMenu();
-		ShowGizmoMenu();
 		ShowCaptureMenu();
 		
 		ImGui::EndMenu();
@@ -113,74 +182,78 @@ void RenderSceneEditor::Render() {
 	config_.colorSpace = System::GetMainWindow()->GetColorSpace();
 	config_.cullCamera = isDebugCulling_ ? ComponentHelper::GetCameraComponent(CameraComponent::Tag::Game) : nullptr;
 
-	FMainRender::GetInstance()->GetContext()->Render(context, config_);
+	FMainRender::GetInstance()->GetContext().Render(context, config_);
 
+	//* Debug Render Scene *//
 	context->BeginEvent(L"RenderSceneEditor | Debug Render");
 
-	//* Debug Render *//
-	textures_->TransitionBeginRenderTargetMainScene(context);
+	{ //!< Debug Render Scene
 
-	CameraComponent* camera = (*camera_)->GetComponent<CameraComponent>();
+		buffer_->BeginRenderTargetMainScene(context);
 
-	if (isRenderGrid_) {
-		Graphics::PushGrid(camera->GetCamera().world, camera->GetCamera().projInv, { 64, 64 }, 64);
-	}
+		CameraComponent* camera = ComponentHelper::GetCameraComponent(CameraComponent::Tag::Editor);
 
-	if (isRenderProbe_) {
-		//* debug primitive draw
+		if (isRenderGrid_) {
+			Graphics::PushGrid(camera->GetCamera().world, camera->GetCamera().projInv, { 64, 64 }, 64);
+			//!< Gridの描画
+			// TODO: Shader側で無限Gridにする. (Unreal Engineを参考にして)
+		}
 
-		FRenderCoreProbe::Config conf = {};
+		if (camera == camera_->GetBehaviour()->GetComponent<CameraComponent>()) {
+			if (isMoveCamera_ && camera_->GetPerspective() == PerspectiveCameraActor::Perspective::ThirdPerson && camera_->GetDistance() > 0.0f) {
+				Graphics::PushAxis(camera_->GetPoint(), 1.0f);
+				//!< カメラが3人称視点で移動している場合は、カメラの位置に軸を描画.
+			}
+		}
 
-		auto core = FRenderCore::GetInstance()->GetProbe();
-		core->SetGraphicsPipeline(context);
-
-		DxObject::BindBufferDesc desc = {};
-		desc.Set32bitConstants("Config", 8, &conf);
-		desc.SetAddress("gCamera", camera->GetGPUVirtualAddress());
-		desc.SetHandle("gProbeIrradiance", textures_->GetProbeGBuffer().GetGBuffer(FProbeGBuffer::Probe::Irradiance)->GetGPUHandleSRV());
-
-		core->BindGraphicsBuffer(context, desc);
-		core->DrawCall(context);
 		
+
+		Graphics::GetDebugPrimitive()->DrawToScene(context, camera->GetGPUVirtualAddress());
+		//!< Debug Primitiveの描画
+
+		selectLine_.SetPipeline(context->GetDxCommand());
+		RenderInspector(context, ComponentHelper::GetCameraComponent(CameraComponent::Tag::Editor));
+		//!< 選択中のオブジェクトのInspectorを描画
+
+		buffer_->EndRenderTargetMainScene(context);
 	}
-
-	if (isMoveCamera_) {
-		Graphics::PushAxis(point_, 1.0f);
-	}
-
-	Graphics::GetDebugPrimitive()->DrawToScene(context, camera->GetGPUVirtualAddress());
-
-	textures_->TransitionEndRenderTargetMainScene(context);
 
 	context->EndEvent();
 
-	if (!sceneWindow_.expired()) {
-		auto ptr = sceneWindow_.lock();
-		ptr->BeginRenderWindow(context);
-		FPresenter::Present(context, ptr->GetSize(), textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV());
-		ptr->EndRenderWindow(context);
+	if (!sceneWindow_.expired()) { //!< Scene Windowが存在している場合はScene Windowに描画
+		context->BeginEvent(L"RenderSceneEditor | Present Scene Window");
+
+		FMainBuffer* main = buffer_->GetBuffer<FMainBuffer>();
+		auto window       = sceneWindow_.lock();
+
+		window->BeginRenderWindow(context);
+		FPresenter::Present(context, window->GetClient(), main->GetBuffer(FMainBuffer::Layout::Scene).GetGPUHandleSRV());
+		window->EndRenderWindow(context);
+
+		context->EndEvent();
 	}
 }
 
 void RenderSceneEditor::Manipulate(EntityBehaviour* behaviour) {
-	if (gizmoUsed_.has_value() && gizmoUsed_.value() != GuizmoUsed::Scene) {
+	if (gizmoUsed_.has_value() && gizmoUsed_.value() != GizmoUsed::Scene) {
 		return;
 	}
 
 	SxImGuizmo::SetDrawlist(sceneWindowDrawer_);
+	SxImGuizmo::SetOrthographic(false);
 
 	SxImGuizmo::Operation operation = SxImGuizmo::NONE;
 
 	// todo: flagに変更
-	if (gizmoOperation_ == GuizmoOperation::Scale) {
+	if (gizmoOperation_ == GizmoOperation::Scale) {
 		operation = SxImGuizmo::SCALE;
 	}
 
-	if (gizmoOperation_ == GuizmoOperation::Translate) {
+	if (gizmoOperation_ == GizmoOperation::Translate) {
 		operation = SxImGuizmo::TRANSLATE;
 	}
 
-	if (gizmoOperation_ == GuizmoOperation::Rotate) {
+	if (gizmoOperation_ == GizmoOperation::Rotate) {
 		operation = SxImGuizmo::ROTATE;
 	}
 
@@ -210,7 +283,7 @@ void RenderSceneEditor::Manipulate(EntityBehaviour* behaviour) {
 
 	SxImGuizmo::Enable(true);
 
-	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::make_optional(GuizmoUsed::Scene) : std::nullopt;
+	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::make_optional(GizmoUsed::Scene) : std::nullopt;
 
 	if (component->HasParent()) {
 		return;
@@ -242,7 +315,7 @@ void RenderSceneEditor::Manipulate(EntityBehaviour* behaviour) {
 }
 
 void RenderSceneEditor::ManipulateCanvas(EntityBehaviour* behaviour) {
-	if (gizmoUsed_.has_value() && gizmoUsed_.value() != GuizmoUsed::Canvas) {
+	if (gizmoUsed_.has_value() && gizmoUsed_.value() != GizmoUsed::Canvas) {
 		return;
 	}
 
@@ -250,17 +323,17 @@ void RenderSceneEditor::ManipulateCanvas(EntityBehaviour* behaviour) {
 	SxImGuizmo::SetOrthographic(true);
 
 	SxImGuizmo::Operation operation = SxImGuizmo::NONE;
-
+	
 	// todo: flagに変更
-	if (gizmoOperation_ == GuizmoOperation::Scale) {
+	if (gizmoOperation_ == GizmoOperation::Scale) {
 		operation = SxImGuizmo::SCALE_X | SxImGuizmo::SCALE_Y;
 	}
 
-	if (gizmoOperation_ == GuizmoOperation::Translate) {
+	if (gizmoOperation_ == GizmoOperation::Translate) {
 		operation = SxImGuizmo::TRANSLATE_X | SxImGuizmo::TRANSLATE_Y;
 	}
 
-	if (gizmoOperation_ == GuizmoOperation::Rotate) {
+	if (gizmoOperation_ == GizmoOperation::Rotate) {
 		operation = SxImGuizmo::ROTATE_Z;
 	}
 
@@ -280,7 +353,7 @@ void RenderSceneEditor::ManipulateCanvas(EntityBehaviour* behaviour) {
 	SxImGuizmo::GizmoOutput output = {};
 
 	static const Matrix4x4 view = Matrix4x4::Identity();
-	static const Matrix4x4 proj = Matrix4x4::Orthographic(0.0f, 0.0f, static_cast<float>(textures_->GetSize().x), static_cast<float>(textures_->GetSize().y), 0.0f, 128.0f);
+	static const Matrix4x4 proj = Matrix4x4::Orthographic(0.0f, 0.0f, static_cast<float>(buffer_->GetResolution().x), static_cast<float>(buffer_->GetResolution().y), 0.0f, 128.0f);
 
 	bool isEdit = SxImGuizmo::Manipulate(
 		reinterpret_cast<const float*>(view.m.data()),
@@ -293,7 +366,7 @@ void RenderSceneEditor::ManipulateCanvas(EntityBehaviour* behaviour) {
 
 	SxImGuizmo::Enable(true);
 
-	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::make_optional(GuizmoUsed::Canvas) : std::nullopt;
+	gizmoUsed_ = SxImGuizmo::IsUsing() ? std::make_optional(GizmoUsed::Canvas) : std::nullopt;
 
 	if (component->HasParent()) {
 		return;
@@ -319,54 +392,56 @@ void RenderSceneEditor::ManipulateCanvas(EntityBehaviour* behaviour) {
 }
 
 void RenderSceneEditor::SetCameraPoint(const Vector3f& point) {
-	point_ = point;
+	camera_->SetPoint(point);
+	camera_->UpdateTransform();
 	UpdateView();
 }
 
 void RenderSceneEditor::ShowSceneMenu() {
 	if (ImGui::BeginMenu("scene")) {
-		MenuPadding();
+		BaseEditor::MenuPadding();
 		ImGui::SeparatorText("scene");
 
-		// render
-		ImGui::Checkbox("render scene", &isRender_);
+		ImGui::Checkbox("Render Scene", &isRender_);
 
-		ImGui::BeginDisabled(!isRender_);
-
-		// layout display
-		ImGui::Text("layout");
-		ImGui::Separator();
-
-		if (ImGui::BeginCombo("GBuffer", magic_enum::enum_name(buffer_).data())) {
-			for (const auto& [value, name] : magic_enum::enum_entries<GBuffer>()) {
-				if (ImGui::Selectable(name.data(), (value == buffer_))) {
-					buffer_ = value;
-				}
-			}
-		
-			ImGui::EndCombo();
+		// Buffer
+		if (SxGui::ButtonRegion(std::format("{} Reset Buffer", SxGui::Icon::FlipToBack))) {
+			buffer_->ResetBuffer(); //!< Bufferのリセット
 		}
 
+		// Window
+		if (sceneWindow_.expired()) { //!< windowが表示されていない場合.
+			if (SxGui::ButtonRegion(std::format("{} Window Open", SxGui::Icon::Window))) {
+				sceneWindow_ = System::CreateSubWindow(Configuration::GetConfig().resolution, L"Scene Window (Editor)", DirectXWindowContext::ProcessCategory::Window);
+			}
+
+		} else { //!< windowが表示されている場合
+			if (SxGui::ButtonRegion(std::format("{} Window Close", SxGui::Icon::Close))) {
+				sceneWindow_.lock()->Close();
+				sceneWindow_.reset();
+			}
+
+		}
+
+		// Layout
+		SxGui::DummyLine();
+		SxGui::Text(std::format("{} Layout", SxGui::Icon::Texture));
+		SxGui::ComboEnum("Display Buffer", &displayBuffer_);
 		SxImGui::HelpMarker("(!)", "[alt] + [up] || [down]");
 
-		ImGui::EndDisabled();
 
-		// process
-		ImGui::Text("process option");
-		ImGui::Separator();
+		// config
+		SxGui::DummyLine();
+		SxGui::Text(std::format("{} Config", SxGui::Icon::Settings));
+		SxGui::ComboEnum("anti-aliasing",       &config_.antiAliasing);
+		SxGui::ComboEnum("ambient-occlusion",   &config_.ambientOcclusion);
+		SxGui::ComboEnum("global-illumination", &config_.globalIllumination);
+		SxGui::ComboEnum("sky-visibility",      &config_.skyVisibility);
 
-		if (ImGui::BeginCombo("anti-aliasing", magic_enum::enum_name(config_.antiAliasing).data())) {
-			for (const auto& [value, name] : magic_enum::enum_entries<FBaseRenderPass::Config::AntiAliasing>()) {
-				if (ImGui::Selectable(name.data(), (value == config_.antiAliasing))) {
-					config_.antiAliasing = value;
-				}
-			}
-
-			ImGui::EndCombo();
-		}
-
-		for (const auto& [value, name] : magic_enum::enum_entries<FBaseRenderPass::Config::Option>()) {
-			if (value == FBaseRenderPass::Config::Option::Default) {
+		SxGui::DummyLine();
+		SxGui::Text(std::format("{} Option", SxGui::Icon::CheckBoxOutline));
+		for (const auto& [value, name] : magic_enum::enum_entries<FRenderConfig::OptionFlag>()) {
+			if (value == FRenderConfig::OptionFlag::Default || value == FRenderConfig::OptionFlag::None) {
 				continue;
 			}
 			SxImGui::CheckBoxFlags(name.data(), &config_.option.Get(), static_cast<size_t>(value));
@@ -375,26 +450,9 @@ void RenderSceneEditor::ShowSceneMenu() {
 		ImGui::Text("debug option");
 		ImGui::Separator();
 
-		ImGui::Checkbox("cull camera", &isDebugCulling_);
-		ImGui::Checkbox("render grid", &isRenderGrid_);
+		ImGui::Checkbox("cull camera",  &isDebugCulling_);
+		ImGui::Checkbox("render grid",  &isRenderGrid_);
 		ImGui::Checkbox("render probe", &isRenderProbe_);
-
-		// window
-		ImGui::Text("window");
-		ImGui::Separator();
-
-		if (sceneWindow_.expired()) { //!< windowが表示されていない場合.
-			if (ImGui::Button("open")) {
-				sceneWindow_ = System::CreateSubWindow(Configuration::GetConfig().resolution, L"Scene Window (Editor)", DirectXWindowContext::ProcessCategory::Window);
-			}
-
-		} else { //!< windowが表示されている場合
-			if (ImGui::Button("close")) {
-				sceneWindow_.lock()->Close();
-				sceneWindow_.reset();
-			}
-			
-		}
 		
 		ImGui::EndMenu();
 	}
@@ -402,27 +460,22 @@ void RenderSceneEditor::ShowSceneMenu() {
 
 void RenderSceneEditor::ShowGameMenu() {
 	if (ImGui::BeginMenu("game")) {
-		MenuPadding();
+		BaseEditor::MenuPadding();
 		ImGui::SeparatorText("game");
 
-		FBaseRenderPass::Config& config = FMainRender::GetInstance()->GetConfig();
+		FRenderConfig& config = FMainRender::GetInstance()->GetConfig();
 
 		// process
 		ImGui::Text("process");
 		ImGui::Separator();
 
-		if (ImGui::BeginCombo("anti-aliasing", magic_enum::enum_name(config.antiAliasing).data())) {
-			for (const auto& [value, name] : magic_enum::enum_entries<FBaseRenderPass::Config::AntiAliasing>()) {
-				if (ImGui::Selectable(name.data(), (value == config.antiAliasing))) {
-					config.antiAliasing = value;
-				}
-			}
+		SxGui::ComboEnum("anti-aliasing",       &config.antiAliasing);
+		SxGui::ComboEnum("ambient-occlusion",   &config.ambientOcclusion);
+		SxGui::ComboEnum("global-illumination", &config.globalIllumination);
+		SxGui::ComboEnum("sky-visibility",      &config.skyVisibility);
 
-			ImGui::EndCombo();
-		}
-
-		for (const auto& [value, name] : magic_enum::enum_entries<FBaseRenderPass::Config::Option>()) {
-			if (value == FBaseRenderPass::Config::Option::Default) {
+		for (const auto& [value, name] : magic_enum::enum_entries<FRenderConfig::OptionFlag>()) {
+			if (value == FRenderConfig::OptionFlag::Default) {
 				continue;
 			}
 			SxImGui::CheckBoxFlags(name.data(), &config.option.Get(), static_cast<size_t>(value));
@@ -432,61 +485,89 @@ void RenderSceneEditor::ShowGameMenu() {
 	}
 }
 
-void RenderSceneEditor::ShowGizmoMenu() {
-	if (ImGui::BeginMenu("gizmo")) {
-		MenuPadding();
-		ImGui::SeparatorText("gizmo");
-
-		ImGui::Text("operation");
-		ImGui::Separator();
-
-		SxImGui::RadioButton("translate", &gizmoOperation_, GuizmoOperation::Translate);
-		ImGui::SameLine();
-		SxImGui::RadioButton("rotate", &gizmoOperation_, GuizmoOperation::Rotate);
-		ImGui::SameLine();
-		SxImGui::RadioButton("scale", &gizmoOperation_, GuizmoOperation::Scale);
-
-		ImGui::Text("mode");
-		ImGui::Separator();
-
-		SxImGui::RadioButton("world", &gizmoMode_, SxImGuizmo::World);
-		ImGui::SameLine();
-		SxImGui::RadioButton("local", &gizmoMode_, SxImGuizmo::Local);
-
-		ImGui::EndMenu();
-	}
-}
-
 void RenderSceneEditor::ShowCaptureMenu() {
 	if (ImGui::BeginMenu("capture")) {
-		MenuPadding();
+		BaseEditor::MenuPadding();
 		ImGui::SeparatorText("capture");
 
-		if (ImGui::Button("scene window capture")) {
-			auto filepath = WinApp::GetSaveFilepath(L"画像(Scene-Capture)の保存先", std::filesystem::current_path(), { L"画像ファイル", L"*.png; *.jpg; *.hdr; *.tga; *.dds;" }, L".png");
+		const ImVec2 region = { BaseEditor::GetMenuPadding().x, ImGui::GetContentRegionAvail().y };
 
-			if (filepath.has_value()) {
-				TextureExporter::Export(
-					System::GetDirectQueueContext(),
-					TextureExporter::TextureDimension::Texture2D,
-					textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetResource(),
-					DxObject::kDefaultScreenViewFormat,
-					filepath.value()
-				);
+		ImGui::Text(std::format("{} Capture Window", SxGui::Icon::Capture).c_str());
+
+		ImGui::BeginTable("## Capture Window", 2, ImGuiTableFlags_BordersInnerV);
+		ImGui::TableNextRow();
+
+		ImGui::TableSetColumnIndex(0); //!< Scene Window Capture
+		if (buffer_->HasBuffer<FMainBuffer>()) {
+
+			FMainBuffer* main   = buffer_->GetBuffer<FMainBuffer>();
+			Vector2f resolution = main->GetBuffer(FMainBuffer::Layout::Scene).GetResolution();
+
+			SxGui::Image(main->GetBuffer(FMainBuffer::Layout::Scene).GetGPUHandleSRV().ptr, { resolution.x, resolution.y }, { region.x * 0.5f, region.y });
+
+			if (ImGui::Button("Scene Window Capture", { region.x * 0.5f, 0.0f })) {
+
+				auto filepath = WinApp::GetSaveFilepath(L"画像(Scene-Capture)の保存先", std::filesystem::current_path(), { L"画像ファイル", L"*.png; *.jpg; *.hdr; *.tga; *.dds;" }, L".png");
+
+				if (filepath.has_value()) {
+					TextureExporter::Export(
+						System::GetDirectQueueContext(),
+						TextureExporter::TextureDimension::Texture2D,
+						main->GetBuffer(FMainBuffer::Layout::Scene).GetResource(),
+						DxObject::kDefaultScreenViewFormat,
+						filepath.value()
+					);
+				}
 			}
+
+		} else {
+			ImGui::Dummy({ region.x * 0.5f, region.y });
+		}
+		
+
+		ImGui::TableSetColumnIndex(1); //!< Game Window Capture
+		if (FMainRender::GetInstance()->GetBuffer()->HasBuffer<FMainBuffer>()) {
+
+			FMainBuffer* main   = FMainRender::GetInstance()->GetBuffer()->GetBuffer<FMainBuffer>();
+			Vector2f resolution = main->GetBuffer(FMainBuffer::Layout::Scene).GetResolution();
+
+			SxGui::Image(main->GetBuffer(FMainBuffer::Layout::Scene).GetGPUHandleSRV().ptr, { resolution.x, resolution.y }, { region.x * 0.5f, region.y });
+
+			if (ImGui::Button("Game Window Capture", { region.x * 0.5f, 0.0f })) {
+
+				auto filepath = WinApp::GetSaveFilepath(L"画像(Game-Capture)の保存先", std::filesystem::current_path(), { L"画像ファイル", L"*.png; *.jpg; *.hdr; *.tga; *.dds;" }, L".png");
+
+				if (filepath.has_value()) {
+					TextureExporter::Export(
+						System::GetDirectQueueContext(),
+						TextureExporter::TextureDimension::Texture2D,
+						main->GetBuffer(FMainBuffer::Layout::Scene).GetResource(),
+						DxObject::kDefaultScreenViewFormat,
+						filepath.value()
+					);
+				}
+			}
+
+		} else {
+			ImGui::Dummy({ region.x * 0.5f, region.y });
+		}
+		
+
+		ImGui::EndTable();
+
+		SxGui::DummyLine();
+		ImGui::Text(std::format("{} Capture Pix", SxGui::Icon::ControlCamera).c_str());
+
+		if (SxGui::InputScalar<uint32_t>("capture frames", &captureFrames_, 1)) {
+			captureFrames_ = std::clamp<uint32_t>(captureFrames_, 1, 10); //!< pixでの上限が10frameまでのため.
 		}
 
-		if (ImGui::Button("game window capture")) {
-			auto filepath = WinApp::GetSaveFilepath(L"画像(Game-Capture)の保存先", std::filesystem::current_path(), { L"画像ファイル", L"*.png; *.jpg; *.hdr; *.tga; *.dds;" }, L".png");
+		if (SxGui::ButtonRegion("Capture Next Frames")) {
+
+			auto filepath = WinApp::GetSaveFilepath(L"PIXの保存先", std::filesystem::current_path(), { L"PIXファイル", L"*.wpix;" }, L".wpix");
 
 			if (filepath.has_value()) {
-				TextureExporter::Export(
-					System::GetDirectQueueContext(),
-					TextureExporter::TextureDimension::Texture2D,
-					FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::Scene)->GetResource(),
-					DxObject::kDefaultScreenViewFormat,
-					filepath.value()
-				);
+				DirectXPixEvent::CaptureNextFrames(filepath.value(), captureFrames_);
 			}
 		}
 
@@ -495,11 +576,14 @@ void RenderSceneEditor::ShowCaptureMenu() {
 }
 
 void RenderSceneEditor::ShowSceneWindow() {
+
+	std::string label = std::format("{} Scene ## Render Scene Editor", SxGui::Icon::Window);
+
 	BaseEditor::SetNextWindowDocking();
 
 	//* fix window style
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
-	ImGui::Begin("Scene ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar);
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_MenuBar);
 
 	//* menu bar
 	if (ImGui::BeginMenuBar()) {
@@ -513,28 +597,28 @@ void RenderSceneEditor::ShowSceneWindow() {
 		//* translate
 		if (SxImGui::ImageButton(
 			"## gizmo translate",
-			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Translate)].Get()->GetGPUHandleSRV().ptr,
+			operationTexture_[static_cast<uint32_t>(GizmoOperation::Translate)].Get()->GetGPUHandleSRV().ptr,
 			{ 16, 16 },
-			gizmoOperation_ == GuizmoOperation::Translate ? kSelectedColor : kNonSelectedColor)) {
-			gizmoOperation_ = GuizmoOperation::Translate;
+			gizmoOperation_ == GizmoOperation::Translate ? kSelectedColor : kNonSelectedColor)) {
+			gizmoOperation_ = GizmoOperation::Translate;
 		}
 
 		//* rotate
 		if (SxImGui::ImageButton(
 			"## gizmo rotate",
-			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Rotate)].Get()->GetGPUHandleSRV().ptr,
+			operationTexture_[static_cast<uint32_t>(GizmoOperation::Rotate)].Get()->GetGPUHandleSRV().ptr,
 			{ 16, 16 },
-			gizmoOperation_ == GuizmoOperation::Rotate ? kSelectedColor : kNonSelectedColor)) {
-			gizmoOperation_ = GuizmoOperation::Rotate;
+			gizmoOperation_ == GizmoOperation::Rotate ? kSelectedColor : kNonSelectedColor)) {
+			gizmoOperation_ = GizmoOperation::Rotate;
 		}
 
 		//* scale
 		if (SxImGui::ImageButton(
 			"## gizmo scale",
-			operationTexture_[static_cast<uint32_t>(GuizmoOperation::Scale)].Get()->GetGPUHandleSRV().ptr,
+			operationTexture_[static_cast<uint32_t>(GizmoOperation::Scale)].Get()->GetGPUHandleSRV().ptr,
 			{ 16, 16 },
-			gizmoOperation_ == GuizmoOperation::Scale ? kSelectedColor : kNonSelectedColor)) {
-			gizmoOperation_ = GuizmoOperation::Scale;
+			gizmoOperation_ == GizmoOperation::Scale ? kSelectedColor : kNonSelectedColor)) {
+			gizmoOperation_ = GizmoOperation::Scale;
 		}
 
 		ImGui::Dummy({ 8, 0 });
@@ -583,13 +667,13 @@ void RenderSceneEditor::ShowSceneWindow() {
 
 	sceneRect_ = SetImGuiImageFullWindow(
 		checkerboard_.Get()->GetGPUHandleSRV(),
-		textures_->GetSize()
+		buffer_->GetResolution()
 	);
 
-	DisplayGBufferTexture(buffer_);
+	ShowDisplayBuffer(displayBuffer_);
 
 	if (ImGui::IsWindowHovered() && (ImGui::IsMouseClicked(ImGuiMouseButton_Middle) || ImGui::IsMouseClicked(ImGuiMouseButton_Right))) {
-		//!< window hovered 状態で mouse middle click が押された場合, camera操作(forcus)を許可.
+		//!< window hovered 状態で mouse middle click が押された場合, camera操作(focus)を許可.
 		ImGui::SetWindowFocus();
 	}
 
@@ -602,6 +686,10 @@ void RenderSceneEditor::ShowSceneWindow() {
 	ImGui::End();
 	ImGui::PopStyleVar();
 
+	if (!SxImGuizmo::IsOver() && isFocusSceneWindow_) {
+		PickMesh(System::GetDirectQueueContext(), sceneRect_);
+	}
+
 	//* render scene information *//
 
 	ShowIconScene();
@@ -609,24 +697,29 @@ void RenderSceneEditor::ShowSceneWindow() {
 }
 
 void RenderSceneEditor::ShowGameWindow() {
+
+	std::string label = std::format("{} Game ## Render Scene Editor", SxGui::Icon::Window);
+
 	BaseEditor::SetNextWindowDocking();
 
 	//* fix window style
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
-	ImGui::Begin("Game ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	SetImGuiImageFullWindow(
 		checkerboard_.Get()->GetGPUHandleSRV(),
 		Configuration::GetConfig().resolution
 	);
 
-	SetImGuiImageFullWindow(
-		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV(),
+	FMainBuffer* main = FMainRender::GetInstance()->GetBuffer()->GetBuffer<FMainBuffer>();
+
+	SetImGuiImageFullWindow( //!< Scene Buffer の描画
+		main->GetBuffer(FMainBuffer::Layout::Scene).GetGPUHandleSRV(),
 		Configuration::GetConfig().resolution
 	);
 
-	SetImGuiImageFullWindow(
-		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::Canvas)->GetGPUHandleSRV(),
+	SetImGuiImageFullWindow( //!< Canvas Buffer の描画
+		main->GetBuffer(FMainBuffer::Layout::Canvas).GetGPUHandleSRV(),
 		Configuration::GetConfig().resolution
 	);
 
@@ -637,11 +730,14 @@ void RenderSceneEditor::ShowGameWindow() {
 }
 
 void RenderSceneEditor::ShowCanvasWindow() {
+
+	std::string label = std::format("{} Canvas ## Render Scene Editor", SxGui::Icon::Layers);
+
 	BaseEditor::SetNextWindowDocking();
 
 	//* fix window style
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0, 0 });
-	ImGui::Begin("Canvas ## Render Scene Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	canvasWindowDrawer_ = ImGui::GetWindowDrawList();
 
@@ -650,8 +746,10 @@ void RenderSceneEditor::ShowCanvasWindow() {
 		Configuration::GetConfig().resolution
 	);
 
-	SetImGuiImageFullWindow(
-		FMainRender::GetInstance()->GetTextures()->GetGBuffer(FMainGBuffer::Layout::Canvas)->GetGPUHandleSRV(),
+	FMainBuffer* main = FMainRender::GetInstance()->GetBuffer()->GetBuffer<FMainBuffer>();
+
+	SetImGuiImageFullWindow( //!< Canvas Buffer の描画
+		main->GetBuffer(FMainBuffer::Layout::Canvas).GetGPUHandleSRV(),
 		Configuration::GetConfig().resolution
 	);
 
@@ -668,12 +766,13 @@ void RenderSceneEditor::ShowInfoTextScene() {
 
 	ImVec2 position = { sceneRect_.pos.x + kPadding.x, sceneRect_.pos.y + sceneRect_.size.y - kPadding.y };
 
-	RenderTextSceneWindow(position, std::format(" Tonemap:          {}", config_.option.Test(FBaseRenderPass::Config::Option::Tonemap)));
-	RenderTextSceneWindow(position, std::format(" PostProcess:      {}", config_.option.Test(FBaseRenderPass::Config::Option::PostProcess)));
-	RenderTextSceneWindow(position, std::format(" IndirectLighting: {}", config_.option.Test(FBaseRenderPass::Config::Option::IndirectLighting)));
-	RenderTextSceneWindow(position, std::format(" Anti-Aliasing:    {}", magic_enum::enum_name(config_.antiAliasing)));
+	RenderTextSceneWindow(position, std::format(" Tonemap:            {}", config_.option.Test(FRenderConfig::OptionFlag::Tonemap)));
+	RenderTextSceneWindow(position, std::format(" PostProcess:        {}", config_.option.Test(FRenderConfig::OptionFlag::PostProcess)));
+	RenderTextSceneWindow(position, std::format(" Anti-Aliasing:      {}", magic_enum::enum_name(config_.antiAliasing)));
+	RenderTextSceneWindow(position, std::format(" GlobalIllumination: {}", magic_enum::enum_name(config_.globalIllumination)));
+	RenderTextSceneWindow(position, std::format(" Ambient-Occlusion:  {}", magic_enum::enum_name(config_.ambientOcclusion)));
 	RenderTextSceneWindow(position, std::format("> Config"));
-	RenderTextSceneWindow(position, std::format("GBuffer | {}", magic_enum::enum_name(buffer_)));
+	RenderTextSceneWindow(position, std::format("Display Buffer | {}", magic_enum::enum_name(displayBuffer_)));
 
 }
 
@@ -681,6 +780,22 @@ void RenderSceneEditor::ShowIconScene() {
 	if (sceneWindowDrawer_ == nullptr) {
 		return;
 	}
+
+	// Decal
+	sComponentStorage->ForEach<DecalRendererComponent>([&](DecalRendererComponent* component) {
+
+		auto transform = component->GetTransform();
+
+		if (transform == nullptr) {
+			return;
+		}
+
+		Color4f color = component->IsActive()
+			? Color4f{ 1.0f, 1.0f, 1.0f, 1.0f }
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+
+		RenderIcon(component->GetBehaviour(), Icon::Decal, transform->GetPosition(), color);
+	});
 
 	// Post Process Layer
 	sComponentStorage->ForEach<PostProcessLayerComponent>([&](PostProcessLayerComponent* component) {
@@ -701,31 +816,49 @@ void RenderSceneEditor::ShowIconScene() {
 	// Directional Light
 	sComponentStorage->ForEach<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
 
+		auto transform = component->RequireTransform();
+
 		Color4f color = component->IsActive()
 			? Color4f(component->GetParameter().color, 1.0f)
 			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 
-		RenderIcon(component->GetBehaviour(), Icon::DirectionalLight, component->RequireTransform()->GetPosition(), color);
+		RenderIcon(component->GetBehaviour(), Icon::DirectionalLight, transform->GetPosition(), color);
 	});
 
 	// Point Light
 	sComponentStorage->ForEach<PointLightComponent>([&](PointLightComponent* component) {
 
+		auto transform = component->RequireTransform();
+
 		Color4f color = component->IsActive()
 			? Color4f(component->GetParameter().color, 1.0f)
 			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 
-		RenderIcon(component->GetBehaviour(), Icon::PointLight, component->RequireTransform()->GetPosition(), color);
+		RenderIcon(component->GetBehaviour(), Icon::PointLight, transform->GetPosition(), color);
 	});
 
 	// Spot Light
 	sComponentStorage->ForEach<SpotLightComponent>([&](SpotLightComponent* component) {
 
+		auto transform = component->RequireTransform();
+
 		Color4f color = component->IsActive()
 			? Color4f(component->GetParameter().color, 1.0f)
 			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 
-		RenderIcon(component->GetBehaviour(), Icon::SpotLight, component->RequireTransform()->GetPosition(), color);
+		RenderIcon(component->GetBehaviour(), Icon::SpotLight, transform->GetPosition(), color);
+	});
+
+	// Rect Light
+	sComponentStorage->ForEach<RectLightComponent>([&](RectLightComponent* component) {
+
+		auto transform = component->RequireTransform();
+
+		Color4f color = component->IsActive()
+			? Color4f(component->GetParameter().color, 1.0f)
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+
+		RenderIcon(component->GetBehaviour(), Icon::RectLight, transform->GetPosition(), color);
 	});
 
 	// Camera
@@ -736,7 +869,7 @@ void RenderSceneEditor::ShowIconScene() {
 
 		Color4f color = component->IsActive()
 			? Color4f{ 1.0f, 1.0f, 1.0f, 1.0f }
-		: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
+			: Color4f{ 0.2f, 0.2f, 0.2f, 1.0f };
 
 		RenderIcon(component->GetBehaviour(), Icon::Camera, Matrix4x4::GetTranslation(component->GetCamera().world), color);
 	});
@@ -749,28 +882,32 @@ void RenderSceneEditor::UpdateKeyShortcut() {
 
 	// bufferの切り替え
 	if (System::IsPressKey(KeyId::KEY_LALT) && System::IsTriggerKey(KeyId::KEY_UP)) { //!< left alt + Up
-		if (buffer_ > static_cast<GBuffer>(0)) {
-			buffer_ = static_cast<GBuffer>(static_cast<uint32_t>(buffer_) - 1);
+		if (displayBuffer_ > DisplayBuffer::Scene) {
+			displayBuffer_ = static_cast<DisplayBuffer>(static_cast<uint32_t>(displayBuffer_) - 1);
 		}
 	}
 
 	if (System::IsPressKey(KeyId::KEY_LALT) && System::IsTriggerKey(KeyId::KEY_DOWN)) { //!< left alt + Down
-		if (static_cast<uint32_t>(buffer_) < magic_enum::enum_count<GBuffer>()) {
-			buffer_ = static_cast<GBuffer>(static_cast<uint32_t>(buffer_) + 1);
+		if (static_cast<uint32_t>(displayBuffer_) < magic_enum::enum_count<DisplayBuffer>()) {
+			displayBuffer_ = static_cast<DisplayBuffer>(static_cast<uint32_t>(displayBuffer_) + 1);
 		}
 
 	}
 
-	if (System::IsPressKey(KeyId::KEY_LALT) && System::IsTriggerKey(KeyId::KEY_1)) { //!< left alt + 1
-		buffer_ = GBuffer::Scene;
+	if (System::IsPressKey(KeyId::KEY_LALT) && System::IsTriggerKey(KeyId::KEY_1)) { //!< [LALT] + [1]
+		displayBuffer_ = DisplayBuffer::Scene;
 	}
 
-	if (System::IsPressKey(KeyId::KEY_LALT) && System::IsTriggerKey(KeyId::KEY_2)) { //!< left alt + 2
-		buffer_ = GBuffer::Deferred_GBuffer;
+	if (System::IsPressKey(KeyId::KEY_LALT) && System::IsTriggerKey(KeyId::KEY_2)) { //!< [LALT] + [2]
+		displayBuffer_ = DisplayBuffer::GBuffer;
 	}
 
-	if (System::IsPressKey(KeyId::KEY_LALT) && System::IsTriggerKey(KeyId::KEY_3)) { //!< left alt + 3
-		buffer_ = GBuffer::Lighting_GBuffer;
+	if (System::IsPressKey(KeyId::KEY_LALT) && System::IsTriggerKey(KeyId::KEY_3)) { //!< [LALT] + [3]
+		displayBuffer_ = DisplayBuffer::LightAccumulation;
+	}
+
+	if (System::IsPressKey(KeyId::KEY_LALT) && System::IsTriggerKey(KeyId::KEY_4)) { //!< [LALT] + [4]
+		displayBuffer_ = DisplayBuffer::Transparent;
 	}
 
 }
@@ -855,7 +992,7 @@ void RenderSceneEditor::SetImGuiImageFullWindowEnable(const D3D12_GPU_DESCRIPTOR
 
 }
 
-void RenderSceneEditor::SetImGuiImagesFullWindowEnable(const std::vector<std::pair<D3D12_GPU_DESCRIPTOR_HANDLE, GBuffer>>& handles, const Vector2ui& size, bool isEnable) {
+void RenderSceneEditor::SetImGuiImagesFullWindowEnable(const std::vector<std::pair<D3D12_GPU_DESCRIPTOR_HANDLE, DisplayBuffer>>& handles, const Vector2ui& size, bool isEnable) {
 
 	// タブ等を排除した全体のwindowSize計算
 	ImVec2 regionMax = ImGui::GetWindowContentRegionMax();
@@ -909,88 +1046,13 @@ void RenderSceneEditor::SetImGuiImagesFullWindowEnable(const std::vector<std::pa
 		ImGui::InvisibleButton(magic_enum::enum_name(handles[i].second).data(), { kWidthEvery, displayTextureSize.y });
 
 		if (SxImGui::IsDoubleClickItem()) {
-			buffer_ = handles[i].second;
+			displayBuffer_ = handles[i].second;
 		}
 	}
 }
 
 void RenderSceneEditor::UpdateCamera() {
-
-	isMoveCamera_ = false;
-
-	auto mouse     = System::GetInput()->GetMouseInput();
-	auto keyboard  = System::GetInput()->GetKeyboardInput();
-	auto transform = (*camera_)->GetComponent<TransformComponent>();
-
-	// mouseによる回転
-	if (mouse->IsPress(MouseId::MOUSE_MIDDLE)) {
-		Vector2f delta = mouse->GetDeltaPosition();
-		static const Vector2f kSensitivity = { 0.01f, 0.01f };
-
-		angle_   += delta * kSensitivity;
-		angle_.x = std::fmod(angle_.x, kPi * 2.0f);
-		angle_.y = std::clamp(angle_.y, -kPi / 2.0f, kPi / 2.0f);
-
-		isMoveCamera_ = true;
-	}
-
-	// mouseによる移動
-	if (mouse->IsPress(MouseId::MOUSE_RIGHT)) {
-		Vector2f delta = mouse->GetDeltaPosition();
-		static const Vector2f kSensitivity = { 0.01f, 0.01f };
-
-		Vector3f right = Quaternion::RotateVector(kUnitX3<float>, transform->GetTransform().rotate);
-		Vector3f up    = Quaternion::RotateVector(kUnitY3<float>, transform->GetTransform().rotate);
-
-		point_ -= right * delta.x * kSensitivity.x;
-		point_ += up * delta.y * kSensitivity.y;
-
-		isMoveCamera_ = true;
-	}
-
-	if (mouse->IsWheel()) {
-		distance_ = std::max(distance_ - mouse->GetDeltaWheelNormalized(), 0.0f);
-		isMoveCamera_ = true;
-	}
-
-	if (mouse->IsPress(MouseId::MOUSE_RIGHT)) {
-
-		Vector3f direction = {};
-
-		// keyboardによる移動
-		if (keyboard->IsPress(KeyId::KEY_W)) {
-			direction.z += 1.0f;
-		}
-
-		if (keyboard->IsPress(KeyId::KEY_S)) {
-			direction.z -= 1.0f;
-		}
-
-		if (keyboard->IsPress(KeyId::KEY_A)) {
-			direction.x -= 1.0f;
-		}
-
-		if (keyboard->IsPress(KeyId::KEY_D)) {
-			direction.x += 1.0f;
-		}
-
-		// TODO: y軸移動の追加
-
-		if (Any(direction != kOrigin3<float>)) {
-			direction = direction.Normalize();
-
-			Vector3f forward = Quaternion::RotateVector(kUnitZ3<float>, transform->GetTransform().rotate);
-			Vector3f right   = Quaternion::RotateVector(kUnitX3<float>, transform->GetTransform().rotate);
-			Vector3f up      = Quaternion::RotateVector(kUnitY3<float>, transform->GetTransform().rotate);
-
-			static const float kMoveSpeed = 1.0f;
-
-			point_ += (forward * direction.z + right * direction.x) * kMoveSpeed;
-
-			isMoveCamera_ = true;
-		}
-
-	}
+	isMoveCamera_ = camera_->Update();
 
 	if (isMoveCamera_) {
 		UpdateView();
@@ -999,119 +1061,273 @@ void RenderSceneEditor::UpdateCamera() {
 
 void RenderSceneEditor::ShowCameraInformation(const WindowRect& rect) {
 
-	ImVec2 cursol = ImGui::GetCursorPos();
+	ImVec2 cursor = ImGui::GetCursorPos();
 
 	ImGui::SetCursorPos({ rect.pos.x + rect.size.x * 0.5f, rect.pos.y + rect.size.y * 0.5f });
 	ImGui::Text("TestA");
 	ImGui::Text("TestB");
 
-	ImGui::SetCursorPos(cursol);
+	ImGui::SetCursorPos(cursor);
 }
 
 void RenderSceneEditor::UpdateView() {
-	auto transform = (*camera_)->GetComponent<TransformComponent>();
-
-	Quaternion r = Quaternion::AxisAngle(kUnitY3<float>, angle_.x) * Quaternion::AxisAngle(kUnitX3<float>, angle_.y);
-
-	Vector3f direciton = Quaternion::RotateVector(kBackward3<float>, r);
-
-	transform->GetTransform().translate = point_ + direciton * distance_;
-	transform->GetTransform().rotate = r;
-	transform->UpdateMatrix();
-
+	(*camera_)->GetComponent<TransformComponent>()->UpdateMatrix();
 	(*camera_)->GetComponent<CameraComponent>()->UpdateView();
 }
 
-void RenderSceneEditor::DisplayGBufferTexture(GBuffer buffer) {
+void RenderSceneEditor::RenderInspector(const DirectXQueueContext* context, const CameraComponent* camera) {
+
+	//!< editorの取得
+	InspectorEditor* editor = GetEditorEngine()->GetEditor<InspectorEditor>();
+
+	if (editor == nullptr) {
+		return; //!< InspectorEditorが存在しない場合は何もしない
+	}
+
+	EntityBehaviour* entity = dynamic_cast<EntityBehaviour*>(editor->GetInspector());
+
+	if (entity == nullptr) {
+		return; //!< Inspectorの対象がEntityBehaviourでない場合は何もしない
+	}
+
+	BehaviourHelper::ForEachBehaviour(entity, [&](EntityBehaviour* behaviour) {
+
+		TransformComponent* transform = behaviour->GetComponent<TransformComponent>();
+
+		if (transform == nullptr) {
+			return; //!< TransformComponentを持たない場合は何もしない
+		}
+
+		ImColor c = ImGui::GetStyle().Colors[ImGuiCol_CheckMark]; //!< Editorのメインカラーとしてチェックマークの色を利用.
+		float thickness = (entity == behaviour ? 0.8f : 0.1f);    //!< 対象のEntityBehaviourがInspectorで選択されている場合は線を太くする
+
+		std::pair<Color4f, float> parameter = { Color4f{ c.Value.x, c.Value.y, c.Value.z, c.Value.w }, thickness };
+
+		DxObject::BindBufferDesc desc = {};
+		desc.Set32bitConstants("Dimension", 2, &buffer_->GetResolution());
+		desc.Set32bitConstants("Parameter", 5, &parameter);
+		desc.SetAddress("gCamera",    camera->GetGPUVirtualAddress());
+		desc.SetAddress("gTransform", transform->GetGPUVirtualAddress());
+
+		// rendererの取得
+		if (MeshRendererComponent* renderer = behaviour->GetComponent<MeshRendererComponent>()) {
+			renderer->GetMesh()->BindInputAssembler(context);
+			selectLine_.BindGraphicsBuffer(context->GetDxCommand(), desc);
+			renderer->GetMesh()->DrawCall(context);
+		}
+
+		if (SkinnedMeshRendererComponent* renderer = behaviour->GetComponent<SkinnedMeshRendererComponent>()) {
+			renderer->BindInputAssembler(context);
+			selectLine_.BindGraphicsBuffer(context->GetDxCommand(), desc);
+			renderer->DrawCall(context);
+		}
+
+	});
+
+	
+}
+
+void RenderSceneEditor::ShowDisplayBuffer(DisplayBuffer buffer) {
 	switch (buffer) {
-		case GBuffer::Scene:
-			SetImGuiImageFullWindowEnable(
-				textures_->GetGBuffer(FMainGBuffer::Layout::Scene)->GetGPUHandleSRV(),
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
+		//* FMainBufferの描画
+		case DisplayBuffer::Scene:
+			{
+				FMainBuffer* main = buffer_->GetBuffer<FMainBuffer>();
 
-		case GBuffer::Deferred_GBuffer:
-			SetImGuiImagesFullWindowEnable(
-				{
-					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(),      GBuffer::Albedo },
-					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(),      GBuffer::Normal },
-					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(), GBuffer::MaterialARM },
-					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(),    GBuffer::Position },
-					{ textures_->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleSRV(),    GBuffer::Velocity }
-				},
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
+				SetImGuiImageFullWindowEnable(
+					main->GetBuffer(FMainBuffer::Layout::Scene).GetGPUHandleSRV(),
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
 
-		case GBuffer::Albedo:
-			SetImGuiImageFullWindowEnable(
-				textures_->GetGBuffer(FDeferredGBuffer::Layout::Albedo)->GetGPUHandleSRV(),
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
+		case DisplayBuffer::GBuffer:
+			{
+				if (!buffer_->HasBuffer<FGBuffer>()) {
+					return;
+				}
 
-		case GBuffer::Normal:
-			SetImGuiImageFullWindowEnable(
-				textures_->GetGBuffer(FDeferredGBuffer::Layout::Normal)->GetGPUHandleSRV(),
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
+				FGBuffer* gbuffer = buffer_->GetBuffer<FGBuffer>();
 
-		case GBuffer::MaterialARM:
-			SetImGuiImageFullWindowEnable(
-				textures_->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM)->GetGPUHandleSRV(),
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
+				SetImGuiImagesFullWindowEnable(
+					{
+						{ gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV(),       DisplayBuffer::Albedo },
+						{ gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV(),       DisplayBuffer::Normal },
+						{ gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV(),  DisplayBuffer::MaterialARM },
+						{ gbuffer->GetBuffer(FGBuffer::Layout::MotionVector).GetGPUHandleSRV(), DisplayBuffer::MotionVector }
+					},
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
 
-		case GBuffer::Position:
-			SetImGuiImageFullWindowEnable(
-				textures_->GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV(),
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
+		case DisplayBuffer::Albedo:
+			{
+				if (!buffer_->HasBuffer<FGBuffer>()) {
+					return;
+				}
 
-		case GBuffer::Velocity:
-			SetImGuiImageFullWindowEnable(
-				textures_->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleSRV(),
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
+				FGBuffer* gbuffer = buffer_->GetBuffer<FGBuffer>();
 
-		case GBuffer::Lighting_GBuffer:
-			SetImGuiImagesFullWindowEnable(
-				{
-					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV(),   GBuffer::Direct },
-					{ textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(), GBuffer::Indirect },
-				},
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
+				SetImGuiImageFullWindowEnable(
+					gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV(),
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
 
-		case GBuffer::Direct:
-			SetImGuiImageFullWindowEnable(
-				textures_->GetGBuffer(FLightingGBuffer::Layout::Direct)->GetGPUHandleSRV(),
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
+		case DisplayBuffer::Normal:
+			{
+				if (!buffer_->HasBuffer<FGBuffer>()) {
+					return;
+				}
 
-		case GBuffer::Indirect:
-			SetImGuiImageFullWindowEnable(
-				textures_->GetGBuffer(FLightingGBuffer::Layout::Indirect)->GetGPUHandleSRV(),
-				textures_->GetSize(),
-				isRender_
-			);
-			break;
+				FGBuffer* gbuffer = buffer_->GetBuffer<FGBuffer>();
+
+				SetImGuiImageFullWindowEnable(
+					gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV(),
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
+
+		case DisplayBuffer::MaterialARM:
+			{
+				if (!buffer_->HasBuffer<FGBuffer>()) {
+					return;
+				}
+
+				FGBuffer* gbuffer = buffer_->GetBuffer<FGBuffer>();
+
+				SetImGuiImageFullWindowEnable(
+					gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV(),
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
+
+		case DisplayBuffer::MotionVector:
+			{
+				if (!buffer_->HasBuffer<FGBuffer>()) {
+					return;
+				}
+
+				FGBuffer* gbuffer = buffer_->GetBuffer<FGBuffer>();
+
+				SetImGuiImageFullWindowEnable(
+					gbuffer->GetBuffer(FGBuffer::Layout::MotionVector).GetGPUHandleSRV(),
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
+
+		case DisplayBuffer::LightAccumulation:
+			{
+				if (!buffer_->HasBuffer<FLightAccumulationBuffer>()) {
+					return;
+				}
+
+				FLightAccumulationBuffer* lightAccumulationBuffer = buffer_->GetBuffer<FLightAccumulationBuffer>();
+
+				SetImGuiImagesFullWindowEnable(
+					{
+						{ lightAccumulationBuffer->GetBuffer(FLightAccumulationBuffer::Layout::Direct).GetGPUHandleSRV(),   DisplayBuffer::Direct },
+						{ lightAccumulationBuffer->GetBuffer(FLightAccumulationBuffer::Layout::Indirect).GetGPUHandleSRV(), DisplayBuffer::Indirect },
+					},
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
+
+		case DisplayBuffer::Direct:
+			{
+				if (!buffer_->HasBuffer<FLightAccumulationBuffer>()) {
+					return;
+				}
+
+				FLightAccumulationBuffer* lightAccumulationBuffer = buffer_->GetBuffer<FLightAccumulationBuffer>();
+
+				SetImGuiImageFullWindowEnable(
+					lightAccumulationBuffer->GetBuffer(FLightAccumulationBuffer::Layout::Direct).GetGPUHandleSRV(),
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
+
+		case DisplayBuffer::Indirect:
+			{
+				if (!buffer_->HasBuffer<FLightAccumulationBuffer>()) {
+					return;
+				}
+
+				FLightAccumulationBuffer* lightAccumulationBuffer = buffer_->GetBuffer<FLightAccumulationBuffer>();
+
+				SetImGuiImageFullWindowEnable(
+					lightAccumulationBuffer->GetBuffer(FLightAccumulationBuffer::Layout::Indirect).GetGPUHandleSRV(),
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
+
+		case DisplayBuffer::Transparent:
+			{
+				if (!buffer_->HasBuffer<FTransparentBuffer>()) {
+					return;
+				}
+
+				FTransparentBuffer* transparent = buffer_->GetBuffer<FTransparentBuffer>();
+
+				SetImGuiImagesFullWindowEnable(
+					{
+						{ transparent->GetBuffer(FTransparentBuffer::Layout::Accumulate).GetGPUHandleSRV(), DisplayBuffer::Accumulate },
+						{ transparent->GetBuffer(FTransparentBuffer::Layout::Revealage).GetGPUHandleSRV(),  DisplayBuffer::Revealage },
+					},
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
+
+		case DisplayBuffer::Accumulate:
+			{
+				if (!buffer_->HasBuffer<FTransparentBuffer>()) {
+					return;
+				}
+
+				FTransparentBuffer* transparent = buffer_->GetBuffer<FTransparentBuffer>();
+
+				SetImGuiImageFullWindowEnable(
+					transparent->GetBuffer(FTransparentBuffer::Layout::Accumulate).GetGPUHandleSRV(),
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
+
+		case DisplayBuffer::Revealage:
+			{
+				if (!buffer_->HasBuffer<FTransparentBuffer>()) {
+					return;
+				}
+
+				FTransparentBuffer* transparent = buffer_->GetBuffer<FTransparentBuffer>();
+
+				SetImGuiImageFullWindowEnable(
+					transparent->GetBuffer(FTransparentBuffer::Layout::Revealage).GetGPUHandleSRV(),
+					buffer_->GetResolution(),
+					isRender_
+				);
+			}
+			return;
 	}
 }
 
@@ -1122,7 +1338,7 @@ void RenderSceneEditor::RenderIcon(BaseInspector* inspector, Icon icon, const Ve
 
 	Vector3f ndc = (*camera_)->GetComponent<CameraComponent>()->CalculateNDCPosition(position);
 
-	if (Any(ndc < Vector3(-1.0f, -1.0f, 0.0f)) || Any(ndc > Vector3(1.0f, 1.0f, 1.0f))) {
+	if (Comparison::Any(ndc < Vector3(-1.0f, -1.0f, 0.0f)) || Comparison::Any(ndc > Vector3(1.0f, 1.0f, 1.0f))) {
 		return;
 		// FIXME: size込みの判定に変更する
 	}
@@ -1164,6 +1380,10 @@ void RenderSceneEditor::RenderIcon(BaseInspector* inspector, Icon icon, const Ve
 		return; //!< 選択不可能(inspectorが未設定, editorが存在しない)
 	}
 
+	if (SxImGuizmo::IsOver()) {
+		return; //!< gizmo操作中は選択不可
+	}
+
 	// rectの調整
 	rect.min = Vector2f::Max(rect.min, sceneRect_.pos);
 	rect.max = Vector2f::Min(rect.max, sceneRect_.pos + sceneRect_.size);
@@ -1180,4 +1400,61 @@ void RenderSceneEditor::RenderTextSceneWindow(ImVec2& position, const std::strin
 	position.y -= size.y;
 
 	sceneWindowDrawer_->AddText(ImVec2(position.x, position.y), color, text.c_str());
+}
+
+void RenderSceneEditor::PickMesh(const DirectXQueueContext* context, const WindowRect& rect) {
+
+	if (!buffer_->HasBuffer<FGBuffer>()) {
+		return; //!< ピックに必要なバッファが存在しない場合は何もしない
+	}
+
+	FGBuffer* buffer = buffer_->GetBuffer<FGBuffer>();
+
+	//!< mouseの位置がrectの範囲内にあるか判定
+	Vector2f min = rect.pos;
+	Vector2f max = rect.pos + rect.size;
+
+	if (!SxImGui::IsMouseClickedRect({ min.x, min.y }, { max.x, max.y }, ImGuiMouseButton_Left)) {
+		return; //!< mouseがrectの範囲内にない場合は何もしない
+	}
+
+	Vector2f mouse = {
+		ImGui::GetMousePos().x,
+		ImGui::GetMousePos().y,
+	};
+
+	mouse = Clamp(mouse - rect.pos, Vector2f(0.0f, 0.0f), rect.size);
+	mouse /= rect.size; //!< mouseの位置を0~1に正規化
+
+	Vector2i pixel = Vector2i(static_cast<int32_t>(mouse.x * buffer_->GetResolution().x), static_cast<int32_t>(mouse.y * buffer_->GetResolution().y));
+
+	static DxObject::UnorderedDimensionBuffer<uintptr_t> address;
+	address.Create(System::GetDxDevice(), 1);
+
+	picker_.SetPipeline(context->GetDxCommand());
+
+	DxObject::BindBufferDesc desc = {};
+	desc.SetHandle("gAddress", buffer->GetBuffer(FGBuffer::Layout::Address).GetGPUHandleSRV());
+	desc.SetAddress("gPicker", address.GetGPUVirtualAddress());
+	desc.Set32bitConstants("Pixel", 2, &pixel);
+	picker_.BindComputeBuffer(context->GetDxCommand(), desc);
+
+	picker_.Dispatch(context->GetDxCommand(), { 1, 1, 1 });
+
+	static DxObject::ReadbackDimensionBuffer<uintptr_t> readback;
+	readback.Readback(System::GetDxDevice(), context->GetDxCommand(), &address);
+
+	context->ExecuteAllAllocators(); //!< readbackの結果を受け取るために、command listをflushする
+
+	uintptr_t value = readback.At(0);
+
+	if (value == 0) {
+		return; //!< ピックした場所にオブジェクトが存在しない場合は何もしない
+	}
+
+	BehaviourAddress behaviour = { readback.At(0), BehaviourAddress::Ownership::Borrowed };
+
+	BaseEditor::GetEditorEngine()->ExecuteEditorFunction<InspectorEditor>([&](InspectorEditor* editor) {
+		editor->SetInspector(behaviour.Get());
+	});
 }

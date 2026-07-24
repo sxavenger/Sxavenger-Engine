@@ -63,7 +63,7 @@ private:
 
 	std::unordered_map<
 		std::filesystem::path,
-		std::pair<const std::type_info*, std::function<std::shared_ptr<BaseContent>(const std::filesystem::path&)>>
+		std::pair<const std::type_info*, std::function<std::shared_ptr<BaseContent>()>>
 	> extensions_;
 
 	//=========================================================================================
@@ -90,7 +90,7 @@ private:
 
 	void ForEachDirectory(const std::filesystem::path& path, const std::function<void(const std::filesystem::directory_entry&)>& func);
 
-	template <ContentConcept T>
+	template <Content T>
 	void RegisterExtension(const std::filesystem::path& extension);
 
 	//* show asset *//
@@ -105,15 +105,13 @@ private:
 // AssetEditor class template methods
 //////////////////////////////////////////////////////////////////////////////////////////
 
-template <ContentConcept T>
+template <Content T>
 inline void AssetEditor::RegisterExtension(const std::filesystem::path& extension) {
 	extensions_.emplace(
 		extension,
 		std::make_pair(&typeid(T),
-		[](const std::filesystem::path& filepath) -> std::shared_ptr<BaseContent> {
+		[]() -> std::shared_ptr<BaseContent> {
 			std::shared_ptr<BaseContent> content = std::make_shared<T>();
-			content->SetFilepath(filepath);
-
 			return content;
 		})
 	);

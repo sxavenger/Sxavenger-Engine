@@ -11,17 +11,9 @@ SXAVENGER_ENGINE_USING
 // ContentBehaviour class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentBehaviour::AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) {
-	BaseContent::CheckExist();
+void ContentBehaviour::Load(MAYBE_UNUSED const DirectXQueueContext* context) {
+	bool success = JsonHandler::LoadFromJson(BaseContent::GetFilepath(), data_);
+	StreamLogger::AssertA(success, "content scene load failed. filepath: " + BaseContent::GetFilepath().generic_string());
 
-	Load(BaseContent::GetFilepath());
-}
-
-void ContentBehaviour::AttachUuid() {
-	BaseContent::CheckExist();
-}
-
-void ContentBehaviour::Load(const std::filesystem::path& filepath) {
-	bool result = JsonHandler::LoadFromJson(filepath, data_);
-	StreamLogger::AssertA(result, "content scene load failed. filepath: " + filepath.generic_string());
+	BaseContent::SetComplete(); //!< 読み込み完了
 }

@@ -8,7 +8,7 @@
 
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* c++
 #include <memory>

@@ -6,108 +6,61 @@ DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Utility/StreamLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseAppendConsumeBuffer class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BaseAppendConsumeBuffer::Release() {
+void BaseAppendConsumeBuffer::Reset() {
 	if (resource_ != nullptr) {
 		resource_.Reset();
 		counter_.Reset();
-
-		counterAddress_ = std::nullopt;
 	}
 
 	size_ = NULL;
 }
 
-const D3D12_GPU_DESCRIPTOR_HANDLE& BaseAppendConsumeBuffer::GetAppendCousumeGPUHandleUAV() const {
+const D3D12_GPU_DESCRIPTOR_HANDLE& BaseAppendConsumeBuffer::GetGPUHandleUAV() const {
 	StreamLogger::AssertA(resource_ != nullptr, "append consume buffer is not create."); //!< UAVが生成されていない
 	return descriptorUAV_.GetGPUHandle();
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& BaseAppendConsumeBuffer::GetCounterGPUVirtualAddress() const {
-	StreamLogger::AssertA(counterAddress_.has_value(), "append consume buffer (counter) is not create."); //!< counterが生成されていない
-	return counterAddress_.value();
-}
+void BaseAppendConsumeBuffer::CreateBuffer(DxObject::Device* device, DxObject::Descriptor&& descriptor, uint32_t size) {
 
-void BaseAppendConsumeBuffer::Create(Device* devices, DescriptorHeaps* descriptorHeaps, uint32_t size, uint32_t counterSize) {
+	//!< 引数の保存
+	size_          = size;
+	descriptorUAV_ = std::move(descriptor);
 
-	auto device = devices->GetDevice();
+	//!< resourceの生成[buffer]
+	resource_ = DxObject::Resource::CreateBuffer(
+		device,
+		D3D12_HEAP_TYPE_DEFAULT,
+		GetByteSize(),
+		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
+		D3D12_RESOURCE_STATE_COMMON
+	);
 
-	// 引数の保存
-	size_ = size;
+	//!< resourceの生成[counter]
+	counter_ = DxObject::Resource::CreateBuffer(
+		device,
+		D3D12_HEAP_TYPE_DEFAULT,
+		sizeof(UINT),
+		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
+		D3D12_RESOURCE_STATE_COMMON
+	);
 
-	{ //!< resourceの生成
-
-		D3D12_HEAP_PROPERTIES prop = {};
-		prop.Type = D3D12_HEAP_TYPE_DEFAULT;
-
-		D3D12_RESOURCE_DESC desc = {};
-		desc.Dimension        = D3D12_RESOURCE_DIMENSION_BUFFER;
-		desc.Width            = GetByteSize();
-		desc.Height           = 1;
-		desc.DepthOrArraySize = 1;
-		desc.MipLevels        = 1;
-		desc.SampleDesc.Count = 1;
-		desc.Layout           = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-
-		device->CreateCommittedResource(
-			&prop,
-			D3D12_HEAP_FLAG_NONE,
-			&desc,
-			D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-			nullptr,
-			IID_PPV_ARGS(&resource_)
-		);
-
-	}
-	
-	{ //!< counterの生成
-
-		D3D12_HEAP_PROPERTIES prop = {};
-		prop.Type = D3D12_HEAP_TYPE_DEFAULT;
-
-		D3D12_RESOURCE_DESC desc = {};
-		desc.Dimension        = D3D12_RESOURCE_DIMENSION_BUFFER;
-		desc.Width            = sizeof(UINT) * counterSize;
-		desc.Height           = 1;
-		desc.DepthOrArraySize = 1;
-		desc.MipLevels        = 1;
-		desc.SampleDesc.Count = 1;
-		desc.Layout           = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-		desc.Flags            = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-
-		device->CreateCommittedResource(
-			&prop,
-			D3D12_HEAP_FLAG_NONE,
-			&desc,
-			D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-			nullptr,
-			IID_PPV_ARGS(&counter_)
-		);
-
-		// counterのアドレスを保存
-		counterAddress_ = counter_->GetGPUVirtualAddress();
-	}
-
-	{ //!< UAVの生成
-
-		descriptorUAV_ = descriptorHeaps->GetDescriptor(DxObject::kDescriptor_UAV);
-
+	{ //!< UAVの作成
 		D3D12_UNORDERED_ACCESS_VIEW_DESC desc = {};
 		desc.ViewDimension              = D3D12_UAV_DIMENSION_BUFFER;
 		desc.Buffer.NumElements         = GetSize();
 		desc.Buffer.StructureByteStride = static_cast<UINT>(GetStride());
 
-		device->CreateUnorderedAccessView(
+		device->GetDevice()->CreateUnorderedAccessView(
 			resource_.Get(),
 			counter_.Get(),
 			&desc,
 			descriptorUAV_.GetCPUHandle()
 		);
 	}
+	
 }

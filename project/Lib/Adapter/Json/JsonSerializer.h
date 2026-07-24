@@ -7,12 +7,12 @@
 #include "JsonHandler.h"
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
-#include <Lib/Geometry/Vector3.h>
-#include <Lib/Geometry/Vector4.h>
-#include <Lib/Geometry/Quaternion.h>
-#include <Lib/Geometry/Color3.h>
-#include <Lib/Geometry/Color4.h>
+#include <Lib/Math/Vector2.h>
+#include <Lib/Math/Vector3.h>
+#include <Lib/Math/Vector4.h>
+#include <Lib/Math/Quaternion.h>
+#include <Lib/Math/Color3.h>
+#include <Lib/Math/Color4.h>
 
 //* c++
 #include <concepts>
@@ -45,15 +45,7 @@ concept JsonSerializePrimitive = std::integral<T> || std::floating_point<T> || s
 template <typename T>
 struct JsonSerializeFormatter {
 public:
-
-	static json Serialize(const T& value) {
-		static_assert(false, "JsonSerializeFormatter::Serialize() : Unsupported type.");
-	}
-
-	static T Deserialize(const json& j) {
-		static_assert(false, "JsonSerializeFormatter::Deserialize() : Unsupported type.");
-	}
-
+	static_assert(requires { typename JsonSerializeFormatter<T>::Serialize; typename JsonSerializeFormatter<T>::Deserialize; }, "JsonSerializeFormatter requires either JsonSerializePrimitive or custom Serialize/Deserialize methods.");
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////

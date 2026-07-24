@@ -8,8 +8,9 @@
 #include <Engine/System/Utility/ComPtr.h>
 
 //* lib
-#include <Lib/CXXAttributeConfig.h>
-#include <Lib/Geometry/Vector3.h>
+#include <Lib/CXXAttribute.h>
+#include <Lib/Math/Vector3.h>
+#include <Lib/Adapter/TracePoint/TracePoint.h>
 
 //* DirectX12
 #include <d3d12.h>
@@ -18,7 +19,6 @@
 //* c++
 #include <cstdint>
 #include <variant>
-#include <source_location>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -48,7 +48,7 @@ using GPUBuffer = std::variant<D3D12_GPU_VIRTUAL_ADDRESS, D3D12_GPU_DESCRIPTOR_H
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ShaderVisibility enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum class ShaderVisibility {
+enum class ShaderVisibility : uint32_t {
 	VISIBILITY_ALL           = D3D12_SHADER_VISIBILITY_ALL,
 	VISIBILITY_VERTEX        = D3D12_SHADER_VISIBILITY_VERTEX,
 	VISIBILITY_HULL          = D3D12_SHADER_VISIBILITY_HULL,
@@ -60,14 +60,23 @@ enum class ShaderVisibility {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// SamplerFilter enum class
+////////////////////////////////////////////////////////////////////////////////////////////
+enum class SamplerFilter : uint32_t {
+	Linear      = D3D12_FILTER_MIN_MAG_MIP_LINEAR,
+	Point       = D3D12_FILTER_MIN_MAG_MIP_POINT,
+	Anisotropic = D3D12_FILTER_ANISOTROPIC
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // SamplerMode enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum SamplerMode {
-	MODE_WRAP        = D3D12_TEXTURE_ADDRESS_MODE_WRAP,
-	MODE_MIRROR      = D3D12_TEXTURE_ADDRESS_MODE_MIRROR,
-	MODE_CLAMP       = D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
-	MODE_BORDER      = D3D12_TEXTURE_ADDRESS_MODE_BORDER,
-	MODE_MIRROR_ONCE = D3D12_TEXTURE_ADDRESS_MODE_MIRROR_ONCE
+enum class SamplerMode : uint32_t {
+	Wrap       = D3D12_TEXTURE_ADDRESS_MODE_WRAP,
+	Mirror     = D3D12_TEXTURE_ADDRESS_MODE_MIRROR,
+	Clamp      = D3D12_TEXTURE_ADDRESS_MODE_CLAMP,
+	Border     = D3D12_TEXTURE_ADDRESS_MODE_BORDER,
+	MirrorOnce = D3D12_TEXTURE_ADDRESS_MODE_MIRROR_ONCE
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,25 +95,33 @@ enum DescriptorType : uint32_t {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // CompileProfile enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
-enum class CompileProfile : uint8_t {
-	vs,
-	gs,
-	ms,
-	as,
-	ps,
-	cs,
-	lib,
+enum class CompileProfile : uint8_t { //!< Graphics -> Compute -> Lib の順で並べる
+	Vertex,
+	Geometry,
+	Mesh,
+	Amplification,
+	Pixel,
+	Compute,
+	Lib,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsShaderType enum class
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class GraphicsShaderType : uint8_t {
-	vs,
-	gs,
-	ms,
-	as,
-	ps
+	Vertex        = CompileProfile::Vertex,
+	Geometry      = CompileProfile::Geometry,
+	Mesh          = CompileProfile::Mesh,
+	Amplification = CompileProfile::Amplification,
+	Pixel         = CompileProfile::Pixel
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ColorEncoding enum class
+////////////////////////////////////////////////////////////////////////////////////////////
+enum class ColorEncoding : bool {
+	Lightness, //!< sRGB
+	Intensity, //!< linear
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -139,6 +156,25 @@ constexpr DXGI_FORMAT ConvertToSRGB(DXGI_FORMAT format) {
 	}
 }
 
+constexpr DXGI_FORMAT ConvertToDepthViewFormat(DXGI_FORMAT format) {
+	switch (format) {
+		case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
+			return DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
+
+		case DXGI_FORMAT_D32_FLOAT:
+			return DXGI_FORMAT_R32_FLOAT;
+
+		case DXGI_FORMAT_D24_UNORM_S8_UINT:
+			return DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+
+		case DXGI_FORMAT_D16_UNORM:
+			return DXGI_FORMAT_R16_UNORM;
+
+		default:
+			return format;
+	}
+}
+
 NODISCARD ComPtr<ID3D12Resource> CreateBufferResource(
 	ID3D12Device* device,
 	D3D12_HEAP_TYPE heapType,
@@ -156,20 +192,22 @@ Vector3ui RoundUp(const Vector3ui& round, const Vector3ui& thread);
 
 CompileProfile ToProfile(GraphicsShaderType type);
 
-void Assert(HRESULT hr, const std::wstring& label, const std::source_location& location = std::source_location::current());
+std::wstring GetComError(HRESULT hr);
+
+void Assert(HRESULT hr, const std::wstring& label, const TracePoint& point = TracePoint());
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Configs
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-constexpr const D3D_SHADER_MODEL kHeighestShaderModel = D3D_SHADER_MODEL_6_6;
-static_assert(kHeighestShaderModel >= D3D_SHADER_MODEL_6_5, "mesh shader is 6.5 or higher");
+constexpr const D3D_SHADER_MODEL kRequireShaderModel = D3D_SHADER_MODEL_6_6;
+static_assert(kRequireShaderModel >= D3D_SHADER_MODEL_6_5, "mesh shader is 6.5 or higher");
 
 constexpr const DXGI_FORMAT kDefaultScreenFormat     = DXGI_FORMAT_R8G8B8A8_UNORM;          //!< スクリーン画面のformat
 constexpr const DXGI_FORMAT kDefaultScreenViewFormat = ConvertToSRGB(kDefaultScreenFormat); //!< 最終的なスクリーン画面のformat
 constexpr const DXGI_FORMAT kDefaultOffscreenFormat  = kDefaultScreenFormat;                //!< offscreenで使われるformat
 
 constexpr const DXGI_FORMAT kDefaultDepthFormat     = DXGI_FORMAT_D32_FLOAT_S8X24_UINT;
-constexpr const DXGI_FORMAT kDefaultDepthViewFormat = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
+constexpr const DXGI_FORMAT kDefaultDepthViewFormat = ConvertToDepthViewFormat(kDefaultDepthFormat);
 
 DXOBJECT_NAMESPACE_END

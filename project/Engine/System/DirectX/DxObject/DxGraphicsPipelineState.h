@@ -16,7 +16,7 @@
 #include <Engine/System/Configuration/Configuration.h>
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
+#include <Lib/Math/Vector2.h>
 
 //* c++
 #include <array>
@@ -29,18 +29,13 @@
 DXOBJECT_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// using
-////////////////////////////////////////////////////////////////////////////////////////////
-using BlendOption = std::variant<BlendMode, D3D12_RENDER_TARGET_BLEND_DESC>;
-
-////////////////////////////////////////////////////////////////////////////////////////////
 // PrimitiveType enum
 ////////////////////////////////////////////////////////////////////////////////////////////
 enum class PrimitiveType {
 	PointList,
 	LineList,
 	LineStrip,
-	TrianglList,
+	TriangleList,
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,7 +57,7 @@ public:
 	void ClearElement();
 
 	void SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);
-	void SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_MASK writeMask = D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC func = D3D12_COMPARISON_FUNC_LESS);
+	void SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_MASK writeMask = D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC func = D3D12_COMPARISON_FUNC_LESS_EQUAL);
 
 	void SetBlendMode(uint8_t renderTargetIndex, BlendMode mode);
 	void SetBlendDesc(uint8_t renderTargetIndex, const D3D12_RENDER_TARGET_BLEND_DESC& desc);
@@ -76,8 +71,6 @@ public:
 	void SetRTVFormats(uint8_t size, const DXGI_FORMAT formats[]);
 
 	void SetDSVFormat(DXGI_FORMAT format);
-
-	void CreateDefaultDesc();
 
 	//* getter *//
 
@@ -95,7 +88,7 @@ public:
 
 	//* blends *//
 
-	std::array<BlendOption, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> blends;
+	std::array<D3D12_RENDER_TARGET_BLEND_DESC, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> blends;
 	bool isIndependentBlendEnable = false;
 
 	//* primitive *//
@@ -139,7 +132,7 @@ public:
 	//* setting pipeline *//
 
 	void SetPipeline(CommandContext* context, const D3D12_VIEWPORT& viewport, const D3D12_RECT& rect) const;
-	void SetPipeline(CommandContext* context, const Vector2ui& windowSize = SXAVENGER_ENGINE Configuration::GetConfig().resolution) const;
+	void SetPipeline(CommandContext* context, const Vector2ui& resolution = SXAVENGER_ENGINE Configuration::GetConfig().resolution) const;
 
 protected:
 
@@ -149,7 +142,7 @@ protected:
 
 	//* blob *//
 
-	std::array<std::optional<ShaderBlob>, static_cast<uint8_t>(GraphicsShaderType::ps) + 1> blobs_;
+	std::array<std::optional<ShaderBlob>, static_cast<uint8_t>(GraphicsShaderType::Pixel) + 1> blobs_;
 
 	//* rootSignature *//
 
@@ -173,7 +166,6 @@ protected:
 
 	D3D12_SHADER_BYTECODE GetBytecode(GraphicsShaderType type, bool isRequired = false);
 
-	D3D12_RENDER_TARGET_BLEND_DESC GetRenderTargetBlendDesc(const BlendOption& option) const;
 	D3D12_BLEND_DESC GetBlendDesc() const;
 
 	//* methods *//
@@ -205,7 +197,7 @@ public:
 	void ReflectionRootSignature(Device* device, const SamplerBindDesc& desc);
 	void ReflectionRootSignature(Device* device, D3D12_ROOT_SIGNATURE_FLAGS flag);
 
-	void BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc);
+	void BindGraphicsBuffer(const CommandContext* context, const BindBufferDesc& desc) const;
 
 private:
 

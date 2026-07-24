@@ -13,7 +13,7 @@
 RWTexture2DArray<float4> gSkyCube : register(u0);
 
 Texture2D<float3> gTransmittance      : register(t0);
-Texture2D<float4> gMultipleScattering : register(t1);
+Texture2D<float3> gMultipleScattering : register(t1);
 SamplerState gSampler                 : register(s0);
 
 ConstantBuffer<TransformComponent> gTransform : register(b0);
@@ -69,11 +69,11 @@ float3 ComputeSunDir(float3 sun_dir, float3 zenith) {
 }
 
 float3 ComputeWorldDir(float2 uv, float view_height, Atmosphere atmosphere) {
-	uv = FromSubUVToUnit(uv, float2(dimension));
+	uv = FromSubUVToUnit(uv, float2(dimension.xy));
 
 	float v_horizon = sqrt(max(view_height * view_height - atmosphere.bottom_radius * atmosphere.bottom_radius, 0.0));
 	float ground_to_horizon_angle = acos(v_horizon / view_height);
-	float zenith_horizon_angle = kPi - ground_to_horizon_angle;
+	float zenith_horizon_angle = Mathmatic::kPi - ground_to_horizon_angle;
 
 	float cos_view_zenith;
 	if (uv.y < 0.5) {
@@ -115,7 +115,7 @@ float2 TransmittanceParamToUV(Atmosphere atmosphere, float view_height, float co
 }
 
 float CornetteShanksPhase(float cos_theta, float g) {
-	float k = 3.0 / (8.0 * kPi) * (1.0 - g * g) / (2.0 + g * g);
+	float k = 3.0 / (8.0 * Mathmatic::kPi) * (1.0 - g * g) / (2.0 + g * g);
 	return k * (1.0 + cos_theta * cos_theta) / pow(1.0 + g * g - 2.0 * g * -cos_theta, 1.5);
 }
 
@@ -124,7 +124,7 @@ float MiePhase(float cos_theta, float g_or_d) {
 }
 
 float RayleighPhase(float cos_theta) {
-	float factor = 3.0f / (16.0f * kPi);
+	float factor = 3.0f / (16.0f * Mathmatic::kPi);
 	return factor * (1.0f + cos_theta * cos_theta);
 }
 
@@ -135,7 +135,7 @@ float3 GetMultipleScattering(Atmosphere atmosphere, float3 scattering, float3 ex
 	gMultipleScattering.GetDimensions(resolution.x, resolution.y);
 	
 	uv = FromUnitToSubUV(uv, resolution);
-	return gMultipleScattering.SampleLevel(gSampler, uv, 0).xyz;
+	return gMultipleScattering.SampleLevel(gSampler, uv, 0);
 }
 
 SingleScattering IntegrateScatteregLuminance(float3 world_pos, float3 world_dir, float3 sun_dir, Atmosphere atmosphere) {
@@ -217,17 +217,17 @@ SingleScattering IntegrateScatteregLuminance(float3 world_pos, float3 world_dir,
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(_NUM_THREAD_X, _NUM_THREAD_Y, _NUM_THREAD_Z)]
+[numthreads(NUM_THREAD_X, NUM_THREAD_Y, NUM_THREAD_Z)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 pixel = dispatchThreadId.xy;
 	uint index  = dispatchThreadId.z;
 
-	if (any(pixel >= dimension)) {
+	if (any(pixel >= dimension.xy)) {
 		return; //!< 範囲外
 	}
 
-	float2 uv = (float2(dispatchThreadId.xy + 0.5f) / dimension) * 2.0f - 1.0f; //!< [-1, 1]に変換
+	float2 uv = (float2(dispatchThreadId.xy + 0.5f) / dimension.xy) * 2.0f - 1.0f; //!< [-1, 1]に変換
 
 	float3 view_world_pos = float3(0.0f, gAtmosphere.bottom_radius + 0.01f, 0.0f);
 	float view_height     = length(view_world_pos);
@@ -235,7 +235,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float3 world_dir      = GetDirection(uv, index);
 
 	float3 zenith  = view_world_pos / view_height;
-	float3 sun_dir = -gTransform.GetDirection();
+	float3 sun_dir = -gTransform.GetForwardDirection();
 
 	SingleScattering ss = IntegrateScatteregLuminance(world_pos, world_dir, sun_dir, gAtmosphere);
 

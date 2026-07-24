@@ -9,10 +9,11 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/Configuration/Configuration.h>
+#include <Engine/System/UI/SxGui.h>
 #include <Engine/Components/Entity/EntityBehaviour.h>
 
 //* lib
-#include <Lib/Geometry/Color4.h>
+#include <Lib/Math/Color4.h>
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -44,19 +45,39 @@ public:
 
 private:
 
+	//////////////////////////////////////////////////////////////////////////////////////////
+	// ActorItem structure
+	//////////////////////////////////////////////////////////////////////////////////////////
+	struct ActorItem {
+	public:
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		SxGui::Icon icon;
+		std::string name;
+		std::function<void(EntityBehaviour*)> function;
+
+	};
+
+private:
+
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
-
-	//* parameter *//
-
-	static inline const Color4f disableColor_ = { 0.4f, 0.4f, 0.4f, 1.0f };
 
 	//* scene parameter *//
 
 	static inline const std::filesystem::path kSceneDirectory = kAssetsDirectory / "scene";
 
+	//* hierarchy parameter *//
+
 	std::string hierarchyBuf_;
+
+	//* actor parameter *//
+
+	std::vector<ActorItem> actorItems_;
 
 	//=========================================================================================
 	// private methods
@@ -66,23 +87,18 @@ private:
 
 	void ShowHierarchyMenu();
 
-	void ShowActorMenu();
 	void ShowSceneMenu();
+	void ShowSummaryMenu();
 
 	void ShowHierarchyWindow();
+	void ShowActorWindow();
 
 	//* helper method *//
 
 	void ForEachBehaviourHierarchy(const EntityBehaviour::Hierarchy& hierarchy, const std::function<void(EntityBehaviour*)>& function);
 
-	void HierarchySelectable(EntityBehaviour* behaviour);
-
 	bool HierarchyFilter(EntityBehaviour* behaviour, const std::string& filter);
-	void HierarchySelectableFilter(EntityBehaviour* behaviour, const std::string& filter);
-
-	bool CheckSelected(EntityBehaviour* behaviour);
-
-	void SetSelected(EntityBehaviour* behaviour);
+	void HierarchySelectable(EntityBehaviour* behaviour, const std::string& filter);
 
 	void SetSelectedView(EntityBehaviour* behaviour);
 

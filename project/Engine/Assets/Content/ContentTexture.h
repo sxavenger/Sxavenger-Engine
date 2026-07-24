@@ -3,21 +3,19 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* ucontent
+//* content
 #include "BaseContent.h"
 
 //* engine
 #include <Engine/Foundation.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
 #include <Lib/Adapter/Uuid/Uuid.h>
 
-//* directx12
+//* DirectX12
 #include <d3dx12.h>
 #include <DirectXTex.h>
-
-//* c++
-#include <filesystem>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -36,7 +34,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Encoding : bool {
 		Lightness, //!< sRGB
-		Intensity,
+		Intensity, //!< Linear
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
@@ -49,8 +47,11 @@ public:
 		// public variables
 		//=========================================================================================
 
-		Encoding encoding     = Encoding::Lightness;
+		Encoding encoding = Encoding::Lightness;
+		//!< 読み込み時のエンコード形式の指定. LightnessはsRGB形式(Albedo etc...), IntensityはLinear形式で読み込む.(Normal etc...)
+
 		bool isGenerateMipmap = true;
+		bool useCompress      = true; //!< 圧縮されたテクスチャを使用するかどうか. 圧縮されたテクスチャが存在しない場合は、通常のテクスチャを使用する.
 
 	};
 
@@ -60,22 +61,19 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ContentTexture()           = default;
+	//* constructor / destructor *//
+
+	ContentTexture() : BaseContent(Async::Execution::Copy) {}
+
 	~ContentTexture() override = default;
-
-	void AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) override;
-
-	AsyncExecution GetAsyncExecution() const { return AsyncExecution::Copy; }
-
-	void AttachUuid() override;
-
-	//* inspector option *//
-
-	void ShowInspector() override;
 
 	//* content option *//
 
-	void Load(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option);
+	void Attach(const std::filesystem::path& filepath, const std::any& parameter) override;
+
+	void Load(MAYBE_UNUSED const DirectXQueueContext* context) override;
+
+	//* id option *//
 
 	const Uuid& GetId() const { return id_; }
 
@@ -84,20 +82,22 @@ private:
 	//=========================================================================================
 	// private variables
 	//=========================================================================================
-	
+
 	Uuid id_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
-	//* helper methods *//
+	static std::string GetEncoding(Encoding encoding);
 
-	void GetUuid();
+	void AttachUuid(const std::filesystem::path& filepath);
+
+	//* load helper methods *//
 
 	Option GetOption();
 
-	static std::string GetEncoding(Encoding encoding);
+	DirectX::ScratchImage LoadContent(const DirectXQueueContext* context, const std::filesystem::path& filepath, const Option& option);
 
 	//* texture load helper methods *//
 
@@ -109,6 +109,16 @@ private:
 	static DirectX::ScratchImage LoadFromWICFile(const std::filesystem::path& filepath, const Option& option);
 
 	static DirectX::ScratchImage LoadTexture(const std::filesystem::path& filepath, const Option& option);
+
+	//* compress helper methods *//
+
+	bool ExistsCompressed(const std::filesystem::path& filepath) const;
+
+	bool CheckCompress(const std::filesystem::path& filepath) const;
+
+	static std::filesystem::path GetCompressedPath(const std::filesystem::path& filepath);
+
+	static void Compress(const std::filesystem::path& filepath, const Option& option);
 
 };
 

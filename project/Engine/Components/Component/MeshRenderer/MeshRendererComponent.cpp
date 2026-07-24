@@ -21,9 +21,14 @@ void MeshRendererComponent::ShowComponentInspector() {
 	ImGui::Checkbox("enable", &isEnable_);
 	SxImGui::CheckBoxFlags("cast shadow", &mask_.Get(), static_cast<uint8_t>(MeshInstanceMask::Shadow));
 
+	SxGui::ComboEnum("mode", &mode_);
+
 	if (ImGui::BeginCombo("mesh", mesh_.GetStr().c_str())) {
-		for (const auto& id : sAssetStorage->GetAssetStorage<AssetMesh>() | std::views::keys) {
-			if (ImGui::Selectable(id.Serialize().c_str(), mesh_ == id)) {
+		for (const auto& [id, asset] : sAssetStorage->GetStorage<AssetMesh>()) {
+
+			std::string label = std::format("{} # {}", asset->GetName(), id.Serialize());
+
+			if (ImGui::Selectable(label.c_str(), mesh_ == id)) {
 				mesh_ = id; //!< 選択されたmeshを設定
 			}
 		}
@@ -31,8 +36,10 @@ void MeshRendererComponent::ShowComponentInspector() {
 	}
 
 	if (ImGui::BeginCombo("material", material_.GetStr().c_str())) {
-		for (const auto& id : sAssetStorage->GetAssetStorage<AssetMaterial>() | std::views::keys) {
-			if (ImGui::Selectable(id.Serialize().c_str(), material_ == id)) {
+		for (const auto& [id, asset] : sAssetStorage->GetStorage<AssetMaterial>()) {
+			std::string label = std::format("{} # {}", asset->GetName(), id.Serialize());
+
+			if (ImGui::Selectable(label.c_str(), material_ == id)) {
 				material_ = id; //!< 選択されたmaterialを設定
 			}
 		}
@@ -54,6 +61,7 @@ json MeshRendererComponent::ParseToJson() const {
 	data["mask"]     = mask_.Get();
 	data["isEnable"] = isEnable_;
 	data["stencil"]  = stencil_;
+	data["mode"]     = magic_enum::enum_name(mode_);
 
 	return data;
 }
@@ -66,12 +74,12 @@ void MeshRendererComponent::InputJson(const json& data) {
 	// mesh, materialのuuidが存在しない場合は, tableから読み込み
 
 	if (!sAssetStorage->Contains<AssetMesh>(mesh)) {
-		const auto& filepath = sAssetStorage->GetFilepath(mesh);
+		const std::filesystem::path& filepath = sAssetStorage->GetLocation(mesh);
 		sContentStorage->Import<ContentModel>(filepath);
 	}
 
 	if (!sAssetStorage->Contains<AssetMaterial>(material)) {
-		const auto& filepath = sAssetStorage->GetFilepath(material);
+		const std::filesystem::path& filepath = sAssetStorage->GetLocation(material);
 		sContentStorage->Import<ContentModel>(filepath);
 	}
 
@@ -82,6 +90,8 @@ void MeshRendererComponent::InputJson(const json& data) {
 	isEnable_ = data["isEnable"].get<bool>();
 
 	stencil_  = data["stencil"].get<uint8_t>();
+
+	mode_ = magic_enum::enum_cast<MeshRendererCommon::Mode>(data["mode"].get<std::string>()).value();
 }
 
 bool MeshRendererComponent::IsEnable() const {
@@ -89,9 +99,9 @@ bool MeshRendererComponent::IsEnable() const {
 }
 
 std::shared_ptr<AssetMesh> MeshRendererComponent::GetMesh() const {
-	return mesh_.Require();
+	return mesh_.WaitRequire();
 }
 
 std::shared_ptr<AssetMaterial> MeshRendererComponent::GetMaterial() const {
-	return material_.Require();
+	return material_.WaitRequire();
 }

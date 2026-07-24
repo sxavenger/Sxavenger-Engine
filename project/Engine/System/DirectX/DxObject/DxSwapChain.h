@@ -30,6 +30,27 @@ public:
 		Rec_2020_2000nit,
 	};
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Buffer structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Buffer {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Reset();
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		ComPtr<ID3D12Resource> resource;
+		DxObject::Descriptor descriptorRTV;
+
+	};
+
 public:
 
 	//=========================================================================================
@@ -44,6 +65,11 @@ public:
 		DXGI_FORMAT format, const Vector2ui& size, const HWND& hwnd
 	);
 
+	void Resize(
+		Device* device, DescriptorHeaps* descriptorHeaps,
+		DXGI_FORMAT format, const Vector2ui& size
+	);
+
 	void Term();
 
 	void Present();
@@ -56,11 +82,11 @@ public:
 
 	D3D12_RESOURCE_BARRIER GetBackBufferTransitionBarrier(D3D12_RESOURCE_STATES stateBefore, D3D12_RESOURCE_STATES stateAfter) const;
 
-	const D3D12_CPU_DESCRIPTOR_HANDLE& GetBackBufferCPUHandle() const { return descriptorsRTV_[GetCurrentBackBufferIndex()].GetCPUHandle(); }
+	const D3D12_CPU_DESCRIPTOR_HANDLE& GetBackBufferCPUHandle() const;
 
 	const ColorSpace GetColorSpace() const { return colorSpace_; }
 
-	static const UINT GetBufferCount() { return kBufferCount_; }
+	static const UINT GetBufferCount() { return kBufferCount; }
 
 private:
 
@@ -74,9 +100,8 @@ private:
 
 	//* buffers *//
 
-	static const UINT      kBufferCount_ = 2;
-	ComPtr<ID3D12Resource> resources_[kBufferCount_];
-	DxObject::Descriptor   descriptorsRTV_[kBufferCount_];
+	static const UINT kBufferCount = 2;
+	std::array<Buffer, kBufferCount> buffers_;
 
 	//* parameter *//
 
@@ -92,11 +117,12 @@ private:
 
 	static UINT16 GetChromaticity(double v);
 
-	//* create methods *//
+	//* helper methods *//
 
 	void CreateSwapChain(Device* device, CommandContext* command, DXGI_FORMAT format, const Vector2ui& size, const HWND& hwnd);
+	void ResizeSwapChain(DXGI_FORMAT format, const Vector2ui& size);
 
-	void CreateRenderTargetView(Device* device, DescriptorHeaps* descriptorHeaps, DXGI_FORMAT format, bool isSRGB);
+	void CreateBuffer(Device* device, DescriptorHeaps* descriptorHeaps, DXGI_FORMAT format, bool isSRGB);
 };
 
 DXOBJECT_NAMESPACE_END

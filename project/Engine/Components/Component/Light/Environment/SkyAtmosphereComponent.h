@@ -11,6 +11,7 @@
 
 //* engine
 #include <Engine/Foundation.h>
+#include <Engine/System/DirectX/DxObject/DxResource.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/DxObject/DxComputePipelineState.h>
@@ -33,13 +34,25 @@ class SkyAtmosphereComponent final
 public:
 	// TODO: コンポーネント変数, 関数の整理
 	
-	_PUSH_GPU_BUFFER_ALIGNAS
+	PUSH_GPU_BUFFER_ALIGNAS
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Atmosphere structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct _GPU_BUFFER_ALIGNAS Atmosphere {
+	struct GPU_BUFFER_ALIGNAS Atmosphere {
 	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Init();
+
+		void Inspector();
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
 
 		Vector3f rayleigh_scattering;
 		float rayleigh_density_exp_scale;
@@ -54,19 +67,16 @@ public:
 		Vector3f mie_scattering;
 		float mie_density_exp_scale;
 		Vector3f mie_extinction;
+		float mie_phase_param;
+
+		Color3f ground_albedo;
 
 		float top_radius;
 		float bottom_radius;
 
-		Color3f ground_albedo;
 		float multi_scattering_factor;
 
 		float intensity;
-
-
-		void Init();
-
-		void Inspector();
 
 	};
 
@@ -78,12 +88,13 @@ public:
 	enum class Flag : uint32_t {
 		None        = 0,
 		Environment = 1 << 0,
+		Aerial      = 1 << 1,
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
-	struct _GPU_BUFFER_ALIGNAS Parameter {
+	struct GPU_BUFFER_ALIGNAS Parameter {
 	public:
 
 		//=========================================================================================
@@ -94,6 +105,8 @@ public:
 
 		void SetEnvironment(const DxObject::Descriptor& descriptorSRV);
 
+		void SetAerial(const DxObject::Descriptor& descriptorSRV);
+
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
@@ -101,10 +114,11 @@ public:
 		Sxl::Flag<Flag> flags;
 
 		uint32_t environment;
+		uint32_t aerial;
 
 	};
 
-	_POP_GPU_BUFFER_ALIGNAS
+	POP_GPU_BUFFER_ALIGNAS
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Type enum class
@@ -112,9 +126,16 @@ public:
 	enum class Type : uint8_t {
 		Transmittance,
 		MultipleScattering,
-		SkyView,
 		SkyCube,
-		// TODO: SkyViewからSkyCubeへの変換 Aerial影
+		Aerial
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Mode enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Mode : uint8_t {
+		Dynamic,   //!< リアルタイム計算
+		Precomput, //!< 事前計算テクスチャを使用 (Transmittance, MultiScattering を事前計算したもととして扱う)
 	};
 
 public:
@@ -128,18 +149,18 @@ public:
 
 	void ShowComponentInspector() override;
 
-	void UpdateTransmittance(const DirectXQueueContext* context);
-	void UpdateMultipleScattering(const DirectXQueueContext* context);
-	void UpdateSkyView(const DirectXQueueContext* context);
-	void UpdateSkyCube(const DirectXQueueContext* context);
+	void Update(Mode mode, const DirectXQueueContext* context);
+	void Update(const DirectXQueueContext* context) { Update(mode_, context); }
+
+	//* component option *//
+
+	Mode GetMode() const { return mode_; }
+
+	void SetMode(Mode mode) { mode_ = mode; }
 
 	void SetIntensity(float intensity);
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
 
 	const TransformComponent* RequireTransform() const;
 
@@ -151,9 +172,32 @@ private:
 	struct Texture {
 	public:
 
-		ComPtr<ID3D12Resource> resource;
+		////////////////////////////////////////////////////////////////////////////////////////////
+		// Dimension enum class
+		////////////////////////////////////////////////////////////////////////////////////////////
+		enum class Dimension : uint8_t {
+			Texture2D,
+			TextureCube,
+			Texture3D,
+		};
+
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void Create(const Vector3ui& resolution, DXGI_FORMAT format, Dimension dimension);
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		DxObject::Resource resource;
 		DxObject::Descriptor descriptorUAV;
 		DxObject::Descriptor descriptorSRV;
+
+		Vector3ui size;
 
 	};
 
@@ -168,25 +212,35 @@ private:
 	std::unique_ptr<DxObject::ConstantBuffer<Atmosphere>> atmosphere_;
 	std::unique_ptr<DxObject::ConstantBuffer<Parameter>> parameter_;
 
+	//* mode *//
+
+	Mode mode_ = Mode::Dynamic;
+
 	//* precomputed textures *//
 
 	std::array<Texture, magic_enum::enum_count<Type>()> textures_;
 
 	//* pipeline state *//
 
-	DxObject::ReflectionComputePipelineState pipeline1_;
-	DxObject::ReflectionComputePipelineState pipeline2_;
-	DxObject::ReflectionComputePipelineState pipeline3_;
-	DxObject::ReflectionComputePipelineState pipeline4_;
+	std::array<DxObject::ReflectionComputePipelineState, magic_enum::enum_count<Type>()> pipelines_;
 
 	//=========================================================================================
 	// private methods
 	//=========================================================================================
 
+	//* create helper *//
+	
 	void CreateTransmittance();
 	void CreateMultipleScattering();
-	void CreateSkyView();
 	void CreateSkyCube();
+	void CreateAerial();
+
+	//* update helper *//
+
+	void UpdateTransmittance(const DirectXQueueContext* context);
+	void UpdateMultipleScattering(const DirectXQueueContext* context);
+	void UpdateSkyCube(const DirectXQueueContext* context);
+	void UpdateAerial(const DirectXQueueContext* context);
 
 };
 

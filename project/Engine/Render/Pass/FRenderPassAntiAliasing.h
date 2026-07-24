@@ -4,10 +4,13 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
+#include "FRenderConfig.h"
 #include "FBaseRenderPass.h"
+#include "../Buffer/FRenderTargetBuffer.h"
 
 //* engine
 #include <Engine/Foundation.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -15,8 +18,9 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderPassAntiAliasing class
+// FRenderPassAntiAliasing
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief アンチエイリアシング処理Pass
 class FRenderPassAntiAliasing
 	: public FBaseRenderPass {
 public:
@@ -25,21 +29,25 @@ public:
 	// public methods
 	//=========================================================================================
 
-	void Render(const DirectXQueueContext* context, const Config& config) override;
+	//* render option *//
+
+	void Render(const DirectXQueueContext* context, const FRenderConfig& config) override;
 
 private:
 
 	//=========================================================================================
-	// private methods
+	// private variables
 	//=========================================================================================
 
-	void BeginProcessAntiAliasing(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+	//* anti-aliasing pass *//
 
-	void EndProcessAntiAliasing(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+	void BeginAntiAliasingPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
-	void ProcessFXAA(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+	void EndAntiAliasingPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
-	void ProcessSMAA(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+	void PassAntiAliasingFXAA(const DirectXQueueContext* context, const FRenderConfig& config);
+
+	void PassAntiAliasingSMAA(const DirectXQueueContext* context, const FRenderConfig& config);
 
 };
 

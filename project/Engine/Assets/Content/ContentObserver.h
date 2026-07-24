@@ -30,9 +30,9 @@ enum class ContentCondition : uint8_t {
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// UContentObserver class
+// ContentObserver class
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <ContentConcept T>
+template <Content T>
 class ContentObserver {
 public:
 
@@ -76,37 +76,43 @@ private:
 	//* parameter *//
 
 	std::filesystem::path filepath_; //!< content filepath.
-	std::any param_;                 //!< content parameter.
+	std::any parameter_;             //!< content parameter.
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	static void Wait(const std::shared_ptr<BaseContent>& content) { content->WaitComplete(); }
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// UContentObserver class template methods
+// ContentObserver class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <ContentConcept T>
+template <Content T>
 inline void ContentObserver<T>::Reset() {
 	content_ = std::nullopt;
 	filepath_.clear();
-	param_ = {};
+	parameter_ = {};
 }
 
-template <ContentConcept T>
+template <Content T>
 inline void ContentObserver<T>::Register(const std::shared_ptr<T>& content) {
 	content_    = content;
 	filepath_   = content->GetFilepath();
-	param_      = content->GetParam();
+	parameter_  = content->GetParameter();
 }
 
-template <ContentConcept T>
+template <Content T>
 inline void ContentObserver<T>::Reload() {
 	ContentCondition condition = GetCondition();
 	StreamLogger::AssertA(condition != ContentCondition::Unregistered, "asset is not registered.");
 
-	Register(sContentStorage->Import<T>(filepath_, param_));
+	ContentObserver<T>::Register(sContentStorage->Import<T>(filepath_, parameter_));
 }
 
-template <ContentConcept T>
+template <Content T>
 inline ContentCondition ContentObserver<T>::GetCondition() const {
 	if (!content_.has_value()) {
 		return ContentCondition::Unregistered;
@@ -119,26 +125,26 @@ inline ContentCondition ContentObserver<T>::GetCondition() const {
 	return ContentCondition::Valid;
 }
 
-template <ContentConcept T>
+template <Content T>
 inline std::shared_ptr<T> ContentObserver<T>::Acquire() {
 	ContentCondition condition = GetCondition();
 	StreamLogger::AssertA(condition != ContentCondition::Unregistered, "asset is not registered.");
 
 	if (condition == ContentCondition::Expired) {
-		Register(sContentStorage->Import<T>(filepath_, param_));
+		ContentObserver<T>::Register(sContentStorage->Import<T>(filepath_, parameter_));
 	}
 
 	return (*content_).lock();
 }
 
-template <ContentConcept T>
+template <Content T>
 inline std::shared_ptr<T> ContentObserver<T>::WaitAcquire() {
 	std::shared_ptr<T> content = Acquire();
-	content->WaitComplete();
+	ContentObserver<T>::Wait(content);
 	return content;
 }
 
-template <ContentConcept T>
+template <Content T>
 inline std::shared_ptr<T> ContentObserver<T>::Get() const {
 	ContentCondition condition = GetCondition();
 	StreamLogger::AssertA(condition != ContentCondition::Unregistered, "asset is not registered.");
@@ -147,10 +153,10 @@ inline std::shared_ptr<T> ContentObserver<T>::Get() const {
 	return (*content_).lock();
 }
 
-template <ContentConcept T>
+template <Content T>
 inline std::shared_ptr<T> ContentObserver<T>::WaitGet() const {
 	std::shared_ptr<T> content = Get();
-	content->WaitComplete();
+	ContentObserver<T>::Wait(content);
 	return content;
 }
 

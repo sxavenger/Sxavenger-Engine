@@ -8,11 +8,11 @@ SXAVENGER_ENGINE_USING
 #include "../../Entity/EntityBehaviour.h"
 
 //* engine
-#include <Engine/System/UI/SxImGui.h>
+#include <Engine/System/UI/SxGui.h>
 #include <Engine/Graphics/Graphics.h>
 
 //* lib
-#include <Lib/Geometry/VectorComparision.h>
+#include <Lib/Math/VectorComparison.h>
 
 //* external
 #include <imgui.h>
@@ -24,16 +24,7 @@ SXAVENGER_ENGINE_USING
 
 void PostProcessLayerComponent::ShowComponentInspector() {
 
-	if (ImGui::BeginCombo("tag", magic_enum::enum_name(GetTag()).data())) {
-
-		for (const auto& [value, name] : magic_enum::enum_entries<Tag>()) {
-			if (ImGui::Selectable(name.data(), GetTag() == value)) {
-				SetTag(value);
-			}
-		}
-
-		ImGui::EndCombo();
-	}
+	SxGui::ComboEnum("tag", &tag_);
 
 	if (ImGui::TreeNodeEx("process layer", ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_NoAutoOpenOnLog | ImGuiTreeNodeFlags_NoTreePushOnOpen)) {
 
@@ -145,7 +136,7 @@ float PostProcessLayerComponent::CalculateVolumeWeight(const Vector3f& position)
 
 	const auto& [min, max] = volume.value();
 
-	if (All(position >= min) && All(position <= max)) { //!< volume内にある場合
+	if (Comparison::All(position >= min) && Comparison::All(position <= max)) { //!< volume内にある場合
 		return 1.0f;
 	}
 
@@ -200,5 +191,5 @@ bool PostProcessLayerComponent::IsInsideVolume(const Vector3f& position) const {
 		}
 	}
 
-	return All(position >= min) && All(position <= max);
+	return Comparison::All(position >= min) && Comparison::All(position <= max);
 }

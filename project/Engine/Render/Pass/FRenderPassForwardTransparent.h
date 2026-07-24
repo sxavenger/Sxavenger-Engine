@@ -4,10 +4,13 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
+#include "FRenderConfig.h"
 #include "FBaseRenderPass.h"
+#include "../Buffer/FRenderTargetBuffer.h"
 
 //* engine
 #include <Engine/Foundation.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -15,8 +18,9 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// FRenderPassDeferredBase class
+// FRenderPassForwardTransparent class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 透過物体の描画Pass
 class FRenderPassForwardTransparent
 	: public FBaseRenderPass {
 public:
@@ -25,7 +29,19 @@ public:
 	// public methods
 	//=========================================================================================
 
-	void Render(const DirectXQueueContext* context, const Config& config) override;
+	//* render option *//
+
+	void Render(const DirectXQueueContext* context, const FRenderConfig& config) override;
+
+private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Pass enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Pass : uint8_t {
+		DepthPrepass,
+		TransparentPass,
+	};
 
 private:
 
@@ -33,19 +49,27 @@ private:
 	// private methods
 	//=========================================================================================
 
-	void BeginPassRenderTarget(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+	//* depth pre-pass *//
 
-	void EndPassRenderTarget(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+	void BeginDepthPrepass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
-	void PassStaticMeshOpaque(const DirectXQueueContext* context, const Config& config);
-	void PassSkinnedMeshOpaque(const DirectXQueueContext* context, const Config& config);
+	void EndDepthPrepass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
-	void PassStaticMeshTransparent(const DirectXQueueContext* context, const Config& config);
-	void PassSkinnedMeshTransparent(const DirectXQueueContext* context, const Config& config);
+	//* transparent mesh render pass *//
 
-	void TransitionTransparentPass(const DirectXQueueContext* context, const Config& config);
+	void BeginTransparentMeshRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
-	void PassParticles(const DirectXQueueContext* context, const Config& config);
+	void EndTransparentMeshRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	//* transition transparent pass *//
+
+	void TransitionTransparentPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	//* mesh render helper methods *//
+
+	void RenderStaticMesh(const DirectXQueueContext* context, const FRenderConfig& config, Pass pass);
+
+	void RenderSkinnedMesh(const DirectXQueueContext* context, const FRenderConfig& config, Pass pass);
 
 };
 

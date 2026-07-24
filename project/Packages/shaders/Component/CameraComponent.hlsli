@@ -38,5 +38,16 @@ struct CameraComponent {
 		static const float3 forward = float3(0.0f, 0.0f, 1.0f);
 		return normalize(mul(forward, (float3x3)world));
 	}
+
+	float3 GetDirection(float2 viewport) {
+		float3 target = mul(float4(viewport, 1.0f, 1.0f), projInv).xyz;
+		return normalize(mul(target, (float3x3)world));
+	}
+
+	float3 GetPosition(float2 viewport, float depth) {
+		float4 clip = float4(viewport, depth, 1.0f);
+		float4 position = mul(clip, mul(projInv, world));
+		return position.xyz / position.w;
+	}
 	
 };

@@ -5,120 +5,184 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "../FRenderCore.h"
+#include "../Buffer/FGBuffer.h"
+#include "../Buffer/FDepthStencilBuffer.h"
+#include "../Core/FRenderCore.h"
+#include "../Core/FRenderCoreGeometry.h"
+#include "../Core/FRenderCoreTransition.h"
+#include "../Core/FRenderCoreDecal.h"
+#include "../FPresenter.h"
 
 //* engine
+#include <Engine/Graphics/Graphics.h>
 #include <Engine/Components/Component/MeshRenderer/MeshRendererComponent.h>
 #include <Engine/Components/Component/MeshRenderer/SkinnedMeshRendererComponent.h>
+#include <Engine/Components/Component/DecalRenderer/DecalRendererComponent.h>
 #include <Engine/Components/Component/ComponentStorage.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassDeferredBase class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const Config& config) {
+void FRenderPassDeferredBase::Render(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	// waning処理
-	if (config.CheckStatus(FBaseRenderPass::Config::Status::Geometry_Warning)) {
-		return;
+	if (config.HasIssue(FRenderConfig::IssueFlag::Warning_Geometry)) {
+		return; //!< configが不適格
 	}
 
-	context->BeginEvent(L"RenderPass - DeferredBase");
+	config.buffer->EnsureBuffer<FGBuffer>(); //!< Bufferの確保
 
-	{ //!< Render Target Pass
-		BeginPassRenderTarget(context, config.buffer);
+	 //!< RenderCoreの確保.
+	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreGeometry>();
+	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreTransition>();
+	FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreDecal>();
 
-		PassStaticMesh(context, config);
+	FBaseRenderPass::BeginRenderPass(context, "Deferred Base", config);
 
-		PassSkinnedMesh(context, config);
+	{ //!< Opaque Mesh Render Pass
 
-		EndPassRenderTarget(context, config.buffer);
+		FBaseRenderPass::BeginEvent(context, "Opaque Mesh Render Pass");
+
+		BeginOpaqueMeshRenderPass(context, config.buffer);
+
+		RenderStaticMesh(context, config);
+
+		RenderSkinnedMesh(context, config);
+
+		EndOpaqueMeshRenderPass(context, config.buffer);
+
+		FBaseRenderPass::EndEvent(context);
 	}
-	
-	{ //!< Velocity Pass
-		BeginPassVelocity(context, config.buffer);
 
-		PassVelocity(context, config);
+	{ //!< Decal Render Pass
 
-		EndPassVelocity(context, config.buffer);
+		FBaseRenderPass::BeginEvent(context, "Decal Render Pass");
+
+		BeginDecalRenderPass(context, config.buffer);
+
+		RenderDecal(context, config);
+
+		EndDecalRenderPass(context, config.buffer);
+
+		FBaseRenderPass::EndEvent(context);
 	}
 
-	context->EndEvent();
+	{ //!< Motion Vector Pass
+
+		FBaseRenderPass::BeginEvent(context, "Motion Vector Pass");
+
+		BeginMotionVectorPass(context, config.buffer);
+
+		PassMotionVector(context, config);
+
+		EndMotionVectorPass(context, config.buffer);
+
+		FBaseRenderPass::EndEvent(context);
+	}
+
+	if (config.option.Test(FRenderConfig::OptionFlag::LightingOnly)) {
+		LightingOnly(context, config.buffer);
+	}
+
+	FBaseRenderPass::EndRenderPass(context);
 }
 
-void FRenderPassDeferredBase::BeginPassRenderTarget(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+void FRenderPassDeferredBase::BeginOpaqueMeshRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
 
 	auto commandList = context->GetCommandList();
 
-	std::array<FBaseTexture*, 4> buffers = {
-		buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo),
-		buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal),
-		buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM),
-		buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)
+	FGBuffer* gbuffer                 = buffer->GetBuffer<FGBuffer>();
+	FDepthStencilBuffer* depthStencil = buffer->GetBuffer<FDepthStencilBuffer>();
+
+	static const size_t kBufferCount = 4;
+	std::array<FRenderTexture*, kBufferCount> buffers = {
+		&gbuffer->GetBuffer(FGBuffer::Layout::Albedo),
+		&gbuffer->GetBuffer(FGBuffer::Layout::Normal),
+		&gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM),
+		&gbuffer->GetBuffer(FGBuffer::Layout::Address)
 	};
 
-	FDepthTexture* depth = buffer->GetDepth();
+	{ //!< barrierの設定
 
-	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {};
-	for (size_t i = 0; i < buffers.size(); ++i) {
-		barriers[i] = buffers[i]->TransitionBeginRenderTarget();
+		std::vector<D3D12_RESOURCE_BARRIER> barriers;
+
+		//!< GBufferのbarrier設定
+		for (size_t i = 0; i < kBufferCount; ++i) {
+			buffers[i]->SetTransitionRenderTarget(barriers);
+		}
+
+		//!< DepthStencilのbarrier設定
+		depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).SetTransitionDepthWrite(barriers);
+
+		//!< barrierの発行
+		context->GetDxCommand()->ResourceBarrier(barriers);
 	}
 
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
+	{ //!< Render Targetの設定
 
-	depth->TransitionBeginRasterizer(context);
+		std::array<D3D12_CPU_DESCRIPTOR_HANDLE, kBufferCount> handles = {};
+		for (size_t i = 0; i < kBufferCount; ++i) {
+			handles[i] = buffers[i]->GetCPUHandleRTV();
+		}
 
-	std::array<D3D12_CPU_DESCRIPTOR_HANDLE, 4> handles = {};
-	for (size_t i = 0; i < buffers.size(); ++i) {
-		handles[i] = buffers[i]->GetCPUHandleRTV();
+		commandList->OMSetRenderTargets(
+			static_cast<UINT>(handles.size()), handles.data(), false,
+			&depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetCPUHandleDSV()
+		);
 	}
 
-	commandList->OMSetRenderTargets(
-		static_cast<UINT>(handles.size()), handles.data(), false,
-		&depth->GetRasterizerCPUHandleDSV()
-	);
-
-	for (size_t i = 0; i < buffers.size(); ++i) {
+	//!< GBuffer Render Targetのクリア
+	for (size_t i = 0; i < kBufferCount; ++i) {
 		buffers[i]->ClearRenderTarget(context);
 	}
 
 }
 
-void FRenderPassDeferredBase::EndPassRenderTarget(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+void FRenderPassDeferredBase::EndOpaqueMeshRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
 
-	auto commandList = context->GetCommandList();
+	FGBuffer* gbuffer                 = buffer->GetBuffer<FGBuffer>();
+	FDepthStencilBuffer* depthStencil = buffer->GetBuffer<FDepthStencilBuffer>();
 
-	std::array<FBaseTexture*, 4> buffers = {
-		buffer->GetGBuffer(FDeferredGBuffer::Layout::Albedo),
-		buffer->GetGBuffer(FDeferredGBuffer::Layout::Normal),
-		buffer->GetGBuffer(FDeferredGBuffer::Layout::MaterialARM),
-		buffer->GetGBuffer(FDeferredGBuffer::Layout::Position)
+	static const size_t kBufferCount = 4;
+	std::array<FRenderTexture*, kBufferCount> buffers = {
+		&gbuffer->GetBuffer(FGBuffer::Layout::Albedo),
+		&gbuffer->GetBuffer(FGBuffer::Layout::Normal),
+		&gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM),
+		&gbuffer->GetBuffer(FGBuffer::Layout::Address)
 	};
 
-	FDepthTexture* depth = buffer->GetDepth();
+	{ //!< barrierの設定
 
-	depth->TransitionEndRasterizer(context);
+		std::vector<D3D12_RESOURCE_BARRIER> barriers;
 
-	std::array<D3D12_RESOURCE_BARRIER, 4> barriers = {};
-	for (size_t i = 0; i < buffers.size(); ++i) {
-		barriers[i] = buffers[i]->TransitionEndRenderTarget();
+		//!< GBufferのbarrier設定
+		for (size_t i = 0; i < kBufferCount; ++i) {
+			buffers[i]->SetTransitionDefaultState(barriers);
+		}
+
+		//!< DepthStencilのbarrier設定
+		depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).SetTransitionDefaultState(barriers);
+
+		//!< barrierの発行
+		context->GetDxCommand()->ResourceBarrier(barriers);
 	}
-
-	commandList->ResourceBarrier(static_cast<UINT>(barriers.size()), barriers.data());
 
 }
 
-void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context, const Config& config) {
+void FRenderPassDeferredBase::RenderStaticMesh(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	auto core = FRenderCore::GetInstance()->GetGeometry();
-	core->SetPipeline(FRenderCoreGeometry::Type::Deferred_MeshMS, context, config.buffer->GetSize());
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreGeometry>();
+	core->SetPipeline(FRenderCoreGeometry::Pipeline::Deferred_MeshMS, context, config.buffer->GetResolution());
 
-	// common parameterの設定
-	DxObject::BindBufferDesc parameter = {};
-	parameter.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
-	parameter.SetAddress("gCullCamera", config.cullCamera->GetGPUVirtualAddress());
+	//!< parameterの設定
+	DxObject::BindBufferDesc desc = {};
+
+	//!< 共通parameterの設定
+	desc.SetAddress("gCamera",     config.camera->GetGPUVirtualAddress());
+	desc.SetAddress("gCullCamera", config.cullCamera->GetGPUVirtualAddress());
 
 	sComponentStorage->ForEachActive<MeshRendererComponent>([&](MeshRendererComponent* component) {
+
 		if (!component->IsEnable()) {
 			return; //!< 不適格component.
 		}
@@ -127,40 +191,43 @@ void FRenderPassDeferredBase::PassStaticMesh(const DirectXQueueContext* context,
 
 		auto mesh     = component->GetMesh();
 		auto material = component->GetMaterial();
+		auto address  = component->GetBehaviourAddress();
 
 		const auto& meshlet = mesh->GetInputMesh().GetMeshlet();
 
 		//!< 不透明なジオメトリは別のパスで描画
-		if (material->GetMode() != AssetMaterial::Mode::Opaque) {
+		if (component->GetMode() != MeshRendererCommon::Mode::Opaque) {
 			return;
 		}
 
-		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
-		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
+		desc.Set32bitConstants("AddressBuffer", 2, &address);
+		desc.SetAddress("gTransform", transform->GetGPUVirtualAddress());
+		desc.SetAddress("gMaterials", material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
-		parameter.Set32bitConstants("Information", 1, &meshlet.meshletCount);
-		parameter.SetAddress("gVertices",   mesh->GetInputVertex()->GetGPUVirtualAddress());
-		parameter.SetAddress("gIndices",    meshlet.uniqueVertexIndices->GetGPUVirtualAddress());
-		parameter.SetAddress("gMeshlets",   meshlet.meshlets->GetGPUVirtualAddress());
-		parameter.SetAddress("gPrimitives", meshlet.primitiveIndices->GetGPUVirtualAddress());
-		parameter.SetAddress("gBounds",     meshlet.meshletBounds->GetGPUVirtualAddress());
+		desc.Set32bitConstants("Information", 1, &meshlet.meshletCount);
+		desc.SetAddress("gVertices",   mesh->GetInputVertex()->GetGPUVirtualAddress());
+		desc.SetAddress("gIndices",    meshlet.uniqueVertexIndices->GetGPUVirtualAddress());
+		desc.SetAddress("gMeshlets",   meshlet.meshlets->GetGPUVirtualAddress());
+		desc.SetAddress("gPrimitives", meshlet.primitiveIndices->GetGPUVirtualAddress());
+		desc.SetAddress("gBounds",     meshlet.meshletBounds->GetGPUVirtualAddress());
 		 
-		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Deferred_MeshMS, context, parameter);
+		core->BindGraphicsBuffer(FRenderCoreGeometry::Pipeline::Deferred_MeshMS, context, desc);
 		meshlet.Dispatch(context, 1);
-
 	});
 
 }
 
-void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context, const Config& config) {
+void FRenderPassDeferredBase::RenderSkinnedMesh(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	auto core = FRenderCore::GetInstance()->GetGeometry();
-	core->SetPipeline(FRenderCoreGeometry::Type::Deferred_MeshVS, context, config.buffer->GetSize());
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreGeometry>();
+	core->SetPipeline(FRenderCoreGeometry::Pipeline::Deferred_MeshVS, context, config.buffer->GetResolution());
 
-	// common parameterの設定
-	DxObject::BindBufferDesc parameter = {};
-	parameter.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+	//!< parameterの設定
+	DxObject::BindBufferDesc desc = {};
+
+	//!< 共通parameterの設定
+	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 
 	sComponentStorage->ForEachActive<SkinnedMeshRendererComponent>([&](SkinnedMeshRendererComponent* component) {
 		if (!component->IsEnable()) {
@@ -168,57 +235,199 @@ void FRenderPassDeferredBase::PassSkinnedMesh(const DirectXQueueContext* context
 		}
 
 		auto transform = component->RequireTransform();
-
-		auto material = component->GetMaterial();
+		auto material  = component->GetMaterial();
+		auto address   = component->GetBehaviourAddress();
 
 		//!< 不透明ジオメトリ描画
-		if (material->GetMode() != AssetMaterial::Mode::Opaque) {
+		if (component->GetMode() != MeshRendererCommon::Mode::Opaque) {
 			return;
 		}
 
 		// メッシュの描画
-		component->BindIABuffer(context);
+		component->BindInputAssembler(context);
 
-		parameter.SetAddress("gTransforms", transform->GetGPUVirtualAddress());
-		parameter.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
+		desc.Set32bitConstants("AddressBuffer", 2, &address);
+		desc.SetAddress("gTransform", transform->GetGPUVirtualAddress());
+		desc.SetAddress("gMaterials",  material->GetGPUVirtualAddress());
 		//!< todo: materialをConstantBufferに変更する
 
-		core->BindGraphicsBuffer(FRenderCoreGeometry::Type::Deferred_MeshVS, context, parameter);
-
+		core->BindGraphicsBuffer(FRenderCoreGeometry::Pipeline::Deferred_MeshVS, context, desc);
 		component->DrawCall(context, 1);
-	
-
 	});
-}
-
-void FRenderPassDeferredBase::BeginPassVelocity(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
-
-	FBaseTexture* velocity = buffer->GetGBuffer(FDeferredGBuffer::Layout::Velocity);
-	velocity->TransitionBeginUnordered(context);
 
 }
 
-void FRenderPassDeferredBase::EndPassVelocity(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+void FRenderPassDeferredBase::BeginDecalRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
 
-	FBaseTexture* velocity = buffer->GetGBuffer(FDeferredGBuffer::Layout::Velocity);
-	velocity->TransitionEndUnordered(context);
+	auto commandList = context->GetCommandList();
+
+	FGBuffer* gbuffer                 = buffer->GetBuffer<FGBuffer>();
+	FDepthStencilBuffer* depthStencil = buffer->GetBuffer<FDepthStencilBuffer>();
+
+	static const size_t kBufferCount = 4;
+	std::array<FRenderTexture*, kBufferCount> buffers = {
+		&gbuffer->GetBuffer(FGBuffer::Layout::Albedo),
+		&gbuffer->GetBuffer(FGBuffer::Layout::Normal),
+		&gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM),
+		&gbuffer->GetBuffer(FGBuffer::Layout::Address)
+	};
+
+	{ //!< barrierの設定
+
+		std::vector<D3D12_RESOURCE_BARRIER> barriers;
+
+		//!< GBufferのbarrier設定
+		for (size_t i = 0; i < kBufferCount; ++i) {
+			buffers[i]->SetTransitionUnorderedAccess(barriers);
+		}
+
+		//!< DepthStencilのbarrier設定
+		depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).SetTransitionDepthRead(barriers);
+
+		//!< barrierの発行
+		context->GetDxCommand()->ResourceBarrier(barriers);
+	}
+
+	{ //!< Render Targetの設定
+
+		commandList->OMSetRenderTargets(
+			0, nullptr, false,
+			&depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetCPUHandleDSV()
+		);
+	}
 
 }
 
-void FRenderPassDeferredBase::PassVelocity(const DirectXQueueContext* context, const Config& config) {
+void FRenderPassDeferredBase::EndDecalRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
 
-	auto core = FRenderCore::GetInstance()->GetTransition();
-	core->SetPipeline(FRenderCoreTransition::Transition::VelocityTransition, context);
+	FGBuffer* gbuffer                 = buffer->GetBuffer<FGBuffer>();
+	FDepthStencilBuffer* depthStencil = buffer->GetBuffer<FDepthStencilBuffer>();
 
-	DxObject::BindBufferDesc parameter = {};
-	parameter.Set32bitConstants("Dimension", 2, &config.buffer->GetSize());
-	parameter.SetHandle("gPosition",       config.buffer->GetDeferredGBuffer().GetGBuffer(FDeferredGBuffer::Layout::Position)->GetGPUHandleSRV());
-	parameter.SetAddress("gCurrentCamera", config.camera->GetGPUVirtualAddress());
-	parameter.SetAddress("gPrevCamera",    config.camera->GetPrevGPUVirtualAddress());
+	static const size_t kBufferCount = 4;
+	std::array<FRenderTexture*, kBufferCount> buffers = {
+		&gbuffer->GetBuffer(FGBuffer::Layout::Albedo),
+		&gbuffer->GetBuffer(FGBuffer::Layout::Normal),
+		&gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM),
+		&gbuffer->GetBuffer(FGBuffer::Layout::Address)
+	};
 
-	parameter.SetHandle("gVelocity", config.buffer->GetGBuffer(FDeferredGBuffer::Layout::Velocity)->GetGPUHandleUAV());
+	{ //!< barrierの設定
 
-	core->BindComputeBuffer(FRenderCoreTransition::Transition::VelocityTransition, context, parameter);
-	core->Dispatch(context, config.buffer->GetSize());
+		std::vector<D3D12_RESOURCE_BARRIER> barriers;
+
+		//!< GBufferのbarrier設定
+		for (size_t i = 0; i < kBufferCount; ++i) {
+			buffers[i]->SetTransitionDefaultState(barriers);
+		}
+
+		//!< DepthStencilのbarrier設定
+		depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).SetTransitionDefaultState(barriers);
+
+		//!< barrierの発行
+		context->GetDxCommand()->ResourceBarrier(barriers);
+	}
 
 }
+
+void FRenderPassDeferredBase::RenderDecal(const DirectXQueueContext* context, const FRenderConfig& config) {
+
+	FGBuffer* gbuffer                 = config.buffer->GetBuffer<FGBuffer>();
+	FDepthStencilBuffer* depthStencil = config.buffer->GetBuffer<FDepthStencilBuffer>();
+
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreDecal>();
+	core->SetPipeline(FRenderCoreDecal::Pipeline::Decal, context, config.buffer->GetResolution());
+
+	//!< parameterの設定
+	DxObject::BindBufferDesc desc = {};
+
+	//!< 共通parameterの設定
+	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
+	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
+
+	//!< GBufferの設定
+	desc.SetHandle("gDepth",       depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetGPUHandleSRV());
+	desc.SetHandle("gAlbedo",      gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleUAV());
+	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleUAV());
+	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleUAV());
+	desc.SetHandle("gAddress",     gbuffer->GetBuffer(FGBuffer::Layout::Address).GetGPUHandleUAV());
+
+	sComponentStorage->ForEachActive<DecalRendererComponent>([&](DecalRendererComponent* component) {
+		
+		auto transform = component->RequireTransform();
+		auto address   = component->GetBehaviourAddress();
+
+		D3D12_GPU_DESCRIPTOR_HANDLE handle = component->GetTexture().Empty()
+			? Graphics::GetGPUHandleSRV("white1x1")
+			: component->GetTexture().WaitRequire()->GetGPUHandleSRV();
+
+		//!< parameterの設定
+		desc.Set32bitConstants("AddressBuffer", 2, &address);
+		desc.SetAddress("gTransform", transform->GetGPUVirtualAddress());
+		desc.SetHandle("gTexture",    handle);
+
+		core->BindGraphicsBuffer(FRenderCoreDecal::Pipeline::Decal, context, desc);
+		core->DrawCall(context);
+	});
+
+}
+
+void FRenderPassDeferredBase::BeginMotionVectorPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	FGBuffer* gbuffer = buffer->GetBuffer<FGBuffer>();
+
+	//!< Motion Vector Bufferのbarrier設定
+	gbuffer->GetBuffer(FGBuffer::Layout::MotionVector).TransitionUnorderedAccess(context);
+
+}
+
+void FRenderPassDeferredBase::EndMotionVectorPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+
+	FGBuffer* gbuffer = buffer->GetBuffer<FGBuffer>();
+
+	//!< Motion Vector Bufferのbarrier設定
+	gbuffer->GetBuffer(FGBuffer::Layout::MotionVector).TransitionDefaultState(context);
+
+}
+
+void FRenderPassDeferredBase::PassMotionVector(const DirectXQueueContext* context, const FRenderConfig& config) {
+
+	FGBuffer* gbuffer                 = config.buffer->GetBuffer<FGBuffer>();
+	FDepthStencilBuffer* depthStencil = config.buffer->GetBuffer<FDepthStencilBuffer>();
+
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreTransition>();
+	core->SetPipeline(FRenderCoreTransition::Transition::MotionVectorTransition, context);
+
+	//!< parameterの設定
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
+	desc.SetHandle("gMotionVector",   gbuffer->GetBuffer(FGBuffer::Layout::MotionVector).GetGPUHandleUAV());
+	desc.SetHandle("gDepth",          depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetGPUHandleSRV());
+	desc.SetAddress("gCurrentCamera", config.camera->GetGPUVirtualAddress());
+	desc.SetAddress("gPrevCamera",    config.camera->GetPrevGPUVirtualAddress());
+
+	core->BindComputeBuffer(FRenderCoreTransition::Transition::MotionVectorTransition, context, desc);
+	core->Dispatch(context, config.buffer->GetResolution());
+
+}
+
+void FRenderPassDeferredBase::LightingOnly(const DirectXQueueContext* context, FRenderTargetBuffer* buffer) {
+	//!< Lighting確認のため, Albedo Buffer を 白色で塗りつぶす.
+
+	FGBuffer* gbuffer = buffer->GetBuffer<FGBuffer>();
+	gbuffer->GetBuffer(FGBuffer::Layout::Albedo).TransitionUnorderedAccess(context);
+
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreTransition>(); //!< RenderCoreの確保.
+	core->SetPipeline(FRenderCoreTransition::Transition::AlbedoWhiteTransition, context);
+
+	//!< parameterの設定
+	DxObject::BindBufferDesc desc = {};
+	desc.Set32bitConstants("Dimension", 2, &buffer->GetResolution());
+	desc.SetHandle("gAlbedo", gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleUAV());
+
+	core->BindComputeBuffer(FRenderCoreTransition::Transition::AlbedoWhiteTransition, context, desc);
+	core->Dispatch(context, buffer->GetResolution());
+
+	gbuffer->GetBuffer(FGBuffer::Layout::Albedo).TransitionDefaultState(context);
+	
+}
+

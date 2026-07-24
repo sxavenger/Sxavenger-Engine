@@ -32,22 +32,19 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ContentFont()           = default;
+	//* constructor / destructor *//
+
+	ContentFont() : BaseContent(Async::Execution::Copy) {}
+
 	~ContentFont() override = default;
-
-	void AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) override;
-
-	AsyncExecution GetAsyncExecution() const { return AsyncExecution::Compute; }
-
-	void AttachUuid() override;
-
-	//* inspector option *//
-
-	void ShowInspector() override;
 
 	//* content option *//
 
-	void Load(const DirectXQueueContext* context, const std::filesystem::path& filepath);
+	void Attach(const std::filesystem::path& filepath, const std::any& parameter) override;
+
+	void Load(MAYBE_UNUSED const DirectXQueueContext* context) override;
+
+	//* id option *//
 
 	const Uuid& GetId() const { return id_; }
 
@@ -63,9 +60,7 @@ private:
 	// private methods
 	//=========================================================================================
 
-	//* helper methods *//
-
-	void GetUuid();
+	void AttachUuid(const std::filesystem::path& filepath);
 
 };
 

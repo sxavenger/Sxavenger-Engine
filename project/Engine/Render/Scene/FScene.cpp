@@ -5,7 +5,9 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "../FRenderCore.h"
+#include "../Core/FRenderCore.h"
+#include "../Core/FRenderCoreReSTIR.h"
+#include "../Core/FRenderCoreLuxGlobalIllumination.h"
 
 //* engine
 #include <Engine/System/Utility/RuntimeLogger.h>
@@ -22,35 +24,10 @@ void FScene::Init() {
 	// TLASの初期化
 	topLevelAS_.Init(System::GetDxDevice());
 
-	{ //!< light containerの初期化
-		directionalLightCount_ = std::make_unique<DxObject::ConstantBuffer<uint32_t>>();
-		directionalLightCount_->Create(System::GetDxDevice());
-
-		directionalLightTransforms_   = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
-		directionalLightTransforms_->Create(System::GetDxDevice(), 1);
-
-		directionalLightParams_       = std::make_unique<DxObject::DimensionBuffer<DirectionalLightComponent::Parameter>>();
-		directionalLightParams_->Create(System::GetDxDevice(), 1);
-
-		pointLightCount_ = std::make_unique<DxObject::ConstantBuffer<uint32_t>>();
-		pointLightCount_->Create(System::GetDxDevice());
-
-		pointLightTransforms_   = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
-		pointLightTransforms_->Create(System::GetDxDevice(), 1);
-
-		pointLightParams_       = std::make_unique<DxObject::DimensionBuffer<PointLightComponent::Parameter>>();
-		pointLightParams_->Create(System::GetDxDevice(), 1);
-
-		spotLightCount_ = std::make_unique<DxObject::ConstantBuffer<uint32_t>>();
-		spotLightCount_->Create(System::GetDxDevice());
-
-		spotLightTransforms_ = std::make_unique<DxObject::DimensionBuffer<TransformationMatrix>>();
-		spotLightTransforms_->Create(System::GetDxDevice(), 1);
-
-		spotLightParams_ = std::make_unique<DxObject::DimensionBuffer<SpotLightComponent::Parameter>>();
-		spotLightParams_->Create(System::GetDxDevice(), 1);
-
-	}
+	//!< light containerの初期化
+	directionalLightContainer_.Init(System::GetDxDevice());
+	pointLightContainer_.Init(System::GetDxDevice());
+	spotLightContainer_.Init(System::GetDxDevice());
 	
 }
 
@@ -66,11 +43,9 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 		std::shared_ptr<AssetMesh> mesh         = component->GetMesh();
 		std::shared_ptr<AssetMaterial> material = component->GetMaterial();
 
-		if (material->GetMode() == AssetMaterial::Mode::Translucent) {
+		if (component->GetMode() == MeshRendererCommon::Mode::Translucent) {
 			return; //!< 透明マテリアルはTLASに登録しない
 		}
-
-		mesh->Update(context); //!< meshの更新
 
 		// instanceの設定
 		DxrObject::TopLevelAS::Instance instance = {};
@@ -82,7 +57,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 		instance.instanceId    = NULL;
 
 		//* ExportGroupの設定
-		instance.name = magic_enum::enum_name(material->GetMode());
+		instance.name = magic_enum::enum_name(component->GetMode());
 		instance.parameter.SetAddress(0, mesh->GetInputVertex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(1, mesh->GetInputIndex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(2, material->GetGPUVirtualAddress());
@@ -98,7 +73,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 
 		std::shared_ptr<AssetMaterial> material = component->GetMaterial();
 
-		if (material->GetMode() == AssetMaterial::Mode::Translucent) {
+		if (component->GetMode() == MeshRendererCommon::Mode::Translucent) {
 			return; //!< 透明マテリアルはTLASに登録しない
 		}
 
@@ -114,7 +89,7 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 		instance.instanceId    = NULL;
 
 		//* ExportGroupの設定
-		instance.name = magic_enum::enum_name(material->GetMode());
+		instance.name = magic_enum::enum_name(component->GetMode());
 		instance.parameter.SetAddress(0, component->GetInputVertex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(1, component->GetInputIndex()->GetGPUVirtualAddress());
 		instance.parameter.SetAddress(2, material->GetGPUVirtualAddress());
@@ -126,9 +101,17 @@ void FScene::SetupTopLevelAS(const DirectXQueueContext* context) {
 }
 
 void FScene::SetupStateObject() {
-	// TopLevelASに設定
-	FRenderCore::GetInstance()->GetRestir()->UpdateShaderTable(&topLevelAS_);
-	FRenderCore::GetInstance()->GetProbe()->UpdateShaderTable(&topLevelAS_); //!< HACK
+	if (FRenderCore::GetInstance()->HasRenderCore<FRenderCoreReSTIR>()) {
+		//!< RenderCoreが存在する場合はShaderTableを更新する.
+		auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreReSTIR>();
+		core->UpdateShaderTable(&topLevelAS_);
+	}
+
+	if (FRenderCore::GetInstance()->HasRenderCore<FRenderCoreLuxGlobalIllumination>()) {
+		//!< RenderCoreが存在する場合はShaderTableを更新する.
+		auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreLuxGlobalIllumination>();
+		core->UpdateShaderTable(&topLevelAS_);
+	}
 }
 
 void FScene::SetupLightContainer() {
@@ -140,27 +123,17 @@ void FScene::SetupLightContainer() {
 void FScene::SetupDirectionalLight() {
 
 	uint32_t count = static_cast<uint32_t>(sComponentStorage->GetActiveComponentCount<DirectionalLightComponent>());
-
-	directionalLightCount_->At() = count;
+	directionalLightContainer_.Resize(System::GetDxDevice(), count);
 
 	if (count == 0) {
 		return;
 	}
 
-	if (directionalLightTransforms_->GetSize() < count) {
-		directionalLightTransforms_->Create(System::GetDxDevice(), count);
-	}
-
-	if (directionalLightParams_->GetSize() < count) {
-		directionalLightParams_->Create(System::GetDxDevice(), count);
-	}
-
 	size_t index = 0;
 
 	sComponentStorage->ForEachActive<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
-		directionalLightTransforms_->At(index)   = component->RequireTransform()->GetTransformationMatrix();
-		directionalLightParams_->At(index)       = component->GetParameter();
-
+		directionalLightContainer_.transforms.At(index) = component->RequireTransform()->GetTransformationMatrix();
+		directionalLightContainer_.parameters.At(index) = component->GetParameter();
 		index++;
 	});
 
@@ -169,27 +142,17 @@ void FScene::SetupDirectionalLight() {
 void FScene::SetupPointLight() {
 
 	uint32_t count = static_cast<uint32_t>(sComponentStorage->GetActiveComponentCount<PointLightComponent>());
-
-	pointLightCount_->At() = count;
+	pointLightContainer_.Resize(System::GetDxDevice(), count);
 
 	if (count == 0) {
 		return;
 	}
 
-	if (pointLightTransforms_->GetSize() < count) {
-		pointLightTransforms_->Create(System::GetDxDevice(), count);
-	}
-
-	if (pointLightParams_->GetSize() < count) {
-		pointLightParams_->Create(System::GetDxDevice(), count);
-	}
-
 	size_t index = 0;
 
 	sComponentStorage->ForEachActive<PointLightComponent>([&](PointLightComponent* component) {
-		pointLightTransforms_->At(index)   = component->RequireTransform()->GetTransformationMatrix();
-		pointLightParams_->At(index)       = component->GetParameter();
-
+		pointLightContainer_.transforms.At(index) = component->RequireTransform()->GetTransformationMatrix();
+		pointLightContainer_.parameters.At(index) = component->GetParameter();
 		index++;
 	});
 
@@ -199,27 +162,17 @@ void FScene::SetupPointLight() {
 void FScene::SetupSpotLight() {
 
 	uint32_t count = static_cast<uint32_t>(sComponentStorage->GetActiveComponentCount<SpotLightComponent>());
-
-	spotLightCount_->At() = count;
+	spotLightContainer_.Resize(System::GetDxDevice(), count);
 
 	if (count == 0) {
 		return;
 	}
 
-	if (spotLightTransforms_->GetSize() < count) {
-		spotLightTransforms_->Create(System::GetDxDevice(), count);
-	}
-
-	if (spotLightParams_->GetSize() < count) {
-		spotLightParams_->Create(System::GetDxDevice(), count);
-	}
-
 	size_t index = 0;
 
 	sComponentStorage->ForEachActive<SpotLightComponent>([&](SpotLightComponent* component) {
-		spotLightTransforms_->At(index)   = component->RequireTransform()->GetTransformationMatrix();
-		spotLightParams_->At(index)       = component->GetParameter();
-
+		spotLightContainer_.transforms.At(index) = component->RequireTransform()->GetTransformationMatrix();
+		spotLightContainer_.parameters.At(index) = component->GetParameter();
 		index++;
 	});
 

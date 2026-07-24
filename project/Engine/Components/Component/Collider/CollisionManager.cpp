@@ -19,7 +19,7 @@ void CollisionManager::CheckCollision() {
 
 	// colliderの状態を更新
 	sComponentStorage->ForEach<ColliderComponent>([](ColliderComponent* collider) {
-		collider->UpdateColliderState();
+		collider->Update();
 	});
 
 	// containerの取得
@@ -34,7 +34,7 @@ void CollisionManager::CheckCollision() {
 		}
 
 		// boundingを取得
-		const CollisionBoundings::Boundings& boundingA = colliderA->GetBoundings();
+		const CollisionBoundings::Boundings& boundingA = colliderA->GetBounding();
 
 		for (auto itrB = std::next(itrA); itrB != container.end(); ++itrB) {
 			ColliderComponent* colliderB = static_cast<ColliderComponent*>(itrB->get());
@@ -44,7 +44,7 @@ void CollisionManager::CheckCollision() {
 			}
 
 			// boundingを取得
-			const CollisionBoundings::Boundings& boundingB = colliderB->GetBoundings();
+			const CollisionBoundings::Boundings& boundingB = colliderB->GetBounding();
 
 			//* 当たり判定 *//
 
@@ -52,18 +52,18 @@ void CollisionManager::CheckCollision() {
 				continue; //!< 登録されてない場合
 			}
 
-			// bounding同士の当たり判定
-			bool isCollision = CollisionDetection::CheckCollision(
+			//!< bounding同士の当たり判定
+			CollisionDetection::Detection detection = CollisionDetection::CheckCollision(
 				colliderA->RequireTransform()->GetPosition(), boundingA,
 				colliderB->RequireTransform()->GetPosition(), boundingB
 			);
 
-			if (!isCollision) {
+			if (!detection.HasPenetration()) {
 				continue; //!< collider同士が当たっていない場合
 			}
 
-			colliderA->OnCollision(colliderB);
-			colliderB->OnCollision(colliderA);
+			colliderA->OnCollision(colliderB, detection);
+			colliderB->OnCollision(colliderA, detection.Inverse());
 		}
 	}
 

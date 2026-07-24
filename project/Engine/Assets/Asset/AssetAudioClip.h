@@ -42,16 +42,17 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//* constructor / destructor *//
+
 	AssetAudioClip(const Uuid& id) : BaseAsset(id) {}
+
 	~AssetAudioClip() override = default;
+
+	//* setup option *//
 
 	void Setup(IMFSourceReader* reader);
 
-	//* inspector *//
-
-	void ShowInspector() override;
-
-	//* getter *//
+	//* audio clip option *//
 
 	const WAVEFORMATEX& GetFormat() const;
 
@@ -68,6 +69,6 @@ private:
 	WAVEFORMATEX format_ = {}; //!< 波形フォーマット
 	std::vector<BYTE> buffer_; //!< 波形データ
 
-};	
+};
 
 SXAVENGER_ENGINE_NAMESPACE_END

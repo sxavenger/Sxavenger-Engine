@@ -31,9 +31,8 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 // EntityBehaviour class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class EntityBehaviour final
-	: public BaseInspector, public IJsonSerializer {
+	: public BaseInspector {
 public:
-	// TODO: BehaviourEntityに命名変更予定.
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// using
@@ -44,7 +43,6 @@ public:
 
 	//* hierarchy
 	using Hierarchy = std::unordered_set<BehaviourAddress, BehaviourAddress::Hash, BehaviourAddress::Hash>;
-	// TODO: orderが必要ならlistに変更, iterator管理も必要
 
 	using InspectableFunction = std::function<void(EntityBehaviour*)>;
 
@@ -71,7 +69,7 @@ public:
 
 	bool IsActive() const { return isActive_; }
 
-	void SetMobility(Mobility mobility) { mobility_ = mobility; }
+	void SetMobility(Mobility mobility);
 
 	Mobility GetMobility() const { return mobility_; }
 
@@ -170,6 +168,11 @@ public:
 	//! @retval false 存在しない
 	bool HasParent() const { return parent_ != nullptr; }
 
+	//! @brief rootか確認
+	//! @return true  rootである
+	//! @return false rootでない
+	bool IsRoot() const { return parent_ == nullptr; }
+
 	//! @brief parentを取得
 	//! @retval address parentのaddress
 	//! @retval nullptr parentが存在しない
@@ -187,7 +190,8 @@ public:
 	//* getter *//
 
 	uintptr_t GetAddress() const { return reinterpret_cast<uintptr_t>(this); }
-	//!< Warning: address受け渡しは内部でのみ使用する.
+	//!< warning: address受け渡しは内部でのみ使用する.
+	// TODO: privateに変更しfriendで各内部クラスに許可を与える.
 
 	//* inspector option *//
 
@@ -203,13 +207,9 @@ public:
 
 	//* json serializer option *//
 
-	json ParseToJson() const override;
+	json SerializeJson() const;
 
-	void InputJson(const json& data) override;
-
-	void LoadComponent(const std::filesystem::path& filepath);
-
-	void SaveComponent(const std::filesystem::path& filepath);
+	void DeserializeJson(const json& data);
 
 private:
 
@@ -250,6 +250,8 @@ private:
 	void RemoveParent(const EntityBehaviour* parent);
 
 	void RemoveChild(EntityBehaviour* child);
+
+	void HierarchyTreeNode(EntityBehaviour* behaviour);
 
 };
 

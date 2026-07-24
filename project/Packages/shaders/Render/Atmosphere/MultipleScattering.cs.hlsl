@@ -16,7 +16,7 @@
 static const uint kSampleCount = 20;
 
 static const float kPlanetOffset = 0.01f;
-static const float kIsotropicPhase = 1.0f / (4.0f * kPi);
+static const float kIsotropicPhase = 1.0f / (4.0f * Mathmatic::kPi);
 
 //=========================================================================================
 // shared variables
@@ -123,7 +123,7 @@ Integration IntegrateScatteredLuminance(float3 world_pos, float3 world_dir, floa
 		float3 transmittance_to_sun = GetTransmittanceToSun(sun_dir, zenith, atmosphere, sample_height);
 
 		float n_dot_l = saturate(dot(zenith, sun_dir));
-		result.luminance += transmittance_to_sun * throughput * n_dot_l * atmosphere.ground_albedo / kPi;
+		result.luminance += transmittance_to_sun * throughput * n_dot_l * atmosphere.ground_albedo / Mathmatic::kPi;
 	}
 
 	return result;
@@ -132,7 +132,7 @@ Integration IntegrateScatteredLuminance(float3 world_pos, float3 world_dir, floa
 float3 ComputeSampleDirection(uint direction_index) {
 	static float golden_ratio = (1.0 + sqrt(5.0)) * 0.5;
 	
-	float theta     = kTau * direction_index / golden_ratio;
+	float theta     = Mathmatic::kTau * direction_index / golden_ratio;
 	float phi       = acos(1.0 - 2.0 * (direction_index + 0.5) / THREAD_GROUP_SIZE_Z);
 	float cos_phi   = cos(phi);
 	float sin_phi   = sin(phi);
@@ -150,13 +150,13 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 pixel = dispatchThreadId.xy;
 
-	if (any(pixel >= dimension)) {
+	if (any(pixel >= dimension.xy)) {
 		return; //!< 範囲外
 	}
 
 	uint direction = dispatchThreadId.z;
 
-	float2 uv = (float2(pixel) + 0.5) / float2(dimension);
+	float2 uv = (float2(pixel) + 0.5) / float2(dimension.xy);
 
 	float cos_sun_zenith = uv.x * 2.0f - 1.0f;
 	float3 sun_dir = float3(0.0, cos_sun_zenith, sqrt(saturate(1.0 - cos_sun_zenith * cos_sun_zenith)));
@@ -181,7 +181,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 		GroupMemoryBarrierWithGroupSync();
 	}
 	
-	if (direction > 0) {
+	if (dispatchThreadId.z != 0) {
 		return;
 	}
 

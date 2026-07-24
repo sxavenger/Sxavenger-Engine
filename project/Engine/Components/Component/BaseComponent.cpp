@@ -18,6 +18,10 @@ EntityBehaviour* BaseComponent::GetBehaviour() const {
 	return behaviour_;
 }
 
+uintptr_t BaseComponent::GetBehaviourAddress() const {
+	return behaviour_->GetAddress();
+}
+
 bool BaseComponent::IsActive() const {
 	return behaviour_->IsActive();
 }

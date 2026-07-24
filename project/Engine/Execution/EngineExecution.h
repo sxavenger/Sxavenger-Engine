@@ -44,6 +44,8 @@ private:
 	void CreateWhite1x1();
 	void CreateCheckerboard();
 
+	void LoadContent();
+
 	void UpdateAsset();
 
 };

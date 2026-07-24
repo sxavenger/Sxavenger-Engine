@@ -8,7 +8,6 @@
 #include "DxDimensionBuffer.h"
 #include "DxCommandContext.h"
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,7 +16,8 @@ DXOBJECT_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // UnorderedDimensionBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <class T>
+//! @brief [RWStructuredBuffer] 1次元Bufferクラス.
+template <typename T>
 class UnorderedDimensionBuffer
 	: public BaseDimensionBuffer {
 public:
@@ -27,36 +27,40 @@ public:
 	//=========================================================================================
 
 	UnorderedDimensionBuffer() : BaseDimensionBuffer(sizeof(T)) {}
-	~UnorderedDimensionBuffer() { Release(); }
+	~UnorderedDimensionBuffer() override {}
 
-	void Create(Device* device, uint32_t size);
+	void Create(DxObject::Device* device, uint32_t size);
 
-	void Release();
+	//* unordered option *//
 
-	void Barrier(CommandContext* context);
+	void Barrier(DxObject::CommandContext* context) const;
 
-	D3D12_RESOURCE_BARRIER TransitionBeginUnordered();
-	void TransitionBeginUnordered(const CommandContext* context);
+	void TransitionUnordered(DxObject::CommandContext* context);
 
-	D3D12_RESOURCE_BARRIER TransitionEndUnordered();
-	void TransitionEndUnordered(const CommandContext* context);
+	void TransitionDefault(DxObject::CommandContext* context);
 
-private:
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// VertexUnorderedDimensionBuffer class
+// UnorderedByteAddressBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
-template <class T>
-class VertexUnorderedDimensionBuffer
-	: public UnorderedDimensionBuffer<T> {
+//! @brief [RWByteAddressBuffer] 1次元Bufferクラス.
+class UnorderedByteAddressBuffer
+	: public BaseDimensionBuffer {
 public:
 
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
+	UnorderedByteAddressBuffer() : BaseDimensionBuffer(1) {}
+	~UnorderedByteAddressBuffer() override {}
 
-	const D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const;
+	void Create(DxObject::Device* device, uint32_t byte);
+
+	//* unordered option *//
+
+	void Barrier(DxObject::CommandContext* context) const;
+
+	void TransitionUnordered(DxObject::CommandContext* context);
+
+	void TransitionDefault(DxObject::CommandContext* context);
 
 };
 
@@ -64,89 +68,29 @@ public:
 // UnorderedDimensionBuffer class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template<class T>
-inline void UnorderedDimensionBuffer<T>::Create(Device* device, uint32_t size) {
-
-	// 引数の保存
-	size_   = size;
-
-	// resourceの生成
-	resource_ = CreateBufferResource(	
-		device->GetDevice(),
-		D3D12_HEAP_TYPE_DEFAULT,
-		BaseDimensionBuffer::GetByteSize(),
-		D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS,
-		D3D12_RESOURCE_STATE_COMMON
-	);
-
-	address_ = resource_->GetGPUVirtualAddress();
+template <typename T>
+inline void UnorderedDimensionBuffer<T>::Create(DxObject::Device* device, uint32_t size) {
+	BaseDimensionBuffer::CreateBuffer(device, size, Category::Default);
+	resource_.SetName(L"Unordered Dimension Buffer");
 }
 
-template<class T>
-inline void UnorderedDimensionBuffer<T>::Release() {
-	if (resource_ != nullptr) {
-		resource_.Reset();
-		address_ = std::nullopt;
-	}
-
-	size_ = NULL;
-}
-
-template <class T>
-inline void UnorderedDimensionBuffer<T>::Barrier(CommandContext* context) {
+template <typename T>
+inline void UnorderedDimensionBuffer<T>::Barrier(DxObject::CommandContext* context) const {
 	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type          = D3D12_RESOURCE_BARRIER_TYPE_UAV;
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_UAV;
 	barrier.UAV.pResource = GetResource();
 
 	context->GetCommandList()->ResourceBarrier(1, &barrier);
 }
 
-template <class T>
-inline D3D12_RESOURCE_BARRIER UnorderedDimensionBuffer<T>::TransitionBeginUnordered() {
-	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Transition.pResource   = GetResource();
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_COMMON;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
-
-	return barrier;
+template <typename T>
+inline void UnorderedDimensionBuffer<T>::TransitionUnordered(DxObject::CommandContext* context) {
+	resource_.Transition(context, D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
 }
 
-template <class T>
-inline void UnorderedDimensionBuffer<T>::TransitionBeginUnordered(const CommandContext* context) {
-	D3D12_RESOURCE_BARRIER barrier = TransitionBeginUnordered();
-	context->GetCommandList()->ResourceBarrier(1, &barrier);
-}
-
-template <class T>
-inline D3D12_RESOURCE_BARRIER UnorderedDimensionBuffer<T>::TransitionEndUnordered() {
-	D3D12_RESOURCE_BARRIER barrier = {};
-	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Transition.pResource   = GetResource();
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_UNORDERED_ACCESS;
-	barrier.Transition.StateAfter  = D3D12_RESOURCE_STATE_COMMON;
-
-	return barrier;
-}
-
-template <class T>
-inline void UnorderedDimensionBuffer<T>::TransitionEndUnordered(const CommandContext* context) {
-	D3D12_RESOURCE_BARRIER barrier = TransitionEndUnordered();
-	context->GetCommandList()->ResourceBarrier(1, &barrier);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// VertexUnorderedDimensionBuffer class template methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-template<class T>
-inline const D3D12_VERTEX_BUFFER_VIEW VertexUnorderedDimensionBuffer<T>::GetVertexBufferView() const {
-	D3D12_VERTEX_BUFFER_VIEW result = {};
-	result.BufferLocation = this->GetGPUVirtualAddress();
-	result.SizeInBytes    = static_cast<UINT>(this->stride_ * this->size_);
-	result.StrideInBytes  = static_cast<UINT>(this->stride_);
-
-	return result;
+template<typename T>
+inline void UnorderedDimensionBuffer<T>::TransitionDefault(DxObject::CommandContext* context) {
+	resource_.Transition(context, BaseDimensionBuffer::GetDefaultState(Category::Default));
 }
 
 

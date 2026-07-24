@@ -4,13 +4,16 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "FPresenter.h"
-#include "FRenderTargetBuffer.h"
 #include "Scene/FScene.h"
+#include "Buffer/FRenderTargetBuffer.h"
+#include "Pass/FRenderConfig.h"
 #include "Pass/FRenderPassContext.h"
 
 //* engine
+#include <Engine/Foundation.h>
+#include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
+#include <Engine/System/DirectX/Context/DirectXWindowContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -27,28 +30,26 @@ public:
 	// public methods
 	//=========================================================================================
 
-	FMainRender()  = default;
-	~FMainRender() = default;
-
 	void Init();
 
 	void Term();
 
-	//* option *//
+	//* render option *//
 
-	void Render(const DirectXQueueContext* context, DirectXWindowContext* window);
+	void Render(const DirectXQueueContext* context, const DirectXWindowContext* window);
 
-	void PresentMain(const DirectXQueueContext* context);
+	void Present(const DirectXQueueContext* context, const Vector2ui& resolution = Configuration::GetConfig().resolution);
+	void Present(const DirectXQueueContext* context, const DirectXWindowContext* window);
 
 	//* getter *//
 
-	FRenderTargetBuffer* GetTextures() const { return buffer_.get(); }
+	FRenderTargetBuffer* GetBuffer() const { return buffer_.get(); }
 
 	FScene* GetScene() const { return scene_.get(); }
 
-	FRenderPassContext* GetContext() const { return context_.get(); }
+	FRenderPassContext& GetContext() { return context_; }
 
-	FBaseRenderPass::Config& GetConfig() { return config_; }
+	FRenderConfig& GetConfig() { return config_; }
 
 	//* singleton *//
 
@@ -60,12 +61,18 @@ private:
 	// private variables
 	//=========================================================================================
 
+	//* render pass context *//
+
+	FRenderPassContext context_ = {};
+
+	//* parameter *//
+
 	std::unique_ptr<FRenderTargetBuffer> buffer_;
-	std::unique_ptr<FScene>              scene_;
+	std::unique_ptr<FScene> scene_;
 
-	std::unique_ptr<FRenderPassContext> context_;
+	FRenderConfig config_ = {};
 
-	FBaseRenderPass::Config config_ = {};
+
 
 };
 

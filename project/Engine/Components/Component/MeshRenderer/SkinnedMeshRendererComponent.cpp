@@ -21,7 +21,7 @@ DXOBJECT_USING
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void SkinnedMeshRendererComponent::InputSkinnedMesh::Create(const DirectXQueueContext* context, const std::shared_ptr<AssetMesh>& mesh) {
-	CreateVetex(mesh);
+	CreateVertex(mesh);
 	CreateBottomLevelAS(context, mesh);
 	isCreateMesh = true;
 }
@@ -31,7 +31,7 @@ void SkinnedMeshRendererComponent::InputSkinnedMesh::UpdateBottomLevelAS(const D
 	bottomLevelAS.Update(context->GetDxCommand());
 }
 
-void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateVetex(const std::shared_ptr<AssetMesh>& mesh) {
+void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateVertex(const std::shared_ptr<AssetMesh>& mesh) {
 	vertex = std::make_unique<VertexUnorderedDimensionBuffer<MeshVertexData>>();
 	vertex->Create(System::GetDxDevice(), mesh->GetInputVertex()->GetSize());
 }
@@ -58,6 +58,8 @@ void SkinnedMeshRendererComponent::InputSkinnedMesh::CreateBottomLevelAS(const D
 void SkinnedMeshRendererComponent::ShowComponentInspector() {
 	ImGui::Checkbox("enable", &isEnable_);
 	SxImGui::CheckBoxFlags("cast shadow", &mask_.Get(), static_cast<uint8_t>(MeshInstanceMask::Shadow));
+
+	SxGui::ComboEnum("mode", &mode_);
 }
 
 void SkinnedMeshRendererComponent::CreateMesh(const Uuid& referenceMesh) {
@@ -97,7 +99,7 @@ void SkinnedMeshRendererComponent::Update(const DirectXQueueContext* context) {
 	mesh_.UpdateBottomLevelAS(context);
 }
 
-void SkinnedMeshRendererComponent::BindIABuffer(const DirectXQueueContext* context) const {
+void SkinnedMeshRendererComponent::BindInputAssembler(const DirectXQueueContext* context) const {
 	auto commandList = context->GetCommandList();
 
 	D3D12_VERTEX_BUFFER_VIEW vbv = mesh_.vertex->GetVertexBufferView();
@@ -127,6 +129,7 @@ json SkinnedMeshRendererComponent::ParseToJson() const {
 	data["mask"]          = mask_.Get();
 	data["isEnable"]      = isEnable_;
 	data["stencil"]       = stencil_;
+	data["mode"]          = magic_enum::enum_name(mode_);
 
 	return data;
 }
@@ -139,12 +142,12 @@ void SkinnedMeshRendererComponent::InputJson(const json& data) {
 	// referenceMesh, materialのuuidが存在しない場合は, tableから読み込み
 
 	if (!sAssetStorage->Contains<AssetMesh>(referenceMesh)) {
-		const auto& filepath = sAssetStorage->GetFilepath(referenceMesh);
+		const auto& filepath = sAssetStorage->GetLocation(referenceMesh);
 		sContentStorage->Import<ContentModel>(filepath);
 	}
 
 	if (!sAssetStorage->Contains<AssetMesh>(material)) {
-		const auto& filepath = sAssetStorage->GetFilepath(material);
+		const auto& filepath = sAssetStorage->GetLocation(material);
 		sContentStorage->Import<ContentModel>(filepath);
 	}
 
@@ -154,6 +157,7 @@ void SkinnedMeshRendererComponent::InputJson(const json& data) {
 	mask_     = static_cast<MeshInstanceMask>(JsonSerializeFormatter<uint8_t>::Deserialize(data["mask"]));
 	isEnable_ = JsonSerializeFormatter<bool>::Deserialize(data["isEnable"]);
 	stencil_  = JsonSerializeFormatter<uint8_t>::Deserialize(data["stencil"]);
+	mode_     = magic_enum::enum_cast<Mode>(data["mode"].get<std::string>()).value();
 	
 }
 

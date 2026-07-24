@@ -13,6 +13,15 @@ DXOBJECT_USING
 #include <magic_enum.hpp>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
+// Buffer structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void SwapChain::Buffer::Reset() {
+	resource.Reset();
+	descriptorRTV.Reset();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
 // SwapChain class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -21,13 +30,21 @@ void SwapChain::Init(
 	DXGI_FORMAT format, const Vector2ui& size, const HWND& hwnd) {
 
 	CreateSwapChain(device, command, format, size, hwnd);
-	CreateRenderTargetView(device, descriptorHeaps, format, true);
+	CreateBuffer(device, descriptorHeaps, format, true);
+}
 
+void SwapChain::Resize(Device* device, DescriptorHeaps* descriptorHeaps, DXGI_FORMAT format, const Vector2ui& size) {
+	for (uint32_t i = 0; i < kBufferCount; ++i) {
+		buffers_[i].resource.Reset();
+	}
+
+	ResizeSwapChain(format, size);
+	CreateBuffer(device, descriptorHeaps, format, true);
 }
 
 void SwapChain::Term() {
-	for (uint32_t i = 0; i < kBufferCount_; ++i) {
-		descriptorsRTV_[i].Delete();
+	for (uint32_t i = 0; i < kBufferCount; ++i) {
+		buffers_[i].Reset();
 	}
 }
 
@@ -130,11 +147,15 @@ D3D12_RESOURCE_BARRIER SwapChain::GetBackBufferTransitionBarrier(D3D12_RESOURCE_
 
 	D3D12_RESOURCE_BARRIER barrier = {};
 	barrier.Type                   = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Transition.pResource   = resources_[GetCurrentBackBufferIndex()].Get();
+	barrier.Transition.pResource   = buffers_[GetCurrentBackBufferIndex()].resource.Get();
 	barrier.Transition.StateBefore = stateBefore;
 	barrier.Transition.StateAfter  = stateAfter;
 
 	return barrier;
+}
+
+const D3D12_CPU_DESCRIPTOR_HANDLE& SwapChain::GetBackBufferCPUHandle() const {
+	return buffers_[GetCurrentBackBufferIndex()].descriptorRTV.GetCPUHandle();
 }
 
 std::optional<SwapChain::ColorSpace> SwapChain::GetColorSpace(const DXGI_OUTPUT_DESC1& desc) {
@@ -165,7 +186,7 @@ void SwapChain::CreateSwapChain(Device* device, CommandContext* command, DXGI_FO
 	desc.Format           = format;
 	desc.SampleDesc.Count = 1;
 	desc.BufferUsage      = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	desc.BufferCount      = kBufferCount_;
+	desc.BufferCount      = kBufferCount;
 	desc.SwapEffect       = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	desc.Flags            = DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;
 	desc.Scaling          = DXGI_SCALING_NONE;
@@ -181,34 +202,38 @@ void SwapChain::CreateSwapChain(Device* device, CommandContext* command, DXGI_FO
 
 }
 
-void SwapChain::CreateRenderTargetView(Device* device, DescriptorHeaps* descriptorHeaps, DXGI_FORMAT format, bool isSRGB) {
+void SwapChain::ResizeSwapChain(DXGI_FORMAT format, const Vector2ui& size) {
+	swapChain_->ResizeBuffers(
+		kBufferCount, size.x, size.y, format, DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING
+	);
+}
 
-	// swap chainからresourceを引っ張ってくる
-	for (uint32_t i = 0; i < kBufferCount_; ++i) {
-		auto hr = swapChain_->GetBuffer(
-			i, IID_PPV_ARGS(&resources_[i])
-		);
+void SwapChain::CreateBuffer(Device* device, DescriptorHeaps* descriptorHeaps, DXGI_FORMAT format, bool isSRGB) {
+
+	//!< SwapChainからResourceを引っ張ってくる
+	for (uint32_t i = 0; i < kBufferCount; ++i) {
+		auto hr = swapChain_->GetBuffer(i, IID_PPV_ARGS(&buffers_[i].resource));
 		DxObject::Assert(hr, L"swap chain get buffer failed.");
 	}
 
-	if (isSRGB) {
-		if (format == DxObject::ConvertToSRGB(format)) {
-			StreamLogger::EngineLog("[DXOBJECT SwapChain] warning | SRGB format is not found.");
-		}
+	//!< SRGBフォーマットへの変換
+	format = isSRGB ? DxObject::ConvertToSRGB(format) : format;
 
-		format = DxObject::ConvertToSRGB(format);
-	}
-
-	// RTVの設定
+	//!< RTVの設定
 	D3D12_RENDER_TARGET_VIEW_DESC desc = {};
 	desc.Format        = format;
 	desc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
-	for (uint32_t i = 0; i < kBufferCount_; ++i) {
-		descriptorsRTV_[i] = descriptorHeaps->GetDescriptor(DescriptorType::kDescriptor_RTV);
+	for (uint32_t i = 0; i < kBufferCount; ++i) {
+		if (!buffers_[i].descriptorRTV.HasHandle()) {
+			buffers_[i].descriptorRTV = descriptorHeaps->GetDescriptor(DescriptorType::kDescriptor_RTV);
+		}
 
 		device->GetDevice()->CreateRenderTargetView(
-			resources_[i].Get(), &desc, descriptorsRTV_[i].GetCPUHandle()
+			buffers_[i].resource.Get(),
+			&desc,
+			buffers_[i].descriptorRTV.GetCPUHandle()
 		);
 	}
+
 }

@@ -6,6 +6,7 @@
 //* DXOBJECT
 #include "DxObjectCommon.h"
 #include "DxDevice.h"
+#include "DxResource.h"
 
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
@@ -26,24 +27,39 @@ DXOBJECT_NAMESPACE_BEGIN
 class BaseDimensionBuffer {
 public:
 
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Category enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Category {
+		Default  = D3D12_HEAP_TYPE_DEFAULT,  //!< GPU専用.
+		Upload   = D3D12_HEAP_TYPE_UPLOAD,   //!< CPU書き込み用.
+		Readback = D3D12_HEAP_TYPE_READBACK, //!< CPU読み込み用.
+	};
+
+public:
+
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
 	BaseDimensionBuffer(size_t stride) : stride_(stride) {}
-	virtual ~BaseDimensionBuffer() { Release(); }
+	virtual ~BaseDimensionBuffer() { Reset(); }
 
-	void Release();
+	//* option *//
+
+	void Reset();
+
+	void SetName(const std::wstring& name) const { resource_.SetName(name); }
 
 	//* getter *//
 
+	DxObject::Resource& Get() { return resource_; }
+
 	ID3D12Resource* GetResource() const { return resource_.Get(); }
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+	D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return resource_.GetGPUVirtualAddress(); }
 
 	const uint32_t GetSize() const { return size_; }
-
-	const uint32_t& GetDimension() const { return size_; }
 
 	const size_t GetStride() const { return stride_; }
 
@@ -57,10 +73,9 @@ protected:
 
 	//* DirectX12 *//
 
-	ComPtr<ID3D12Resource> resource_;
-	std::optional<D3D12_GPU_VIRTUAL_ADDRESS> address_ = std::nullopt;
+	DxObject::Resource resource_;
 
-	//* paraemter *//
+	//* parameter *//
 
 	uint32_t size_       = NULL;
 	const size_t stride_ = NULL;
@@ -69,17 +84,65 @@ protected:
 	// protected methods
 	//=========================================================================================
 
-	void Create(Device* devices, uint32_t size);
+	//* helper create methods *//
 
-	bool CheckIndex(size_t index) const;
+	static D3D12_RESOURCE_STATES GetDefaultState(Category category);
+	static D3D12_RESOURCE_FLAGS GetResourceFlags(Category category);
+
+	void CreateBuffer(DxObject::Device* device, uint32_t size, Category category);
+
+};
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ConstantBuffer class
+////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief [ConstantBuffer] 1次元Bufferクラス.
+template <typename T>
+class ConstantBuffer
+	: public BaseDimensionBuffer {
+public:
+
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	ConstantBuffer() : BaseDimensionBuffer(sizeof(T)) {}
+	~ConstantBuffer() override { Unmap(); }
+
+	void Create(DxObject::Device* device);
+
+	//* getter *//
+
+	T* GetData() const { return data_; }
+
+	//* access option *//
+
+	T& At();
+	const T& At() const;
+
+private:
+
+	//=========================================================================================
+	// private variables
+	//=========================================================================================
+
+	T* data_ = nullptr;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void Map();
+
+	void Unmap();
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DimensionBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief ConstantBuffer/StructuredBufferの1次元Bufferクラス.
-template <class T>
+//! @brief [ConstantBuffer/StructuredBuffer] 1次元Bufferクラス.
+template <typename T>
 class DimensionBuffer
 	: public BaseDimensionBuffer {
 public:
@@ -91,29 +154,25 @@ public:
 	DimensionBuffer() : BaseDimensionBuffer(sizeof(T)) {}
 	~DimensionBuffer() override { Unmap(); }
 
-	void Create(Device* device, uint32_t size);
-
-	void Map();
-
-	void Unmap();
-
-	T& At(size_t index);
-	const T& At(size_t index) const;
-
-	const T* GetData() const;
+	void Create(DxObject::Device* device, uint32_t size);
 
 	void Memcpy(const T* data);
 
 	void Fill(const T& value);
 
-	const std::span<T>& GetSpan() const { return datas_; }
+	//* getter *//
 
-	//=========================================================================================
-	// operator
-	//=========================================================================================
+	T* GetData() const { return data_.data(); }
 
-	T& operator[](size_t index);
-	const T& operator[](size_t index) const;
+	const std::span<T>& GetSpan() const { return data_; }
+
+	//* access option *//
+
+	T& At(size_t index);
+	const T& At(size_t index) const;
+
+	T& operator[](size_t index) { return At(index); }
+	const T& operator[](size_t index) const { return At(index); }
 
 private:
 
@@ -121,171 +180,107 @@ private:
 	// private variables
 	//=========================================================================================
 
-	std::span<T> datas_;
+	std::span<T> data_ = {};
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	void Map();
+
+	void Unmap();
 
 };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// VertexDimensionBuffer class
+// ConstantBuffer class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief 頂点バッファ用の1次元Bufferクラス.
-template <class T>
-class VertexDimensionBuffer
-	: public DimensionBuffer<T> {
-public:
 
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
+template <typename T>
+inline void ConstantBuffer<T>::Create(DxObject::Device* device) {
+	BaseDimensionBuffer::CreateBuffer(device, 1, Category::Upload);
+	resource_.SetName(L"Constant Buffer");
 
-	const D3D12_VERTEX_BUFFER_VIEW GetVertexBufferView() const;
+	Map();
+}
 
-private:
-};
+template <typename T>
+inline T& ConstantBuffer<T>::At() {
+	SXAVENGER_ENGINE StreamLogger::AssertA(data_ != nullptr, "Constant Buffer not mapped.");
+	return *data_;
+}
 
-////////////////////////////////////////////////////////////////////////////////////////////
-// IndexDimensionBuffer class
-////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief IndexBuffer用の1次元Bufferクラス.
-class IndexDimensionBuffer
-	: public DimensionBuffer<UINT> {
-public:
+template <typename T>
+inline const T& ConstantBuffer<T>::At() const {
+	SXAVENGER_ENGINE StreamLogger::AssertA(data_ != nullptr, "Constant Buffer not mapped.");
+	return *data_;
+}
 
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
+template <typename T>
+inline void ConstantBuffer<T>::Map() {
+	//!< resourceをマッピング
+	resource_.Map(reinterpret_cast<void**>(&data_));
+}
 
-	const UINT GetIndexCount() const;
+template <typename T>
+inline void ConstantBuffer<T>::Unmap() {
+	if (resource_ != nullptr) {
+		resource_.Unmap();
+	}
 
-	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
-
-private:
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// LineIndexDimensionBuffer class
-////////////////////////////////////////////////////////////////////////////////////////////
-class LineIndexDimensionBuffer
-	: public DimensionBuffer<std::array<UINT, 2>> {
-public:
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	const UINT GetIndexCount() const;
-
-	const UINT* GetIndexData() const;
-
-	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
-
-private:
-};
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// TriangleIndexDimensionBuffer class
-////////////////////////////////////////////////////////////////////////////////////////////
-class TriangleIndexDimensionBuffer
-	: public DimensionBuffer<std::array<UINT, 3>> {
-public:
-
-	//=========================================================================================
-	// public methods
-	//=========================================================================================
-
-	const UINT GetIndexCount() const;
-
-	const UINT* GetIndexData() const;
-
-	const D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
-
-private:
-};
-
+	data_ = nullptr;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DimensionBuffer class template methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-template <class T>
-inline void DimensionBuffer<T>::Create(Device* device, uint32_t size) {
-	BaseDimensionBuffer::Create(device, size);
-	resource_->SetName(L"Dimension Buffer");
+template <typename T>
+inline void DimensionBuffer<T>::Create(DxObject::Device* device, uint32_t size) {
+	BaseDimensionBuffer::CreateBuffer(device, size, Category::Upload);
+	resource_.SetName(L"Dimension Buffer");
 
 	Map();
 }
 
-template <class T>
+template <typename T>
 inline void DimensionBuffer<T>::Map() {
-	T* target = nullptr;
+	T* ptr = nullptr;
 
-	// resourceをマッピング
-	resource_->Map(0, nullptr, reinterpret_cast<void**>(&target));
-	datas_ = { target, size_ };
+	//!< resourceをマッピング
+	resource_.Map(reinterpret_cast<void**>(&ptr));
+	data_ = std::span<T>(ptr, size_);
 }
 
-template <class T>
+template <typename T>
 inline void DimensionBuffer<T>::Unmap() {
 	if (resource_ != nullptr) {
-		resource_->Unmap(0, nullptr);
+		resource_.Unmap();
 	}
 
-	datas_ = {};
+	data_ = {};
 }
 
-template <class T>
-inline T& DimensionBuffer<T>::At(size_t index) {
-	SXAVENGER_ENGINE StreamLogger::AssertA(CheckIndex(index), "Dimension Buffer out of range.");
-	return datas_[index];
-}
-
-template <class T>
-inline const T& DimensionBuffer<T>::At(size_t index) const {
-	SXAVENGER_ENGINE StreamLogger::AssertA(CheckIndex(index), "Dimension Buffer out of range.");
-	return datas_[index];
-}
-
-template <class T>
-inline const T* DimensionBuffer<T>::GetData() const {
-	return datas_.data();
-}
-
-template <class T>
+template <typename T>
 inline void DimensionBuffer<T>::Memcpy(const T* data) {
-	std::memcpy(datas_.data(), data, stride_ * size_);
+	std::memcpy(data_.data(), data, BaseDimensionBuffer::GetByteSize());
 }
 
-template <class T>
+template <typename T>
 inline void DimensionBuffer<T>::Fill(const T& value) {
-	std::fill(datas_.begin(), datas_.end(), value);
+	std::fill(data_.begin(), data_.end(), value);
 }
 
-template <class T>
-inline T& DimensionBuffer<T>::operator[](size_t index) {
-	SXAVENGER_ENGINE StreamLogger::AssertA(CheckIndex(index), "Dimension Buffer out of range.");
-	return datas_[index];
+template <typename T>
+inline T& DimensionBuffer<T>::At(size_t index) {
+	SXAVENGER_ENGINE StreamLogger::AssertA(index < size_, "Dimension Buffer out of range.");
+	return data_[index];
 }
 
-template <class T>
-inline const T& DimensionBuffer<T>::operator[](size_t index) const {
-	SXAVENGER_ENGINE StreamLogger::AssertA(CheckIndex(index), "Dimension Buffer out of range.");
-	return datas_[index];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// VertexDimensionBuffer class template methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-template <class T>
-inline const D3D12_VERTEX_BUFFER_VIEW VertexDimensionBuffer<T>::GetVertexBufferView() const {
-	D3D12_VERTEX_BUFFER_VIEW result = {};
-	result.BufferLocation = this->GetGPUVirtualAddress();
-	result.SizeInBytes    = static_cast<UINT>(this->stride_ * this->size_);
-	result.StrideInBytes  = static_cast<UINT>(this->stride_);
-
-	return result;
+template <typename T>
+inline const T& DimensionBuffer<T>::At(size_t index) const {
+	SXAVENGER_ENGINE StreamLogger::AssertA(index < size_, "Dimension Buffer out of range.");
+	return data_[index];
 }
 
 DXOBJECT_NAMESPACE_END
-
-

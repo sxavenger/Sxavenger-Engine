@@ -4,30 +4,26 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
-//* external
-#include <imgui.h>
-#include <magic_enum.hpp>
+//* engine
+#include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/Utility/RuntimeLogger.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseAsset class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void BaseAsset::ShowInspector() {
-	ImGui::SeparatorText(GetStr().c_str());
-	ImGui::Text("status: %s", magic_enum::enum_name(status_).data());
-	ImGui::Separator();
+const Uuid& BaseAsset::GetId() const {
+	StreamLogger::AssertA(id_.has_value(), "asset does not have an id.");
+	return id_.value();
+}
+
+std::string BaseAsset::SerializeId() const {
+	return id_.has_value() ? id_->Serialize() : "null";
 }
 
 void BaseAsset::WaitComplete() const {
-	while (!IsComplete()) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(1)); //!< 完了を待つ
+	while (status_ != Status::Complete) {
+		RuntimeLogger::LogDebug("[BaseAsset]", "waiting for asset to complete loading... id: " + SerializeId());
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
-}
-
-std::string BaseAsset::GetStr() const {
-	if (!id_.has_value()) {
-		return "null";
-	}
-
-	return (*id_).Serialize();
 }

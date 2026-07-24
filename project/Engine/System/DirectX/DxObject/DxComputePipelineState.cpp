@@ -21,7 +21,7 @@ void ComputePipelineState::SetBlob(const ShaderBlob& blob) {
 
 void ComputePipelineState::CreateBlob(const std::filesystem::path& filepath) {
 	std::unique_ptr<ShaderBlob> blob = std::make_unique<ShaderBlob>();
-	blob->Create(filepath, CompileProfile::cs);
+	blob->Create(filepath, CompileProfile::Compute);
 
 	SetBlob(*blob.get());
 }
@@ -46,11 +46,11 @@ void ComputePipelineState::Dispatch(CommandContext* context, const Vector3ui& th
 }
 
 D3D12_SHADER_BYTECODE ComputePipelineState::GetBytecode() {
-	if (!blob_.has_value()) {
+	if (blob_ == nullptr) {
 		StreamLogger::Exception("blob is not set.");  //!< blobが設定されていない
 	}
 
-	return blob_.value().GetBytecode();
+	return blob_.GetBytecode();
 }
 
 void ComputePipelineState::CreateDirectXRootSignature(Device* device) {
@@ -94,16 +94,16 @@ void ReflectionComputePipelineState::ReflectionPipeline(Device* device, const Sa
 }
 
 
-void ReflectionComputePipelineState::BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc) {
+void ReflectionComputePipelineState::BindComputeBuffer(const CommandContext* context, const BindBufferDesc& desc) const {
 	table_.BindComputeBuffer(context, desc);
 }
 
 void ReflectionComputePipelineState::SetBlobToTable() {
-	if (!blob_.has_value()) {
+	if (blob_ == nullptr) {
 		StreamLogger::Exception("blob is not set."); //!< blobが設定されていない.
 		return;
 	}
 
-	ComPtr<ID3D12ShaderReflection> reflection = blob_.value().GetReflection();
+	ComPtr<ID3D12ShaderReflection> reflection = blob_.GetReflection();
 	table_.CreateTable(reflection.Get(), ShaderVisibility::VISIBILITY_ALL);
 }

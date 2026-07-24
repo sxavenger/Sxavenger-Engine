@@ -6,6 +6,7 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* entity
 #include "EntityBehaviourStorage.h"
+#include "BehaviourHelper.h"
 
 //* engine
 #include <Engine/System/UI/SxImGui.h>
@@ -51,6 +52,14 @@ void EntityBehaviour::SetActive(bool isActive) {
 
 	for (const auto& child : children_) {
 		child->SetActive(isActive);
+	}
+}
+
+void EntityBehaviour::SetMobility(Mobility mobility) {
+	mobility_ = mobility;
+
+	for (const auto& child : children_) {
+		child->SetMobility(mobility);
 	}
 }
 
@@ -149,28 +158,39 @@ void EntityBehaviour::ShowInspector() {
 
 	ImGui::SameLine();
 
-	SxImGui::InputText("## name", name_);
-
-	ImGui::Text(std::format("mobility - {}", magic_enum::enum_name(mobility_)).c_str());
+	SxGui::InputText("## name", name_, std::format("{} name", SxGui::Icon::Label).c_str());
 
 	ImGui::EndDisabled();
 
-	{
-		ImGui::Separator();
+	ImGui::Dummy(ImVec2(0.0f, 1.0f));
+	ImGui::Text(std::format("Mobility | {} {}", mobility_ == Mobility::Static ? SxGui::Icon::Cube : SxGui::Icon::ChessPawn, magic_enum::enum_name(mobility_)).c_str());
+	ImGui::Dummy(ImVec2(0.0f, 1.0f));
+
+	{ //!< hierarchyの表示
+		ImGui::BeginChild("## hierarchy child", ImVec2(0, 120), ImGuiChildFlags_ResizeY);
+
+		if (SxGui::Hierarchy::Begin()) {
+			HierarchyTreeNode(this);
+			SxGui::Hierarchy::End();
+		}
+
+		ImGui::EndChild();
+	}
+
+	{ //!< componentの表示・追加・削除
 		ImGui::SeparatorText("components");
 
-		std::queue<const std::type_info*> deleteQueue;
+		std::queue<const std::type_info*> unregister;
 
 		for (const auto& [type, component] : GetComponents()) {
 			ImGui::PushID(type->name());
 
 			if (ImGui::Button(":")) {
-				deleteQueue.emplace(type);
+				unregister.emplace(type);
 			}
 
 			ImGui::SameLine();
 
-			// ???: child window に変更...?
 			if (ImGui::CollapsingHeader(type->name(), ImGuiTreeNodeFlags_DefaultOpen)) {
 				(*component)->ShowComponentInspector();
 			}
@@ -178,9 +198,9 @@ void EntityBehaviour::ShowInspector() {
 			ImGui::PopID();
 		}
 
-		while (!deleteQueue.empty()) {
-			RemoveComponent(deleteQueue.front());
-			deleteQueue.pop();
+		while (!unregister.empty()) {
+			RemoveComponent(unregister.front());
+			unregister.pop();
 		}
 
 		//* componentの追加
@@ -205,7 +225,7 @@ void EntityBehaviour::ShowInspector() {
 		}
 	}
 	
-	{
+	{ //!< inspectableの表示
 		ImGui::SeparatorText("inspectable");
 		if (inspectable_ != nullptr) {
 			inspectable_(this);
@@ -218,7 +238,7 @@ void EntityBehaviour::ShowInspector() {
 		auto filepath = WinApp::GetOpenFilepath(L"behaviourを選択", std::filesystem::current_path(), { L"behaviourファイル", L"*.behaviour" });
 
 		if (filepath.has_value()) {
-			LoadComponent(filepath.value());
+			BehaviourHelper::LoadBehaviour(this->GetAddress(), filepath.value());
 		}
 	}
 
@@ -228,14 +248,15 @@ void EntityBehaviour::ShowInspector() {
 		auto filepath = WinApp::GetSaveFilepath(L"behaviourを保存", std::filesystem::current_path(), { L"behaviourファイル", L"*.behaviour" }, ".behaviour");
 
 		if (filepath.has_value()) {
-			SaveComponent(filepath.value());
+			BehaviourHelper::SaveBehaviour(this->GetAddress(), filepath.value());
 		}
 	}
 
 	ImGui::SameLine();
 
 	if (ImGui::Button("Delete Behaviour")) {
-		sEntityBehaviourStorage->PushUnregisterQueue(this->GetAddress());
+		BehaviourAddress address = { this->GetAddress(), BehaviourAddress::Ownership::Owned }; //!< 所有権を渡す
+		sEntityBehaviourStorage->PushUnregisterQueue(address);
 	}
 }
 
@@ -250,7 +271,7 @@ void EntityBehaviour::LateUpdateInspector() {
 	});
 }
 
-json EntityBehaviour::ParseToJson() const {
+json EntityBehaviour::SerializeJson() const {
 	json root = json::object();
 
 	//* properties
@@ -270,13 +291,13 @@ json EntityBehaviour::ParseToJson() const {
 	//* children
 	json& children = root["children"] = json::array();
 	for (const auto& child : children_) {
-		children.emplace_back(child->ParseToJson());
+		children.emplace_back(child->SerializeJson());
 	}
 
 	return root;
 }
 
-void EntityBehaviour::InputJson(const json& data) {
+void EntityBehaviour::DeserializeJson(const json& data) {
 
 	name_        = data.value("name", "new behaviour");
 	isRenamable_ = data.value("isRenamable", true);
@@ -301,21 +322,9 @@ void EntityBehaviour::InputJson(const json& data) {
 		BehaviourAddress address = sEntityBehaviourStorage->RegisterBehaviour();
 		EntityBehaviour* ptr = address.Get();
 		AddChild(std::move(address));
-		ptr->InputJson(childData);
+		ptr->DeserializeJson(childData);
 	}
 
-}
-
-void EntityBehaviour::LoadComponent(const std::filesystem::path& filepath) {
-	json data;
-	if (JsonHandler::LoadFromJson(filepath, data)) {
-		InputJson(data);
-	}
-}
-
-void EntityBehaviour::SaveComponent(const std::filesystem::path& filepath) {
-	json data = ParseToJson();
-	JsonHandler::WriteToJson(filepath, data);
 }
 
 void EntityBehaviour::SetParent(EntityBehaviour* parent) {
@@ -332,4 +341,34 @@ void EntityBehaviour::RemoveChild(EntityBehaviour* child) {
 	StreamLogger::AssertA(children_.contains(child->GetAddress()), "child behaviour not found.");
 	child->RemoveParent(this);
 	children_.erase(child->GetAddress());
+}
+
+void EntityBehaviour::HierarchyTreeNode(EntityBehaviour* behaviour) {
+
+	bool isInspector  = behaviour->CheckInspector();
+	std::string label = std::format("{} {} # 0x{:x}", SxGui::Icon::Cube, GetName(), GetAddress());
+
+	if (!behaviour->IsActive()) {
+		ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
+	}
+
+	bool isOpen = SxGui::Hierarchy::TreeNode(label.c_str(), isInspector, !HasChild(), ImGuiTreeNodeFlags_DefaultOpen);
+
+	if (!behaviour->IsActive()) {
+		ImGui::PopStyleColor();
+	}
+
+	//!< 選択処理
+	if (ImGui::IsItemClicked()) {
+		behaviour->SetInspector();
+	}
+
+	if (isOpen) {
+		for (const auto& child : behaviour->children_) {
+			child->HierarchyTreeNode(child.Get());
+		}
+
+		SxGui::Hierarchy::TreePop();
+	}
+
 }

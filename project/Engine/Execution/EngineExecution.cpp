@@ -6,14 +6,16 @@ SXAVENGER_ENGINE_USING
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
+#include <Engine/System/Utility/CrashHandler.h>
 #include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/System.h>
 #include <Engine/Graphics/Graphics.h>
+#include <Engine/Assets/Content/ContentStorage.h>
 #include <Engine/Assets/Asset/AssetStorage.h>
 #include <Engine/Components/Component/Audio/AudioController.h>
 #include <Engine/Components/Component/ComponentHelper.h>
 #include <Engine/Components/Entity/EntityBehaviourStorage.h>
-#include <Engine/Render/FRenderCore.h>
+#include <Engine/Render/Core/FRenderCore.h>
 #include <Engine/Render/FMainRender.h>
 
 //* c++
@@ -27,6 +29,7 @@ void EngineExecution::Init(Execution::Context* context) {
 	SetProcess(context);
 
 	StreamLogger::Init();
+	CrashHandler::Install();
 	Configuration::Load();
 	System::Init();
 	Graphics::Init();
@@ -44,7 +47,7 @@ void EngineExecution::Term() {
 void EngineExecution::SetProcess(Execution::Context* context) {
 	context->SetProcess(Execution::Process::Init, std::nullopt, [this]() {
 
-		sAssetStorage->Deserialize();
+		sAssetStorage->DeserializeLocation();
 
 		ComponentHelper::RegisterComponents();
 		sAudioController->Init();
@@ -55,7 +58,7 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 		CreateWhite1x1();
 		CreateCheckerboard();
 
-		
+		LoadContent();
 	});
 
 	context->SetProcess(Execution::Process::Init, std::numeric_limits<uint32_t>::max(), [this]() {
@@ -66,24 +69,24 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 		FMainRender::GetInstance()->Term();
 		FRenderCore::GetInstance()->Term();
 
-		sAssetStorage->Serialize();
-
 		System::Shutdown();
 		System::ExecuteAllAllocator();
+
+		sAssetStorage->SerializeLocation();
 	});
 
 	context->SetProcess(Execution::Process::Begin, 0, [this]() {
 		System::GetDxDevice()->CheckDeviceStatus();
-		System::BeginPerformace();
+		System::BeginPerformance();
 		System::GetInput()->Update();
 		System::BeginImGuiFrame();
 		ComponentHelper::BeginFrame();
 
-		System::Record("begin [engine]");
+		System::RecordCpu("begin [engine]");
 	});
 
 	context->SetProcess(Execution::Process::Update, std::numeric_limits<uint32_t>::max(), [this]() {
-		System::Record("update [game logic]");
+		System::RecordCpu("update [game logic]");
 
 		System::EndImGuiFrame();
 
@@ -93,17 +96,19 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 
 		UpdateAsset();
 
-		System::Record("update [engine]");
+		System::RecordCpu("update [engine]");
 	});
 
 	context->SetProcess(Execution::Process::End, 0, [this]() {
-		System::Record("render [draw logic]");
+		System::RecordCpu("render [draw logic]");
+
+		System::GetTimestampGpu()->ReadTimestamp(System::GetDirectQueueContext());
 
 		//System::TransitionAllocator();
 		System::ExecuteAllAllocator();
 		//!< ダブルバッファ変更時, TransitionAllocatorに設定
 		
-		System::Record("render [gpu execution]");
+		System::RecordCpu("render [gpu execution]");
 
 		System::RemoveClosedWindow();
 		System::PresentWindows();
@@ -112,8 +117,8 @@ void EngineExecution::SetProcess(Execution::Context* context) {
 
 		sEntityBehaviourStorage->UnregisterBehaviour();
 
-		System::Record("end [engine]");
-		System::EndPerformace();
+		System::RecordCpu("end [engine]");
+		System::EndPerformance();
 	});
 }
 
@@ -161,12 +166,16 @@ void EngineExecution::CreateCheckerboard() {
 	Graphics::RegisterTexture("checkerboard", std::move(checker));
 }
 
+void EngineExecution::LoadContent() {
+	sContentStorage->Import<ContentTexture>("packages/textures/uvchecker.png");
+}
+
 void EngineExecution::UpdateAsset() {
 	sAssetStorage->ForEach<AssetMaterial>([](AssetMaterial* asset) {
 		asset->Update();
 	});
 
 	sAssetStorage->ForEach<AssetTexture>([](AssetTexture* asset) {
-		asset->Update(System::GetDirectQueueContext());
+		asset->Transition(System::GetDirectQueueContext());
 	});
 }

@@ -9,7 +9,6 @@
 #include <Engine/Execution/EngineExecution.h>
 #include <Engine/Execution/EditorExecution.h>
 #include <Engine/Execution/ExampleGameLoop.h>
-#include <Demo/Execution/DemoGameLoop.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
@@ -17,8 +16,6 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	std::unique_ptr<SxxEngine::Execution::Pipeline> pipeline = std::make_unique<SxxEngine::Execution::Pipeline>();
-	pipeline->Push<SxxEngine::FeatureLevelExecution>(); //!< FeatureLevelの確認
-
 	pipeline->Push<SxxEngine::EngineExecution>();
 
 #ifdef _DEVELOPMENT
@@ -26,7 +23,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 #endif
 
 	pipeline->Push<SxxEngine::ExampleGameLoop>();
-	//pipeline->Push<DemoGameLoop>();
 
 	pipeline->Run();
 

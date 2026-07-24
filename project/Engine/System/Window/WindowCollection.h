@@ -29,9 +29,18 @@ public:
 	// public methods
 	//=========================================================================================
 
-	std::weak_ptr<DirectXWindowContext> CreateMainWindow(const Vector2ui& size, const std::wstring& name, const Color4f& color = DirectXWindowContext::kDefaultClearColor);
+	std::shared_ptr<DirectXWindowContext> CreateMainWindow(
+		const Vector2ui& client, const std::wstring& name,
+		Sxl::Flag<DirectXWindowContext::Style> style = DirectXWindowContext::Style::Default,
+		const Color4f& color = DirectXWindowContext::kDefaultClearColor
+	);
 
-	std::weak_ptr<DirectXWindowContext> CreateSubWindow(const Vector2ui& size, const std::wstring& name, DirectXWindowContext::ProcessCategory category, const Color4f& color = DirectXWindowContext::kDefaultClearColor);
+	std::shared_ptr<DirectXWindowContext> CreateSubWindow(
+		const Vector2ui& client, const std::wstring& name,
+		DirectXWindowContext::ProcessCategory category = DirectXWindowContext::ProcessCategory::Window,
+		Sxl::Flag<DirectXWindowContext::Style> style = DirectXWindowContext::Style::Default,
+		const Color4f& color = DirectXWindowContext::kDefaultClearColor
+	);
 
 	void Term();
 
@@ -55,7 +64,7 @@ public:
 	//! @brief フォーカスされているウィンドウの取得
 	//! @retval ptr フォーカスされているwindowのptr
 	//! @retval nullptr windowが存在しない
-	DirectXWindowContext* GetForcusWindow() const;
+	DirectXWindowContext* GetFocusWindow() const;
 
 	//* debug option *//
 

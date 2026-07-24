@@ -11,9 +11,9 @@
 #include <Engine/Graphics/Animation/BornNode.h>
 
 //* lib
-#include <Lib/Geometry/Vector3.h>
-#include <Lib/Geometry/Vector4.h>
-#include <Lib/Geometry/Quaternion.h>
+#include <Lib/Math/Vector3.h>
+#include <Lib/Math/Vector4.h>
+#include <Lib/Math/Quaternion.h>
 
 //* external
 #include <assimp/Importer.hpp>
@@ -35,36 +35,29 @@ class ContentModel final
 	: public BaseContent {
 public:
 
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// using
-	////////////////////////////////////////////////////////////////////////////////////////////
-
-	using Uuids = std::vector<Uuid>;
-
-public:
-
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	ContentModel()           = default;
+	//* constructor / destructor *//
+
+	ContentModel() : BaseContent(Async::Execution::Cpu) {}
+
 	~ContentModel() override = default;
-
-	void AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) override;
-
-	AsyncExecution GetAsyncExecution() const { return AsyncExecution::None; }
-
-	void AttachUuid() override;
-
-	//* inspector option *//
-
-	void ShowInspector() override;
 
 	//* content option *//
 
-	void Load(const std::filesystem::path& filepath, uint32_t assimpOption);
+	void Attach(const std::filesystem::path& filepath, const std::any& parameter) override;
+
+	void Load(MAYBE_UNUSED const DirectXQueueContext* context) override;
+
+	//* parameter option *//
 
 	size_t GetMeshCount() const { return meshes_.size(); }
+
+	const BornNode& GetRoot() const { return root_; }
+
+	//* id option *//
 
 	const Uuid& GetMeshId(size_t index) const { return meshes_[index]; }
 
@@ -72,16 +65,7 @@ public:
 
 	const Uuid& GetMeshToMaterialId(size_t meshIndex) const { return materials_[materialIndices_[meshIndex]]; }
 
-	const BornNode& GetRoot() const { return root_; }
-
 	const Uuid& GetSkeletonId() const { return skeleton_; }
-
-	//* convert helper methods *//
-
-	static Vector3f ConvertNormal(const aiVector3D& aiVector);
-	static Vector3f ConvertPosition3(const aiVector3D& aiVector);
-	static Vector4f ConvertPosition4(const aiVector3D& aiVector);
-	static Quaternion ConvertQuaternion(const aiQuaternion& aiQuaternion);
 
 private:
 
@@ -89,8 +73,8 @@ private:
 	// private variables
 	//=========================================================================================
 
-	Uuids meshes_;
-	Uuids materials_;
+	std::vector<Uuid> meshes_;
+	std::vector<Uuid> materials_;
 
 	std::vector<uint32_t> materialIndices_; //!< mesh index to material index
 
@@ -101,15 +85,19 @@ private:
 	// private methods
 	//=========================================================================================
 
-	//* helper method *//
+	void AttachUuid(const std::filesystem::path& filepath);
 
-	void GetUuid();
+	//* load helper methods *//
 
-	void LoadMeshes(const aiScene* aiScene);
-	void LoadMaterials(const aiScene* aiScene, const std::filesystem::path& filepath);
+	uint32_t GetOption();
 
-	BornNode ReadNode(aiNode* node);
-	void LoadSkeleton(const aiScene* aiScene);
+	static std::shared_ptr<Assimp::Importer> LoadImporter(const std::filesystem::path& filepath, uint32_t option);
+
+	void SetupMaterialIndices(const aiScene* aiScene);
+
+	static BornNode ReadNode(const aiNode* node);
+
+	void SetupBornNode(const aiNode* aiNode);
 
 };
 

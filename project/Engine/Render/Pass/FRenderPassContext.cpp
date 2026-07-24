@@ -8,54 +8,69 @@ SXAVENGER_ENGINE_USING
 #include "../FMainRender.h"
 
 //* engine
+#include <Engine/System/Utility/RuntimeLogger.h>
 #include <Engine/Components/Component/ComponentHelper.h>
+
+//* lib
+#include <Lib/Adapter/String/EncodedString.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassContext class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FRenderPassContext::Render(const DirectXQueueContext* context, const FBaseRenderPass::Config& config) {
+void FRenderPassContext::Render(const DirectXQueueContext* context, const FRenderConfig& config) {
 
-	FBaseRenderPass::Config conf = FRenderPassContext::ApplyConfig(config);
+	FRenderConfig resolved = FRenderPassContext::ResolveConfig(config);
 
-	if (conf.CheckStatus(FBaseRenderPass::Config::Status::Error_GBuffer)) {
+	if (resolved.HasIssue(FRenderConfig::IssueFlag::Error_Buffer)) {
+		RuntimeLogger::LogWarning("[FRenderPassContext]", "config buffer is not set.");
 		return; //!< configが不適格
 	}
 
-	context->BeginEvent(L"FRenderPassContext | ClearRenderTarget");
-	conf.buffer->ClearRenderTargetMain(context);
-	context->EndEvent();
+	//!< Contextの実行
+	context->BeginEvent(std::format(L"[{}] FRenderPassContext", EncodedString::Convert(config.name)));
+
+	config.buffer->ClearMainRenderTarget(context);
 
 	for (const auto& pass : passes_) {
-		pass->Render(context, conf);
+		pass->Render(context, resolved);
 	}
+
+	context->EndEvent();
 }
 
-void FRenderPassContext::Emplace(std::unique_ptr<FBaseRenderPass>&& pass) {
+void FRenderPassContext::Insert(std::unique_ptr<FBaseRenderPass>&& pass) {
+	pass->Init();
 	passes_.emplace_back(std::move(pass));
 }
 
-FBaseRenderPass::Config FRenderPassContext::ApplyConfig(const FBaseRenderPass::Config& _config) {
-	FBaseRenderPass::Config config = _config;
+FRenderConfig FRenderPassContext::ResolveConfig(const FRenderConfig& config) {
 
-	if (config.camera == nullptr) { //!< cameraが設定されていない場合, Tagのcameraを取得
-		if (config.tag != CameraComponent::Tag::None) {
-			config.camera = ComponentHelper::GetCameraComponent(config.tag);
+	FRenderConfig resolved = config;
+
+	if (resolved.name.empty()) {
+		resolved.name = magic_enum::enum_name(resolved.tag); //!< nameが設定されていない場合, Tagの名前を使用する
+	}
+
+	if (resolved.camera == nullptr) { //!< cameraが設定されていない場合, Tagのcameraを取得
+		if (resolved.tag != CameraComponent::Tag::None) {
+			resolved.camera = ComponentHelper::GetCameraComponent(resolved.tag);
 		}
 	}
 
 #ifdef _DEVELOPMENT
-	if (config.cullCamera == nullptr) { //!< culling用cameraが設定されていない場合, cameraと同じものを使用する
-		config.cullCamera = config.camera;
+	if (resolved.cullCamera == nullptr) { //!< culling用cameraが設定されていない場合, 同じものを使用する
+		resolved.cullCamera = resolved.camera;
 	}
 #else
-	config.cullCamera = config.camera; //!< cameraと同じものを使用する
+	resolved.cullCamera = resolved.camera; //!< 同じものを使用する
 #endif
 
-	if (config.scene == nullptr) { //!< sceneが設定されていない場合, main renderから取得
-		config.scene = FMainRender::GetInstance()->GetScene();
+	if (resolved.scene == nullptr) { //!< sceneが設定されていない場合, main renderから取得
+		resolved.scene = FMainRender::GetInstance()->GetScene();
 	}
 
-	config.AttachStatus(); //!< statusの更新
-	return config;
+	resolved.CheckIssue(); //!< issueの更新
+	return resolved;
+	
 }

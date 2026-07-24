@@ -7,7 +7,7 @@
 #include <Engine/Foundation.h>
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
+#include <Lib/Math/Vector2.h>
 
 //* c++
 #include <string>
@@ -65,7 +65,7 @@ public:
 		uint32_t descriptorCount_RTV;
 		uint32_t descriptorCount_DSV;
 
-		//* tiearing
+		//* tearing
 		bool isTearingAllowed;
 
 		//* frame rate lock
@@ -75,12 +75,16 @@ public:
 		//* shader optimization
 		bool enableShaderOptimization;
 
+		//* pix
+		bool enablePix;
+
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Support structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Support {
+		//!< TODO: 廃止予定. Device側を参照して機能サポートの有無を確認するようにする
 	public:
 
 		//=========================================================================================
@@ -94,7 +98,6 @@ public:
 		//=========================================================================================
 
 		bool isSupportTearing;
-		bool isSupportInlineRaytracing;
 
 	};
 

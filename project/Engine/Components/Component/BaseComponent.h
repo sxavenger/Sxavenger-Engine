@@ -62,6 +62,10 @@ public:
 	//! @throw 親が存在しない場合に例外をスローする
 	EntityBehaviour* RequireParent() const;
 
+	//! @brief behaviourのアドレスを取得
+	//! @return behaviourのアドレス
+	uintptr_t GetBehaviourAddress() const;
+
 	//! @brief componentが有効か確認(entityがActiveかどうか)
 	bool IsActive() const;
 

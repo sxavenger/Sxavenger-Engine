@@ -62,55 +62,37 @@ void BaseRootSignatureDesc::Set32bitConstants(uint32_t index, ShaderVisibility s
 
 void BaseRootSignatureDesc::SetSamplerDesc(const D3D12_STATIC_SAMPLER_DESC& desc) {
 	uint32_t sampleIndex = static_cast<uint32_t>(samplers.size());
-
 	AutoResizeSampler(sampleIndex);
 	samplers.at(sampleIndex) = desc;
 }
 
-void BaseRootSignatureDesc::SetSamplerLinear(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace) {
-	uint32_t sampleIndex = static_cast<uint32_t>(samplers.size());
+void BaseRootSignatureDesc::SetSamplerFilter(SamplerFilter filter, SamplerMode mode, ShaderVisibility stage, uint32_t anisotropic, UINT shaderRegister, UINT registerSpace) {
 
-	AutoResizeSampler(sampleIndex);
-	samplers.at(sampleIndex).Filter           = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-	samplers.at(sampleIndex).AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers.at(sampleIndex).AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers.at(sampleIndex).AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers.at(sampleIndex).ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-	samplers.at(sampleIndex).MaxLOD           = D3D12_FLOAT32_MAX;
-	samplers.at(sampleIndex).ShaderRegister   = shaderRegister;
-	samplers.at(sampleIndex).RegisterSpace    = registerSpace;
-	samplers.at(sampleIndex).ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+	D3D12_STATIC_SAMPLER_DESC desc = {};
+	desc.Filter           = static_cast<D3D12_FILTER>(filter);
+	desc.MaxAnisotropy    = anisotropic; //!< 異方性フィルタリングパラメーター(typeがAnisotropicのときのみ有効)
+	desc.AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	desc.AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	desc.AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
+	desc.ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
+	desc.MaxLOD           = D3D12_FLOAT32_MAX;
+	desc.ShaderRegister   = shaderRegister;
+	desc.RegisterSpace    = registerSpace;
+	desc.ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+
+	BaseRootSignatureDesc::SetSamplerDesc(desc);
 }
 
-void BaseRootSignatureDesc::SetSamplerAnisotropic(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, uint32_t anisotropic, UINT registerSpace) {
-	uint32_t sampleIndex = static_cast<uint32_t>(samplers.size());
-
-	AutoResizeSampler(sampleIndex);
-	samplers.at(sampleIndex).Filter           = D3D12_FILTER_ANISOTROPIC;
-	samplers.at(sampleIndex).MaxAnisotropy    = anisotropic; //!< 異方性フィルタリングパラメーター
-	samplers.at(sampleIndex).AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers.at(sampleIndex).AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers.at(sampleIndex).AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers.at(sampleIndex).ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-	samplers.at(sampleIndex).MaxLOD           = D3D12_FLOAT32_MAX;
-	samplers.at(sampleIndex).ShaderRegister   = shaderRegister;
-	samplers.at(sampleIndex).RegisterSpace    = registerSpace;
-	samplers.at(sampleIndex).ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+void BaseRootSignatureDesc::SetSamplerLinear(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace) {
+	BaseRootSignatureDesc::SetSamplerFilter(SamplerFilter::Linear, mode, stage, 0, shaderRegister, registerSpace);
 }
 
 void BaseRootSignatureDesc::SetSamplerPoint(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace) {
-	uint32_t sampleIndex = static_cast<uint32_t>(samplers.size());
+	BaseRootSignatureDesc::SetSamplerFilter(SamplerFilter::Point, mode, stage, 0, shaderRegister, registerSpace);
+}
 
-	AutoResizeSampler(sampleIndex);
-	samplers.at(sampleIndex).Filter           = D3D12_FILTER_MIN_MAG_MIP_POINT;
-	samplers.at(sampleIndex).AddressU         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers.at(sampleIndex).AddressV         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers.at(sampleIndex).AddressW         = static_cast<D3D12_TEXTURE_ADDRESS_MODE>(mode);
-	samplers.at(sampleIndex).ComparisonFunc   = D3D12_COMPARISON_FUNC_NEVER;
-	samplers.at(sampleIndex).MaxLOD           = D3D12_FLOAT32_MAX;
-	samplers.at(sampleIndex).ShaderRegister   = shaderRegister;
-	samplers.at(sampleIndex).RegisterSpace    = registerSpace;
-	samplers.at(sampleIndex).ShaderVisibility = static_cast<D3D12_SHADER_VISIBILITY>(stage);
+void BaseRootSignatureDesc::SetSamplerAnisotropic(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, uint32_t anisotropic, UINT registerSpace) {
+	BaseRootSignatureDesc::SetSamplerFilter(SamplerFilter::Anisotropic, mode, stage, anisotropic, shaderRegister, registerSpace);
 }
 
 ComPtr<ID3D12RootSignature> BaseRootSignatureDesc::CreateRootSignature(ID3D12Device* device, D3D12_ROOT_SIGNATURE_FLAGS flags) const {

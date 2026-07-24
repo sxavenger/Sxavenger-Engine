@@ -9,8 +9,9 @@ DXOBJECT_USING
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/System.h>
 #include <Engine/Assets/Content/ContentStorage.h>
-#include <Engine/Render/FRenderCore.h>
-#include <Engine/Render/FRenderTargetBuffer.h>
+#include <Engine/Render/Buffer/FRenderTargetBuffer.h>
+#include <Engine/Render/Core/FRenderCore.h>
+#include <Engine/Render/Core/FRenderCoreProcess.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // PostProcessLUT class methods
@@ -29,31 +30,32 @@ void PostProcessLUT::Process(const DirectXQueueContext* context, const ProcessIn
 		return; //!< textureが設定されていない場合は処理しない
 	}
 
-	auto process = info.buffer->GetProcessTextures();
-	process->NextProcess();
-	process->GetCurrentTexture()->TransitionBeginUnordered(context);
+	FProcessBuffer* process = info.buffer->GetProcess();
 
-	auto core = FRenderCore::GetInstance()->GetProcess();
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreProcess>(); //!< RenderCoreの確保.
+	core->SetPipeline(FRenderCoreProcess::PostProcess::LUT, context);
 
-	core->SetPipeline(FRenderCoreProcess::ProcessType::LUT, context);
+	{ //!< LUT
 
-	BindBufferDesc desc = {};
-	// common
-	desc.Set32bitConstants("Dimension", 2, &info.buffer->GetSize());
-	desc.Set32bitConstants("Information", 1, &info.weight);
+		process->Next();
+		process->GetCurrentTexture().TransitionUnorderedAccess(context);
 
-	//* textures
-	desc.SetHandle("gInput", process->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput", process->GetCurrentTexture()->GetGPUHandleUAV());
+		//!< parameterの設定
+		DxObject::BindBufferDesc desc = {};
 
-	// lut
-	desc.SetHandle("gLUTTexture", texture_->GetGPUHandleSRV());
-	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
+		//!< 共通parameterの設定
+		desc.Set32bitConstants("Dimension", 2,   &info.buffer->GetResolution());
+		desc.Set32bitConstants("Information", 1, &info.weight);
 
-	core->BindComputeBuffer(FRenderCoreProcess::ProcessType::LUT, context, desc);
-	core->Dispatch(context, info.buffer->GetSize());
+		//!< Bufferの設定
+		desc.SetHandle("gInput",  process->GetPreviousTexture().GetGPUHandleSRV());
+		desc.SetHandle("gOutput", process->GetCurrentTexture().GetGPUHandleUAV());
 
-	process->GetCurrentTexture()->TransitionEndUnordered(context);
+		core->BindComputeBuffer(FRenderCoreProcess::PostProcess::LUT, context, desc);
+		core->Dispatch(context, info.buffer->GetResolution());
+
+		process->GetCurrentTexture().TransitionDefaultState(context);
+	}
 }
 
 void PostProcessLUT::ShowInspectorImGui() {
@@ -68,7 +70,7 @@ void PostProcessLUT::ShowInspectorImGui() {
 		ImGui::EndDisabled();
 	}
 
-	{ //!< infomation
+	{ //!< information
 
 		SxImGui::InputScalarN<uint32_t, 2>("tile", &tile_.x);
 

@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* lib
+#include <Lib/Sxl/Exception.h>
+
 //* windows
 #include <objbase.h>
 
@@ -22,7 +25,7 @@ Uuid Uuid::Generate() {
 
 	GUID guid;
 	if (CoCreateGuid(&guid) != S_OK) {
-		throw std::runtime_error("failed to generate UUID");
+		Sxl::Exception::RuntimeError("[Uuid]: failed to generate UUID.");
 	}
 
 	Uuid uuid = {};

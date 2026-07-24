@@ -30,6 +30,7 @@ void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 	float4 output = direct + indirect;
 	output.a = 1.0f;
 
-	gOutput[index] = output;
+	gOutput[index].rgb += output.rgb;
+	gOutput[index].a   = output.a;
 	
 }

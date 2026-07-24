@@ -5,11 +5,10 @@
 //-----------------------------------------------------------------------------------------
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* lib
 #include <Lib/Sxl/Flag.h>
-#include <Lib/Geometry/Color4.h>
 
 //* c++
 #include <memory>

@@ -11,7 +11,7 @@ SXAVENGER_ENGINE_USING
 
 //* engine
 #include <Engine/System/Utility/RuntimeLogger.h>
-#include <Engine/System/UI/SxImGui.h>
+#include <Engine/System/UI/SxGui.h>
 #include <Engine/Assets/Content/ContentStorage.h>
 #include <Engine/Components/Entity/EntityBehaviourStorage.h>
 #include <Engine/Components/Entity/BehaviourHelper.h>
@@ -24,6 +24,16 @@ SXAVENGER_ENGINE_USING
 //////////////////////////////////////////////////////////////////////////////////////////
 
 void HierarchyEditor::Init() {
+
+	//* actor items *//
+
+	actorItems_.emplace_back(SxGui::Icon::Cube, "Behaviour", [](EntityBehaviour* behaviour) { BehaviourHelper::CreateTransformBehaviour(behaviour); });
+	actorItems_.emplace_back(SxGui::Icon::Camera, "Camera", [](EntityBehaviour* behaviour) { BehaviourHelper::CreateCameraBehaviour(behaviour); });
+	actorItems_.emplace_back(SxGui::Icon::DirectionalLight, "Directional Light", [](EntityBehaviour* behaviour) { BehaviourHelper::CreateDirectionalLightBehaviour(behaviour); });
+	actorItems_.emplace_back(SxGui::Icon::PointLight, "Point Light", [](EntityBehaviour* behaviour) { BehaviourHelper::CreatePointLightBehaviour(behaviour); });
+	actorItems_.emplace_back(SxGui::Icon::SpotLight, "Spot Light", [](EntityBehaviour* behaviour) { BehaviourHelper::CreateSpotLightBehaviour(behaviour); });
+	actorItems_.emplace_back(SxGui::Icon::RectLight, "Rect Light", [](EntityBehaviour* behaviour) { BehaviourHelper::CreateRectLightBehaviour(behaviour); });
+
 }
 
 void HierarchyEditor::ShowMainMenu() {
@@ -32,6 +42,7 @@ void HierarchyEditor::ShowMainMenu() {
 
 void HierarchyEditor::ShowWindow() {
 	ShowHierarchyWindow();
+	ShowActorWindow();
 }
 
 void HierarchyEditor::LateUpdate() {
@@ -42,45 +53,8 @@ void HierarchyEditor::ShowHierarchyMenu() {
 		MenuPadding();
 		ImGui::SeparatorText("hierarchy");
 
-		ShowActorMenu();
 		ShowSceneMenu();
-
-		ImGui::EndMenu();
-	}
-}
-
-void HierarchyEditor::ShowActorMenu() {
-	if (ImGui::BeginMenu("actor")) {
-		MenuPadding();
-		ImGui::SeparatorText("actor");
-
-		ImGui::Text("Common");
-		ImGui::Separator();
-
-		if (ImGui::MenuItem("Behaviour")) {
-			BehaviourAddress address = BehaviourHelper::CreateTransformBehaviour();
-			address->SetMobility(EntityBehaviour::Mobility::Static);
-		}
-
-		ImGui::Dummy({ 0, 4 });
-
-		ImGui::Text("Punctual Light");
-		ImGui::Separator();
-
-		if (ImGui::MenuItem("Directional Light")) {
-			BehaviourAddress address = BehaviourHelper::CreateDirectionalLightBehaviour();
-			address->SetMobility(EntityBehaviour::Mobility::Static);
-		}
-
-		if (ImGui::MenuItem("Point Light")) {
-			BehaviourAddress address =  BehaviourHelper::CreatePointLightBehaviour();
-			address->SetMobility(EntityBehaviour::Mobility::Static);
-		}
-
-		if (ImGui::MenuItem("Spot Light")) {
-			BehaviourAddress address = BehaviourHelper::CreateSpotLightBehaviour();
-			address->SetMobility(EntityBehaviour::Mobility::Static);
-		}
+		ShowSummaryMenu();
 
 		ImGui::EndMenu();
 	}
@@ -102,9 +76,9 @@ void HierarchyEditor::ShowSceneMenu() {
 			if (filepath.has_value()) {
 				sEntityBehaviourStorage->ClearStaticBehaviours();
 				sEntityBehaviourStorage->InputJson(JsonHandler::LoadFromJson(filepath.value()));
-			}
 
-			RuntimeLogger::LogComment("[HierarchyEditor]", "load scene.");
+				RuntimeLogger::LogInformation("[HierarchyEditor]", "load scene. filepath: " + (*filepath).generic_string());
+			}
 		}
 
 		ImGui::SameLine();
@@ -123,45 +97,72 @@ void HierarchyEditor::ShowSceneMenu() {
 					filepath.value(),
 					sEntityBehaviourStorage->ParseToJson()
 				);
-			}
 
-			RuntimeLogger::LogComment("[HierarchyEditor]", "save scene.");
+				RuntimeLogger::LogInformation("[HierarchyEditor]", "save scene. filepath: " + (*filepath).generic_string());
+			}
 		}
 
 		if (ImGui::Button("clear")) {
 			sEntityBehaviourStorage->ClearStaticBehaviours();
-			RuntimeLogger::LogComment("[HierarchyEditor]", "clear scene.");
+			RuntimeLogger::LogInformation("[HierarchyEditor]", "clear scene.");
 		}
 
 		ImGui::EndMenu();
 	}
 }
 
-void HierarchyEditor::ShowHierarchyWindow() {
-	BaseEditor::SetNextWindowDocking();
-	ImGui::Begin("Hierarchy ## Hierarchy Editor", nullptr, BaseEditor::GetWindowFlag());
+void HierarchyEditor::ShowSummaryMenu() {
+	if (ImGui::BeginMenu("summary")) {
+		MenuPadding();
+		ImGui::SeparatorText("summary");
 
-	SxImGui::InputText("## hierarchy filter", hierarchyBuf_);
 
-	ImGui::Separator();
+		{ //!< Entity Behaviour Summary
+			ImGui::Text("Entity Behaviour Summary");
+			ImGui::Separator();
 
-	// hierarchyの表示
-	ImGui::PushStyleVarY(ImGuiStyleVar_ItemSpacing, 0);
+			size_t count        = 0;
+			size_t activeCount  = 0;
+			size_t rootCount    = 0;
+			size_t movableCount = 0;
 
-	if (hierarchyBuf_.empty()) {
-		//!< 通常表示
-		sEntityBehaviourStorage->ForEachRootOnly([this](EntityBehaviour* behaviour) {
-			HierarchySelectable(behaviour);
-		});
-		
-	} else {
-		//!< フィルター表示
-		sEntityBehaviourStorage->ForEachRootOnly([this](EntityBehaviour* behaviour) {
-			HierarchySelectableFilter(behaviour, hierarchyBuf_);
-		});
+			sEntityBehaviourStorage->ForEach([&](EntityBehaviour* behaviour) {
+				count++;
+				activeCount  += behaviour->IsActive();
+				rootCount    += behaviour->IsRoot();
+				movableCount += (behaviour->GetMobility() == EntityBehaviour::Mobility::Movable);
+			});
+
+			ImGui::Text(std::format("behaviour count: {}", count).c_str());
+			ImGui::Text(std::format("active behaviour count: {}", activeCount).c_str());
+			ImGui::Text(std::format("root behaviour count: {}", rootCount).c_str());
+			ImGui::Text(std::format("movable behaviour count: {}", movableCount).c_str());
+
+		}
+	
+
+
+		ImGui::EndMenu();
 	}
+}
 
-	ImGui::PopStyleVar();
+void HierarchyEditor::ShowHierarchyWindow() {
+
+	std::string label = std::format("{} Hierarchy ## Hierarchy Editor", SxGui::Icon::Hierarchy);
+
+	BaseEditor::SetNextWindowDocking();
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag());
+
+	SxGui::InputText("## hierarchy filter", hierarchyBuf_, std::format("{} Search Behaviour", SxGui::Icon::Search).c_str());
+
+	if (SxGui::Hierarchy::Begin(ImGuiTableFlags_BordersInnerV | ImGuiTableFlags_SizingFixedFit)) {
+
+		sEntityBehaviourStorage->ForEachRootOnly([this](EntityBehaviour* behaviour) {
+			HierarchySelectable(behaviour, hierarchyBuf_);
+		});
+
+		SxGui::Hierarchy::End();
+	}
 
 	{
 		ImVec2 position = ImGui::GetWindowPos();
@@ -193,9 +194,37 @@ void HierarchyEditor::ShowHierarchyWindow() {
 		sContentStorage->DragAndDropTargetContentFunc<ContentBehaviour>([this](const std::shared_ptr<ContentBehaviour>& content) {
 			content->WaitComplete(); // contentの読み込みを待つ
 			BehaviourAddress address = BehaviourHelper::Create();
-			address->InputJson(content->GetData());
+			address->DeserializeJson(content->GetData());
 			address->SetMobility(EntityBehaviour::Mobility::Static);
 		});
+	}
+
+	ImGui::End();
+}
+
+void HierarchyEditor::ShowActorWindow() {
+
+	std::string label = std::format("{} Actor ## Hierarchy Editor", SxGui::Icon::CubeUpdate);
+
+	BaseEditor::SetNextWindowDocking();
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag());
+
+
+	{ //!< Actor View
+		ImGui::BeginChild("## Actor View", ImVec2{}, ImGuiChildFlags_FrameStyle);
+
+		ImVec2 region = ImGui::GetContentRegionAvail();
+
+		for (const auto& item : actorItems_) {
+			if (ImGui::Button(std::format("{} | {}", item.icon, item.name).c_str(), { region.x, 32 })) {
+				BehaviourAddress address = BehaviourHelper::Create(item.name);
+				address->SetMobility(EntityBehaviour::Mobility::Static);
+				item.function(address.Get());
+				address->SetInspector(); //!< 追加したActorをInspectorで選択状態にする
+			}
+		}
+
+		ImGui::EndChild();
 	}
 
 	ImGui::End();
@@ -213,56 +242,60 @@ void HierarchyEditor::ForEachBehaviourHierarchy(const EntityBehaviour::Hierarchy
 	}
 }
 
-void HierarchyEditor::HierarchySelectable(EntityBehaviour* behaviour) {
+bool HierarchyEditor::HierarchyFilter(EntityBehaviour* behaviour, const std::string& filter) {
+	if (filter.empty()) {
+		return true; //!< filterが空の場合, 常にtrue
+	}
 
-	bool isSelect     = CheckSelected(behaviour);
-	std::string label = std::format("{} # {:p}", behaviour->GetName(), static_cast<const void*>(behaviour));
+	//!< 自身とfilterの比較
+	bool isFilter = (behaviour->GetName().find(filter) != std::string::npos);
+
+	// childのfilter確認
+	ForEachBehaviourHierarchy(behaviour->GetChildren(), [&](EntityBehaviour* child) {
+		isFilter |= HierarchyFilter(child, filter);
+	});
+
+	return isFilter;
+	
+}
+
+void HierarchyEditor::HierarchySelectable(EntityBehaviour* behaviour, const std::string& filter) {
+
+	if (!HierarchyFilter(behaviour, filter)) {
+		return; //!< filterに引っかからない場合, 処理しない
+	}
+
+	//!< mobilityによるicon変更
+	SxGui::Icon icon = behaviour->GetMobility() == EntityBehaviour::Mobility::Static ? SxGui::Icon::Cube : SxGui::Icon::ChessPawn;
+
+	bool isInspector  = behaviour->CheckInspector();
+	std::string label = std::format("{} {} # 0x{:x}", icon, behaviour->GetName(), behaviour->GetAddress());
 
 	bool hasChild = behaviour->HasChild();
 
 	if (!behaviour->IsActive()) {
-		ImGui::PushStyleColor(ImGuiCol_Text, { disableColor_.r, disableColor_.g, disableColor_.b, disableColor_.a });
+		ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyleColorVec4(ImGuiCol_TextDisabled));
 	}
 
-	ImGuiTreeNodeFlags flags
-		= ImGuiTreeNodeFlags_OpenOnDoubleClick
-		| ImGuiTreeNodeFlags_OpenOnArrow
-		| ImGuiTreeNodeFlags_FramePadding
-		| ImGuiTreeNodeFlags_SpanAllColumns
-		| ImGuiTreeNodeFlags_DrawLinesToNodes;
-
-	if (isSelect) {
-		flags |= ImGuiTreeNodeFlags_Selected;
-	}
-
-	if (!hasChild) {
-		flags |= ImGuiTreeNodeFlags_Leaf;
-		ImGui::Unindent();
-	}
-
-	bool isOpen = ImGui::TreeNodeEx(label.c_str(), flags);
-
-	if (!hasChild) {
-		ImGui::Indent();
-	}
+	bool isOpen = SxGui::Hierarchy::TreeNode(label.c_str(), isInspector, !hasChild);
 
 	if (!behaviour->IsActive()) {
 		ImGui::PopStyleColor();
 	}
 
-	//* event
-
-	if (ImGui::IsItemClicked()) {
-		SetSelected(behaviour);
-		isSelect = true;
+	//!< 選択処理
+	if (SxGui::Hierarchy::IsClicked()) {
+		behaviour->SetInspector();
+		isInspector = true;
 	}
 
-	if (isSelect && SxImGui::IsDoubleClickItem()) {
+	if (isInspector && SxGui::Hierarchy::IsDoubleClicked()) {
 		SetSelectedView(behaviour);
 	}
 
-	if (ImGui::BeginPopupContextItem(std::format("hierarchy behaviour context menu # {:p}", static_cast<const void*>(behaviour)).c_str())) {
-		ImGui::PopStyleVar();
+	//!< menu処理
+	// TODO: 関数化
+	if (ImGui::BeginPopupContextItem(std::format("hierarchy behaviour context menu # 0x{:x}", behaviour->GetAddress()).c_str())) {
 
 		ImGui::SeparatorText("behaviour context menu");
 		ImGui::Text("name: %s", behaviour->GetName().c_str());
@@ -276,125 +309,17 @@ void HierarchyEditor::HierarchySelectable(EntityBehaviour* behaviour) {
 		// TODO: Removeの追加
 
 		ImGui::EndPopup();
-
-		ImGui::PushStyleVarY(ImGuiStyleVar_ItemSpacing, 0);
 	}
 
+	//!< childの表示
 	if (isOpen) {
-		ForEachBehaviourHierarchy(behaviour->GetChildren(), [this](EntityBehaviour* child) {
-			HierarchySelectable(child);
+		ForEachBehaviourHierarchy(behaviour->GetChildren(), [this, &filter](EntityBehaviour* child) {
+			HierarchySelectable(child, filter);
 		});
 
-		ImGui::TreePop();
-	}
-	
-}
-
-bool HierarchyEditor::HierarchyFilter(EntityBehaviour* behaviour, const std::string& filter) {
-	// 自身とfilterの比較
-	bool result = (behaviour->GetName().find(filter) != std::string::npos);
-
-	// childとfilterの比較
-	ForEachBehaviourHierarchy(behaviour->GetChildren(), [&](EntityBehaviour* child) {
-		result |= HierarchyFilter(child, filter);
-	});
-
-	return result;
-}
-
-void HierarchyEditor::HierarchySelectableFilter(EntityBehaviour* behaviour, const std::string& filter) {
-
-	if (!HierarchyFilter(behaviour, filter)) {
-		return;
+		SxGui::Hierarchy::TreePop();
 	}
 
-	bool isSelect     = CheckSelected(behaviour);
-	std::string label = std::format("{} # {:p}", behaviour->GetName(), static_cast<const void*>(behaviour));
-
-	bool hasChild = !behaviour->HasChild();
-
-	if (!behaviour->IsActive()) {
-		ImGui::PushStyleColor(ImGuiCol_Text, { disableColor_.r, disableColor_.g, disableColor_.b, disableColor_.a });
-	}
-
-	ImGuiTreeNodeFlags flags
-		= ImGuiTreeNodeFlags_OpenOnDoubleClick
-		| ImGuiTreeNodeFlags_OpenOnArrow
-		| ImGuiTreeNodeFlags_FramePadding
-		| ImGuiTreeNodeFlags_SpanAllColumns
-		| ImGuiTreeNodeFlags_DrawLinesToNodes;
-
-	if (isSelect) {
-		flags |= ImGuiTreeNodeFlags_Selected;
-	}
-
-	if (!hasChild) {
-		flags |= ImGuiTreeNodeFlags_Leaf;
-		ImGui::Unindent();
-	}
-
-	bool isOpen = ImGui::TreeNodeEx(label.c_str(), flags);
-
-	if (!hasChild) {
-		ImGui::Indent();
-	}
-
-	if (!behaviour->IsActive()) {
-		ImGui::PopStyleColor();
-	}
-
-	//* event
-
-	if (ImGui::IsItemClicked()) {
-		SetSelected(behaviour);
-		isSelect = true;
-	}
-
-	if (isSelect && SxImGui::IsDoubleClickItem()) {
-		SetSelectedView(behaviour);
-	}
-
-	if (ImGui::BeginPopupContextItem(std::format("hierarchy behaviour context menu # {:p}", static_cast<const void*>(behaviour)).c_str())) {
-		ImGui::PopStyleVar();
-
-		ImGui::SeparatorText("behaviour context menu");
-		ImGui::Text("name: %s", behaviour->GetName().c_str());
-
-		ImGui::Separator();
-
-		if (ImGui::MenuItem("Add Child")) {
-			behaviour->AddChild(BehaviourHelper::CreateTransformBehaviour());
-		}
-
-		// TODO: Removeの追加
-
-		ImGui::EndPopup();
-
-		ImGui::PushStyleVarY(ImGuiStyleVar_ItemSpacing, 0);
-	}
-
-	if (isOpen) {
-		ForEachBehaviourHierarchy(behaviour->GetChildren(), [&](EntityBehaviour* child) {
-			HierarchySelectableFilter(child, filter);
-		});
-
-		ImGui::TreePop();
-	}
-
-}
-
-bool HierarchyEditor::CheckSelected(EntityBehaviour* behaviour) {
-	if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>()) {
-		return editor->CheckInspector(behaviour);
-	}
-
-	return false;
-}
-
-void HierarchyEditor::SetSelected(EntityBehaviour* behaviour) {
-	if (auto editor = BaseEditor::GetEditorEngine()->GetEditor<InspectorEditor>()) {
-		editor->SetInspector(behaviour);
-	}
 }
 
 void HierarchyEditor::SetSelectedView(EntityBehaviour* behaviour) {

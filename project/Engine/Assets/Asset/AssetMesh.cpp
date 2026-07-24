@@ -1,21 +1,17 @@
 #include "AssetMesh.h"
 SXAVENGER_ENGINE_USING
 
-//-----------------------------------------------------------------------------------------
-// include
-//-----------------------------------------------------------------------------------------
-//* engine
-#include <Engine/System/Utility/StreamLogger.h>
-
 ////////////////////////////////////////////////////////////////////////////////////////////
-// UAssetMesh class methods
+// AssetMesh class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void AssetMesh::Setup(const aiMesh* mesh) {
+void AssetMesh::Setup(const DirectXQueueContext* context, const aiMesh* mesh) {
+	context->RequestQueue(DirectXQueueContext::RenderQueue::Compute); //!< ComputeQueue以上を使用
+
+	// nameの設定
+	BaseAsset::SetName(mesh->mName.C_Str());
 
 	// meshの解析
-	// nameの設定
-	name_ = mesh->mName.C_Str();
 
 	// InputAssemblerの設定
 	auto& ia = input_;
@@ -29,12 +25,12 @@ void AssetMesh::Setup(const aiMesh* mesh) {
 
 		//!< position
 		const aiVector3D& position  = mesh->mVertices[element];
-		(*vertex)[element].position = ConvertPosition4(position);
+		(*vertex)[element].position = ConvertVector4(position);
 
 		//!< normal
 		if (mesh->HasNormals()) {
 			const aiVector3D& normal  = mesh->mNormals[element];
-			(*vertex)[element].normal = ConvertNormal(normal);
+			(*vertex)[element].normal = ConvertVector3(normal);
 		}
 
 		//!< texcoord
@@ -47,10 +43,10 @@ void AssetMesh::Setup(const aiMesh* mesh) {
 			//!< fixme: 左手座標系に変換
 			
 			const aiVector3D& tangent  = mesh->mTangents[element];
-			(*vertex)[element].tangent = { tangent.x, tangent.y, tangent.z }; //!< 左手座標系に変換
+			(*vertex)[element].tangent = ConvertVector3(tangent); //!< 左手座標系に変換
 
 			const aiVector3D& bitangent  = mesh->mBitangents[element];
-			(*vertex)[element].bitangent = { bitangent.x, bitangent.y, bitangent.z }; //!< 左手座標系に変換
+			(*vertex)[element].bitangent = ConvertVector3(bitangent); //!< 左手座標系に変換
 		}
 	}
 
@@ -87,7 +83,7 @@ void AssetMesh::Setup(const aiMesh* mesh) {
 		Matrix4x4 bindPoseMatrix = Matrix4x4::MakeAffine(
 			{ scale.x, scale.y, scale.z },
 			ConvertQuaternion(rotate),
-			ConvertPosition3(translate)
+			ConvertVector3(translate)
 		);
 
 		// inverseBindOiseMatrixにする
@@ -99,37 +95,16 @@ void AssetMesh::Setup(const aiMesh* mesh) {
 		}
 	}
 
-	input_.CreateMeshlet();
+	input_.CreateMeshlet(); //!< meshletの生成
+	input_.CreateBottomLevelAS(context); //!< BLASの生成
 
-	BaseAsset::Complete();
-	StreamLogger::EngineThreadLog(std::format("[AssetMesh]: mesh setup complete. uuid: {}", BaseAsset::GetId().Serialize()));
+	BaseAsset::SetComplete();
+	StreamLogger::EngineThreadLog(std::format("[AssetMesh]: mesh setup complete. uuid: {}", BaseAsset::SerializeId()));
+
 }
 
-void AssetMesh::Update(const DirectXQueueContext* context) {
-	BaseAsset::WaitComplete();
-
-	if (!input_.IsCreateBottomLevelAS()) {
-		input_.CreateBottomLevelAS(context);
-	}
-
-	// todo: 仮meshの追加
-}
-
-void AssetMesh::ShowInspector() {
-	BaseAsset::ShowInspector();
-
-	if (!BaseAsset::IsComplete()) {
-		ImGui::Text("loading...");
-		return;
-	}
-
-	ImGui::Text("name:         %s", name_.c_str());
-	ImGui::Text("vertex count: %u", input_.GetVertex()->GetSize());
-	ImGui::Text("index count:  %u", input_.GetIndex()->GetSize());
-}
-
-void AssetMesh::BindIABuffer(const DirectXQueueContext* context) const {
-	input_.BindIABuffer(context);
+void AssetMesh::BindInputAssembler(const DirectXQueueContext* context) const {
+	input_.BindInputAssembler(context);
 }
 
 void AssetMesh::DrawCall(const DirectXQueueContext* context, UINT instanceCount) const {
@@ -137,24 +112,15 @@ void AssetMesh::DrawCall(const DirectXQueueContext* context, UINT instanceCount)
 }
 
 const InputMesh& AssetMesh::GetInputMesh() const {
-	BaseAsset::WaitComplete();
+	BaseAsset::WaitComplete(); //!< TODO: 仮meshを用意する.
 	return input_;
 }
 
-InputMesh& AssetMesh::GetInputMesh() {
-	BaseAsset::WaitComplete();
-	return input_;
-}
-
-Vector3f AssetMesh::ConvertNormal(const aiVector3D& aiVector) {
+Vector3f AssetMesh::ConvertVector3(const aiVector3D& aiVector) {
 	return { aiVector.x, aiVector.y, -aiVector.z }; //!< 左手座標系に変換
 }
 
-Vector3f AssetMesh::ConvertPosition3(const aiVector3D& aiVector) {
-	return { aiVector.x, aiVector.y, -aiVector.z }; //!< 左手座標系に変換
-}
-
-Vector4f AssetMesh::ConvertPosition4(const aiVector3D& aiVector) {
+Vector4f AssetMesh::ConvertVector4(const aiVector3D& aiVector) {
 	return { aiVector.x, aiVector.y, -aiVector.z, 1.0f }; //!< 左手座標系に変換
 }
 

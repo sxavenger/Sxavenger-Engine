@@ -23,11 +23,19 @@ RectTransformComponent::RectTransformComponent(EntityBehaviour* behaviour) : Bas
 }
 
 void RectTransformComponent::ShowComponentInspector() {
-	transform_.SetImGuiCommand();
+	SxGui::DragVectorN<float, 2>("translate", &transform_.translate.x, 0.1f);
+	ImGui::SliderAngle("rotate", &transform_.rotate);
+	SxGui::DragVectorN<float, 2>("scale", &transform_.scale.x, 0.1f);
+
+	ImGui::Separator();
+
+	SxGui::DragVectorN<float, 2>("pivot", &transform_.pivot.x, 0.01f, 0.0f, 1.0f, "%.2f");
+	SxImGui::DragFloat("priority", &transform_.priority, 0.01f, 0.0f, 1.0f);
+
 	UpdateMatrix();
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& RectTransformComponent::GetGPUVirtualAddress() const {
+const D3D12_GPU_VIRTUAL_ADDRESS RectTransformComponent::GetGPUVirtualAddress() const {
 	StreamLogger::AssertA(buffer_ != nullptr, "transform buffer is not create.");
 	return buffer_->GetGPUVirtualAddress();
 }
@@ -61,13 +69,13 @@ const Vector2f RectTransformComponent::GetPosition() const {
 
 json RectTransformComponent::ParseToJson() const {
 	json component = json::object();
-	component["transform"] = transform_.ParseToJson();
+	component["transform"] = transform_.Serialize();
 
 	return component;
 }
 
 void RectTransformComponent::InputJson(const json& data) {
-	transform_.InputJson(data.at("transform"));
+	transform_ = RectTransform::Deserialize(data.at("transform"));
 }
 
 void RectTransformComponent::TransferGPU() {

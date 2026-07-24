@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------------------------
 //* external
 #include <imgui.h>
+#include <magic_enum.hpp>
 
 //* c++
 #include <optional>
@@ -91,6 +92,8 @@ namespace SxImGui {
 	bool MultilineInputTextFunc(const char* label, const std::string& dst, const std::function<void(const std::string&)>& func, const ImVec2& size = ImVec2(0, 0), ImGuiInputTextFlags flags = ImGuiInputTextFlags_None);
 
 	void PlotHistogramFunc(const char* label, const std::function<float(int32_t idx)>& func, int32_t values_count, int32_t values_offset = 0, const char* overlay_text = NULL, const std::optional<float>& scale_min = std::nullopt, const std::optional<float>& scale_max = std::nullopt, ImVec2 graph_size = ImVec2(0, 0));
+
+	void PlotLinesFunc(const char* label, const std::function<float(int32_t idx)>& func, int32_t values_count, int32_t values_offset = 0, const char* overlay_text = NULL, const std::optional<float>& scale_min = std::nullopt, const std::optional<float>& scale_max = std::nullopt, ImVec2 graph_size = ImVec2(0, 0));
 
 	bool BeginHoveredTooltip(ImGuiHoveredFlags flags = ImGuiHoveredFlags_None);
 

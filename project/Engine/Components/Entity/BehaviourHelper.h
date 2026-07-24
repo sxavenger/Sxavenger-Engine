@@ -12,6 +12,7 @@
 #include <Engine/Graphics/Animation/Animation.h>
 #include <Engine/Assets/Content/ContentModel.h>
 #include <Engine/Assets/Asset/AssetMaterial.h>
+#include <Engine/Components/Component/MeshRenderer/MeshRendererCommon.h>
 
 //* c++
 #include <string>
@@ -38,20 +39,29 @@ public:
 
 	//* create helper *//
 
+	static void CreateTransformBehaviour(EntityBehaviour* behaviour);
 	static void CreateTransformBehaviour(const BehaviourAddress& address);
 	static BehaviourAddress CreateTransformBehaviour();
 
+	static void CreateCameraBehaviour(EntityBehaviour* behaviour);
 	static void CreateCameraBehaviour(const BehaviourAddress& address);
 	static BehaviourAddress CreateCameraBehaviour();
 
+	static void CreateDirectionalLightBehaviour(EntityBehaviour* behaviour);
 	static void CreateDirectionalLightBehaviour(const BehaviourAddress& address);
 	static BehaviourAddress CreateDirectionalLightBehaviour();
 
+	static void CreatePointLightBehaviour(EntityBehaviour* behaviour);
 	static void CreatePointLightBehaviour(const BehaviourAddress& address);
 	static BehaviourAddress CreatePointLightBehaviour();
 
+	static void CreateSpotLightBehaviour(EntityBehaviour* behaviour);
 	static void CreateSpotLightBehaviour(const BehaviourAddress& address);
 	static BehaviourAddress CreateSpotLightBehaviour();
+
+	static void CreateRectLightBehaviour(EntityBehaviour* behaviour);
+	static void CreateRectLightBehaviour(const BehaviourAddress& address);
+	static BehaviourAddress CreateRectLightBehaviour();
 
 	static void CreateStaticMeshBehaviour(const BehaviourAddress& address, const std::shared_ptr<ContentModel>& model);
 	static BehaviourAddress CreateStaticMeshBehaviour(const std::shared_ptr<ContentModel>& model);
@@ -64,6 +74,9 @@ public:
 	static void ForEachBehaviour(EntityBehaviour* behaviour, const std::function<void(EntityBehaviour*)>& function);
 	static void ForEachBehaviour(const BehaviourAddress& address, const std::function<void(EntityBehaviour*)>& function);
 
+	//* mesh renderer helper *//
+
+	static void SetMeshRendererMode(const BehaviourAddress& address, MeshRendererCommon::Mode mode);
 
 	//* animation helper *//
 
@@ -85,6 +98,12 @@ public:
 
 	static void ModifyBehaviourMaterial(EntityBehaviour* behaviour, const std::function<void(AssetMaterial*)>& function);
 	static void ModifyBehaviourMaterial(const BehaviourAddress& address, const std::function<void(AssetMaterial*)>& function);
+
+	//* json helper *//
+
+	static void LoadBehaviour(const BehaviourAddress& address, const std::filesystem::path& filepath);
+
+	static void SaveBehaviour(const BehaviourAddress& address, const std::filesystem::path& filepath);
 
 private:
 

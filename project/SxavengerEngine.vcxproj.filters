@@ -1,21 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Demo">
-      <UniqueIdentifier>{6A15847C-564C-850D-FF38-6B10EB4E010F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Demo\Camera">
-      <UniqueIdentifier>{A22E10BF-0EE4-88B4-97D8-828B038D7FB8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Demo\Execution">
-      <UniqueIdentifier>{6D904BF5-595E-3FFB-42F2-AF212E5F1B60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Demo\Interact">
-      <UniqueIdentifier>{D39B6A46-3F5C-E67C-0897-2FFA74162B59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Demo\Player">
-      <UniqueIdentifier>{460B24DE-B2C0-9CD3-3BB5-96AAA76993D7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{DBC7D3B0-C769-FE86-B024-12DB9C6585D7}</UniqueIdentifier>
     </Filter>
@@ -49,6 +34,9 @@
     <Filter Include="Engine\Components\Component\Collider">
       <UniqueIdentifier>{6F4D3E08-5B34-0000-0485-661DF04A7966}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Components\Component\DecalRenderer">
+      <UniqueIdentifier>{917214C7-FD8C-7768-46AF-87FCB2089F6F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Components\Component\Light">
       <UniqueIdentifier>{997B1D92-05EA-7211-4ED3-2D11BA8068AD}</UniqueIdentifier>
     </Filter>
@@ -58,8 +46,14 @@
     <Filter Include="Engine\Components\Component\Light\Punctual">
       <UniqueIdentifier>{142B6A2E-0093-30FC-69FE-4412558547E8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Components\Component\Light\Rect">
+      <UniqueIdentifier>{D6D428BF-C226-00AF-AB45-3DBF97361998}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Components\Component\MeshRenderer">
       <UniqueIdentifier>{E5B9FA95-D136-EED8-FAB3-EEECE68F8A6C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Components\Component\MonoScript">
+      <UniqueIdentifier>{AFE386C5-9B35-5EB5-8454-9BC57045779E}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Components\Component\PostProcessLayer">
       <UniqueIdentifier>{A3FE43C3-8F11-441C-38FB-200924EDE069}</UniqueIdentifier>
@@ -115,8 +109,14 @@
     <Filter Include="Engine\Module\Pipeline">
       <UniqueIdentifier>{55D74E13-41D1-7765-2A3E-0E7616D7DDD1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Module\Scene">
+      <UniqueIdentifier>{4D6A813A-B9CB-5E48-4239-A5FAAE999507}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Render">
       <UniqueIdentifier>{EAE1D856-56A2-548D-1FDD-9D0A8B5C9969}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Render\Buffer">
+      <UniqueIdentifier>{93D882C8-7F67-0C92-2886-208D14F41C38}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Render\Common">
       <UniqueIdentifier>{E2636FCA-CEF2-F893-7711-0D8F637F093A}</UniqueIdentifier>
@@ -124,17 +124,11 @@
     <Filter Include="Engine\Render\Core">
       <UniqueIdentifier>{82C8DD5B-6EAC-9EB1-D70C-9904C30F8933}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Render\GBuffer">
-      <UniqueIdentifier>{3A75D9E3-A6E1-94DE-6FD5-2C3CDB00B746}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Render\Pass">
       <UniqueIdentifier>{10AEE45B-FC91-A5B1-65F2-9F0451F58F33}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Render\Scene">
       <UniqueIdentifier>{8796B1D8-F3F7-8EE6-7C65-D598E8C5C5A5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Render\Scene\ColorGrading">
-      <UniqueIdentifier>{F1626C9C-DDB3-57DE-0618-46A0F2C7EA47}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\System">
       <UniqueIdentifier>{8FF69A5A-FBB6-1691-C4F1-5F0E30715B6D}</UniqueIdentifier>
@@ -154,8 +148,14 @@
     <Filter Include="Engine\System\DirectX\DxrObject">
       <UniqueIdentifier>{6598DD01-D17B-EC41-DA7E-1A7E46E1B292}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\System\Mono">
+      <UniqueIdentifier>{9707F530-83EB-B586-EC4B-B0D9D84EA008}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\System\Runtime">
       <UniqueIdentifier>{C222E51B-2E8F-A016-F782-387463AEC27E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\System\Runtime\Async">
+      <UniqueIdentifier>{6F7BD4B7-DB88-029E-646F-FE88D07BCE54}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\System\Runtime\Execution">
       <UniqueIdentifier>{C52BFF8E-310F-0ECF-3A12-3C0BA674D41F}</UniqueIdentifier>
@@ -169,9 +169,6 @@
     <Filter Include="Engine\System\Runtime\Performance">
       <UniqueIdentifier>{23757C96-8FE3-D115-D8CC-8C15447AC7B1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\System\Runtime\Thread">
-      <UniqueIdentifier>{E9E2EADD-D59D-DA89-7E55-53D46AEF241A}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\System\UI">
       <UniqueIdentifier>{5C738E13-486C-AD65-719E-92EA5DF68C71}</UniqueIdentifier>
     </Filter>
@@ -183,6 +180,12 @@
     </Filter>
     <Filter Include="Engine\System\Window">
       <UniqueIdentifier>{962C3C59-82BB-C522-2BDA-D91D1748D6C8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals">
+      <UniqueIdentifier>{7B3ECCEB-E7A8-8062-30E7-31089C905EB7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Externals\stb">
+      <UniqueIdentifier>{53C2885C-BF82-0493-88BD-4D10F43C496F}</UniqueIdentifier>
     </Filter>
     <Filter Include="Lib">
       <UniqueIdentifier>{1C04880B-880D-887C-1189-9E7C7D91937C}</UniqueIdentifier>
@@ -196,14 +199,20 @@
     <Filter Include="Lib\Adapter\Random">
       <UniqueIdentifier>{BC77C5C7-A85B-861D-11BC-8070FDBE709F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lib\Adapter\String">
+      <UniqueIdentifier>{92B874CB-7E9C-3521-E7FC-2F74D3FF1FA3}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Lib\Adapter\Time">
       <UniqueIdentifier>{AA635815-965C-7767-BF8E-5CECABE65673}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lib\Adapter\TracePoint">
+      <UniqueIdentifier>{54DBD7F7-40D5-004A-2942-975A15DB66B6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Lib\Adapter\Uuid">
       <UniqueIdentifier>{92225915-7E1B-7867-A74D-5DEC93A55773}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lib\Geometry">
-      <UniqueIdentifier>{F790A372-E3F3-3217-8C79-6BCD78BBFE99}</UniqueIdentifier>
+    <Filter Include="Lib\Math">
+      <UniqueIdentifier>{755AF919-6127-5425-8A40-42CD766C89B3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Lib\Motion">
       <UniqueIdentifier>{C135B77E-ADED-F8CB-16F5-D12702CC93BC}</UniqueIdentifier>
@@ -214,36 +223,9 @@
     <Filter Include="Lib\Transform">
       <UniqueIdentifier>{E7AE5A7E-536F-D6B4-1CAA-1F3288291B91}</UniqueIdentifier>
     </Filter>
-    <Filter Include="externals">
-      <UniqueIdentifier>{9B5E5A7B-07C9-0EF2-5007-C097BCB0EC46}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="externals\meshoptimizer">
-      <UniqueIdentifier>{BA959FAD-26CD-E744-2FD7-4B689B8D0E3E}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="externals\stb">
-      <UniqueIdentifier>{73F26948-DFB2-E57E-A8ED-2EFC146D2A5B}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Demo\Camera\CameraHandle.h">
-      <Filter>Demo\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Demo\Camera\PerspectiveCamera.h">
-      <Filter>Demo\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="Demo\Execution\DemoGameLoop.h">
-      <Filter>Demo\Execution</Filter>
-    </ClInclude>
-    <ClInclude Include="Demo\Interact\InteractItem.h">
-      <Filter>Demo\Interact</Filter>
-    </ClInclude>
-    <ClInclude Include="Demo\Player\Player.h">
-      <Filter>Demo\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Demo\Player\PlayerHandle.h">
-      <Filter>Demo\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Assets\Asset\AssetAnimation.h">
+    <ClInclude Include="Engine\Assets\Asset\AssetAnimationClip.h">
       <Filter>Engine\Assets\Asset</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Assets\Asset\AssetAudioClip.h">
@@ -345,9 +327,6 @@
     <ClInclude Include="Engine\Components\Component\Collider\CollisionDetection.h">
       <Filter>Engine\Components\Component\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\Collider\CollisionHelper.h">
-      <Filter>Engine\Components\Component\Collider</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Components\Component\Collider\CollisionManager.h">
       <Filter>Engine\Components\Component\Collider</Filter>
     </ClInclude>
@@ -356,6 +335,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\ComponentStorage.h">
       <Filter>Engine\Components\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Components\Component\DecalRenderer\DecalRendererComponent.h">
+      <Filter>Engine\Components\Component\DecalRenderer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\Light\Environment\SkyAtmosphereComponent.h">
       <Filter>Engine\Components\Component\Light\Environment</Filter>
@@ -375,6 +357,9 @@
     <ClInclude Include="Engine\Components\Component\Light\Punctual\SpotLightComponent.h">
       <Filter>Engine\Components\Component\Light\Punctual</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Components\Component\Light\Rect\RectLightComponent.h">
+      <Filter>Engine\Components\Component\Light\Rect</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Components\Component\MeshRenderer\MeshRendererCommon.h">
       <Filter>Engine\Components\Component\MeshRenderer</Filter>
     </ClInclude>
@@ -387,19 +372,16 @@
     <ClInclude Include="Engine\Components\Component\MeshRenderer\SkinnedMeshRendererComponent.h">
       <Filter>Engine\Components\Component\MeshRenderer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Components\Component\MonoScript\MonoScriptComponent.h">
+      <Filter>Engine\Components\Component\MonoScript</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\BasePostProcess.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessAutoExposure.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessBloom.h">
-      <Filter>Engine\Components\Component\PostProcessLayer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessChromaticAberration.h">
-      <Filter>Engine\Components\Component\PostProcessLayer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessDoF.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessGrayScale.h">
@@ -414,7 +396,10 @@
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessLocalExposure.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessMotionBlur.h">
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessPostFx.h">
+      <Filter>Engine\Components\Component\PostProcessLayer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessPosterize.h">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessRadialBlur.h">
@@ -546,6 +531,9 @@
     <ClInclude Include="Engine\Module\Actor\PerformanceActor.h">
       <Filter>Engine\Module\Actor</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Module\Actor\PerspectiveCameraActor.h">
+      <Filter>Engine\Module\Actor</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Module\Exporter\TextureExporter.h">
       <Filter>Engine\Module\Exporter</Filter>
     </ClInclude>
@@ -564,37 +552,88 @@
     <ClInclude Include="Engine\Module\Pipeline\CustomGraphicsPipeline.h">
       <Filter>Engine\Module\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Common\FBaseTexture.h">
-      <Filter>Engine\Render\Common</Filter>
+    <ClInclude Include="Engine\Module\Scene\BaseScene.h">
+      <Filter>Engine\Module\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Common\FDepthTexture.h">
+    <ClInclude Include="Engine\Module\Scene\SceneController.h">
+      <Filter>Engine\Module\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\Scene\SceneFactory.h">
+      <Filter>Engine\Module\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FBaseBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FDepthStencilBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FGBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FLightAccumulationBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FMainBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FProcessBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FRenderTargetBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FReservoirBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FSkyReservoirBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Buffer\FTransparentBuffer.h">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Common\FDepthStencilTexture.h">
       <Filter>Engine\Render\Common</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Common\FLUTTexture.h">
       <Filter>Engine\Render\Common</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Common\FPriorityTexture.h">
-      <Filter>Engine\Render\Common</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Render\Common\FProcessTexture.h">
       <Filter>Engine\Render\Common</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Render\Common\FRenderTexture.h">
+      <Filter>Engine\Render\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FBaseRenderCore.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCore.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreCanvas.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreDecal.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreDirectLight.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreGeometry.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Core\FRenderCoreLight.h">
-      <Filter>Engine\Render\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Render\Core\FRenderCoreProbe.h">
+    <ClInclude Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreProcess.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Core\FRenderCoreRestir.h">
+    <ClInclude Include="Engine\Render\Core\FRenderCoreReSTIR.h">
+      <Filter>Engine\Render\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Core\FRenderCoreSkyLight.h">
       <Filter>Engine\Render\Core</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Core\FRenderCoreTransition.h">
@@ -606,28 +645,13 @@
     <ClInclude Include="Engine\Render\FPresenter.h">
       <Filter>Engine\Render</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\FRenderCore.h">
-      <Filter>Engine\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Render\FRenderTargetBuffer.h">
-      <Filter>Engine\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Render\GBuffer\FDeferredGBuffer.h">
-      <Filter>Engine\Render\GBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Render\GBuffer\FLightingGBuffer.h">
-      <Filter>Engine\Render\GBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Render\GBuffer\FMainGBuffer.h">
-      <Filter>Engine\Render\GBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Render\GBuffer\FProbeGBuffer.h">
-      <Filter>Engine\Render\GBuffer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Render\GBuffer\FTransparentGBuffer.h">
-      <Filter>Engine\Render\GBuffer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FBaseRenderPass.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderConfig.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassAmbientOcclusion.h">
       <Filter>Engine\Render\Pass</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassAntiAliasing.h">
@@ -642,10 +666,19 @@
     <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredBase.h">
       <Filter>Engine\Render\Pass</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredLighting.h">
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredGlobalIllumination.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassDeferredSkyLighting.h">
       <Filter>Engine\Render\Pass</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassForwardTransparent.h">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Render\Pass\FRenderPassLightingComposite.h">
       <Filter>Engine\Render\Pass</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassPostProcess.h">
@@ -653,9 +686,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Render\Pass\FRenderPassTonemap.h">
       <Filter>Engine\Render\Pass</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Render\Scene\ColorGrading\FColorGrading.h">
-      <Filter>Engine\Render\Scene\ColorGrading</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Render\Scene\FScene.h">
       <Filter>Engine\Render\Scene</Filter>
@@ -675,6 +705,9 @@
     <ClInclude Include="Engine\System\DirectX\DirectXCommon.h">
       <Filter>Engine\System\DirectX</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DirectXPixEvent.h">
+      <Filter>Engine\System\DirectX</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
@@ -688,9 +721,6 @@
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxComputePipelineState.h">
-      <Filter>Engine\System\DirectX\DxObject</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\System\DirectX\DxObject\DxConstantBuffer.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDepthStencil.h">
@@ -708,6 +738,9 @@
     <ClInclude Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxGeometryDimensionBuffer.h">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
@@ -715,6 +748,9 @@
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxReadbackDimensionBuffer.h">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\DirectX\DxObject\DxResource.h">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.h">
@@ -756,6 +792,30 @@
     <ClInclude Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.h">
       <Filter>Engine\System\DirectX\DxrObject</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\Mono\MonoAssembly.h">
+      <Filter>Engine\System\Mono</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Mono\MonoCommon.h">
+      <Filter>Engine\System\Mono</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Mono\MonoController.h">
+      <Filter>Engine\System\Mono</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Mono\MonoDomain.h">
+      <Filter>Engine\System\Mono</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Mono\MonoInstance.h">
+      <Filter>Engine\System\Mono</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Runtime\Async\AsyncExecutionTask.h">
+      <Filter>Engine\System\Runtime\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Runtime\Async\AsyncExecutionThread.h">
+      <Filter>Engine\System\Runtime\Async</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Runtime\Async\AsyncExecutionThreadPool.h">
+      <Filter>Engine\System\Runtime\Async</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\Runtime\Execution\ExecutionContext.h">
       <Filter>Engine\System\Runtime\Execution</Filter>
     </ClInclude>
@@ -777,20 +837,14 @@
     <ClInclude Include="Engine\System\Runtime\Performance\DeltaTimePoint.h">
       <Filter>Engine\System\Runtime\Performance</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\Runtime\Performance\LapTimer.h">
-      <Filter>Engine\System\Runtime\Performance</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\System\Runtime\Performance\Performance.h">
       <Filter>Engine\System\Runtime\Performance</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\Runtime\Thread\AsyncTask.h">
-      <Filter>Engine\System\Runtime\Thread</Filter>
+    <ClInclude Include="Engine\System\Runtime\Performance\TimestampCpu.h">
+      <Filter>Engine\System\Runtime\Performance</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\System\Runtime\Thread\AsyncThread.h">
-      <Filter>Engine\System\Runtime\Thread</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\System\Runtime\Thread\AsyncThreadCollection.h">
-      <Filter>Engine\System\Runtime\Thread</Filter>
+    <ClInclude Include="Engine\System\Runtime\Performance\TimestampGpu.h">
+      <Filter>Engine\System\Runtime\Performance</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\System.h">
       <Filter>Engine\System</Filter>
@@ -801,6 +855,12 @@
     <ClInclude Include="Engine\System\UI\ImGuiController.h">
       <Filter>Engine\System\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\System\UI\SxGui.h">
+      <Filter>Engine\System\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\UI\SxGuiInternal.h">
+      <Filter>Engine\System\UI</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\System\UI\SxImGui.h">
       <Filter>Engine\System\UI</Filter>
     </ClInclude>
@@ -808,9 +868,6 @@
       <Filter>Engine\System\UI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\Utility\ComPtr.h">
-      <Filter>Engine\System\Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\System\Utility\Convert.h">
       <Filter>Engine\System\Utility</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\Utility\RuntimeLogger.h">
@@ -834,50 +891,62 @@
     <ClInclude Include="Lib\Adapter\Random\Random.h">
       <Filter>Lib\Adapter\Random</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\Adapter\String\EncodedString.h">
+      <Filter>Lib\Adapter\String</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Adapter\Time\LocalTimePoint.h">
+      <Filter>Lib\Adapter\Time</Filter>
+    </ClInclude>
     <ClInclude Include="Lib\Adapter\Time\RunTimeTracker.h">
       <Filter>Lib\Adapter\Time</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Adapter\Time\TimePoint.h">
       <Filter>Lib\Adapter\Time</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\Adapter\TracePoint\TracePoint.h">
+      <Filter>Lib\Adapter\TracePoint</Filter>
+    </ClInclude>
     <ClInclude Include="Lib\Adapter\Uuid\Uuid.h">
       <Filter>Lib\Adapter\Uuid</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\CXXAttributeConfig.h">
+    <ClInclude Include="Lib\CXXAttribute.h">
       <Filter>Lib</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Easing.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Color3.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Color3.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Color4.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Color4.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\GeometryMath.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\GeometryMath.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Matrix4x4.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Matrix4x4.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Quaternion.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Quaternion.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Vector2.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Vector2.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Vector3.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Vector3.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\Vector4.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\Vector4.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Geometry\VectorComparision.h">
-      <Filter>Lib\Geometry</Filter>
+    <ClInclude Include="Lib\Math\VectorComparison.h">
+      <Filter>Lib\Math</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Motion\Motion.h">
       <Filter>Lib\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Sxl\Exception.h">
+      <Filter>Lib\Sxl</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Sxl\Expected.h">
       <Filter>Lib\Sxl</Filter>
@@ -886,6 +955,9 @@
       <Filter>Lib\Sxl</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Sxl\Formatter.h">
+      <Filter>Lib\Sxl</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Sxl\IndexAllocator.h">
       <Filter>Lib\Sxl</Filter>
     </ClInclude>
     <ClInclude Include="Lib\Sxl\OptimizedMap.h">
@@ -897,6 +969,9 @@
     <ClInclude Include="Lib\Sxl\OptimizedPathSet.h">
       <Filter>Lib\Sxl</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\Sxl\SubclassRegistry.h">
+      <Filter>Lib\Sxl</Filter>
+    </ClInclude>
     <ClInclude Include="Lib\Sxl\SxavengerLibrary.h">
       <Filter>Lib\Sxl</Filter>
     </ClInclude>
@@ -906,33 +981,32 @@
     <ClInclude Include="Lib\Traits.h">
       <Filter>Lib</Filter>
     </ClInclude>
-    <ClInclude Include="Lib\Transform\Transform.h">
+    <ClInclude Include="Lib\Transform\Basis.h">
       <Filter>Lib\Transform</Filter>
     </ClInclude>
-    <ClInclude Include="externals\meshoptimizer\meshoptimizer.h">
-      <Filter>externals\meshoptimizer</Filter>
+    <ClInclude Include="Lib\Transform\RectTransform.h">
+      <Filter>Lib\Transform</Filter>
     </ClInclude>
+    <ClInclude Include="Lib\Transform\Transform2d.h">
+      <Filter>Lib\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Transform\TransformEuler.h">
+      <Filter>Lib\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Transform\TransformQuaternion.h">
+      <Filter>Lib\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Transform\Transformation.h">
+      <Filter>Lib\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Lib\Transform\TransformationMatrix.h">
+      <Filter>Lib\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\System\Utility\CrashHandler.h" />
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessSketch.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Demo\Camera\CameraHandle.cpp">
-      <Filter>Demo\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Demo\Camera\PerspectiveCamera.cpp">
-      <Filter>Demo\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="Demo\Execution\DemoGameLoop.cpp">
-      <Filter>Demo\Execution</Filter>
-    </ClCompile>
-    <ClCompile Include="Demo\Interact\InteractItem.cpp">
-      <Filter>Demo\Interact</Filter>
-    </ClCompile>
-    <ClCompile Include="Demo\Player\Player.cpp">
-      <Filter>Demo\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Demo\Player\PlayerHandle.cpp">
-      <Filter>Demo\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Assets\Asset\AssetAnimation.cpp">
+    <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp">
       <Filter>Engine\Assets\Asset</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Assets\Asset\AssetAudioClip.cpp">
@@ -1028,9 +1102,6 @@
     <ClCompile Include="Engine\Components\Component\Collider\CollisionDetection.cpp">
       <Filter>Engine\Components\Component\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Component\Collider\CollisionHelper.cpp">
-      <Filter>Engine\Components\Component\Collider</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Components\Component\Collider\CollisionManager.cpp">
       <Filter>Engine\Components\Component\Collider</Filter>
     </ClCompile>
@@ -1039,6 +1110,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\ComponentStorage.cpp">
       <Filter>Engine\Components\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Components\Component\DecalRenderer\DecalRendererComponent.cpp">
+      <Filter>Engine\Components\Component\DecalRenderer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\Light\Environment\SkyAtmosphereComponent.cpp">
       <Filter>Engine\Components\Component\Light\Environment</Filter>
@@ -1058,6 +1132,9 @@
     <ClCompile Include="Engine\Components\Component\Light\Punctual\SpotLightComponent.cpp">
       <Filter>Engine\Components\Component\Light\Punctual</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Components\Component\Light\Rect\RectLightComponent.cpp">
+      <Filter>Engine\Components\Component\Light\Rect</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Components\Component\MeshRenderer\MeshRendererComponent.cpp">
       <Filter>Engine\Components\Component\MeshRenderer</Filter>
     </ClCompile>
@@ -1067,16 +1144,13 @@
     <ClCompile Include="Engine\Components\Component\MeshRenderer\SkinnedMeshRendererComponent.cpp">
       <Filter>Engine\Components\Component\MeshRenderer</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Components\Component\MonoScript\MonoScriptComponent.cpp">
+      <Filter>Engine\Components\Component\MonoScript</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessAutoExposure.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessBloom.cpp">
-      <Filter>Engine\Components\Component\PostProcessLayer</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessChromaticAberration.cpp">
-      <Filter>Engine\Components\Component\PostProcessLayer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessDoF.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessGrayScale.cpp">
@@ -1091,7 +1165,10 @@
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessLocalExposure.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessMotionBlur.cpp">
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessPostFx.cpp">
+      <Filter>Engine\Components\Component\PostProcessLayer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessPosterize.cpp">
       <Filter>Engine\Components\Component\PostProcessLayer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessRadialBlur.cpp">
@@ -1205,6 +1282,9 @@
     <ClCompile Include="Engine\Module\Actor\PerformanceActor.cpp">
       <Filter>Engine\Module\Actor</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Module\Actor\PerspectiveCameraActor.cpp">
+      <Filter>Engine\Module\Actor</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Module\Exporter\TextureExporter.cpp">
       <Filter>Engine\Module\Exporter</Filter>
     </ClCompile>
@@ -1217,37 +1297,85 @@
     <ClCompile Include="Engine\Module\Pipeline\CustomGraphicsPipeline.cpp">
       <Filter>Engine\Module\Pipeline</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Render\Common\FBaseTexture.cpp">
-      <Filter>Engine\Render\Common</Filter>
+    <ClCompile Include="Engine\Module\Scene\BaseScene.cpp">
+      <Filter>Engine\Module\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Render\Common\FDepthTexture.cpp">
+    <ClCompile Include="Engine\Module\Scene\SceneController.cpp">
+      <Filter>Engine\Module\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\Scene\SceneFactory.cpp">
+      <Filter>Engine\Module\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FBaseBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FDepthStencilBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FGBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FLightAccumulationBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FMainBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FProcessBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FRenderTargetBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FReservoirBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FScreenSpaceProbeBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FSkyReservoirBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Buffer\FTransparentBuffer.cpp">
+      <Filter>Engine\Render\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Common\FDepthStencilTexture.cpp">
       <Filter>Engine\Render\Common</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Common\FLUTTexture.cpp">
       <Filter>Engine\Render\Common</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Render\Common\FPriorityTexture.cpp">
-      <Filter>Engine\Render\Common</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Render\Common\FProcessTexture.cpp">
       <Filter>Engine\Render\Common</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Render\Common\FRenderTexture.cpp">
+      <Filter>Engine\Render\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCore.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreCanvas.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreDecal.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreDirectLight.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreGeometry.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Render\Core\FRenderCoreLight.cpp">
-      <Filter>Engine\Render\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Render\Core\FRenderCoreProbe.cpp">
+    <ClCompile Include="Engine\Render\Core\FRenderCoreLuxGlobalIllumination.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreProcess.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Render\Core\FRenderCoreRestir.cpp">
+    <ClCompile Include="Engine\Render\Core\FRenderCoreReSTIR.cpp">
+      <Filter>Engine\Render\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Core\FRenderCoreSkyLight.cpp">
       <Filter>Engine\Render\Core</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Core\FRenderCoreTransition.cpp">
@@ -1259,28 +1387,13 @@
     <ClCompile Include="Engine\Render\FPresenter.cpp">
       <Filter>Engine\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Render\FRenderCore.cpp">
-      <Filter>Engine\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Render\FRenderTargetBuffer.cpp">
-      <Filter>Engine\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Render\GBuffer\FDeferredGBuffer.cpp">
-      <Filter>Engine\Render\GBuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Render\GBuffer\FLightingGBuffer.cpp">
-      <Filter>Engine\Render\GBuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Render\GBuffer\FMainGBuffer.cpp">
-      <Filter>Engine\Render\GBuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Render\GBuffer\FProbeGBuffer.cpp">
-      <Filter>Engine\Render\GBuffer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Render\GBuffer\FTransparentGBuffer.cpp">
-      <Filter>Engine\Render\GBuffer</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FBaseRenderPass.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderConfig.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassAmbientOcclusion.cpp">
       <Filter>Engine\Render\Pass</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FRenderPassAntiAliasing.cpp">
@@ -1295,10 +1408,19 @@
     <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredBase.cpp">
       <Filter>Engine\Render\Pass</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredLighting.cpp">
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredDirectLighting.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredGlobalIllumination.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassDeferredSkyLighting.cpp">
       <Filter>Engine\Render\Pass</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FRenderPassForwardTransparent.cpp">
+      <Filter>Engine\Render\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Render\Pass\FRenderPassLightingComposite.cpp">
       <Filter>Engine\Render\Pass</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FRenderPassPostProcess.cpp">
@@ -1306,9 +1428,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Render\Pass\FRenderPassTonemap.cpp">
       <Filter>Engine\Render\Pass</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Render\Scene\ColorGrading\FColorGrading.cpp">
-      <Filter>Engine\Render\Scene\ColorGrading</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Render\Scene\FScene.cpp">
       <Filter>Engine\Render\Scene</Filter>
@@ -1323,6 +1442,9 @@
       <Filter>Engine\System\DirectX\Context</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DirectXCommon.cpp">
+      <Filter>Engine\System\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\DirectX\DirectXPixEvent.cpp">
       <Filter>Engine\System\DirectX</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxAppendConsumeBuffer.cpp">
@@ -1340,9 +1462,6 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxComputePipelineState.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\System\DirectX\DxObject\DxConstantBuffer.cpp">
-      <Filter>Engine\System\DirectX\DxObject</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDepthStencil.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
@@ -1358,10 +1477,16 @@
     <ClCompile Include="Engine\System\DirectX\DxObject\DxDimensionBuffer.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxGeometryDimensionBuffer.cpp">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxGraphicsPipelineState.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxObjectCommon.cpp">
+      <Filter>Engine\System\DirectX\DxObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\DirectX\DxObject\DxResource.cpp">
       <Filter>Engine\System\DirectX\DxObject</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\DirectX\DxObject\DxRootSignatureDesc.cpp">
@@ -1400,6 +1525,30 @@
     <ClCompile Include="Engine\System\DirectX\DxrObject\DxrStateObjectContext.cpp">
       <Filter>Engine\System\DirectX\DxrObject</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\System\Mono\MonoAssembly.cpp">
+      <Filter>Engine\System\Mono</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Mono\MonoCommon.cpp">
+      <Filter>Engine\System\Mono</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Mono\MonoController.cpp">
+      <Filter>Engine\System\Mono</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Mono\MonoDomain.cpp">
+      <Filter>Engine\System\Mono</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Mono\MonoInstance.cpp">
+      <Filter>Engine\System\Mono</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Runtime\Async\AsyncExecutionTask.cpp">
+      <Filter>Engine\System\Runtime\Async</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Runtime\Async\AsyncExecutionThread.cpp">
+      <Filter>Engine\System\Runtime\Async</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\Runtime\Async\AsyncExecutionThreadPool.cpp">
+      <Filter>Engine\System\Runtime\Async</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\Runtime\Execution\ExecutionContext.cpp">
       <Filter>Engine\System\Runtime\Execution</Filter>
     </ClCompile>
@@ -1412,20 +1561,14 @@
     <ClCompile Include="Engine\System\Runtime\Performance\DeltaTimePoint.cpp">
       <Filter>Engine\System\Runtime\Performance</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\System\Runtime\Performance\LapTimer.cpp">
-      <Filter>Engine\System\Runtime\Performance</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\System\Runtime\Performance\Performance.cpp">
       <Filter>Engine\System\Runtime\Performance</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\System\Runtime\Thread\AsyncTask.cpp">
-      <Filter>Engine\System\Runtime\Thread</Filter>
+    <ClCompile Include="Engine\System\Runtime\Performance\TimestampCpu.cpp">
+      <Filter>Engine\System\Runtime\Performance</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\System\Runtime\Thread\AsyncThread.cpp">
-      <Filter>Engine\System\Runtime\Thread</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\System\Runtime\Thread\AsyncThreadCollection.cpp">
-      <Filter>Engine\System\Runtime\Thread</Filter>
+    <ClCompile Include="Engine\System\Runtime\Performance\TimestampGpu.cpp">
+      <Filter>Engine\System\Runtime\Performance</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\System.cpp">
       <Filter>Engine\System</Filter>
@@ -1433,14 +1576,17 @@
     <ClCompile Include="Engine\System\UI\ImGuiController.cpp">
       <Filter>Engine\System\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\System\UI\SxGui.cpp">
+      <Filter>Engine\System\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\System\UI\SxGuiInternal.cpp">
+      <Filter>Engine\System\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\System\UI\SxImGui.cpp">
       <Filter>Engine\System\UI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\UI\SxImGuizmo.cpp">
       <Filter>Engine\System\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\System\Utility\Convert.cpp">
-      <Filter>Engine\System\Utility</Filter>
     </ClCompile>
     <ClCompile Include="Engine\System\Utility\RuntimeLogger.cpp">
       <Filter>Engine\System\Utility</Filter>
@@ -1454,8 +1600,17 @@
     <ClCompile Include="Engine\System\Window\WindowCollection.cpp">
       <Filter>Engine\System\Window</Filter>
     </ClCompile>
+    <ClCompile Include="Externals\stb\Stb_include.cpp">
+      <Filter>Externals\stb</Filter>
+    </ClCompile>
     <ClCompile Include="Lib\Adapter\Json\JsonHandler.cpp">
       <Filter>Lib\Adapter\Json</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Adapter\String\EncodedString.cpp">
+      <Filter>Lib\Adapter\String</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Adapter\Time\LocalTimePoint.cpp">
+      <Filter>Lib\Adapter\Time</Filter>
     </ClCompile>
     <ClCompile Include="Lib\Adapter\Time\RunTimeTracker.cpp">
       <Filter>Lib\Adapter\Time</Filter>
@@ -1469,69 +1624,41 @@
     <ClCompile Include="Lib\Easing.cpp">
       <Filter>Lib</Filter>
     </ClCompile>
-    <ClCompile Include="Lib\Geometry\Matrix4x4.cpp">
-      <Filter>Lib\Geometry</Filter>
+    <ClCompile Include="Lib\Math\Matrix4x4.cpp">
+      <Filter>Lib\Math</Filter>
     </ClCompile>
-    <ClCompile Include="Lib\Geometry\Quaternion.cpp">
-      <Filter>Lib\Geometry</Filter>
+    <ClCompile Include="Lib\Math\Quaternion.cpp">
+      <Filter>Lib\Math</Filter>
     </ClCompile>
     <ClCompile Include="Lib\Motion\Motion.cpp">
       <Filter>Lib\Motion</Filter>
     </ClCompile>
-    <ClCompile Include="Lib\Transform\Transform.cpp">
+    <ClCompile Include="Lib\Sxl\Exception.cpp">
+      <Filter>Lib\Sxl</Filter>
+    </ClCompile>
+    <ClCompile Include="Lib\Transform\Basis.cpp">
       <Filter>Lib\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\allocator.cpp">
-      <Filter>externals\meshoptimizer</Filter>
+    <ClCompile Include="Lib\Transform\RectTransform.cpp">
+      <Filter>Lib\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\clusterizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
+    <ClCompile Include="Lib\Transform\Transform2d.cpp">
+      <Filter>Lib\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\indexanalyzer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
+    <ClCompile Include="Lib\Transform\TransformEuler.cpp">
+      <Filter>Lib\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\indexcodec.cpp">
-      <Filter>externals\meshoptimizer</Filter>
+    <ClCompile Include="Lib\Transform\TransformQuaternion.cpp">
+      <Filter>Lib\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\indexgenerator.cpp">
-      <Filter>externals\meshoptimizer</Filter>
+    <ClCompile Include="Lib\Transform\Transformation.cpp">
+      <Filter>Lib\Transform</Filter>
     </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\overdrawoptimizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\partition.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\quantization.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\rasterizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\simplifier.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\spatialorder.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\stripifier.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vcacheoptimizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vertexcodec.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vertexfilter.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\meshoptimizer\vfetchoptimizer.cpp">
-      <Filter>externals\meshoptimizer</Filter>
-    </ClCompile>
-    <ClCompile Include="externals\stb\Stb_include.cpp">
-      <Filter>externals\stb</Filter>
+    <ClCompile Include="Lib\Transform\TransformationMatrix.cpp">
+      <Filter>Lib\Transform</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Engine\System\Utility\CrashHandler.cpp" />
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessSketch.cpp" />
   </ItemGroup>
 </Project>

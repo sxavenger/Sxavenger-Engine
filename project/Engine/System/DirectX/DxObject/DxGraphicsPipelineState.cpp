@@ -5,6 +5,9 @@ DXOBJECT_USING
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* DXOBJECT
+#include "DxBlendState.h"
+
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
 
@@ -33,6 +36,7 @@ void GraphicsPipelineDesc::ClearElement() {
 void GraphicsPipelineDesc::SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode) {
 	rasterizerDesc.CullMode = cullMode;
 	rasterizerDesc.FillMode = fillMode;
+	rasterizerDesc.DepthClipEnable = true;
 }
 
 void GraphicsPipelineDesc::SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_MASK writeMask, D3D12_COMPARISON_FUNC func) {
@@ -41,12 +45,12 @@ void GraphicsPipelineDesc::SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_M
 	depthStencilDesc.DepthFunc      = func;
 }
 
-void GraphicsPipelineDesc::SetBlendMode(uint8_t renderTargetIndex, BlendMode mode) {
-	blends[renderTargetIndex] = mode;
-}
-
 void GraphicsPipelineDesc::SetBlendDesc(uint8_t renderTargetIndex, const D3D12_RENDER_TARGET_BLEND_DESC& desc) {
 	blends[renderTargetIndex] = desc;
+}
+
+void GraphicsPipelineDesc::SetBlendMode(uint8_t renderTargetIndex, BlendMode mode) {
+	SetBlendDesc(renderTargetIndex, BlendState::GetDesc(mode));
 }
 
 void GraphicsPipelineDesc::SetIndependentBlendEnable(bool isIndependentEnable) {
@@ -70,7 +74,7 @@ void GraphicsPipelineDesc::SetPrimitive(PrimitiveType type) {
 			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_LINESTRIP;
 			break;
 
-		case PrimitiveType::TrianglList:
+		case PrimitiveType::TriangleList:
 			primitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 			primitiveTopology     = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 			break;
@@ -87,6 +91,10 @@ void GraphicsPipelineDesc::SetRTVFormat(DXGI_FORMAT format) {
 }
 
 void GraphicsPipelineDesc::SetRTVFormat(uint8_t index, DXGI_FORMAT format) {
+	if (rtvFormats.size() <= index) {
+		rtvFormats.resize(index + 1, DXGI_FORMAT_UNKNOWN); //!< indexの位置までサイズを拡張
+	}
+
 	rtvFormats[index] = format;
 	StreamLogger::AssertA(rtvFormats.size() < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT, "RTV Format must be within D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT"); //!< RTVの設定限界
 }
@@ -98,26 +106,6 @@ void GraphicsPipelineDesc::SetRTVFormats(uint8_t size, const DXGI_FORMAT formats
 
 void GraphicsPipelineDesc::SetDSVFormat(DXGI_FORMAT format) {
 	dsvFormat = format;
-}
-
-void GraphicsPipelineDesc::CreateDefaultDesc() {
-	ClearElement();
-	SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
-	SetElement("TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT);
-	SetElement("NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT);
-	SetElement("TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT);
-	SetElement("BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT);
-
-	SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
-	SetDepthStencil(true);
-
-	SetBlendMode(0, BlendMode::Normal);
-	SetIndependentBlendEnable(false);
-
-	SetPrimitive(PrimitiveType::TrianglList);
-
-	SetRTVFormat(kDefaultOffscreenFormat);
-	SetDSVFormat(kDefaultDepthFormat);
 }
 
 D3D12_INPUT_LAYOUT_DESC GraphicsPipelineDesc::GetInputLayout() const {
@@ -142,7 +130,7 @@ void GraphicsPipelineState::CreateBlob(const std::filesystem::path& filepath, Gr
 }
 
 void GraphicsPipelineState::SetBlob(const ShaderBlob& blob, GraphicsShaderType type) {
-	if (type == GraphicsShaderType::ms) {
+	if (type == GraphicsShaderType::Mesh) {
 		isUseMeshShaderPipeline_ = true; //!< mesh shader pipelineを使用する場合
 	}
 
@@ -182,23 +170,23 @@ void GraphicsPipelineState::SetPipeline(CommandContext* context, const D3D12_VIE
 	}
 }
 
-void GraphicsPipelineState::SetPipeline(CommandContext* context, const Vector2ui& windowSize) const {
+void GraphicsPipelineState::SetPipeline(CommandContext* context, const Vector2ui& resolution) const {
 
 	// viewportの設定
 	D3D12_VIEWPORT viewport = {};
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
-	viewport.Width    = static_cast<float>(windowSize.x);
-	viewport.Height   = static_cast<float>(windowSize.y);
+	viewport.Width    = static_cast<float>(resolution.x);
+	viewport.Height   = static_cast<float>(resolution.y);
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 
 	// シザー矩形の設定
 	D3D12_RECT rect = {};
 	rect.left   = 0;
-	rect.right  = windowSize.x;
+	rect.right  = resolution.x;
 	rect.top    = 0;
-	rect.bottom = windowSize.y;
+	rect.bottom = resolution.y;
 
 	SetPipeline(context, viewport, rect);
 }
@@ -212,26 +200,14 @@ D3D12_SHADER_BYTECODE GraphicsPipelineState::GetBytecode(GraphicsShaderType type
 	return blobs_[static_cast<uint8_t>(type)].value().GetBytecode();
 }
 
-D3D12_RENDER_TARGET_BLEND_DESC GraphicsPipelineState::GetRenderTargetBlendDesc(const BlendOption& option) const {
-	if (std::holds_alternative<BlendMode>(option)) {
-		BlendMode blendMode = std::get<BlendMode>(option);
-		return BlendState::GetDesc(blendMode);
-
-	} else if (std::holds_alternative<D3D12_RENDER_TARGET_BLEND_DESC>(option)) {
-		return std::get<D3D12_RENDER_TARGET_BLEND_DESC>(option);
-	}
-
-	StreamLogger::Exception("is not define option.");
-}
-
 D3D12_BLEND_DESC GraphicsPipelineState::GetBlendDesc() const {
 	D3D12_BLEND_DESC desc = {};
 	desc.IndependentBlendEnable = pipelineDesc_.isIndependentBlendEnable;
-	desc.RenderTarget[0]        = GetRenderTargetBlendDesc(pipelineDesc_.blends[0]);
+	desc.RenderTarget[0]        = pipelineDesc_.blends[0];
 
 	if (desc.IndependentBlendEnable) {
 		for (uint8_t i = 1; i < D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
-			desc.RenderTarget[i] = GetRenderTargetBlendDesc(pipelineDesc_.blends[i]);
+			desc.RenderTarget[i] = pipelineDesc_.blends[i];
 		}
 	}
 
@@ -267,9 +243,9 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 		std::copy(pipelineDesc_.rtvFormats.begin(), pipelineDesc_.rtvFormats.end(), desc.RTVFormats);
 
 		// blobの設定
-		desc.AS = GetBytecode(GraphicsShaderType::as);
-		desc.MS = GetBytecode(GraphicsShaderType::ms, true);
-		desc.PS = GetBytecode(GraphicsShaderType::ps, true);
+		desc.AS = GetBytecode(GraphicsShaderType::Amplification);
+		desc.MS = GetBytecode(GraphicsShaderType::Mesh, true);
+		desc.PS = GetBytecode(GraphicsShaderType::Pixel, true);
 
 		// pipelineの生成
 		CD3DX12_PIPELINE_MESH_STATE_STREAM psoStream = CD3DX12_PIPELINE_MESH_STATE_STREAM(desc);
@@ -304,9 +280,9 @@ void GraphicsPipelineState::CreateDirectXPipeline(Device* device) {
 		desc.NumRenderTargets = static_cast<UINT>(pipelineDesc_.rtvFormats.size());
 		std::copy(pipelineDesc_.rtvFormats.begin(), pipelineDesc_.rtvFormats.end(), desc.RTVFormats);
 
-		desc.VS = GetBytecode(GraphicsShaderType::vs, true);
-		desc.GS = GetBytecode(GraphicsShaderType::gs);
-		desc.PS = GetBytecode(GraphicsShaderType::ps, true);
+		desc.VS = GetBytecode(GraphicsShaderType::Vertex, true);
+		desc.GS = GetBytecode(GraphicsShaderType::Geometry);
+		desc.PS = GetBytecode(GraphicsShaderType::Pixel, true);
 
 		// pipelineの生成
 		auto hr = device->GetDevice()->CreateGraphicsPipelineState(
@@ -326,15 +302,15 @@ void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device) {
 	table_.Reset();
 
 	if (isUseMeshShaderPipeline_) {
-		TrySetBlobToTable(GraphicsShaderType::as, ShaderVisibility::VISIBILITY_AMPLIFICATION);
-		TrySetBlobToTable(GraphicsShaderType::ms, ShaderVisibility::VISIBILITY_MESH, true);
+		TrySetBlobToTable(GraphicsShaderType::Amplification, ShaderVisibility::VISIBILITY_AMPLIFICATION);
+		TrySetBlobToTable(GraphicsShaderType::Mesh, ShaderVisibility::VISIBILITY_MESH, true);
 
 	} else {
-		TrySetBlobToTable(GraphicsShaderType::vs, ShaderVisibility::VISIBILITY_VERTEX, true);
-		TrySetBlobToTable(GraphicsShaderType::gs, ShaderVisibility::VISIBILITY_GEOMETRY);
+		TrySetBlobToTable(GraphicsShaderType::Vertex, ShaderVisibility::VISIBILITY_VERTEX, true);
+		TrySetBlobToTable(GraphicsShaderType::Geometry, ShaderVisibility::VISIBILITY_GEOMETRY);
 	}
 
-	TrySetBlobToTable(GraphicsShaderType::ps, ShaderVisibility::VISIBILITY_PIXEL, true);
+	TrySetBlobToTable(GraphicsShaderType::Pixel, ShaderVisibility::VISIBILITY_PIXEL, true);
 
 	rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc();
 	CreateDirectXRootSignature(device);
@@ -345,15 +321,15 @@ void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device, co
 	table_.Reset();
 
 	if (isUseMeshShaderPipeline_) {
-		TrySetBlobToTable(GraphicsShaderType::as, ShaderVisibility::VISIBILITY_AMPLIFICATION);
-		TrySetBlobToTable(GraphicsShaderType::ms, ShaderVisibility::VISIBILITY_MESH, true);
+		TrySetBlobToTable(GraphicsShaderType::Amplification, ShaderVisibility::VISIBILITY_AMPLIFICATION);
+		TrySetBlobToTable(GraphicsShaderType::Mesh, ShaderVisibility::VISIBILITY_MESH, true);
 
 	} else {
-		TrySetBlobToTable(GraphicsShaderType::vs, ShaderVisibility::VISIBILITY_VERTEX, true);
-		TrySetBlobToTable(GraphicsShaderType::gs, ShaderVisibility::VISIBILITY_GEOMETRY);
+		TrySetBlobToTable(GraphicsShaderType::Vertex, ShaderVisibility::VISIBILITY_VERTEX, true);
+		TrySetBlobToTable(GraphicsShaderType::Geometry, ShaderVisibility::VISIBILITY_GEOMETRY);
 	}
 
-	TrySetBlobToTable(GraphicsShaderType::ps, ShaderVisibility::VISIBILITY_PIXEL, true);
+	TrySetBlobToTable(GraphicsShaderType::Pixel, ShaderVisibility::VISIBILITY_PIXEL, true);
 
 
 	rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc(desc);
@@ -364,22 +340,22 @@ void ReflectionGraphicsPipelineState::ReflectionRootSignature(Device* device, D3
 	table_.Reset();
 
 	if (isUseMeshShaderPipeline_) {
-		TrySetBlobToTable(GraphicsShaderType::as, ShaderVisibility::VISIBILITY_AMPLIFICATION);
-		TrySetBlobToTable(GraphicsShaderType::ms, ShaderVisibility::VISIBILITY_MESH, true);
+		TrySetBlobToTable(GraphicsShaderType::Amplification, ShaderVisibility::VISIBILITY_AMPLIFICATION);
+		TrySetBlobToTable(GraphicsShaderType::Mesh, ShaderVisibility::VISIBILITY_MESH, true);
 
 	} else {
-		TrySetBlobToTable(GraphicsShaderType::vs, ShaderVisibility::VISIBILITY_VERTEX, true);
-		TrySetBlobToTable(GraphicsShaderType::gs, ShaderVisibility::VISIBILITY_GEOMETRY);
+		TrySetBlobToTable(GraphicsShaderType::Vertex, ShaderVisibility::VISIBILITY_VERTEX, true);
+		TrySetBlobToTable(GraphicsShaderType::Geometry, ShaderVisibility::VISIBILITY_GEOMETRY);
 	}
 
-	TrySetBlobToTable(GraphicsShaderType::ps, ShaderVisibility::VISIBILITY_PIXEL, true);
+	TrySetBlobToTable(GraphicsShaderType::Pixel, ShaderVisibility::VISIBILITY_PIXEL, true);
 
 
 	rootSignatureDesc_ = table_.CreateGraphicsRootSignatureDesc();
 	CreateDirectXRootSignature(device, flag);
 }
 
-void ReflectionGraphicsPipelineState::BindGraphicsBuffer(CommandContext* context, const BindBufferDesc& desc) {
+void ReflectionGraphicsPipelineState::BindGraphicsBuffer(const CommandContext* context, const BindBufferDesc& desc) const {
 	table_.BindGraphicsBuffer(context, desc);
 }
 

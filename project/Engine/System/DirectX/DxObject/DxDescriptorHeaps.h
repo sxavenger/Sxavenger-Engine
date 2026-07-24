@@ -12,7 +12,8 @@
 #include <Engine/System/UI/ISystemDebugGui.h>
 
 //* lib
-#include <Lib/CXXAttributeConfig.h>
+#include <Lib/CXXAttribute.h>
+#include <Lib/Sxl/IndexAllocator.h>
 
 // c++
 #include <queue>
@@ -41,8 +42,8 @@ public:
 
 	void Init(
 		Device* device,
-		D3D12_DESCRIPTOR_HEAP_TYPE descriptorHeapType, bool shaderVisible,
-		uint32_t descriptorMaxCount
+		DescriptorType type, bool shaderVisible,
+		uint32_t capacity
 	);
 
 	void Term();
@@ -55,17 +56,11 @@ public:
 
 	//* getter *//
 
-	ID3D12DescriptorHeap* const GetDescriptorHeap() const {
-		return descriptorHeap_.Get();
-	}
+	ID3D12DescriptorHeap* const GetDescriptorHeap() const { return descriptorHeap_.Get(); }
 
-	const uint32_t GetDescriptorMaxCount() const {
-		return descriptorMaxCount_;
-	}
+	const uint32_t GetDescriptorCapacity() const { return allocator_.GetCapacity(); }
 
-	const uint32_t GetUsedDescriptorsCount() const {
-		return static_cast<uint32_t>(descriptorIndexCount_ - descriptorFreeIndices_.size());
-	}
+	const uint32_t GetUsedDescriptorsCount() const { return allocator_.GetUsedCount(); }
 
 private:
 
@@ -76,15 +71,12 @@ private:
 	//* descriptorHeap *//
 
 	ComPtr<ID3D12DescriptorHeap> descriptorHeap_;
-	D3D12_DESCRIPTOR_HEAP_TYPE   descriptorHeapType_;
+	DescriptorType               type_;
 	UINT                         descriptorHandleSize_;
 
 	//* descriptorPool *//
 
-	uint32_t descriptorMaxCount_;   //!< descriptorの最大数
-	uint32_t descriptorIndexCount_ = 0;
-	
-	std::queue<uint32_t> descriptorFreeIndices_; //!< 動的に消されたDescriptorのIndexの格納先
+	Sxl::IndexAllocator<uint32_t> allocator_;
 
 	//* config *//
 
@@ -98,7 +90,11 @@ private:
 	// private methods
 	//=========================================================================================
 
-	void CreateDescriptorHeap(ID3D12Device* device);
+	static D3D12_DESCRIPTOR_HEAP_TYPE GetDescriptorHeapType(DescriptorType type);
+
+	void CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE type);
+
+	//* helper method *//
 
 	uint32_t GetCurrentDescriptorIndex();
 
@@ -134,7 +130,7 @@ public:
 
 	//* getter *//
 
-	const uint32_t GetDescriptorMaxCount(DescriptorType type) const { return pools_.at(type)->GetDescriptorMaxCount(); }
+	const uint32_t GetDescriptorCapacity(DescriptorType type) const { return pools_.at(type)->GetDescriptorCapacity(); }
 
 	ID3D12DescriptorHeap* const GetDescriptorHeap(DescriptorType type) const { return pools_.at(type)->GetDescriptorHeap(); }
 

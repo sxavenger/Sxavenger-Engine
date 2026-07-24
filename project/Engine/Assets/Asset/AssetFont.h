@@ -8,6 +8,7 @@
 
 //* engine
 #include <Engine/Foundation.h>
+#include <Engine/System/DirectX/DxObject/DxResource.h>
 #include <Engine/System/DirectX/DxObject/DxDescriptor.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
@@ -46,25 +47,24 @@ public:
 		Vector2f size;
 		Vector2f offset;
 		float advance;
-		
+
 	};
 
-public:
+	public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
 	AssetFont(const Uuid& id) : BaseAsset(id) {}
+
 	~AssetFont() override = default;
+
+	//* setup option *//
 
 	void Setup(const DirectXQueueContext* context, const stbtt_fontinfo& info, float size);
 
-	//* inspector *//
-
-	void ShowInspector() override;
-
-	//* getter *//
+	//* font option *//
 
 	const DxObject::Descriptor& GetDescriptorSRV() const;
 
@@ -74,8 +74,6 @@ public:
 
 	const GlyphInfo& GetGlyphInfo(wchar_t c) const;
 
-
-
 private:
 
 	//=========================================================================================
@@ -84,12 +82,12 @@ private:
 
 	//* directx12 *// 
 
-	ComPtr<ID3D12Resource> resource_;
-	DxObject::Descriptor   descriptorSRV_;
+	DxObject::Resource   resource_;
+	DxObject::Descriptor descriptorSRV_;
 
 	//* font intermediate *//
 
-	Vector2i current_  = {};
+	Vector2i current_ = {};
 	int32_t maxHeight_ = 0;
 
 	std::vector<uint8_t> atlasData_;
@@ -101,7 +99,7 @@ private:
 
 	float fontSize_ = NULL;
 
-	int32_t ascent_  = NULL;
+	int32_t ascent_ = NULL;
 	int32_t descent_ = NULL;
 
 	std::unordered_map<wchar_t, GlyphInfo> glyphs_;

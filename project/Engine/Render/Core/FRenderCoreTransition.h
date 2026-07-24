@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* render
+#include "FBaseRenderCore.h"
+
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/Configuration/Configuration.h>
@@ -23,18 +26,22 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderCoreTransition class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class FRenderCoreTransition {
+class FRenderCoreTransition final
+	: public FBaseRenderCore {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Transition enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
 	enum class Transition : uint8_t {
+		MotionVectorTransition,
+		AlbedoWhiteTransition,
 		LightingTransition,
+		ReflectionTransition,
 		MipmapTransition,
-		VelocityTransition,
 		TransparentTransition,
 	};
+	static inline const size_t kTransitionCount = magic_enum::enum_count<Transition>();
 
 public:
 
@@ -42,22 +49,22 @@ public:
 	// public methods
 	//=========================================================================================
 
-	void Init();
+	void Init() override;
 
 	//* transition option *//
 
-	void SetPipeline(Transition transition, const DirectXQueueContext* context);
+	void SetPipeline(Transition transition, const DirectXQueueContext* context) const;
 
 	void BindComputeBuffer(
 		Transition transition, const DirectXQueueContext* context,
 		const DxObject::BindBufferDesc& desc
-	);
+	) const;
 
-	void Dispatch(const DirectXQueueContext* context, const Vector2ui& size);
+	void Dispatch(const DirectXQueueContext* context, const Vector2ui& resolution) const;
 
 	//* present option *//
 
-	void Present(const DirectXQueueContext* context, const Vector2ui& size, const D3D12_GPU_DESCRIPTOR_HANDLE& handle);
+	void Present(const DirectXQueueContext* context, const Vector2ui& resolution, const D3D12_GPU_DESCRIPTOR_HANDLE& handle) const;
 
 private:
 
@@ -65,13 +72,11 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static inline const Vector2ui kNumThreadSize         = { 16, 16 };
+	static inline const Vector2ui kNumthread             = { 16, 16 };
 	static inline const std::filesystem::path kDirectory = kPackagesDirectory / "shaders" / "render" / "Transition";
 
-	static inline const size_t kTransitionCount = magic_enum::enum_count<Transition>();
-
-	std::array<std::unique_ptr<CustomReflectionComputePipeline>, kTransitionCount> transitions_;
-	std::unique_ptr<DxObject::ReflectionGraphicsPipelineState> presenter_;
+	std::array<CustomReflectionComputePipeline, kTransitionCount> transitions_;
+	DxObject::ReflectionGraphicsPipelineState presenter_;
 
 	//=========================================================================================
 	// private methods

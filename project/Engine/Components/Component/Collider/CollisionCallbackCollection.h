@@ -10,7 +10,7 @@
 #include <Engine/Foundation.h>
 
 //* lib
-#include <Lib/CXXAttributeConfig.h>
+#include <Lib/CXXAttribute.h>
 
 //* c++
 #include <functional>
@@ -33,16 +33,28 @@ public:
 	// using
 	////////////////////////////////////////////////////////////////////////////////////////////
 
-	using OnCollisionFunction = std::function<void(MAYBE_UNUSED ColliderComponent* const, MAYBE_UNUSED ColliderComponent* const)>; //!< OnCollision関数
-	//!< 制約: ColliderComponent*の順番はtagの昇順である.
+	using OnCollisionFunctionPenetration
+		= std::function<void(MAYBE_UNUSED ColliderComponent* const, MAYBE_UNUSED ColliderComponent* const, const CollisionDetection::Penetration&)>; //!< OnCollision関数
+	//!< [制約]
+	//!< Penetration結果はlhsから見たrhsのPenetrationである必要がある.
+
+	using OnCollisionFunction
+		= std::function<void(MAYBE_UNUSED ColliderComponent* const, MAYBE_UNUSED ColliderComponent* const)>; //!< OnCollision関数
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// OnCollisionFunction structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct OnCollisionCallbacks {
-		OnCollisionFunction enter; //!< OnCollisionEnter関数
-		OnCollisionFunction exit;  //!< OnCollisionExit関数
-		OnCollisionFunction stay;  //!< OnCollisionStay関数
+	public:
+
+		//=========================================================================================
+		// public variables
+		//=========================================================================================
+
+		OnCollisionFunctionPenetration enter; //!< OnCollisionEnter関数
+		OnCollisionFunctionPenetration exit;  //!< OnCollisionExit関数
+		OnCollisionFunctionPenetration stay;  //!< OnCollisionStay関数
+
 	};
 
 public:
@@ -55,15 +67,26 @@ public:
 
 	void SetOnCollisionFunctions(const std::string& tagA, const std::string& tagB, const OnCollisionCallbacks& functions);
 
+	void SetOnCollisionFunctionEnter(const std::string& tagA, const std::string& tagB, const OnCollisionFunctionPenetration& function);
 	void SetOnCollisionFunctionEnter(const std::string& tagA, const std::string& tagB, const OnCollisionFunction& function);
+
+	void SetOnCollisionFunctionExit(const std::string& tagA, const std::string& tagB, const OnCollisionFunctionPenetration& function);
 	void SetOnCollisionFunctionExit(const std::string& tagA, const std::string& tagB, const OnCollisionFunction& function);
+
+	void SetOnCollisionFunctionStay(const std::string& tagA, const std::string& tagB, const OnCollisionFunctionPenetration& function);
 	void SetOnCollisionFunctionStay(const std::string& tagA, const std::string& tagB, const OnCollisionFunction& function);
 
-	void CallbackOnCollisionEnter(ColliderComponent* lhs, ColliderComponent* rhs) const;
-	void CallbackOnCollisionExit(ColliderComponent* lhs, ColliderComponent* rhs) const;
-	void CallbackOnCollisionStay(ColliderComponent* lhs, ColliderComponent* rhs) const;
+	//* callback option *//
 
-	bool CheckRegistered(ColliderComponent* lhs, ColliderComponent* rhs) const;
+	void CallbackOnCollisionEnter(ColliderComponent* lhs, ColliderComponent* rhs, const CollisionDetection::Penetration& penetration) const;
+
+	void CallbackOnCollisionExit(ColliderComponent* lhs, ColliderComponent* rhs, const CollisionDetection::Penetration& penetration) const;
+
+	void CallbackOnCollisionStay(ColliderComponent* lhs, ColliderComponent* rhs, const CollisionDetection::Penetration& penetration) const;
+
+	//* check option *//
+
+	bool CheckRegistered(const ColliderComponent* lhs, const ColliderComponent* rhs) const;
 
 private:
 
@@ -82,9 +105,6 @@ private:
 	//=========================================================================================
 
 	bool Contains(const std::string& tagA, const std::string& tagB) const;
-
-	static std::pair<std::string, std::string> Sort(const std::string& x, const std::string& y);
-	static std::pair<ColliderComponent*, ColliderComponent*> Sort(ColliderComponent* x, ColliderComponent* y);
 
 };
 

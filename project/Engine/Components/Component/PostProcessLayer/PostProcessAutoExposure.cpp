@@ -1,6 +1,5 @@
 #include "PostProcessAutoExposure.h"
 SXAVENGER_ENGINE_USING
-DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
@@ -9,8 +8,9 @@ DXOBJECT_USING
 #include <Engine/System/Utility/StreamLogger.h>
 #include <Engine/System/UI/SxImGui.h>
 #include <Engine/System/System.h>
-#include <Engine/Render/FRenderTargetBuffer.h>
-#include <Engine/Render/FRenderCore.h>
+#include <Engine/Render/Buffer/FRenderTargetBuffer.h>
+#include <Engine/Render/Core/FRenderCore.h>
+#include <Engine/Render/Core/FRenderCoreProcess.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Parameter structure methods
@@ -37,99 +37,99 @@ void PostProcessAutoExposure::Parameter::SetImGuiCommand() {
 void PostProcessAutoExposure::Init() {
 	name_ = "Auto Exposure";
 
-	parameter_ = std::make_unique<ConstantBuffer<Parameter>>();
+	parameter_ = std::make_unique<DxObject::ConstantBuffer<Parameter>>();
 	parameter_->Create(System::GetDxDevice());
 	parameter_->At().Init();
 
-	histgram_ = std::make_unique<UnorderedDimensionBuffer<uint32_t>>();
-	histgram_->Create(System::GetDxDevice(), kGroupCount_);
+	histogram_ = std::make_unique<DxObject::UnorderedDimensionBuffer<uint32_t>>();
+	histogram_->Create(System::GetDxDevice(), kGroupCount_);
 
-	histgramShared_ = std::make_unique<UnorderedDimensionBuffer<uint32_t>>();
-	histgramShared_->Create(System::GetDxDevice(), kGroupCount_);
+	histogramShared_ = std::make_unique<DxObject::UnorderedDimensionBuffer<uint32_t>>();
+	histogramShared_->Create(System::GetDxDevice(), kGroupCount_);
 
-	averageLuminance_ = std::make_unique<UnorderedDimensionBuffer<float>>();
+	averageLuminance_ = std::make_unique<DxObject::UnorderedDimensionBuffer<float>>();
 	averageLuminance_->Create(System::GetDxDevice(), 1);
 
-	debugHistgram_         = std::make_unique<ReadbackDimensionBuffer<uint32_t>>();
-	debugAverageLuminance_ = std::make_unique<ReadbackDimensionBuffer<float>>();
+	debugHistogram_         = std::make_unique<DxObject::ReadbackDimensionBuffer<uint32_t>>();
+	debugAverageLuminance_ = std::make_unique<DxObject::ReadbackDimensionBuffer<float>>();
 }
 
 void PostProcessAutoExposure::Process(const DirectXQueueContext* context, const ProcessInfo& info) {
+	// TODO: 完全に黒の場合は, Histogramから除外させる.
 
-	auto core = FRenderCore::GetInstance()->GetProcess();
+	FProcessBuffer* process = info.buffer->GetProcess();
 
-	auto process = info.buffer->GetProcessTextures();
-	process->NextProcess();
-	process->GetCurrentTexture()->TransitionBeginUnordered(context);
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreProcess>(); //!< RenderCoreの確保.
 
-	BindBufferDesc desc = {};
-	// common
-	desc.Set32bitConstants("Dimension", 2,  &info.buffer->GetSize());
+	process->Next();
+	process->GetCurrentTexture().TransitionUnorderedAccess(context);
+
+	//!< parameterの設定
+	DxObject::BindBufferDesc desc = {};
+
+	//!< 共通parameterの設定
+	desc.Set32bitConstants("Dimension", 2,   &info.buffer->GetResolution());
 	desc.Set32bitConstants("Information", 1, &info.weight);
 
-	// textures
-	desc.SetHandle("gInput",   process->GetPrevTexture()->GetGPUHandleSRV());
-	desc.SetHandle("gOutput",  process->GetCurrentTexture()->GetGPUHandleUAV());
+	//!< Bufferの設定
+	desc.SetHandle("gInput",   process->GetPreviousTexture().GetGPUHandleSRV());
+	desc.SetHandle("gOutput",  process->GetCurrentTexture().GetGPUHandleUAV());
 
-	// intermediate
-	desc.SetAddress("gHistogram",        histgram_->GetGPUVirtualAddress());
-	desc.SetAddress("gHistogramShared",  histgramShared_->GetGPUVirtualAddress());
+	//!< parameterの設定
+	desc.SetAddress("gHistogram",        histogram_->GetGPUVirtualAddress());
+	desc.SetAddress("gHistogramShared",  histogramShared_->GetGPUVirtualAddress());
 	desc.SetAddress("gAverageLuminance", averageLuminance_->GetGPUVirtualAddress());
+	desc.SetAddress("gParameter",        parameter_->GetGPUVirtualAddress());
 
-	// parameter
-	desc.SetAddress("gParameter", parameter_->GetGPUVirtualAddress());
+	{ //!< Luminance
+		core->SetPipeline(FRenderCoreProcess::PostProcess::AutoExposure_Luminance, context);
+		core->BindComputeBuffer(FRenderCoreProcess::PostProcess::AutoExposure_Luminance, context, desc);
+		core->Dispatch(context, info.buffer->GetResolution());
 
-	{
-		core->SetPipeline(FRenderCoreProcess::ProcessType::AutoExposureLuminance, context);
-		core->BindComputeBuffer(FRenderCoreProcess::ProcessType::AutoExposureLuminance, context, desc);
-		core->Dispatch(context, info.buffer->GetSize());
-
-		histgramShared_->Barrier(context->GetDxCommand());
+		histogramShared_->Barrier(context->GetDxCommand());
 	}
 
-	{
-		core->SetPipeline(FRenderCoreProcess::ProcessType::AutoExposureAverage, context);
-		core->BindComputeBuffer(FRenderCoreProcess::ProcessType::AutoExposureAverage, context, desc);
+	{ //!< Average 
+		core->SetPipeline(FRenderCoreProcess::PostProcess::AutoExposure_Average, context);
+		core->BindComputeBuffer(FRenderCoreProcess::PostProcess::AutoExposure_Average, context, desc);
 		context->GetCommandList()->Dispatch(1, 1, 1);
 
 		averageLuminance_->Barrier(context->GetDxCommand());
 	}
 
-	{
-		core->SetPipeline(FRenderCoreProcess::ProcessType::AutoExposureApply, context);
-		core->BindComputeBuffer(FRenderCoreProcess::ProcessType::AutoExposureApply, context, desc);
-		core->Dispatch(context, info.buffer->GetSize());
+	{ //!< Apply
+		core->SetPipeline(FRenderCoreProcess::PostProcess::AutoExposure_Apply, context);
+		core->BindComputeBuffer(FRenderCoreProcess::PostProcess::AutoExposure_Apply, context, desc);
+		core->Dispatch(context, info.buffer->GetResolution());
 	}
 
-	process->GetCurrentTexture()->TransitionEndUnordered(context);
+	process->GetCurrentTexture().TransitionDefaultState(context);
 }
 
 void PostProcessAutoExposure::ShowInspectorImGui() {
 	parameter_->At().SetImGuiCommand();
 
-	ReadbackDimensionBuffer<uint32_t>::Readback(
+	debugHistogram_->Readback(
 		System::GetDxDevice(),
 		System::GetDirectQueueContext()->GetDxCommand(),
-		histgram_.get(),
-		debugHistgram_.get()
+		histogram_.get()
 	);
 
-	ReadbackDimensionBuffer<float>::Readback(
+	debugAverageLuminance_->Readback(
 		System::GetDxDevice(),
 		System::GetDirectQueueContext()->GetDxCommand(),
-		averageLuminance_.get(),
-		debugAverageLuminance_.get()
+		averageLuminance_.get()
 	);
 
-	uint32_t sum = std::accumulate(debugHistgram_->GetSpan().begin(), debugHistgram_->GetSpan().end(), 0);
+	uint32_t sum = std::accumulate(debugHistogram_->GetSpan().begin(), debugHistogram_->GetSpan().end(), 0);
 
 	ImVec2 cursor = ImGui::GetCursorPos();
 	ImVec2 size   = { ImGui::GetContentRegionAvail().x, 80.0f };
 
 	SxImGui::PlotHistogramFunc(
 		"## histogram",
-		[&](uint32_t index) { return sum != 0 ? static_cast<float>(debugHistgram_->At(index)) / static_cast<float>(sum) : 0; },
-		debugHistgram_->GetSize(),
+		[&](uint32_t index) { return sum != 0 ? static_cast<float>(debugHistogram_->At(index)) / static_cast<float>(sum) : 0; },
+		debugHistogram_->GetSize(),
 		0,
 		NULL,
 		std::nullopt,
@@ -137,11 +137,11 @@ void PostProcessAutoExposure::ShowInspectorImGui() {
 		size
 	);
 
-	float avarage = debugAverageLuminance_->At(0);
-	float t = (avarage - parameter_->At().minLogLuminance) / (parameter_->At().maxLogLuminance - parameter_->At().minLogLuminance);
+	float average = debugAverageLuminance_->At(0);
+	float t = (average - parameter_->At().minLogLuminance) / (parameter_->At().maxLogLuminance - parameter_->At().minLogLuminance);
 
 	// FIXME
-	ImGui::ProgressBar(t, { size.x, 0.0f }, std::format("avarage luminance: {}", avarage).c_str());
+	ImGui::ProgressBar(t, { size.x, 0.0f }, std::format("average luminance: {}", average).c_str());
 
 	
 }

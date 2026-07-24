@@ -19,15 +19,51 @@ DXOBJECT_USING
 // static variables
 //=========================================================================================
 
-const std::array<LPCWSTR, static_cast<uint32_t>(CompileProfile::lib) + 1> ShaderCompiler::profiles_ = {
-	L"vs_6_6", //!< vs
-	L"gs_6_6", //!< gs
-	L"ms_6_6", //!< ms
-	L"as_6_6", //!< as
-	L"ps_6_6", //!< ps
-	L"cs_6_6", //!< cs
-	L"lib_6_6" //!< lib
+const std::array<LPCWSTR, static_cast<uint32_t>(CompileProfile::Lib) + 1> ShaderCompiler::stages_ = {
+	L"vs", //!< vertex shader
+	L"gs", //!< geometry shader
+	L"ms", //!< mesh shader
+	L"as", //!< amplification shader
+	L"ps", //!< pixel shader
+	L"cs", //!< compute shader
+	L"lib" //!< library (raytracing shader)
 };
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Argument structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void ShaderCompiler::Argument::PushArgument(LPCWSTR argument) {
+	arguments_.emplace_back(argument); //!< 引数を追加
+}
+
+void ShaderCompiler::Argument::PushArgument(const std::wstring& argument) {
+	lifetime_.emplace_back(argument); //!< 引数の寿命を管理するためにリストに追加
+	arguments_.emplace_back(lifetime_.back().c_str());
+}
+
+void ShaderCompiler::Argument::AddFilepath(const std::filesystem::path& filepath) {
+	PushArgument(filepath.generic_wstring()); //!< ファイルパスの引数を追加
+}
+
+void ShaderCompiler::Argument::AddProfile(CompileProfile profile, const std::wstring& tire) {
+	PushArgument(L"-T"); //!< プロフィールの引数を追加
+	PushArgument(GetProfile(profile, tire)); //!< プロフィールの引数を追加
+}
+
+void ShaderCompiler::Argument::AddEntryPoint(const std::wstring& entryPoint) {
+	PushArgument(L"-E");              //!< entry pointの引数を追加
+	PushArgument(entryPoint.c_str());
+}
+
+void ShaderCompiler::Argument::AddDefine(LPCWSTR name) {
+	PushArgument(L"-D"); //!< defineの引数を追加
+	PushArgument(name);
+}
+
+std::wstring ShaderCompiler::Argument::GetProfile(CompileProfile profile, const std::wstring& tire) const {
+	return std::format(L"{}_{}", stages_[static_cast<uint32_t>(profile)], tire);
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ShaderCompiler class methods
@@ -66,76 +102,59 @@ ComPtr<IDxcBlob> ShaderCompiler::Compile(
 	CompileProfile profile,
 	const std::wstring& entryPoint) {
 
-	std::wstring path = filepath.generic_wstring(); //!< wstringの寿命確保
-
 	// hlslファイルを読み込む
-	ComPtr<IDxcBlobEncoding> shaderSource;
-	auto hr = utils_->LoadFile(path.c_str(), nullptr, &shaderSource);
+	ComPtr<IDxcBlobEncoding> source;
+	auto hr = utils_->LoadFile(
+		filepath.generic_wstring().c_str(),
+		nullptr,
+		&source
+	);
 	StreamLogger::AssertA(SUCCEEDED(hr), "hlsl not found.", "filepath: " + filepath.generic_string());
 
-	// 読み込んだファイルの内容を設定する
-	DxcBuffer shaderSourceBuffer = {};
-	shaderSourceBuffer.Ptr      = shaderSource->GetBufferPointer();
-	shaderSourceBuffer.Size     = shaderSource->GetBufferSize();
-	shaderSourceBuffer.Encoding = DXC_CP_UTF8;
-
-	// 基本情報の設定
-	std::vector<LPCWSTR> arguments = {
-		path.c_str(),                                     //!< コンパイル対象のhlslファイルパス
-		L"-T", profiles_[static_cast<uint32_t>(profile)], //!< ShaderProfileの設定
-		L"-Zi", L"-Qembed_debug",                         //!< デバッグ用情報を埋め込む
-		L"-Zpr",                                          //!< メモリレイアウトは行優先
-	};
-
-#ifdef _DEVELOPMENT
-	arguments.emplace_back(
-		Configuration::GetConfig().enableShaderOptimization ? L"-O3" : L"-Od"
+	auto blob = ShaderCompiler::Compile(
+		filepath,
+		source.Get(),
+		profile,
+		entryPoint
 	);
-#else
-	// releaseではoption関わらず最適化
-	arguments.emplace_back(L"-O3"); //!< 最適化を最大にする
-#endif
 
-	if (!entryPoint.empty()) { //!< entry pointがある場合, 設定
-		arguments.emplace_back(L"-E");
-		arguments.emplace_back(entryPoint.c_str());
+	if (!blob.HasValue()) {
+		StreamLogger::Exception("hlsl is compile error. filepath: " + filepath.generic_string(), blob.Error());
 	}
 
-	if (profile == CompileProfile::cs || profile == CompileProfile::lib) { //!< compute shader用のdefineを追加
-		arguments.emplace_back(L"-D");
-		arguments.emplace_back(L"_COMPUTE");
-	}
+	StreamLogger::EngineLog(std::format("[DXOBJECT ShaderCompiler] shader compiled. filepath: {}, profile: {}", filepath.generic_string(), magic_enum::enum_name(profile)));
+	return blob.Value();
+}
 
-	if (Configuration::GetSupport().isSupportInlineRaytracing) {
-		arguments.emplace_back(L"-D");
-		arguments.emplace_back(L"_INLINE_RAYTRACING");
-	}
+ComPtr<IDxcBlob> ShaderCompiler::Compile(
+	const std::filesystem::path& filepath,
+	const std::string& code,
+	CompileProfile profile,
+	const std::wstring& entryPoint) {
 
-	// compile
-	ComPtr<IDxcResult> shaderResult;
-	hr = compiler_->Compile(
-		&shaderSourceBuffer,
-		arguments.data(),
-		static_cast<UINT32>(arguments.size()),
-		includeHandler_.Get(),
-		IID_PPV_ARGS(&shaderResult)
+	// コードを読み取る
+	ComPtr<IDxcBlobEncoding> source;
+	auto hr = utils_->CreateBlob(
+		code.data(),
+		static_cast<UINT32>(code.size()),
+		DXC_CP_UTF8,
+		&source
 	);
-	DxObject::Assert(hr, L"shader compile failed.");
+	StreamLogger::AssertA(SUCCEEDED(hr), "source blob create failed.", "filepath: " + filepath.generic_string());
 
-	// 警告エラーだった場合, プログラムの停止
-	ComPtr<IDxcBlobUtf8> shaderError;
-	hr = shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
+	auto blob = ShaderCompiler::Compile(
+		filepath,
+		source.Get(),
+		profile,
+		entryPoint
+	);
 
-	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
-		StreamLogger::Exception("hlsl is compile error. filepath: " + filepath.generic_string(), shaderError->GetStringPointer());
+	if (!blob.HasValue()) {
+		StreamLogger::Exception("source code is compile error. filepath: " + filepath.generic_string(), blob.Error());
 	}
 
-	ComPtr<IDxcBlob> blob;
-	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&blob), nullptr);
-	DxObject::Assert(hr, L"shader compile failed.");
-
-	StreamLogger::EngineThreadLog(std::format("[DXOBJECT ShaderCompiler] shader compiled. filepath: {}, profile: {}", filepath.generic_string(), magic_enum::enum_name(profile)));
-	return blob;
+	StreamLogger::EngineLog(std::format("[DXOBJECT ShaderCompiler] source code compiled. filepath: {}, profile: {}", filepath.generic_string(), magic_enum::enum_name(profile)));
+	return blob.Value();
 }
 
 ComPtr<ID3D12ShaderReflection> ShaderCompiler::Reflection(IDxcBlob* blob) {
@@ -155,7 +174,87 @@ ComPtr<ID3D12ShaderReflection> ShaderCompiler::Reflection(IDxcBlob* blob) {
 	return result;
 }
 
+void ShaderCompiler::SetShaderModelTire(D3D_SHADER_MODEL model) {
+	uint32_t major = (model >> 4) & 0xF; //!< 上位4bitがmajor
+	uint32_t minor = model & 0xF;        //!< 下位4bitがminor
+
+	tire_ = std::format(L"{}_{}", major, minor);
+}
+
 ShaderCompiler* ShaderCompiler::GetInstance() {
 	static ShaderCompiler instance;
 	return &instance;
+}
+
+std::wstring ShaderCompiler::GetProfile(CompileProfile profile) const {
+	return std::format(L"{}_{}", stages_[static_cast<uint32_t>(profile)], tire_);
+}
+
+Sxl::Expected<ComPtr<IDxcBlob>, std::string> ShaderCompiler::Compile(
+	const std::filesystem::path& filepath,
+	IDxcBlobEncoding* source,
+	CompileProfile profile,
+	std::wstring entryPoint) {
+
+	// sourceの内容を設定する
+	DxcBuffer buffer = {};
+	buffer.Ptr      = source->GetBufferPointer();
+	buffer.Size     = source->GetBufferSize();
+	buffer.Encoding = DXC_CP_UTF8;
+
+	Argument arguments;
+	arguments.AddFilepath(filepath);      //!< コンパイル対象のファイルパス
+	arguments.AddProfile(profile, tire_); //!< プロフィールの引数を追加
+	arguments.PushArgument(L"-Zpr");      //!< メモリレイアウトは行優先
+
+#ifdef _DEVELOPMENT
+	//!< 最適化の有無を設定
+	arguments.PushArgument(
+		Configuration::GetConfig().enableShaderOptimization ? L"-O3" : L"-Od" //!< 最適化の有無
+	);
+
+	arguments.PushArgument(L"-Zi");           //!< デバッグ情報を生成
+	arguments.PushArgument(L"-Qembed_debug"); //!< デバッグ情報をシェーダバイナリに埋め込む
+#else
+	//!< option関わらず最適化
+	arguments.PushArgument(L"-O3"); //!< 最適化を最大にする
+#endif
+
+	if (!entryPoint.empty()) {
+		arguments.AddEntryPoint(entryPoint); //!< entry pointの引数を追加
+	}
+
+	if (profile == CompileProfile::Compute || profile == CompileProfile::Lib) {
+		arguments.AddDefine(L"_COMPUTE_SHADER"); //!< compute shader or library shaderであることをdefineで伝える
+	}
+
+	if (isSupportInlineRaytracing_) {
+		arguments.AddDefine(L"_SUPPORT_INLINE_RAYTRACING"); //!< inline raytracingをサポートしていることをdefineで伝える
+	}
+
+	// shaderのコンパイル
+	ComPtr<IDxcResult> result;
+	auto hr = compiler_->Compile(
+		&buffer,
+		arguments.GetData(),
+		arguments.GetCount(),
+		includeHandler_.Get(),
+		IID_PPV_ARGS(&result)
+	);
+	DxObject::Assert(hr, L"shader compile failed.");
+
+	// 警告エラーだった場合, プログラムの停止
+	ComPtr<IDxcBlobUtf8> error;
+	hr = result->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&error), nullptr);
+
+	if (error != nullptr && error->GetStringLength() != 0) {
+		return Sxl::Unexpected<std::string>(error->GetStringPointer());
+	}
+
+	ComPtr<IDxcBlob> blob;
+	hr = result->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&blob), nullptr);
+	DxObject::Assert(hr, L"shader compile output failed.");
+
+	return blob;
+
 }

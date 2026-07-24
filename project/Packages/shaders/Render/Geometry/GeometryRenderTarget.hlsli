@@ -55,7 +55,7 @@ struct GeometryDeferredOutput {
 	float4 albedo      : SV_Target0;
 	float4 normal      : SV_Target1;
 	float4 materialARM : SV_Target2;
-	float4 position    : SV_Target3;
+	uint2 address      : SV_Target3; //!< [x, y] = [upper 32 bits, lower 32 bits]
 	
 	//=========================================================================================
 	// public methods
@@ -66,8 +66,8 @@ struct GeometryDeferredOutput {
 		normal = float4(map, NOT_USED_1);
 	}
 	
-	void SetMaterial(float ao, float roughness, float metallic) {
-		materialARM.r = ao;
+	void SetMaterial(float roughness, float metallic) {
+		materialARM.r = 1.0f;
 		materialARM.g = max(roughness, 0.02f);
 		materialARM.b = metallic;
 		materialARM.a = NOT_USED_1;
@@ -77,9 +77,9 @@ struct GeometryDeferredOutput {
 		albedo.rgb = _albedo;
 		albedo.a   = NOT_USED_1;
 	}
-	
-	void SetPosition(float3 pos) {
-		position = float4(pos, NOT_USED_1);
+
+	void SetAddress(uint2 sprit) {
+		address = sprit;
 	}
 	
 };

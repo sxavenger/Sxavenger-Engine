@@ -57,7 +57,7 @@ public:
 	// public methods
 	//=========================================================================================
 
-	//* constactor & destructor *//
+	//* constructor & destructor *//
 
 	BehaviourAddress() noexcept = default;
 	BehaviourAddress(std::nullptr_t) noexcept : address_(std::nullopt), ownership_(Ownership::Owned) {}
@@ -65,6 +65,8 @@ public:
 
 	BehaviourAddress(const BehaviourAddress& other) noexcept;
 	BehaviourAddress(BehaviourAddress&& other) noexcept;
+
+	// TODO: 内部クラスでの生成を許可するよう変更.
 
 	//* operator [compare] *//
 
@@ -93,12 +95,12 @@ public:
 	//* getter *//
 
 	EntityBehaviour* Get() const;
-	//!< TODO: Reference型を用意する.
+	//!< TODO: Pointer-Reference型を用意する.
 
 	Ownership GetOwnership() const { return ownership_; }
 	
 	uintptr_t GetAddress() const;
-	//!< Warninig: 内部でのみ使用する.
+	//!< warning: 内部でのみ使用する.
 
 private:
 

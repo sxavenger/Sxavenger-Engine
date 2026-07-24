@@ -50,7 +50,7 @@ public:
 
 	void ParseText();
 
-	void BindIABuffer(const DirectXQueueContext* context);
+	void BindInputAssembler(const DirectXQueueContext* context);
 
 	void DrawCall(const DirectXQueueContext* context);
 
@@ -60,7 +60,7 @@ public:
 
 	const std::shared_ptr<AssetFont> GetFont() const { return font_.WaitRequire(); }
 
-	//! @brief AssetのFontSizeとParameterのFonstSize比率を取得
+	//! @brief AssetのFontSizeとParameterのFontSize比率を取得
 	float GetFontSizeRatio() const;
 
 	//* behaviour option *//

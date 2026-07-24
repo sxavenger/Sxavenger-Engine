@@ -1,0 +1,49 @@
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+#include "Transition.hlsli"
+
+//* component
+#include "../../Component/CameraComponent.hlsli"
+
+//=========================================================================================
+// buffers
+//=========================================================================================
+
+Texture2D<float> gDepth : register(t0);
+
+ConstantBuffer<CameraComponent> gCurrentCamera : register(b0);
+ConstantBuffer<CameraComponent> gPrevCamera    : register(b1);
+
+RWTexture2D<float4> gMotionVector : register(u0);
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// main
+////////////////////////////////////////////////////////////////////////////////////////////
+[numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)]
+void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
+	// TODO: MeshでのMotionVectorを実装.
+	
+	uint2 index = dispatchThreadId.xy;
+
+	if (CheckOverTexture(index)) {
+		return;
+	}
+
+	float depth = gDepth.Load(uint3(index, 0)).x;
+
+	float2 texcoord = (float2(index) + 0.5f) / dimension; //!< [0.0 ~ 1.0]
+	float2 viewport = texcoord * 2.0f - 1.0f; //!< [-1.0 ~ 1.0]
+	viewport.y *= -1.0f; //!< y軸反転
+
+	float3 position = gCurrentCamera.GetPosition(viewport, depth);
+
+	float3 current = gCurrentCamera.CalculateNDCPosition(position);
+	float3 prev    = gPrevCamera.CalculateNDCPosition(position); //!< HACK: 前フレーム自体のDepthを使用して取得する.
+
+	float3 delta = current - prev;
+	delta.y *= -1.0f; //!< y軸反転
+
+	gMotionVector[index] = float4(delta, 1.0f);
+	
+}

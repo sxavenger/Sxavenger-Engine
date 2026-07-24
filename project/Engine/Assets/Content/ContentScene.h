@@ -28,20 +28,19 @@ public:
 	// public methods
 	//=========================================================================================
 
-	ContentScene()           = default;
+	//* constructor / destructor *//
+
+	ContentScene() : BaseContent(Async::Execution::Cpu) {}
+
 	~ContentScene() override = default;
-
-	void AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) override;
-
-	AsyncExecution GetAsyncExecution() const { return AsyncExecution::None; }
-
-	void AttachUuid() override;
 
 	//* content option *//
 
-	void Load(const std::filesystem::path& filepath);
+	void Load(MAYBE_UNUSED const DirectXQueueContext* context) override;
 
-	const json& GetData() const { return data_; }
+	//* parameter option *//
+
+	json GetData() const { return data_; }
 
 private:
 

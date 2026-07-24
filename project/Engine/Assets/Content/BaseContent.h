@@ -6,13 +6,12 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
-#include <Engine/System/Runtime/Thread/AsyncTask.h>
-#include <Engine/System/Runtime/Thread/AsyncThread.h>
-#include <Engine/Assets/Asset/BaseAsset.h>
+#include <Engine/System/Runtime/Async/AsyncExecutionTask.h>
 #include <Engine/Editors/Editor/InspectorEditor.h>
 
 //* lib
 #include <Lib/Adapter/Uuid/Uuid.h>
+#include <Lib/Adapter/Json/JsonHandler.h>
 
 //* c++
 #include <filesystem>
@@ -27,51 +26,50 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 // BaseContent class
 ////////////////////////////////////////////////////////////////////////////////////////////
 class BaseContent
-	: public BaseInspector, public AsyncTask {
+	: public BaseInspector {
+public:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Status enum class
+	////////////////////////////////////////////////////////////////////////////////////////////
+	enum class Status : uint8_t {
+		None,    //!< 初期状態
+		Complete //!< 読み込み完了
+	};
+
 public:
 
 	//=========================================================================================
 	// public methods
 	//=========================================================================================
 
-	BaseContent() = default;
+	//* constructor / destructor *//
+
+	BaseContent(Async::Execution execution) : execution_(execution) {}
+
 	virtual ~BaseContent() = default;
 
-	//* async task option *//
+	//* content option *//
 
-	virtual void AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) = 0;
+	virtual void Attach(const std::filesystem::path& filepath, const std::any& parameter);
 
-	virtual AsyncExecution GetAsyncExecution() const = 0;
+	virtual void Load(MAYBE_UNUSED const DirectXQueueContext* context) = 0;
 
-	void Execute(const AsyncThread* thread) override;
-
-	//* uuid option *//
-
-	virtual void AttachUuid() = 0;
-
-	//* state option *//
-
-	bool IsComplete() const { return AsyncTask::IsCompleted(); }
-
-	void WaitComplete() const;
+	void ShowInspector() override {}
 
 	//* parameter option *//
 
-	void SetFilepath(const std::filesystem::path& filepath);
+	const std::filesystem::path& GetFilepath() const { return filepath_; }
 
-	const std::filesystem::path& GetFilepath() const;
+	const std::any& GetParameter() const { return parameter_; }
 
-	void SetParam(const std::any& param) { param_ = param; }
+	static const std::filesystem::path& GetMetaExtension() { return kMetaExtension; }
 
-	const std::any& GetParam() const { return param_; }
+	//* execution option *//
 
-	//* inspector option *//
+	const Async::Execution GetExecution() const { return execution_; }
 
-	virtual void ShowInspector() override;
-
-	//* extension option *//
-
-	static const std::filesystem::path& GetContentExtension() { return kContentExtension_; }
+	void WaitComplete() const;
 
 protected:
 
@@ -79,21 +77,23 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	std::filesystem::path filepath_; //!< content filepath.
-	std::any param_;                 //!< content parameter.
-	// FIXME: Anyの廃止
+	std::filesystem::path filepath_;
+	std::any parameter_;
+	// HACK: Anyの廃止
 
 	//=========================================================================================
 	// protected methods
 	//=========================================================================================
 
-	//* helper method *//
+	//* meta helper methods *//
 
-	void CheckExist() const;
+	static json LoadMetaData(const std::filesystem::path& filepath);
 
-	std::filesystem::path GetContentPath() const;
+	static void SaveMetaData(const json& data, const std::filesystem::path& filepath);
 
-	static void SelectInspector(BaseAsset* asset);
+	//* execution methods *//
+
+	void SetComplete() { status_ = Status::Complete; }
 
 private:
 
@@ -101,7 +101,19 @@ private:
 	// private variables
 	//=========================================================================================
 
-	static const inline std::filesystem::path kContentExtension_ = ".content";
+	const Async::Execution execution_;
+
+	static const inline std::filesystem::path kMetaExtension = ".content";
+
+	Status status_ = Status::None;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	//* meta helper methods *//
+
+	static std::filesystem::path GetMetaFilepath(const std::filesystem::path& filepath);
 
 };
 
@@ -109,6 +121,6 @@ private:
 // concept
 ////////////////////////////////////////////////////////////////////////////////////////////
 template <class T>
-concept ContentConcept = std::derived_from<T, BaseContent> && !std::is_same_v<T, BaseContent>;
+concept Content = std::derived_from<T, BaseContent>;
 
 SXAVENGER_ENGINE_NAMESPACE_END

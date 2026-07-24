@@ -13,6 +13,7 @@ SXAVENGER_ENGINE_USING
 #include "../Component/Light/Punctual/DirectionalLightComponent.h"
 #include "../Component/Light/Punctual/PointLightComponent.h"
 #include "../Component/Light/Punctual/SpotLightComponent.h"
+#include "../Component/Light/Rect/RectLightComponent.h"
 #include "../Component/Armature/ArmatureComponent.h"
 #include "../Component/MeshRenderer/MeshRendererComponent.h"
 #include "../Component/MeshRenderer/SkinnedMeshRendererComponent.h"
@@ -36,6 +37,10 @@ void BehaviourHelper::Destroy(BehaviourAddress& address) {
 	sEntityBehaviourStorage->PushUnregisterQueue(address);
 }
 
+void BehaviourHelper::CreateTransformBehaviour(EntityBehaviour* behaviour) {
+	behaviour->AddComponent<TransformComponent>();
+}
+
 void BehaviourHelper::CreateTransformBehaviour(const BehaviourAddress& address) {
 	address->AddComponent<TransformComponent>();
 }
@@ -44,6 +49,11 @@ BehaviourAddress BehaviourHelper::CreateTransformBehaviour() {
 	BehaviourAddress address = BehaviourHelper::Create("behaviour");
 	BehaviourHelper::CreateTransformBehaviour(address);
 	return address;
+}
+
+void BehaviourHelper::CreateCameraBehaviour(EntityBehaviour* behaviour) {
+	behaviour->AddComponent<TransformComponent>();
+	behaviour->AddComponent<CameraComponent>();
 }
 
 void BehaviourHelper::CreateCameraBehaviour(const BehaviourAddress& address) {
@@ -55,6 +65,11 @@ BehaviourAddress BehaviourHelper::CreateCameraBehaviour() {
 	BehaviourAddress address = BehaviourHelper::Create("camera");
 	BehaviourHelper::CreateCameraBehaviour(address);
 	return address;
+}
+
+void BehaviourHelper::CreateDirectionalLightBehaviour(EntityBehaviour* behaviour) {
+	behaviour->AddComponent<TransformComponent>();
+	behaviour->AddComponent<DirectionalLightComponent>();
 }
 
 void BehaviourHelper::CreateDirectionalLightBehaviour(const BehaviourAddress& address) {
@@ -73,6 +88,11 @@ BehaviourAddress BehaviourHelper::CreateDirectionalLightBehaviour() {
 	return address;
 }
 
+void BehaviourHelper::CreatePointLightBehaviour(EntityBehaviour* behaviour) {
+	behaviour->AddComponent<TransformComponent>();
+	behaviour->AddComponent<PointLightComponent>();
+}
+
 void BehaviourHelper::CreatePointLightBehaviour(const BehaviourAddress& address) {
 	address->AddComponent<TransformComponent>();
 	address->AddComponent<PointLightComponent>();
@@ -84,6 +104,11 @@ BehaviourAddress BehaviourHelper::CreatePointLightBehaviour() {
 	return address;
 }
 
+void BehaviourHelper::CreateSpotLightBehaviour(EntityBehaviour* behaviour) {
+	behaviour->AddComponent<TransformComponent>();
+	behaviour->AddComponent<SpotLightComponent>();
+}
+
 void BehaviourHelper::CreateSpotLightBehaviour(const BehaviourAddress& address) {
 	address->AddComponent<TransformComponent>();
 	address->AddComponent<SpotLightComponent>();
@@ -92,6 +117,22 @@ void BehaviourHelper::CreateSpotLightBehaviour(const BehaviourAddress& address) 
 BehaviourAddress BehaviourHelper::CreateSpotLightBehaviour() {
 	BehaviourAddress address = BehaviourHelper::Create("spot light");
 	BehaviourHelper::CreateSpotLightBehaviour(address);
+	return address;
+}
+
+void BehaviourHelper::CreateRectLightBehaviour(EntityBehaviour* behaviour) {
+	behaviour->AddComponent<TransformComponent>();
+	behaviour->AddComponent<RectLightComponent>();
+}
+
+void BehaviourHelper::CreateRectLightBehaviour(const BehaviourAddress& address) {
+	address->AddComponent<TransformComponent>();
+	address->AddComponent<RectLightComponent>();
+}
+
+BehaviourAddress BehaviourHelper::CreateRectLightBehaviour() {
+	BehaviourAddress address = BehaviourHelper::Create("rect light");
+	BehaviourHelper::CreateRectLightBehaviour(address);
 	return address;
 }
 
@@ -125,8 +166,8 @@ void BehaviourHelper::CreateSkinnedMeshBehaviour(const BehaviourAddress& address
 	// meshの登録
 	for (size_t i = 0; i < model->GetMeshCount(); ++i) {
 
-		auto mesh     = sAssetStorage->GetAsset<AssetMesh>(model->GetMeshId(i));
-		auto material = sAssetStorage->GetAsset<AssetMaterial>(model->GetMeshToMaterialId(i));
+		std::shared_ptr<AssetMesh> mesh = sAssetStorage->Get<AssetMesh>(model->GetMeshId(i));
+		std::shared_ptr<AssetMaterial> material = sAssetStorage->Get<AssetMaterial>(model->GetMeshToMaterialId(i));
 
 		BehaviourAddress child = BehaviourHelper::Create(mesh->GetName());
 
@@ -164,6 +205,19 @@ void BehaviourHelper::ForEachBehaviour(const BehaviourAddress& address, const st
 	BehaviourHelper::ForEachBehaviour(address.Get(), function);
 }
 
+void BehaviourHelper::SetMeshRendererMode(const BehaviourAddress& address, MeshRendererCommon::Mode mode) {
+
+	BehaviourHelper::ForEachBehaviour(address, [&](EntityBehaviour* child) {
+		if (MeshRendererComponent* component = child->GetComponent<MeshRendererComponent>()) {
+			component->SetMode(mode);
+		}
+
+		if (auto component = child->GetComponent<SkinnedMeshRendererComponent>()) {
+			component->SetMode(mode);
+		}
+	});
+}
+
 void BehaviourHelper::ApplyAnimation(const BehaviourAddress& address, const Animation& animation, TimePointd<TimeUnit::second> time, bool isLoop) {
 	auto child = address->FindChild(ArmatureComponent::kArmatureName);
 	child->GetComponent<ArmatureComponent>()->UpdateAnimation(animation, time, isLoop);
@@ -186,10 +240,9 @@ void BehaviourHelper::DetachBehaviourMaterial(const BehaviourAddress& address) {
 			std::shared_ptr<AssetMaterial> material = std::make_shared<AssetMaterial>(std::nullopt);
 			std::shared_ptr<AssetMaterial> reference = component->GetMaterial();
 			reference->WaitComplete();
-			reference->Wait();
 			reference->Update();
 
-			material->Copy(*reference);
+			*material = *reference; //!< Materialのコピー
 
 			component->SetMaterial(material);
 		}
@@ -198,10 +251,9 @@ void BehaviourHelper::DetachBehaviourMaterial(const BehaviourAddress& address) {
 			std::shared_ptr<AssetMaterial> material = std::make_shared<AssetMaterial>(std::nullopt);
 			std::shared_ptr<AssetMaterial> reference = component->GetMaterial();
 			reference->WaitComplete();
-			reference->Wait();
 			reference->Update();
 
-			material->Copy(*reference);
+			*material = *reference; //!< Materialのコピー
 
 			component->SetMaterial(material);
 		}
@@ -229,6 +281,21 @@ void BehaviourHelper::ModifyBehaviourMaterial(const BehaviourAddress& address, c
 	BehaviourHelper::ModifyBehaviourMaterial(address.Get(), function);
 }
 
+void BehaviourHelper::LoadBehaviour(const BehaviourAddress& address, const std::filesystem::path& filepath) {
+	json data;
+	if (JsonHandler::LoadFromJson(filepath, data)) {
+		address->DeserializeJson(data);
+
+	} else {
+		RuntimeLogger::LogError("[BehaviourHelper]", std::format("failed to load behaviour json file: {}", filepath.string()));
+	}
+}
+
+void BehaviourHelper::SaveBehaviour(const BehaviourAddress& address, const std::filesystem::path& filepath) {
+	json data = address->SerializeJson();
+	JsonHandler::WriteToJson(filepath, data);
+}
+
 void BehaviourHelper::CreateStaticMeshBehaviourNode(const BehaviourAddress& parent, const BornNode& node, const std::shared_ptr<ContentModel>& model) {
 
 	BehaviourAddress child = BehaviourHelper::Create(node.name);
@@ -241,8 +308,8 @@ void BehaviourHelper::CreateStaticMeshBehaviourNode(const BehaviourAddress& pare
 		// componentが1つの場合, そのままMeshRendererComponentを追加
 		const uint32_t meshIndex = node.meshIndices.front();
 
-		auto mesh     = sAssetStorage->GetAsset<AssetMesh>(model->GetMeshId(meshIndex));
-		auto material = sAssetStorage->GetAsset<AssetMaterial>(model->GetMeshToMaterialId(meshIndex));
+		std::shared_ptr<AssetMesh> mesh         = sAssetStorage->Get<AssetMesh>(model->GetMeshId(meshIndex));
+		std::shared_ptr<AssetMaterial> material = sAssetStorage->Get<AssetMaterial>(model->GetMeshToMaterialId(meshIndex));
 
 		auto renderer = child->AddComponent<MeshRendererComponent>();
 		renderer->SetMesh(mesh->GetId());
@@ -252,8 +319,8 @@ void BehaviourHelper::CreateStaticMeshBehaviourNode(const BehaviourAddress& pare
 		// componentが一つしか付けられないので苦肉の策
 		for (auto& meshIndex : node.meshIndices) {
 
-			auto mesh     = sAssetStorage->GetAsset<AssetMesh>(model->GetMeshId(meshIndex));
-			auto material = sAssetStorage->GetAsset<AssetMaterial>(model->GetMeshToMaterialId(meshIndex));
+			std::shared_ptr<AssetMesh> mesh         = sAssetStorage->Get<AssetMesh>(model->GetMeshId(meshIndex));
+			std::shared_ptr<AssetMaterial> material = sAssetStorage->Get<AssetMaterial>(model->GetMeshToMaterialId(meshIndex));
 
 			auto behaviour = BehaviourHelper::Create(mesh->GetName());
 

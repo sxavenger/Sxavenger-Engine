@@ -68,11 +68,15 @@ public:
 	//! @throw 指定したRenderQueueが対応されていない場合に例外をスローする
 	void RequestQueue(RenderQueue type) const;
 
+	//* getter *//
+
 	DxObject::CommandContext* GetDxCommand() const;
 
 	ID3D12GraphicsCommandList6* GetCommandList() const;
 
 	ID3D12CommandQueue* GetCommandQueue() const;
+
+	uint64_t GetTimestampFrequency() const;
 
 private:
 

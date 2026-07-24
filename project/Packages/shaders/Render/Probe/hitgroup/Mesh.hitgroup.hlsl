@@ -68,8 +68,8 @@ struct Surface {
 float3 CalculateDirectionalLight(uint index, Surface surface) {
 	//* Lightの情報を取得
 	float3 color_mask = gDirectionalLights[index].GetColorMask();
-	float light_mask  = gDirectionalLights[index].GetLightMask(gScene, gDirectionalLightTransforms[index].GetDirection(), surface.position);
-	float3 l          = gDirectionalLights[index].GetDirectionFromSurface(gDirectionalLightTransforms[index].GetDirection()); //!< lightの方向ベクトル
+	float light_mask  = gDirectionalLights[index].GetLightMask(gScene, gDirectionalLightTransforms[index].GetForwardDirection(), surface.position);
+	float3 l          = gDirectionalLights[index].GetDirectionFromSurface(gDirectionalLightTransforms[index].GetForwardDirection()); //!< lightの方向ベクトル
 
 	//* Viewの情報を取得
 	float3 v = normalize(-WorldRayDirection()); //!< viewからの方向ベクトルを取得
@@ -109,7 +109,7 @@ float3 CalculateSpotLight(uint index, Surface surface) {
 
 	//* Lightの情報を取得
 	float3 color_mask = gSpotLights[index].GetColorMask();
-	float light_mask  = gSpotLights[index].GetLightMask(gScene, gSpotLightTransforms[index].GetPosition(), gSpotLightTransforms[index].GetDirection(), surface.position);
+	float light_mask  = gSpotLights[index].GetLightMask(gScene, gSpotLightTransforms[index].GetPosition(), gSpotLightTransforms[index].GetForwardDirection(), surface.position);
 	float3 l          = gSpotLights[index].GetDirectionFromSurface(gSpotLightTransforms[index].GetPosition(), surface.position); //!< lightの方向ベクトル
 
 	//* Viewの情報を取得

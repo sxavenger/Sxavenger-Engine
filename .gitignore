@@ -333,8 +333,15 @@ FodyWeavers.xsd
 /project/externals/DirectXTex/Shaders/Compiled
 
 # Sxavenger Engine 内部出力関係
+*.wpix
 *.log
+*.compress
 /project/imgui.ini
+/project/Capture
+
+# Sxavenger Engine Script 関係
+/project/Assets/script/obj
+/project/Assets/script/bin
 
 # 負荷の高いAssets関係
 /project/assets/models/sponza

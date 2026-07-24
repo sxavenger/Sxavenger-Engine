@@ -10,7 +10,7 @@
 #include "DxDescriptorHeaps.h"
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
+#include <Lib/Math/Vector2.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DXOBJECT
@@ -35,6 +35,8 @@ public:
 		Device* device, DescriptorHeaps* descriptorHeaps,
 		const Vector2ui& size, DXGI_FORMAT format = DxObject::kDefaultDepthFormat
 	);
+
+	void Resize(Device* device, const Vector2ui& size, DXGI_FORMAT format = DxObject::kDefaultDepthFormat);
 
 	void Term();
 

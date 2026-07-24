@@ -7,9 +7,9 @@
 #include <Engine/Foundation.h>
 
 //* lib
-#include <Lib/Geometry/Vector3.h>
-#include <Lib/Geometry/Quaternion.h>
-#include <Lib/Geometry/GeometryMath.h>
+#include <Lib/Math/Vector3.h>
+#include <Lib/Math/Quaternion.h>
+#include <Lib/Math/GeometryMath.h>
 #include <Lib/Adapter/Time/TimePoint.h>
 
 //* c++
@@ -56,6 +56,14 @@ public:
 	AnimationCurve<Quaternion> rotate;
 	AnimationCurve<Vector3f>   translate;
 
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
+	static Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, TimePointd<TimeUnit::second> time);
+
+	static Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, TimePointd<TimeUnit::second> time);
+
 };
 
 struct Animation {
@@ -64,16 +72,9 @@ struct Animation {
 	// public variables
 	//=========================================================================================
 
-	TimePointd<TimeUnit::second>                        duration;
-	std::unordered_map<std::string, TransformAnimation> nodeAnimations;
-	//!< key: node名, value: Nodeのanimation
+	TimePointd<TimeUnit::second>                        duration;       //!< アニメーション全体時間
+	std::unordered_map<std::string, TransformAnimation> nodeAnimations; //!< ノード名とTransformAnimationのマップ
+
 };
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Animation methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-Vector3f CalculateAnimationCurve(const AnimationCurve<Vector3f>& keyframes, TimePointd<TimeUnit::second> time);
-Quaternion CalculateAnimationCurve(const AnimationCurve<Quaternion>& keyframes, TimePointd<TimeUnit::second> time);
 
 SXAVENGER_ENGINE_NAMESPACE_END

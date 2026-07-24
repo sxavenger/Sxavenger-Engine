@@ -6,6 +6,9 @@
 //* DXOBJECT
 #include "DxObjectCommon.h"
 
+//* lib
+#include <Lib/Sxl/Expected.h>
+
 //* DirectX12
 #include <dxcapi.h>
 #include <d3d12shader.h>
@@ -13,6 +16,8 @@
 //* c++
 #include <array>
 #include <filesystem>
+#include <list>
+#include <string>
 
 //-----------------------------------------------------------------------------------------
 // comment
@@ -38,7 +43,7 @@ public:
 
 	void Term();
 
-	//* compiler opiton *//
+	//* compiler option *//
 
 	ComPtr<IDxcBlob> Compile(
 		const std::filesystem::path& filepath,
@@ -46,9 +51,72 @@ public:
 		const std::wstring& entryPoint = L""
 	);
 
+	ComPtr<IDxcBlob> Compile(
+		const std::filesystem::path& filepath,
+		const std::string& code,
+		CompileProfile profile,
+		const std::wstring& entryPoint = L""
+	);
+
 	ComPtr<ID3D12ShaderReflection> Reflection(IDxcBlob* blob);
 
+	//* setter *//
+
+	void SetShaderModelTire(D3D_SHADER_MODEL model);
+
+	void SetSupportInlineRaytracing(bool isSupport) { isSupportInlineRaytracing_ = isSupport; }
+
+	//* singleton *//
+
 	static ShaderCompiler* GetInstance();
+
+private:
+
+	////////////////////////////////////////////////////////////////////////////////////////////
+	// Argument structure
+	////////////////////////////////////////////////////////////////////////////////////////////
+	struct Argument {
+	public:
+
+		//=========================================================================================
+		// public methods
+		//=========================================================================================
+
+		void PushArgument(LPCWSTR argument);
+
+		void PushArgument(const std::wstring& argument);
+
+		void AddFilepath(const std::filesystem::path& filepath);
+
+		void AddProfile(CompileProfile profile, const std::wstring& tire);
+
+		void AddEntryPoint(const std::wstring& entryPoint);
+
+		void AddDefine(LPCWSTR name);
+
+		//* getter *//
+
+		LPCWSTR* GetData() { return arguments_.data(); }
+
+		UINT32 GetCount() const { return static_cast<UINT32>(arguments_.size()); }
+
+	private:
+
+		//=========================================================================================
+		// private variables
+		//=========================================================================================
+
+		std::vector<LPCWSTR> arguments_; //!< コンパイルオプションの引数
+
+		std::list<std::wstring> lifetime_; //!< 引数の寿命を管理するリスト
+
+		//=========================================================================================
+		// private methods
+		//=========================================================================================
+
+		std::wstring GetProfile(CompileProfile profile, const std::wstring& tire) const;
+
+	};
 
 private:
 
@@ -62,7 +130,28 @@ private:
 	ComPtr<IDxcCompiler3>      compiler_;
 	ComPtr<IDxcIncludeHandler> includeHandler_;
 
-	static const std::array<LPCWSTR, static_cast<uint8_t>(CompileProfile::lib) + 1> profiles_;
+	//* shader stage *//
+
+	static const std::array<LPCWSTR, static_cast<uint8_t>(CompileProfile::Lib) + 1> stages_;
+
+	//* compiler features *//
+
+	std::wstring tire_ = L"6_6";
+
+	bool isSupportInlineRaytracing_ = true;
+
+	//=========================================================================================
+	// private methods
+	//=========================================================================================
+
+	std::wstring GetProfile(CompileProfile profile) const;
+
+	Sxl::Expected<ComPtr<IDxcBlob>, std::string> Compile(
+		const std::filesystem::path& filepath,
+		IDxcBlobEncoding* source,
+		CompileProfile profile,
+		std::wstring entryPoint = L""
+	);
 
 };
 

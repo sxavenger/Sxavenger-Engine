@@ -14,13 +14,15 @@
 #include "DirectX/DirectXCommon.h"
 #include "DirectX/Context/DirectXQueueContext.h"
 #include "DirectX/Context/DirectXWindowContext.h"
+#include "DirectX/DirectXPixEvent.h"
 #include "Window/WindowCollection.h"
 #include "Runtime/Input/Input.h"
 #include "Runtime/Performance/Performance.h"
-#include "Runtime/Performance/LapTimer.h"
-
-#include "Runtime/Thread/AsyncThreadCollection.h"
+#include "Runtime/Performance/TimestampCpu.h"
+#include "Runtime/Performance/TimestampGpu.h"
+#include "Runtime/Async/AsyncExecutionThreadPool.h"
 #include "UI/ImGuiController.h"
+#include "Mono/MonoController.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -70,12 +72,17 @@ public:
 	// GameWindowCollection option
 	//-----------------------------------------------------------------------------------------
 
-	static const std::weak_ptr<DirectXWindowContext> CreateMainWindow(
-		const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor = DirectXWindowContext::kDefaultClearColor
+	static const std::shared_ptr<DirectXWindowContext> CreateMainWindow(
+		const Vector2ui& client, const std::wstring& name,
+		Sxl::Flag<DirectXWindowContext::Style> style = DirectXWindowContext::Style::Default,
+		const Color4f& color = DirectXWindowContext::kDefaultClearColor
 	);
 
-	static const std::weak_ptr<DirectXWindowContext> CreateSubWindow(
-		const Vector2ui& clientSize, const LPCWSTR& name, DirectXWindowContext::ProcessCategory category, const Color4f& clearColor = DirectXWindowContext::kDefaultClearColor
+	static const std::shared_ptr<DirectXWindowContext> CreateSubWindow(
+		const Vector2ui& client, const std::wstring& name,
+		DirectXWindowContext::ProcessCategory category = DirectXWindowContext::ProcessCategory::Window,
+		Sxl::Flag<DirectXWindowContext::Style> style = DirectXWindowContext::Style::Default,
+		const Color4f& color = DirectXWindowContext::kDefaultClearColor
 	);
 
 	//! @brief メッセージ処理
@@ -93,7 +100,7 @@ public:
 	static DirectXWindowContext* GetMainWindow();
 
 	//! @brief フォーカスされているウィンドウの取得
-	static DirectXWindowContext* GetForcusWindow();
+	static DirectXWindowContext* GetFocusWindow();
 
 	static WindowCollection* GetWindowCollection();
 
@@ -119,35 +126,48 @@ public:
 	// Performance option
 	//-----------------------------------------------------------------------------------------
 
-	static void BeginPerformace();
+	static void BeginPerformance();
 
-	static void EndPerformace();
+	static void EndPerformance();
 
 	static TimePointd<TimeUnit::second> GetDeltaTimed();
 	static TimePointf<TimeUnit::second> GetDeltaTimef();
 
-	static void Record(const std::string& name);
+	static void RecordCpu(const std::string& name);
+
+	static void BeginRecordGpu(const std::string& name);
+
+	static void EndRecordGpu();
 
 	static Performance* GetPerformance();
 
-	static LapTimer* GetLapTimer();
+	static TimestampCpu* GetTimestampCpu();
+
+	static TimestampGpu* GetTimestampGpu();
 
 	//-----------------------------------------------------------------------------------------
-	// Async thread collection option
+	// Async execution thread pool option
 	//-----------------------------------------------------------------------------------------
 
 	//! @brief 非同期タスクを追加
 	//! @param[in] execution 実行するスレッド
 	//! @param[in] task      実行するタスク
-	static void PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task);
+	static void PushTask(const std::shared_ptr<Async::ExecutionTask>& task);
 
 	//! @brief 非同期タスクを追加
 	//! @param[in] execution 実行するスレッド
-	//! @param[in] function 実行する関数
+	//! @param[in] tag       タスクのタグ
+	//! @param[in] function  実行する関数
 	//! @return 追加されたタスク
-	static std::shared_ptr<AsyncTask> PushTask(AsyncExecution execution, const AsyncTask::Function& function);
+	static std::shared_ptr<Async::ExecutionTask> PushTask(Async::Execution execution, const std::string& tag, const Async::ExecutionTask::ExecutionFunction& function);
 
-	static AsyncThreadCollection* GetAsyncThreadCollection();
+	//! @brief 非同期タスクを追加
+	//! @param[in] execution 実行するスレッド
+	//! @param[in] function  実行する関数
+	//! @return 追加されたタスク
+	static std::shared_ptr<Async::ExecutionTask> PushTask(Async::Execution execution, const Async::ExecutionTask::ExecutionFunction& function);
+
+	static Async::ExecutionThreadPool* GetExecutionThreadPool();
 
 	//-----------------------------------------------------------------------------------------
 	// imgui controller option
@@ -157,9 +177,15 @@ public:
 
 	static void EndImGuiFrame();
 
-	static void RenderImGui(DirectXQueueContext* context = GetDirectQueueContext());
+	static void RenderImGui(const Vector2ui& size = Configuration::GetConfig().resolution, DirectXQueueContext* context = GetDirectQueueContext());
 
 	static ImGuiController* GetImGuiController();
+
+	//-----------------------------------------------------------------------------------------
+	// Mono option
+	//-----------------------------------------------------------------------------------------
+	
+	static Mono::Instance CreateMonoInstance(const std::string& _namespace, const std::string& _class);
 
 };
 

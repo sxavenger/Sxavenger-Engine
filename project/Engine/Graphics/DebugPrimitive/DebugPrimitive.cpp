@@ -9,7 +9,7 @@ SXAVENGER_ENGINE_USING
 #include <Engine/System/System.h>
 
 //* lib
-#include <Lib/Geometry/GeometryMath.h>
+#include <Lib/Math/GeometryMath.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DebugPrimitive class methods
@@ -347,27 +347,27 @@ void DebugPrimitive::CreatePipeline() {
 	{
 		auto& pipeline = pipelines_[static_cast<uint32_t>(PipelineType::Line)];
 		pipeline = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.vs.hlsl", DxObject::GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.gs.hlsl", DxObject::GraphicsShaderType::gs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.ps.hlsl", DxObject::GraphicsShaderType::ps);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.vs.hlsl", DxObject::GraphicsShaderType::Vertex);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.gs.hlsl", DxObject::GraphicsShaderType::Geometry);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.ps.hlsl", DxObject::GraphicsShaderType::Pixel);
 
 		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
 		DxObject::GraphicsPipelineDesc desc = {};
-		desc.CreateDefaultDesc();
-
-		desc.elements.clear();
-		desc.SetElement("POSITION", 0,  DXGI_FORMAT_R32G32B32A32_FLOAT);
-		desc.SetElement("COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		
+		desc.SetElement("POSITION",  0,  DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("COLOR",     0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("THICKNESS", 0, DXGI_FORMAT_R32_FLOAT);
 
-		desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
-		desc.SetPrimitive(DxObject::PrimitiveType::LineList);
-
+		desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_WIREFRAME);
 		desc.SetDepthStencil(true);
 
-		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
+		desc.SetPrimitive(DxObject::PrimitiveType::LineList);
+
+		desc.SetRTVFormat(DXGI_FORMAT_R16G16B16A16_FLOAT);
 		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
+
+		desc.SetDSVFormat(DxObject::kDefaultDepthFormat);
 
 		pipeline->CreatePipeline(System::GetDxDevice(), desc);
 	}
@@ -375,26 +375,24 @@ void DebugPrimitive::CreatePipeline() {
 	{
 		auto& pipeline = pipelines_[static_cast<uint32_t>(PipelineType::LineOverlay)];
 		pipeline = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.vs.hlsl", DxObject::GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.gs.hlsl", DxObject::GraphicsShaderType::gs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.ps.hlsl", DxObject::GraphicsShaderType::ps);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.vs.hlsl", DxObject::GraphicsShaderType::Vertex);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.gs.hlsl", DxObject::GraphicsShaderType::Geometry);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Line/PrimitiveLine.ps.hlsl", DxObject::GraphicsShaderType::Pixel);
 
 		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
 		DxObject::GraphicsPipelineDesc desc = {};
-		desc.CreateDefaultDesc();
-
-		desc.elements.clear();
+		
 		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("COLOR",     0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("THICKNESS", 0, DXGI_FORMAT_R32_FLOAT);
 
 		desc.SetRasterizer(D3D12_CULL_MODE_NONE, D3D12_FILL_MODE_SOLID);
-		desc.SetPrimitive(DxObject::PrimitiveType::LineList);
-
 		desc.SetDepthStencil(false);
 
-		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
+		desc.SetPrimitive(DxObject::PrimitiveType::LineList);
+
+		desc.SetRTVFormat(DXGI_FORMAT_R16G16B16A16_FLOAT);
 		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
 
 		pipeline->CreatePipeline(System::GetDxDevice(), desc);
@@ -403,16 +401,14 @@ void DebugPrimitive::CreatePipeline() {
 	{
 		auto& pipeline = pipelines_[static_cast<uint32_t>(PipelineType::Point)];
 		pipeline = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.vs.hlsl", DxObject::GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.gs.hlsl", DxObject::GraphicsShaderType::gs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.ps.hlsl", DxObject::GraphicsShaderType::ps);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.vs.hlsl", DxObject::GraphicsShaderType::Vertex);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.gs.hlsl", DxObject::GraphicsShaderType::Geometry);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.ps.hlsl", DxObject::GraphicsShaderType::Pixel);
 
 		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
 		DxObject::GraphicsPipelineDesc desc = {};
-		desc.CreateDefaultDesc();
-
-		desc.elements.clear();
+		
 		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("COLOR",     0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("THICKNESS", 0, DXGI_FORMAT_R32_FLOAT);
@@ -425,22 +421,22 @@ void DebugPrimitive::CreatePipeline() {
 		desc.SetRTVFormat(0, DXGI_FORMAT_R16G16B16A16_FLOAT);
 		desc.SetBlendMode(0, BlendMode::Normal_AlphaMax);
 
+		desc.SetDSVFormat(DxObject::kDefaultDepthFormat);
+
 		pipeline->CreatePipeline(System::GetDxDevice(), desc);
 	}
 
 	{
 		auto& pipeline = pipelines_[static_cast<uint32_t>(PipelineType::PointOverlay)];
 		pipeline = std::make_unique<DxObject::ReflectionGraphicsPipelineState>();
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.vs.hlsl", DxObject::GraphicsShaderType::vs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.gs.hlsl", DxObject::GraphicsShaderType::gs);
-		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.ps.hlsl", DxObject::GraphicsShaderType::ps);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.vs.hlsl", DxObject::GraphicsShaderType::Vertex);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.gs.hlsl", DxObject::GraphicsShaderType::Geometry);
+		pipeline->CreateBlob(kPackagesDirectory / "shaders/render/debug/Point/PrimitivePoint.ps.hlsl", DxObject::GraphicsShaderType::Pixel);
 
 		pipeline->ReflectionRootSignature(System::GetDxDevice());
 
 		DxObject::GraphicsPipelineDesc desc = {};
-		desc.CreateDefaultDesc();
-
-		desc.elements.clear();
+		
 		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("COLOR",     0, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		desc.SetElement("THICKNESS", 0, DXGI_FORMAT_R32_FLOAT);

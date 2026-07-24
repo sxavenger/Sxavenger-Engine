@@ -8,11 +8,12 @@
 
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* lib
-#include <Lib/Geometry/Vector2.h>
-#include <Lib/Geometry/Matrix4x4.h>
+#include <Lib/Math/Vector2.h>
+#include <Lib/Math/Matrix4x4.h>
+#include <Lib/Transform/Transformation.h>
 
 //* c++
 #include <memory>
@@ -50,7 +51,7 @@ public:
 
 		void Init();
 
-		void TransferView(const Matrix4x4& _world);
+		void TransferView(const Transformation& _transformation);
 
 		void TransferProj(const Matrix4x4& _proj);
 
@@ -79,7 +80,7 @@ public:
 
 		void Init();
 
-		Matrix4x4 ToProj() const;
+		Matrix4x4 ToProjection() const;
 
 		//=========================================================================================
 		// public variables
@@ -105,9 +106,9 @@ public:
 
 	//* buffer option *//
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetPrevGPUVirtualAddress() const;
+	const D3D12_GPU_VIRTUAL_ADDRESS GetPrevGPUVirtualAddress() const;
 
 	void SwapBuffer();
 

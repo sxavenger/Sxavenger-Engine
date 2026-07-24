@@ -8,8 +8,8 @@
 #include <Engine/Graphics/Animation/BornNode.h>
 
 //* lib
-#include <Lib/Geometry/Matrix4x4.h>
-#include <Lib/Transform/Transform.h>
+#include <Lib/Math/Matrix4x4.h>
+#include <Lib/Transform/TransformQuaternion.h>
 
 //* c++
 #include <cstdint>
@@ -34,7 +34,7 @@ struct Joint {
 
 	std::optional<uint32_t> parent; //!< 親のJointのindex, いなければnull
 
-	QuaternionTransform transform;
+	TransformQuaternion transform;
 
 	Matrix4x4 localMatrix;
 	Matrix4x4 skeletonSpaceMatrix; //!< skeleton空間でのmatrix
@@ -86,7 +86,7 @@ private:
 
 	uint32_t CreateJoint(const BornNode& node, const std::optional<uint32_t>& parent);
 
-	std::optional<QuaternionTransform> GetTransform(const std::string& jointName, const Animation& animation, TimePointd<TimeUnit::second> time);
+	std::optional<TransformQuaternion> GetTransform(const std::string& jointName, const Animation& animation, TimePointd<TimeUnit::second> time);
 
 	void ApplyAnimation(const Animation& animation, TimePointd<TimeUnit::second> time);
 

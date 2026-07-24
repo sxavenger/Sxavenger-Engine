@@ -1,420 +1,298 @@
 #include "AssetMaterial.h"
 SXAVENGER_ENGINE_USING
-DXOBJECT_USING
 
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
 //* asset
+#include "AssetTexture.h"
 #include "AssetStorage.h"
 
-//* ucontent
+//* content
+#include "../Content/ContentTexture.h"
 #include "../Content/ContentStorage.h"
 
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
 #include <Engine/System/System.h>
 
-//* external
-#include <magic_enum.hpp>
+//* lib
+#include <Lib/Adapter/Json/JsonHandler.h>
+#include <Lib/Adapter/Json/JsonSerializer.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Albedo structure methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void AssetMaterial::Albedo::Init() {
-	type  = Type::Value;
-	color = kWhite3<float>;
-	index = NULL;
-}
-
-void AssetMaterial::Albedo::SetValue(const Color3f& _color) {
-	type  = Type::Value;
-	color = _color;
-}
-
-void AssetMaterial::Albedo::SetTexture(uint32_t _index) {
-	type  = Type::Texture;
-	index = _index;
-}
-
-void AssetMaterial::Albedo::SetValueMultiply(const Color3f& _color) {
-	if (type == Type::Value) {
-		SetValue(_color); //!< Textureが設定されていない場合はValueとして設定
-		return;
-	}
-
-	type  = Type::Multiply;
-	color = _color;
-}
-
-void AssetMaterial::Albedo::SetTextureMultiply(uint32_t _index) {
-	type  = Type::Multiply;
-	index = _index;
-}
-
-void AssetMaterial::Albedo::SetImGuiCommand() {
-	if (ImGui::RadioButton("Value", type == Type::Value)) {
-		type = Type::Value;
-	}
-
-	ImGui::SameLine();
-
-	if (ImGui::RadioButton("Texture", type == Type::Texture)) {
-		type = Type::Texture;
-	}
-
-	ImGui::SameLine();
-
-	if (ImGui::RadioButton("Multiply", type == Type::Multiply)) {
-		type = Type::Multiply;
-	}
-
-	switch (type) {
-		case Type::Value:
-			ImGui::ColorEdit3("color", &color.x);
-			break;
-
-		case Type::Texture:
-			ImGui::Text("texture index: %d", index);
-			break;
-
-		case Type::Multiply:
-			ImGui::ColorEdit3("color", &color.x);
-			ImGui::Text("texture index: %d", index);
-			break;
-	};
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Transparency structure methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void AssetMaterial::Transparency::Init() {
-	type = Type::Value;
-	value = 1.0f;
-	index = NULL;
-}
-
-void AssetMaterial::Transparency::SetValue(float _value) {
-	type  = Type::Value;
-	value = _value;
-}
-
-void AssetMaterial::Transparency::SetTexture(uint32_t _index) {
-	type = Type::Texture;
-	index = _index;
-}
-
-void AssetMaterial::Transparency::SetImGuiCommand() {
-	if (ImGui::RadioButton("Value", type == Type::Value)) {
-		type = Type::Value;
-	}
-
-	ImGui::SameLine();
-
-	if (ImGui::RadioButton("Texture", type == Type::Texture)) {
-		type = Type::Texture;
-	}
-
-	switch (type) {
-		case Type::Value:
-			ImGui::DragFloat("value", &value, 0.01f, 0.0f, 1.0f);
-			break;
-
-		case Type::Texture:
-			ImGui::Text("texture index: %d", index);
-			break;
-	};
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Normal structure methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void AssetMaterial::Normal::Init() {
-	type = Type::None;
-	index = NULL;
-}
-
-void AssetMaterial::Normal::SetNone() {
-	type = Type::None;
-}
-
-void AssetMaterial::Normal::SetTexture(uint32_t _index) {
-	type = Type::Texture;
-	index = _index;
-}
-
-void AssetMaterial::Normal::SetImGuiCommand() {
-	if (ImGui::RadioButton("None", type == Type::None)) {
-		type = Type::None;
-	}
-
-	ImGui::SameLine();
-
-	if (ImGui::RadioButton("Texture", type == Type::Texture)) {
-		type = Type::Texture;
-	}
-
-	if (type == Type::Texture) {
-		ImGui::Text("texture index: %d", index);
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Property structure methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void AssetMaterial::Property::Init() {
-	type = Type::Value;
-	value = 0.0f;
-	index = NULL;
-}
-
-void AssetMaterial::Property::SetValue(float _value) {
-	type = Type::Value;
-	value = _value;
-}
-
-void AssetMaterial::Property::SetTexture(uint32_t _index) {
-	type = Type::Texture;
-	index = _index;
-}
-
-void AssetMaterial::Property::SetImGuiCommand() {
-	if (ImGui::RadioButton("Value", type == Type::Value)) {
-		type = Type::Value;
-	}
-
-	ImGui::SameLine();
-
-	if (ImGui::RadioButton("Texture", type == Type::Texture)) {
-		type = Type::Texture;
-	}
-
-	if (type == Type::Value) {
-		ImGui::DragFloat("value", &value, 0.01f, 0.0f, 1.0f);
-
-	} else {
-		ImGui::Text("texture index: %d", index);
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// SurfaceProperties structure
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void AssetMaterial::SurfaceProperties::Init() {
-	ao.Init();
-	roughness.Init();
-	metallic.Init();
-}
-
-void AssetMaterial::SurfaceProperties::SetImGuiCommand() {
-	if (ImGui::TreeNode("ao")) {
-		ao.SetImGuiCommand();
-		ImGui::TreePop();
-	}
-
-	if (ImGui::TreeNode("roughness")) {
-		roughness.SetImGuiCommand();
-		ImGui::TreePop();
-	}
-
-	if (ImGui::TreeNode("metallic")) {
-		metallic.SetImGuiCommand();
-		ImGui::TreePop();
-	}
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// Transform structure methods
-////////////////////////////////////////////////////////////////////////////////////////////
-
-void AssetMaterial::UVTransformation::Init() {
-	mat = Matrix4x4::Identity();
-}
-
-void AssetMaterial::UVTransformation::Transfer(const Matrix4x4& _mat) {
-	mat = _mat;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-// MaterialBuffer structure methods
+// [AssetMaterial] MaterialBuffer structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetMaterial::MaterialBuffer::Init() {
-	transformation.Init();
-	albedo.Init();
-	transparency.Init();
-	normal.Init();
-	properties.Init();
+	*this = MaterialBuffer{};
+}
+
+void AssetMaterial::MaterialBuffer::SetAlbedoTexture(const DxObject::ReferenceDescriptor& descriptor) {
+	albedo.index = descriptor.GetIndex();
+	flags.Set(TextureFlag::Albedo);
+}
+
+void AssetMaterial::MaterialBuffer::SetAlbedoTexture(std::nullopt_t) {
+	albedo.index = NULL;
+	flags.Reset(TextureFlag::Albedo);
+}
+
+void AssetMaterial::MaterialBuffer::SetAlbedoTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor) {
+	if (descriptor.has_value()) {
+		SetAlbedoTexture(descriptor.value());
+
+	} else {
+		SetAlbedoTexture(std::nullopt);
+	}
+}
+
+void AssetMaterial::MaterialBuffer::SetTransparencyTexture(const DxObject::ReferenceDescriptor& descriptor) {
+	transparency.index = descriptor.GetIndex();
+	flags.Set(TextureFlag::Transparency);
+}
+
+void AssetMaterial::MaterialBuffer::SetTransparencyTexture(std::nullopt_t) {
+	transparency.index = NULL;
+	flags.Reset(TextureFlag::Transparency);
+}
+
+void AssetMaterial::MaterialBuffer::SetTransparencyTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor) {
+	if (descriptor.has_value()) {
+		SetTransparencyTexture(descriptor.value());
+
+	} else {
+		SetTransparencyTexture(std::nullopt);
+	}
+}
+
+void AssetMaterial::MaterialBuffer::SetNormalTexture(const DxObject::ReferenceDescriptor& descriptor) {
+	normal.index = descriptor.GetIndex();
+	flags.Set(TextureFlag::Normal);
+}
+
+void AssetMaterial::MaterialBuffer::SetNormalTexture(std::nullopt_t) {
+	normal.index = NULL;
+	flags.Reset(TextureFlag::Normal);
+}
+
+void AssetMaterial::MaterialBuffer::SetNormalTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor) {
+	if (descriptor.has_value()) {
+		SetNormalTexture(descriptor.value());
+
+	} else {
+		SetNormalTexture(std::nullopt);
+	}
+}
+
+void AssetMaterial::MaterialBuffer::SetRoughnessTexture(const DxObject::ReferenceDescriptor& descriptor) {
+	roughness.index = descriptor.GetIndex();
+	flags.Set(TextureFlag::Roughness);
+}
+
+void AssetMaterial::MaterialBuffer::SetRoughnessTexture(std::nullopt_t) {
+	roughness.index = NULL;
+	flags.Reset(TextureFlag::Roughness);
+}
+
+void AssetMaterial::MaterialBuffer::SetRoughnessTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor) {
+	if (descriptor.has_value()) {
+		SetRoughnessTexture(descriptor.value());
+
+	} else {
+		SetRoughnessTexture(std::nullopt);
+	}
+}
+
+void AssetMaterial::MaterialBuffer::SetMetallicTexture(const DxObject::ReferenceDescriptor& descriptor) {
+	metallic.index = descriptor.GetIndex();
+	flags.Set(TextureFlag::Metallic);
+}
+
+void AssetMaterial::MaterialBuffer::SetMetallicTexture(std::nullopt_t) {
+	metallic.index = NULL;
+	flags.Reset(TextureFlag::Metallic);
+}
+
+void AssetMaterial::MaterialBuffer::SetMetallicTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor) {
+	if (descriptor.has_value()) {
+		SetMetallicTexture(descriptor.value());
+
+	} else {
+		SetMetallicTexture(std::nullopt);
+	}
+}
+
+void AssetMaterial::MaterialBuffer::SetEmissiveTexture(const DxObject::ReferenceDescriptor& descriptor) {
+	emissive.index = descriptor.GetIndex();
+	flags.Set(TextureFlag::Emissive);
+}
+
+void AssetMaterial::MaterialBuffer::SetEmissiveTexture(std::nullopt_t) {
+	emissive.index = NULL;
+	flags.Reset(TextureFlag::Emissive);
+}
+
+void AssetMaterial::MaterialBuffer::SetEmissiveTextureOptional(const std::optional<DxObject::ReferenceDescriptor>& descriptor) {
+	if (descriptor.has_value()) {
+		SetEmissiveTexture(descriptor.value());
+	} else {
+		SetEmissiveTexture(std::nullopt);
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// AssetMaterial class methods
+// Material class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 void AssetMaterial::Setup(const aiMaterial* material, const std::filesystem::path& directory) {
 
-	// albedoの取得
-	textures_[static_cast<uint8_t>(TextureType::Albedo)] = GetTextureId(material, aiTextureType_DIFFUSE, directory);
+	// 名前の取得
+	BaseAsset::SetName(material->GetName().C_Str());
+
+	// albedo, transparencyの取得
+	textures_[static_cast<uint8_t>(Texture::Albedo)]       = GetTextureId(material, aiTextureType_DIFFUSE, directory);
+	textures_[static_cast<uint8_t>(Texture::Transparency)] = textures_[static_cast<uint8_t>(Texture::Albedo)]; //!< 同一Textureとして使用する.
 
 	// normalの取得
 	if (material->GetTextureCount(aiTextureType_HEIGHT) != 0) { //!< .objの場合
-		textures_[static_cast<uint8_t>(TextureType::Bump)] = GetTextureId(material, aiTextureType_HEIGHT, directory, true);
+		textures_[static_cast<uint8_t>(Texture::Normal)] = GetTextureId(material, aiTextureType_HEIGHT, directory, true);
 
 	} else if (material->GetTextureCount(aiTextureType_NORMALS) != 0) { //!< .gltfの場合
-		textures_[static_cast<uint8_t>(TextureType::Bump)] = GetTextureId(material, aiTextureType_NORMALS, directory, true);
+		textures_[static_cast<uint8_t>(Texture::Normal)] = GetTextureId(material, aiTextureType_NORMALS, directory, true);
 	}
 
 	// roughnessの取得
-	textures_[static_cast<uint8_t>(TextureType::Roughness)] = GetTextureId(material, aiTextureType_DIFFUSE_ROUGHNESS, directory, true);
+	textures_[static_cast<uint8_t>(Texture::Roughness)] = GetTextureId(material, aiTextureType_DIFFUSE_ROUGHNESS, directory, true);
 
 	// metallicの取得
-	textures_[static_cast<uint8_t>(TextureType::Metallic)] = GetTextureId(material, aiTextureType_METALNESS, directory, true);
+	textures_[static_cast<uint8_t>(Texture::Metallic)] = GetTextureId(material, aiTextureType_METALNESS, directory, true);
 
-	// ambient occlusionの取得
-	textures_[static_cast<uint8_t>(TextureType::AmbientOcclusion)] = GetTextureId(material, aiTextureType_AMBIENT_OCCLUSION, directory, true);
+	// emissiveの取得
+	textures_[static_cast<uint8_t>(Texture::Emissive)] = GetTextureId(material, aiTextureType_EMISSIVE, directory);
 
 	// colorの取得
 	aiColor3D color;
 	if (material->Get(AI_MATKEY_COLOR_DIFFUSE, color) == AI_SUCCESS) {
-		color_ = { color.r, color.g, color.b };
+		buffer_.At().albedo.value = { color.r, color.g, color.b };
 	}
 
 	// roughnessの取得
 	float roughness;
 	if (material->Get(AI_MATKEY_ROUGHNESS_FACTOR, roughness) == AI_SUCCESS) {
-		roughness_ = roughness;
+		buffer_.At().roughness.value = roughness;
 	}
 
 	// metallicの取得
 	float metallic;
 	if (material->Get(AI_MATKEY_METALLIC_FACTOR, metallic) == AI_SUCCESS) {
-		metallic_ = metallic;
+		buffer_.At().metallic.value = metallic;
 	}
 
-	// todo: specularFactorの設定
+	// transform
+	transform_ = GetTransform2d(material);
 
-	BaseAsset::Complete();
-	StreamLogger::EngineThreadLog(std::format("[AssetMaterial]: material setup complete. uuid: {}", BaseAsset::GetId().Serialize()));
+	BaseAsset::SetComplete();
+	StreamLogger::EngineThreadLog(std::format("[AssetMaterial]: material [assimp] setup complete. uuid: {}", BaseAsset::SerializeId()));
+}
+
+void AssetMaterial::Setup(const json& data) {
+	
+	//!< albedoの取得
+	if (data.contains("albedo")) {
+		const json& albedo = data["albedo"];
+		buffer_.At().albedo.value                        = JsonSerializeFormatter<Color3f>::Deserialize(albedo["value"]);
+		textures_[static_cast<uint8_t>(Texture::Albedo)] = GetTextureId(albedo["texture"]);
+	}
+
+	//!< normalの取得
+	if (data.contains("normal")) {
+		const json& normal = data["normal"];
+		textures_[static_cast<uint8_t>(Texture::Normal)] = GetTextureId(normal["texture"], true);
+	}
+
+	//!< transparencyの取得
+	if (data.contains("transparency")) {
+		const json& transparency = data["transparency"];
+		buffer_.At().transparency.value                        = JsonSerializeFormatter<float>::Deserialize(transparency["value"]);
+		textures_[static_cast<uint8_t>(Texture::Transparency)] = GetTextureId(transparency["texture"], true);
+	}
+
+	//!< roughnessの取得
+	if (data.contains("roughness")) {
+		const json& roughness = data["roughness"];
+		buffer_.At().roughness.value                        = JsonSerializeFormatter<float>::Deserialize(roughness["value"]);
+		textures_[static_cast<uint8_t>(Texture::Roughness)] = GetTextureId(roughness["texture"], true);
+	}
+
+	//!< metallicの取得
+	if (data.contains("metallic")) {
+		const json& metallic = data["metallic"];
+		buffer_.At().metallic.value                        = JsonSerializeFormatter<float>::Deserialize(metallic["value"]);
+		textures_[static_cast<uint8_t>(Texture::Metallic)] = GetTextureId(metallic["texture"], true);
+	}
+
+	//!< emissiveの取得
+	if (data.contains("emissive")) {
+		const json& emissive = data["emissive"];
+		buffer_.At().emissive.value                        = JsonSerializeFormatter<Color3f>::Deserialize(emissive["value"]);
+		buffer_.At().emissive.intensity                    = JsonSerializeFormatter<float>::Deserialize(emissive["intensity"]);
+		textures_[static_cast<uint8_t>(Texture::Emissive)] = GetTextureId(emissive["texture"], true);
+	}
+
+	//!< transformの取得
+	if (data.contains("transform")) {
+		const json& transform = data["transform"];
+		transform_ = Transform2d::Deserialize(transform);
+	}
+
+	BaseAsset::SetComplete();
+	StreamLogger::EngineThreadLog(std::format("[AssetMaterial]: material [json] setup complete. uuid: {}", BaseAsset::SerializeId()));
 }
 
 void AssetMaterial::Update() {
 
-	auto& parameter = buffer_->At(0);
+	auto& parameter = buffer_.At();
 
-	// diffuse
-	if (textures_[static_cast<uint8_t>(TextureType::Albedo)].has_value()) {
-		auto texture = sAssetStorage->GetAsset<AssetTexture>(textures_[static_cast<uint8_t>(TextureType::Albedo)].value());
+	// albedo
+	parameter.SetAlbedoTextureOptional(AssetMaterial::GetTextureDescriptor(Texture::Albedo));
 
-		parameter.albedo.SetTexture(texture->GetDescriptorSRV().GetIndex());
-		parameter.transparency.SetTexture(texture->GetDescriptorSRV().GetIndex());
+	// transparency
+	parameter.SetTransparencyTextureOptional(AssetMaterial::GetTextureDescriptor(Texture::Transparency));
 
-	} else {
-		parameter.albedo.SetValue(color_);
-		parameter.transparency.SetValue(1.0f);
-	}
-
-	// bump
-	if (textures_[static_cast<uint8_t>(TextureType::Bump)].has_value()) {
-		auto texture = sAssetStorage->GetAsset<AssetTexture>(textures_[static_cast<uint8_t>(TextureType::Bump)].value());
-
-		parameter.normal.SetTexture(texture->GetDescriptorSRV().GetIndex());
-	}
+	// normal
+	parameter.SetNormalTextureOptional(AssetMaterial::GetTextureDescriptor(Texture::Normal));
 
 	// roughness
-	if (textures_[static_cast<uint8_t>(TextureType::Roughness)].has_value()) {
-		auto texture = sAssetStorage->GetAsset<AssetTexture>(textures_[static_cast<uint8_t>(TextureType::Roughness)].value());
-
-		parameter.properties.roughness.SetTexture(texture->GetDescriptorSRV().GetIndex());
-
-	} else {
-		parameter.properties.roughness.SetValue(roughness_);
-	}
+	parameter.SetRoughnessTextureOptional(AssetMaterial::GetTextureDescriptor(Texture::Roughness));
 
 	// metallic
-	if (textures_[static_cast<uint8_t>(TextureType::Metallic)].has_value()) {
-		auto texture = sAssetStorage->GetAsset<AssetTexture>(textures_[static_cast<uint8_t>(TextureType::Metallic)].value());
-		
-		parameter.properties.metallic.SetTexture(texture->GetDescriptorSRV().GetIndex());
+	parameter.SetMetallicTextureOptional(AssetMaterial::GetTextureDescriptor(Texture::Metallic));
 
-	} else {
-		parameter.properties.metallic.SetValue(metallic_);
-	}
+	// emissive
+	parameter.SetEmissiveTextureOptional(AssetMaterial::GetTextureDescriptor(Texture::Emissive));
 
-	// ambient occlusion
-	if (textures_[static_cast<uint8_t>(TextureType::AmbientOcclusion)].has_value()) {
-		auto texture = sAssetStorage->GetAsset<AssetTexture>(textures_[static_cast<uint8_t>(TextureType::AmbientOcclusion)].value());
-
-		parameter.properties.ao.SetTexture(texture->GetDescriptorSRV().GetIndex());
-	}
+	// transform
+	parameter.SetTransformation(transform_.ToMatrix());
 
 }
 
-void AssetMaterial::Copy(const AssetMaterial& material) {
+AssetMaterial& AssetMaterial::operator=(const AssetMaterial& other) {
+	textures_  = other.textures_;
+	transform_ = other.transform_;
 
-	textures_ = material.textures_;
+	buffer_.At() = other.buffer_.At();
 
-	color_     = material.color_;
-	roughness_ = material.roughness_;
-	metallic_  = material.metallic_;
-
-	transform_ = material.transform_;
-
-	mode_ = material.mode_;
-
-	buffer_->At(0) = material.buffer_->At(0);
+	return *this;
 }
 
-void AssetMaterial::Wait() {
-	for (const auto& textureId : textures_) {
-		if (textureId.has_value()) {
-			auto texture = sAssetStorage->GetAsset<AssetTexture>(textureId.value());
-			texture->WaitComplete();
-		}
-	}
-}
-
-void AssetMaterial::ShowInspector() {
-	BaseAsset::ShowInspector();
-
-	if (!BaseAsset::IsComplete()) { //!< loadが完了していない場合
-		ImGui::Text("loading...");
-		return;
-	}
-
-	if (ImGui::BeginCombo("mode", magic_enum::enum_name(mode_).data())) {
-		for (const auto& [value, name] : magic_enum::enum_entries<Mode>()) {
-			if (ImGui::Selectable(name.data(), mode_ == value)) {
-				mode_ = value;
-			}
-		}
-		ImGui::EndCombo();
-	}
-
-
-
-}
-
-const D3D12_GPU_VIRTUAL_ADDRESS& AssetMaterial::GetGPUVirtualAddress() const {
-	StreamLogger::AssertA(buffer_ != nullptr, "buffer is not create.");
-	return buffer_->GetGPUVirtualAddress();
-}
-
-const AssetMaterial::MaterialBuffer& AssetMaterial::GetBuffer() const {
-	StreamLogger::AssertA(buffer_ != nullptr, "buffer is not create.");
-	return buffer_->At(0);
-}
-
-AssetMaterial::MaterialBuffer& AssetMaterial::GetBuffer() {
-	StreamLogger::AssertA(buffer_ != nullptr, "buffer is not create.");
-	return buffer_->At(0);
+void AssetMaterial::CreateBuffer() {
+	buffer_.Create(System::GetDxDevice());
+	buffer_.At() = MaterialBuffer{};
 }
 
 std::optional<Uuid> AssetMaterial::GetTextureId(const aiMaterial* aiMaterial, aiTextureType type, const std::filesystem::path& directory, bool isIntensity) {
+
 	if (aiMaterial->GetTextureCount(type) == 0) {
 		return std::nullopt; //!< テクスチャが存在しない場合はnulloptを返す
 	}
@@ -424,13 +302,54 @@ std::optional<Uuid> AssetMaterial::GetTextureId(const aiMaterial* aiMaterial, ai
 
 	std::filesystem::path filepath = directory / part.C_Str();
 
-	ContentTexture::Option option = isIntensity ? ContentTexture::Option{ ContentTexture::Encoding::Intensity, true } : ContentTexture::Option{ ContentTexture::Encoding::Lightness, true };
+	ContentTexture::Option option = {};
+	option.encoding         = isIntensity ? ContentTexture::Encoding::Intensity : ContentTexture::Encoding::Lightness;
+	option.isGenerateMipmap = true;
 
-	return sContentStorage->Import<ContentTexture>(filepath, option)->GetId(); //!< UContentStorageからIdを取得して返す
+	return sContentStorage->Import<ContentTexture>(filepath, option)->GetId(); //!< ContentStorageからIdを取得して返す
+
 }
 
-void AssetMaterial::CreateBuffer() {
-	buffer_ = std::make_unique<DimensionBuffer<MaterialBuffer>>();
-	buffer_->Create(System::GetDxDevice(), 1);
-	buffer_->At(0).Init();
+Transform2d AssetMaterial::GetTransform2d(const aiMaterial* aiMaterial) {
+	Transform2d transform = {};
+
+	aiUVTransform t;
+	if (aiMaterial->Get(AI_MATKEY_UVTRANSFORM(aiTextureType_DIFFUSE, 0), t) == AI_SUCCESS) {
+		transform.translate = { t.mTranslation.x, t.mTranslation.y };
+		transform.rotate    = t.mRotation;
+		transform.scale     = { t.mScaling.x, t.mScaling.y };
+	}
+
+	return transform;
 }
+
+std::optional<Uuid> AssetMaterial::GetTextureId(const json& data, bool isIntensity) {
+	//!< jsonからのTextureの取得
+
+	if (data.is_null()) {
+		return std::nullopt; //!< テクスチャが存在しない場合はnulloptを返す
+	}
+
+	std::filesystem::path filepath = data.get<std::string>();
+
+	ContentTexture::Option option = {};
+	option.encoding         = isIntensity ? ContentTexture::Encoding::Intensity : ContentTexture::Encoding::Lightness;
+	option.isGenerateMipmap = true;
+
+	return sContentStorage->Import<ContentTexture>(filepath, option)->GetId(); //!< ContentStorageからIdを取得して返す
+}
+
+std::optional<DxObject::ReferenceDescriptor> AssetMaterial::GetTextureDescriptor(Texture texture) const {
+
+	if (textures_[static_cast<uint8_t>(texture)].has_value()) {
+		std::shared_ptr<AssetTexture> asset
+			= sAssetStorage->Get<AssetTexture>(textures_[static_cast<uint8_t>(texture)].value());
+
+		if (asset->IsComplete()) {
+			return asset->GetDescriptorSRV();
+		}
+	}
+
+	return std::nullopt;
+}
+

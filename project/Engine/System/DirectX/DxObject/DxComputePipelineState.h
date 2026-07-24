@@ -13,7 +13,7 @@
 #include "DxBindBuffer.h"
 
 //* lib
-#include <Lib/Geometry/Vector3.h>
+#include <Lib/Math/Vector3.h>
 
 //* c++
 #include <filesystem>
@@ -59,7 +59,7 @@ protected:
 	// protected variables
 	//=========================================================================================
 
-	std::optional<ShaderBlob> blob_;
+	ShaderBlob blob_;
 
 	//* rootSignature *//
 
@@ -106,7 +106,7 @@ public:
 
 	void ReflectionPipeline(Device* device, const SamplerBindDesc& desc);
 
-	void BindComputeBuffer(CommandContext* context, const BindBufferDesc& desc);
+	void BindComputeBuffer(const CommandContext* context, const BindBufferDesc& desc) const;
 
 private:
 

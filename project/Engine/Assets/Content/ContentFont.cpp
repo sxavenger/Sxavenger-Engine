@@ -17,34 +17,23 @@ SXAVENGER_ENGINE_USING
 // ContentFont class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentFont::AsyncLoad(MAYBE_UNUSED const DirectXQueueContext* context) {
-	BaseContent::CheckExist();
+void ContentFont::Attach(const std::filesystem::path& filepath, const std::any& parameter) {
 
-	Load(context, BaseContent::GetFilepath());
+	//!< 引数の保存
+	BaseContent::Attach(filepath, parameter);
+
+	//!< Uuidの割り当て
+	AttachUuid(filepath);
+
+	//!< Storageに登録
+	sAssetStorage->Register<AssetFont>(id_, filepath);
+
 }
 
-void ContentFont::AttachUuid() {
-	BaseContent::CheckExist();
+void ContentFont::Load(MAYBE_UNUSED const DirectXQueueContext* context) {
 
-	// idを取得
-	GetUuid();
-
-	// storageに登録
-	auto asset = std::make_shared<AssetFont>(id_);
-	sAssetStorage->Register(asset, BaseContent::GetFilepath());
-}
-
-void ContentFont::ShowInspector() {
-	BaseContent::ShowInspector();
-
-	if (ImGui::Button("Font")) {
-		BaseContent::SelectInspector(sAssetStorage->GetAsset<AssetFont>(id_).get());
-	}
-}
-
-void ContentFont::Load(const DirectXQueueContext* context, const std::filesystem::path& filepath) {
-	std::ifstream file(filepath, std::ios::binary);
-	StreamLogger::AssertA(file.is_open(), "font load failed. filepath: " + filepath.generic_string());
+	std::ifstream file(BaseContent::GetFilepath(), std::ios::binary);
+	StreamLogger::AssertA(file.is_open(), "font load failed. filepath: " + BaseContent::GetFilepath().generic_string());
 
 	file.seekg(0, std::ios::end);
 	size_t size = static_cast<size_t>(file.tellg());
@@ -61,25 +50,26 @@ void ContentFont::Load(const DirectXQueueContext* context, const std::filesystem
 
 	const float kFontSize = 64.0f; //!< todo: parameter化
 
-	auto asset = sAssetStorage->GetAsset<AssetFont>(id_);
+	std::shared_ptr<AssetFont> asset = sAssetStorage->Get<AssetFont>(id_);
 	asset->Setup(context, info, kFontSize);
+
+	BaseContent::SetComplete(); //!< 読み込み完了
 }
 
-void ContentFont::GetUuid() {
-	std::filesystem::path filepath = BaseContent::GetContentPath();
+void ContentFont::AttachUuid(const std::filesystem::path& filepath) {
 
-	if (JsonHandler::CheckExist(filepath)) {
-		//!< Idが既に存在する場合は、Json形式で読み込む
-		json data = JsonHandler::LoadFromJson(filepath);
-		id_ = Uuid::Deserialize(data["id"].get<std::string>());
+	json meta = BaseContent::LoadMetaData(filepath);
+
+	if (meta.contains("id")) {
+		//!< idが既に存在する場合は、metaから取得する
+		id_ = Uuid::Deserialize(meta["id"].get<std::string>());
 
 	} else {
-		//!< 新しくIdを生成し, Json形式で保存する
+		//!< idが存在しない場合は、新しくidを生成し, metaに保存する
 		id_ = Uuid::Generate();
 
-		json data = json::object();
-		data["id"] = id_.Serialize();
-
-		JsonHandler::WriteToJson(filepath, data);
+		meta["id"] = id_.Serialize();
+		BaseContent::SaveMetaData(meta, filepath);
 	}
+
 }

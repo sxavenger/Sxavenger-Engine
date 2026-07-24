@@ -17,11 +17,11 @@ GeometryForwardTransparentOutput main(GeometryPSInput input) {
 	
 	GeometryForwardTransparentOutput output = (GeometryForwardTransparentOutput)0;
 
-	MaterialLib::TextureSampler parameter;
-	parameter.Set(input.texcoord, gSampler);
+	MaterialLib::TextureSampler parameter
+		= MaterialLib::TextureSampler::Create(input.texcoord, gSampler);
 
-	float3 albedo      = gMaterials[input.instanceId].albedo.GetAlbedo(parameter);
-	float transparency = gMaterials[input.instanceId].transparency.GetTransparency(parameter);
+	float3 albedo      = gMaterials[input.instanceId].GetAlbedo(parameter);
+	float transparency = gMaterials[input.instanceId].GetTransparency(parameter);
 
 	float weight = WeightedBlendedOIT::CalculateWeight(transparency, input.position.z, gCamera.near, gCamera.far);
 

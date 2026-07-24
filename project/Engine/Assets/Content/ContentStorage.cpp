@@ -14,21 +14,24 @@ SXAVENGER_ENGINE_USING
 // ContentStorage class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void ContentStorage::Emplace(const std::type_info* type, const std::shared_ptr<BaseContent>& content) {
-	content->AttachUuid();
+void ContentStorage::Emplace(const std::type_info* type, const std::shared_ptr<BaseContent>& content, const std::filesystem::path& filepath, const std::any& parameter) {
+	ContentStorage::CheckExists(filepath); //!< ファイルの存在確認
 
-	System::PushTask(content->GetAsyncExecution(), content);
+	content->Attach(filepath, parameter); //!< filepathとparameterの保存
 
-	storage_[type][content->GetFilepath()] = content;
+	//!< 非同期Taskとして設定.
+	System::PushTask(content->GetExecution(), filepath.filename().string(), [content](const Async::ExecutionTask*, const DirectXQueueContext* context) { content->Load(context); });
+
+	storage_[type][filepath] = content; //!< storageに登録
 }
 
-void ContentStorage::TryEmplace(const std::type_info* type, const std::shared_ptr<BaseContent>& content) {
-	if (Contains(type, content->GetFilepath())) {
-		RuntimeLogger::LogComment("[UAssetStorage]", "content is already registered in storage. \n filepath: " + content->GetFilepath().generic_string());
+void ContentStorage::TryEmplace(const std::type_info* type, const std::shared_ptr<BaseContent>& content, const std::filesystem::path& filepath, const std::any& parameter) {
+	if (ContentStorage::Contains(type, filepath)) {
+		RuntimeLogger::LogDebug("[AssetStorage]", "content is already registered in storage. filepath: " + filepath.generic_string());
 		return;
 	}
 
-	Emplace(type, content);
+	ContentStorage::Emplace(type, content, filepath, parameter);
 }
 
 std::shared_ptr<BaseContent> ContentStorage::GetContent(const std::type_info* type, const std::filesystem::path& filepath) const {
@@ -86,6 +89,10 @@ std::optional<std::filesystem::path> ContentStorage::DragAndDropTargetFilepath(c
 ContentStorage* ContentStorage::GetInstance() {
 	static ContentStorage instance;
 	return &instance;
+}
+
+void ContentStorage::CheckExists(const std::filesystem::path& filepath) {
+	StreamLogger::AssertA(std::filesystem::exists(filepath), "file is not exists. filepath: " + filepath.generic_string());
 }
 
 bool ContentStorage::Contains(const std::type_info* type, const std::filesystem::path& filepath) const {

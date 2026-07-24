@@ -5,9 +5,11 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Utility/Convert.h>
 #include <Engine/System/Utility/StreamLogger.h>
 #include <Engine/System/UI/SxImGui.h>
+
+//* lib
+#include <Lib/Adapter/String/EncodedString.h>
 
 //* external
 #include <imgui.h>
@@ -20,23 +22,32 @@ SXAVENGER_ENGINE_USING
 // WindowCollection class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-std::weak_ptr<DirectXWindowContext> WindowCollection::CreateMainWindow(const Vector2ui& size, const std::wstring& name, const Color4f& color) {
+std::shared_ptr<DirectXWindowContext> WindowCollection::CreateMainWindow(
+	const Vector2ui& client, const std::wstring& name,
+	Sxl::Flag<DirectXWindowContext::Style> style,
+	const Color4f& color) {
+
 	main_ = std::make_shared<DirectXWindowContext>();
-	main_->Init(size, name, DirectXWindowContext::ProcessCategory::Application, color);
+	main_->Init(client, name, DirectXWindowContext::ProcessCategory::Application, style, color);
 
 	hwnds_.emplace(main_->GetHwnd(), main_.get());
 
 	return main_;
 }
 
-std::weak_ptr<DirectXWindowContext> WindowCollection::CreateSubWindow(const Vector2ui& size, const std::wstring& name, DirectXWindowContext::ProcessCategory category, const Color4f& color) {
+std::shared_ptr<DirectXWindowContext> WindowCollection::CreateSubWindow(
+	const Vector2ui& client, const std::wstring& name,
+	DirectXWindowContext::ProcessCategory category,
+	Sxl::Flag<DirectXWindowContext::Style> style,
+	const Color4f& color) {
+
 	if (windows_.contains(name)) {
-		StreamLogger::EngineLog(L"warninig | window with name '" + name + L"' already exists.");
+		StreamLogger::EngineLog(L"warning | window with name '" + name + L"' already exists.");
 		return windows_.at(name);
 	}
 
 	auto window = std::make_shared<DirectXWindowContext>();
-	window->Init(size, name, category, color);
+	window->Init(client, name, category, style, color);
 	windows_.emplace(name, window);
 
 	hwnds_.emplace(window->GetHwnd(), window.get());
@@ -101,24 +112,24 @@ void WindowCollection::RemoveClosedWindow() {
 }
 
 
-DirectXWindowContext* WindowCollection::GetForcusWindow() const {
+DirectXWindowContext* WindowCollection::GetFocusWindow() const {
 
-	HWND forcus = GetForegroundWindow();
+	HWND focus = GetForegroundWindow();
 
-	if (forcus == nullptr || !hwnds_.contains(forcus)) {
+	if (focus == nullptr || !hwnds_.contains(focus)) {
 		return nullptr;
 	}
 
-	return hwnds_.at(forcus);
+	return hwnds_.at(focus);
 }
 
 void WindowCollection::SystemDebugGui() {
 	ImGui::Dummy({ 240.0f, 0 });
 
-	DirectXWindowContext* current = GetForcusWindow();
+	DirectXWindowContext* current = GetFocusWindow();
 
 	ImGui::SeparatorText("main window");
-	if (ImGui::Selectable(ToString(main_->GetName()).c_str(), main_.get() == current)) {
+	if (ImGui::Selectable(EncodedString::Convert(main_->GetName()).c_str(), main_.get() == current)) {
 		SetForegroundWindow(main_->GetHwnd());
 	}
 
@@ -126,8 +137,8 @@ void WindowCollection::SystemDebugGui() {
 
 		ImGui::Text("common info");
 		ImGui::Separator();
-		ImGui::Text("name:     %s",      ToString(main_->GetName()).c_str());
-		ImGui::Text("size:     %u x %u", main_->GetSize().x, main_->GetSize().y);
+		ImGui::Text("name:     %s",      EncodedString::Convert(main_->GetName()).c_str());
+		ImGui::Text("size:     %u x %u", main_->GetClient().x, main_->GetClient().y);
 		ImGui::Text("category: %s",      magic_enum::enum_name(main_->GetCategory()).data());
 		ImGui::Dummy({ 0, 4 });
 		
@@ -146,7 +157,7 @@ void WindowCollection::SystemDebugGui() {
 
 	ImGui::SeparatorText("sub window");
 	for (const auto& window : windows_ | std::views::values) {
-		if (ImGui::Selectable(ToString(window->GetName()).c_str(), window.get() == current)) {
+		if (ImGui::Selectable(EncodedString::Convert(window->GetName()).c_str(), window.get() == current)) {
 			SetForegroundWindow(window->GetHwnd());
 		}
 	}

@@ -6,12 +6,11 @@ DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* engine
-#include <Engine/System/Utility/Convert.h>
 #include <Engine/System/Utility/StreamLogger.h>
 #include <Engine/System/System.h>
 
-//* windows
-#include <pix.h>
+//* lib
+#include <Lib/Adapter/String/EncodedString.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DirectXQueueContext class methods
@@ -33,7 +32,7 @@ void DirectXQueueContext::Init(uint32_t allocator, RenderQueue type) {
 }
 
 void DirectXQueueContext::SetName(const std::wstring& name) const {
-	context_->SetName(std::format(L"{} | {}", name, ToWString(magic_enum::enum_name(type_))));
+	context_->SetName(std::format(L"{} | {}", name, EncodedString::Convert(magic_enum::enum_name(type_))));
 }
 
 void DirectXQueueContext::TransitionAllocator() const {
@@ -59,7 +58,7 @@ void DirectXQueueContext::BeginEvent(const std::wstring& name) const {
 		return;
 	}
 
-	PIXBeginEvent(context_->GetCommandList(), 0, name.c_str());
+	context_->BeginEvent(name);
 }
 
 void DirectXQueueContext::EndEvent() const {
@@ -67,7 +66,7 @@ void DirectXQueueContext::EndEvent() const {
 		return;
 	}
 
-	PIXEndEvent(context_->GetCommandList());
+	context_->EndEvent();
 }
 
 bool DirectXQueueContext::IsSupportQueue(RenderQueue type) const {
@@ -91,6 +90,14 @@ ID3D12GraphicsCommandList6* DirectXQueueContext::GetCommandList() const {
 ID3D12CommandQueue* DirectXQueueContext::GetCommandQueue() const {
 	StreamLogger::AssertA(context_ != nullptr, "[DirectXQueueContext] context is not create.");
 	return context_->GetCommandQueue();
+}
+
+uint64_t DirectXQueueContext::GetTimestampFrequency() const {
+	uint64_t frequency = 0;
+	auto hr = context_->GetCommandQueue()->GetTimestampFrequency(&frequency);
+	DxObject::Assert(hr, L"Timestamp Frequency failed.");
+
+	return frequency;
 }
 
 

@@ -5,12 +5,14 @@ SXAVENGER_ENGINE_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "FRenderCore.h"
+#include "Core/FRenderCore.h"
+#include "Core/FRenderCoreTransition.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FPresenter class methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void FPresenter::Present(const DirectXQueueContext* context, const Vector2ui& size, const D3D12_GPU_DESCRIPTOR_HANDLE& handle) {
-	FRenderCore::GetInstance()->GetTransition()->Present(context, size, handle);
+void FPresenter::Present(const DirectXQueueContext* context, const Vector2ui& resolution, const D3D12_GPU_DESCRIPTOR_HANDLE& handle) {
+	auto core = FRenderCore::GetInstance()->EnsureRenderCore<FRenderCoreTransition>();
+	core->Present(context, resolution, handle);
 }

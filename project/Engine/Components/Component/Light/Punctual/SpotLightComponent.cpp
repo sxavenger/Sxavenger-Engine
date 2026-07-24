@@ -14,6 +14,9 @@ DXOBJECT_USING
 #include <Engine/System/System.h>
 #include <Engine/Graphics/Graphics.h>
 
+//* lib
+#include <Lib/Math/GeometryMath.h>
+
 //* externals
 #include <magic_enum.hpp>
 
@@ -70,7 +73,7 @@ void SpotLightComponent::ShowComponentInspector() {
 	Graphics::PushCone(RequireTransform()->GetPosition(), RequireTransform()->GetDirection(), parameter.radius, parameter.coneAngle.y, Color4f{ parameter.color, 1.0f });
 }
 
-const D3D12_GPU_VIRTUAL_ADDRESS& SpotLightComponent::GetGPUVirtualAddress() const {
+const D3D12_GPU_VIRTUAL_ADDRESS SpotLightComponent::GetGPUVirtualAddress() const {
 	StreamLogger::AssertA(parameter_ != nullptr, "spot light buffer is not create.");
 	return parameter_->GetGPUVirtualAddress();
 }

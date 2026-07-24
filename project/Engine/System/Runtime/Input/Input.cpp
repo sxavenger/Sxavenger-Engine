@@ -43,7 +43,7 @@ void KeyboardInput::AsyncUpdate() {
 
 	InputData& input = inputs_[static_cast<uint8_t>(InputType::Async_Stack)];
 
-	input.isEnableAcquire = SetCooperativeLevel(System::GetForcusWindow());
+	input.isEnableAcquire = SetCooperativeLevel(System::GetFocusWindow());
 
 	if (!input.isEnableAcquire) {
 		input.Clear();
@@ -252,7 +252,7 @@ void MouseInput::AsyncUpdate() {
 
 	InputData& input = inputs_[static_cast<uint8_t>(InputType::Async_Stack)];
 
-	input.isEnableAcquire = SetCooperativeLevel(System::GetForcusWindow());
+	input.isEnableAcquire = SetCooperativeLevel(System::GetFocusWindow());
 
 	if (!input.isEnableAcquire) {
 		input.Clear();

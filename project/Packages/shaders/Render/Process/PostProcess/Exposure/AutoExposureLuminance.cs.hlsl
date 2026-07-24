@@ -2,7 +2,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "AutoExposure.hlsli"
-#include "../../../../Library/Math.hlsli"
+#include "../../../../Library/Mathmatic.hlsli"
 #include "../../../../Library/ACES.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -12,23 +12,23 @@
 uint CalculateBin(float3 color) {
 	float luminance = dot(color, ACES::AP1_RGB2Y);
 	
-	if (luminance < kEpsilon) {
+	if (luminance < Mathmatic::kEpsilon) {
 		return 0;
 	}
 
 	float logLuminance = saturate((log2(luminance) - gParameter.minLogLuminance) * kLogLuminanceRangeInv);
-	return uint(logLuminance * (_GROUP_SIZE - 1) + 1.0);
+	return uint(logLuminance * (GROUP_SIZE - 1) + 1.0);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)]
+[numthreads(NUM_THREADS_X, NUM_THREADS_Y, 1)]
 void main(uint3 dispatchThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispatchThreadId.xy;
 	
-	if (CheckOverTexture(index)) {
+	if (CheckOverDimension(index)) {
 		return; //!< texture size over
 	}
 

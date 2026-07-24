@@ -15,6 +15,7 @@ SXAVENGER_ENGINE_USING
 
 //* c++
 #include <ranges>
+#include <numeric>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // DevelopEditor class methods
@@ -56,7 +57,7 @@ void DevelopEditor::BreakPoint(const std::source_location& location) {
 	locate += std::to_string(location.line());
 	locate += "\n";
 
-	RuntimeLogger::LogComment("[DevelopEditor]" , "break point called. \n locate: " + locate);
+	RuntimeLogger::LogInformation("[DevelopEditor]" , "break point called. \n locate: " + locate);
 }
 
 void DevelopEditor::ShowConfigMenu() {
@@ -100,7 +101,7 @@ void DevelopEditor::ShowProcessMenu() {
 		ImGui::SeparatorText("process");
 
 		if (processLimit_.has_value()) {
-			if (ImGui::Button("resame")) { //!< 再生
+			if (ImGui::Button("resume")) { //!< 再生
 				processLimit_      = std::nullopt;
 				isProcessRequired_ = true;
 			}
@@ -174,7 +175,7 @@ void DevelopEditor::ShowSystemMenu() {
 void DevelopEditor::ShowThreadMenu() {
 	if (ImGui::BeginMenu("thread")) {
 		MenuPadding();
-		System::GetAsyncThreadCollection()->SystemDebugGui();
+		System::GetExecutionThreadPool()->DebugGui();
 		ImGui::EndMenu();
 	}
 }
@@ -192,35 +193,108 @@ void DevelopEditor::ShowPerformanceWindow() {
 		ImGui::PushStyleColor(ImGuiCol_WindowBg, ImGuiController::ToImVec4({ 45, 5, 8, 255 }));
 	}
 
+	{ //!< Historyの更新
+
+		TimePointf<TimeUnit::second> time = System::GetDeltaTimef();
+
+		if (time.time > 0.0f) {
+			frameHistory_.emplace_back(1.0f / time.time); //!< fps履歴
+		}
+
+		if (frameHistory_.size() > kFrameHistoryCount) {
+			frameHistory_.pop_front();
+		}
+
+		// TODO: Historyの描画
+	}
+
 	BaseEditor::SetNextWindowDocking();
-	ImGui::Begin("Performace ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoTitleBar);
+	ImGui::Begin("Performance ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag() | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 	TimePointf<TimeUnit::second> time = System::GetDeltaTimef();
 
-	std::string text = "";
-	text += std::format("[exec speed / frame]: {:.6f}", time.time) + " ";
-	text += std::format("[frame per second]: {:.1f}",   1.0f / time.time);
-	ImGui::Text(text.c_str());
+	ImVec2 position = ImGui::GetCursorScreenPos();
+	ImVec2 size     = ImGui::GetContentRegionAvail();
 
+	//!< 基本情報(テキスト)
+	ImGui::BeginGroup();
+	ImGui::Text(std::format("{} [exec speed / frame]: {:.4f}sec", SxGui::Icon::Timer, time.time).c_str());
+	ImGui::SameLine(0.0f, ImGui::GetStyle().ItemInnerSpacing.x * 2);
+	ImGui::Text(std::format("{} [frame per second]: {:.1f}fps", SxGui::Icon::Stack, 1.0f / time.time).c_str());
+	ImGui::EndGroup();
+
+	ImGui::SetCursorScreenPos(position);
+	ImGui::InvisibleButton("## FullWindow", size);
+
+	//!< tooltip(詳細情報)
 	if (ImGui::BeginItemTooltip()) {
 
-		if (ImGui::BeginTable("## record laps", 2, ImGuiTableFlags_ScrollY | ImGuiTableFlags_Borders)) {
+		{ //!< CPU Timestamp
+			ImGui::BeginGroup();
+
+			ImGui::Text(std::format("{} CPU Timestamp", SxGui::Icon::Timer).c_str());
+
+			ImGui::BeginTable("## record cpu timestamp", 2, ImGuiTableFlags_Borders);
 			ImGui::TableSetupColumn("name");
-			ImGui::TableSetupColumn("lap");
+			ImGui::TableSetupColumn("timestamp - section / [elapsed]");
 			ImGui::TableHeadersRow();
 
-			const auto& laps = System::GetLapTimer()->GetLap();
+			const TimestampCpu::Timestamp& timestamp = System::GetTimestampCpu()->GetTimestamp();
 
-			for (const auto& lap : laps) {
+			auto itr = std::ranges::max_element(timestamp, {}, &TimestampCpu::Stamp::section); //!< sectionの最大値を持つiterator
+
+			for (const auto& stamp : timestamp) {
 				ImGui::TableNextRow();
 				ImGui::TableNextColumn();
-				ImGui::Text(lap.name.c_str());
+				ImGui::Text(stamp.name.c_str());
 
 				ImGui::TableNextColumn();
-				ImGui::Text(std::format("{:.2f}ms / [{:.2f}ms]", lap.delta.time, lap.elapsed.time).c_str());
-			}
 
+				float t = static_cast<float>(stamp.section.time) / static_cast<float>(itr->section.time); //!< sectionの最大値に対する割合
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f - t, 1.0f)); //!< sectionの最大値に近いほど黄色になる
+
+				ImGui::Text(std::format("{:.2f}ms / [{:.2f}ms]", stamp.section.time, stamp.elapsed.time).c_str());
+
+				ImGui::PopStyleColor();
+			}
 			ImGui::EndTable();
+
+			ImGui::EndGroup();
+		}
+
+		SxGui::DummyLine();
+
+		{ //!< GPU Timestamp
+			ImGui::BeginGroup();
+
+			ImGui::Text(std::format("{} GPU Timestamp", SxGui::Icon::Hourglass).c_str());
+
+			ImGui::BeginTable("## record gpu timestamp", 2, ImGuiTableFlags_Borders);
+			ImGui::TableSetupColumn("name");
+			ImGui::TableSetupColumn("timestamp - section");
+			ImGui::TableHeadersRow();
+
+			const TimestampGpu::Timestamp& timestamp = System::GetTimestampGpu()->GetTimestamp();
+
+			auto itr = std::ranges::max_element(timestamp.stamps, {}, &TimestampGpu::Stamp::section); //!< sectionの最大値を持つiterator
+
+			for (const auto& stamp : timestamp.stamps) {
+				ImGui::TableNextRow();
+				ImGui::TableNextColumn();
+				ImGui::Text(stamp.name.c_str());
+
+				ImGui::TableNextColumn();
+
+				float t = static_cast<float>(stamp.section.time) / static_cast<float>(itr->section.time); //!< sectionの最大値に対する割合
+				ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f - t, 1.0f)); //!< sectionの最大値に近いほど黄色になる
+
+				ImGui::Text(std::format("{:.2f}ms", stamp.section.time).c_str());
+
+				ImGui::PopStyleColor();
+			}
+			ImGui::EndTable();
+
+			ImGui::EndGroup();
 		}
 
 		ImGui::EndTooltip();
@@ -234,64 +308,81 @@ void DevelopEditor::ShowPerformanceWindow() {
 }
 
 void DevelopEditor::ShowConsole() {
+	// TODO: コマンドの実行機能などの追加
+
+	std::string label = std::format("{} Console ## Developer Editor", SxGui::Icon::Terminal);
+
 	BaseEditor::SetNextWindowDocking();
-	ImGui::Begin("Console ## Engine Developer Editor", nullptr, BaseEditor::GetWindowFlag());
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag());
+
+	//* constant variables *//
+
+	static const std::pair<SxGui::Icon, ImColor> kLogLevelStyle[magic_enum::enum_count<RuntimeLogger::Level>()] = {
+		{ SxGui::Icon::Dialog,      ImGui::GetStyle().Colors[ImGuiCol_Text] }, //!< Level::Information
+		{ SxGui::Icon::Dialog,      ImColor(0.80f, 0.80f, 0.80f) },            //!< Level::Debug
+		{ SxGui::Icon::Nearby,      ImColor(1.00f, 0.80f, 0.10f) },            //!< Level::Warning
+		{ SxGui::Icon::NearbyError, ImColor(1.00f, 0.10f, 0.10f) },            //!< Level::Error
+	};
 
 	//* console option *//
 
-	static std::pair<const char*, ImColor> kStyles[magic_enum::enum_count<RuntimeLogger::Type>()] = {
-		{ "-", ImGui::GetStyle().Colors[ImGuiCol_Text] },
-		{ "●", ImVec4(0.80f, 0.80f, 0.80f, 1.0f) },
-		{ "!", ImVec4(1.00f, 0.80f, 0.20f, 1.0f) },
-		{ "x", ImVec4(1.00f, 0.30f, 0.30f, 1.0f) },
-	};
+	ImGuiTableFlags flags
+		= ImGuiTableFlags_ScrollY
+		| ImGuiTableFlags_ScrollX
+		| ImGuiTableFlags_BordersInnerH
+		| ImGuiTableFlags_SizingFixedFit;
 
-	if (ImGui::BeginTable("## console table", 2, ImGuiTableFlags_ScrollY | ImGuiTableFlags_ScrollX | ImGuiTableFlags_BordersH)) {
+	if (ImGui::BeginTable("## console table", static_cast<int32_t>(ConsoleTable::Count) + 1, flags)) {
 
-		ImGui::TableSetupColumn("Log");
-		ImGui::TableHeadersRow();
-
-		for (const auto& log : RuntimeLogger::GetLogs()) {
-
-			const auto& style = kStyles[static_cast<uint32_t>(log.type)];
-
+		for (const auto& log : RuntimeLogger::GetLogs() | std::views::reverse) {
 			ImGui::TableNextRow();
-			ImGui::TableNextColumn();
 
-			ImGui::PushID(&log);
+			const auto& [level, color] = kLogLevelStyle[static_cast<uint8_t>(log.level)];
 
-			// 行全体を Selectable にする
-			ImGui::Selectable(
-				"##log_row",
-				false,
-				ImGuiSelectableFlags_SpanAllColumns
-			);
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(color));
 
-			ImGui::SameLine();
+			{ //!< Message
+				ImGui::TableSetColumnIndex(static_cast<int32_t>(ConsoleTable::Message));
+				SxGui::DummySpace(ImVec2(640.0f, 0.0f));
 
-			// アイコン
-			ImGui::TextColored(style.second, "%s", style.first);
-			ImGui::SameLine();
+				std::string text = std::format("{}", log.label);
+				ImGui::TextWrapped(text.c_str());
+			}
 
-			// メインログテキスト
-			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(style.second));
-			ImGui::TextWrapped("%s", log.label.c_str());
+			{ //!< Level
+				ImGui::TableSetColumnIndex(static_cast<int32_t>(ConsoleTable::Level));
+
+				std::string text = std::format("{}", level);
+				ImGui::Text(text.c_str());
+			}
+			
+			{ //!< Timestamp
+				ImGui::TableSetColumnIndex(static_cast<int32_t>(ConsoleTable::Timestamp));
+
+				std::string text = std::format("{}", log.timestamp.Serialize());
+				ImGui::Text(text.c_str());
+			}
+
+			{ //!< Category
+				ImGui::TableSetColumnIndex(static_cast<int32_t>(ConsoleTable::Category));
+
+				std::string text = std::format("{}", log.category);
+				ImGui::Text(text.c_str());
+			}
+
+			{ //!< Count
+				ImGui::TableSetColumnIndex(static_cast<int32_t>(ConsoleTable::Count));
+
+				std::string text = "";
+
+				if (log.count > 1) {
+					text = std::format("{} x{}", SxGui::Icon::ShortText, log.count);
+				}
+
+				ImGui::Text(text.c_str());
+			}
+
 			ImGui::PopStyleColor();
-
-			// 補助情報（薄く）
-			ImGui::SameLine(0.0f, 12.0f);
-			ImGui::PushStyleColor(
-				ImGuiCol_Text,
-				ImVec4(0.55f, 0.55f, 0.55f, 1.0f)
-			);
-			ImGui::Text(
-				"[%s] x%u",
-				log.category.c_str(),
-				log.count
-			);
-			ImGui::PopStyleColor();
-
-			ImGui::PopID();
 		}
 
 		ImGui::EndTable();

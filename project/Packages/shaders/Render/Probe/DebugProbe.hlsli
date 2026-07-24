@@ -6,7 +6,7 @@
 #include "ProbeCommon.hlsli"
 
 //* library
-#include "../../Library/Math.hlsli"
+#include "../../Library/Mathmatic.hlsli"
 
 //* component
 #include "../../Component/CameraComponent.hlsli"
@@ -73,8 +73,8 @@ struct VSOutput {
 			float u[2] = { float(lon) / kLongitude, float(lon + 1) / kLongitude };
 			float v[2] = { float(lat) / kLatitude,  float(lat + 1) / kLatitude };
 			
-			float theta[2] = { u[0] * kTau, u[1] * kTau };
-			float phi[2]   = { v[0] * kPi,  v[1] * kPi };
+			float theta[2] = { u[0] * Mathmatic::kTau, u[1] * Mathmatic::kTau };
+			float phi[2]   = { v[0] * Mathmatic::kPi, v[1] * Mathmatic::kPi };
 
 			float2 angle;
 

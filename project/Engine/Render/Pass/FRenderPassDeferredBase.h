@@ -4,10 +4,13 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
+#include "FRenderConfig.h"
 #include "FBaseRenderPass.h"
+#include "../Buffer/FRenderTargetBuffer.h"
 
 //* engine
 #include <Engine/Foundation.h>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -17,6 +20,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FRenderPassDeferredBase class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief GBufferへの描画Pass
 class FRenderPassDeferredBase
 	: public FBaseRenderPass {
 public:
@@ -25,7 +29,9 @@ public:
 	// public methods
 	//=========================================================================================
 
-	void Render(const DirectXQueueContext* context, const Config& config) override;
+	//* render option *//
+
+	void Render(const DirectXQueueContext* context, const FRenderConfig& config) override;
 
 private:
 
@@ -33,20 +39,38 @@ private:
 	// private methods
 	//=========================================================================================
 
-	void BeginPassRenderTarget(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+	//* opaque mesh render pass *//
 
-	void EndPassRenderTarget(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+	void BeginOpaqueMeshRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
-	void PassStaticMesh(const DirectXQueueContext* context, const Config& config);
+	void EndOpaqueMeshRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
-	void PassSkinnedMesh(const DirectXQueueContext* context, const Config& config);
+	void RenderStaticMesh(const DirectXQueueContext* context, const FRenderConfig& config);
 
-	void BeginPassVelocity(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+	void RenderSkinnedMesh(const DirectXQueueContext* context, const FRenderConfig& config);
 
-	void EndPassVelocity(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+	//* decal render pass *//
 
-	void PassVelocity(const DirectXQueueContext* context, const Config& config);
+	void BeginDecalRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	void EndDecalRenderPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	void RenderDecal(const DirectXQueueContext* context, const FRenderConfig& config);
+
+	//* motion vector pass *//
+
+	void BeginMotionVectorPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	void EndMotionVectorPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
+
+	void PassMotionVector(const DirectXQueueContext* context, const FRenderConfig& config);
+
+	//* lighting only *//
+
+	void LightingOnly(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
 };
 
 SXAVENGER_ENGINE_NAMESPACE_END
+
+

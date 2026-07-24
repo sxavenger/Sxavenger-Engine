@@ -18,5 +18,6 @@ struct Parameter {
 	float intensity;
 	float threshold;
 	float radius;
+	uint isStochastic;
 };
 ConstantBuffer<Parameter> gParameter : register(b0);

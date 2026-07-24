@@ -60,7 +60,7 @@ void AssetEditor::ShowAssetMenu() {
 		ImGui::TableSetupColumn("count");
 		ImGui::TableHeadersRow();
 
-		for (const auto& [type, storage] : sAssetStorage->GetStorage()) {
+		for (const auto& [type, storage] : sAssetStorage->GetStage()) {
 			ImGui::TableNextRow();
 
 			{ //!< type
@@ -86,18 +86,23 @@ void AssetEditor::ShowAssetMenu() {
 
 void AssetEditor::ShowAssetWindow() {
 
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 4, 4 });
+	std::string label = std::format("{} Asset ## Asset Editor", SxGui::Icon::Folder);
 
 	BaseEditor::SetNextWindowDocking();
-	ImGui::Begin("Asset ## Engine Asset Editor", nullptr, BaseEditor::GetWindowFlag());
+
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 4, 4 });
+	ImGui::Begin(label.c_str(), nullptr, BaseEditor::GetWindowFlag());
 
 	//* Asset Directory *//
 
 	ImVec2 context = ImGui::GetContentRegionAvail();
 
 	ImGui::BeginChild("## asset directory", { 160, context.y }, ImGuiChildFlags_ResizeX | ImGuiChildFlags_Borders);
-	ShowAssetDirectoryTable(kAssetsDirectory);
-	ShowAssetDirectoryTable(kPackagesDirectory);
+	if (SxGui::Hierarchy::Begin()) {
+		ShowAssetDirectoryTable(kAssetsDirectory);
+		ShowAssetDirectoryTable(kPackagesDirectory);
+		SxGui::Hierarchy::End();
+	}
 	ImGui::EndChild();
 
 	ImGui::SameLine();
@@ -153,8 +158,8 @@ void AssetEditor::ForEachDirectory(const std::filesystem::path& path, const std:
 
 	// file only
 	for (const auto& entry : std::filesystem::directory_iterator(path) | std::views::filter([](const std::filesystem::directory_entry& entry) { return !entry.is_directory(); })) {
-		if (entry.path().extension() == BaseContent::GetContentExtension()) {
-			continue; // contentファイルは除外
+		if (entry.path().extension() == BaseContent::GetMetaExtension()) {
+			continue; //!< metaファイルは除外
 		}
 
 		func(entry);
@@ -163,33 +168,15 @@ void AssetEditor::ForEachDirectory(const std::filesystem::path& path, const std:
 
 void AssetEditor::ShowAssetDirectoryTable(const std::filesystem::path& path) {
 
-	bool isDirectory   = std::filesystem::is_directory(path);
-	std::u8string name = path.filename().generic_u8string();
-	bool isSelected    = selectedDirectory_.has_value() && selectedDirectory_.value() == path;
+	bool isDirectory = std::filesystem::is_directory(path);
+	bool isSelect    = selectedDirectory_.has_value() && selectedDirectory_.value() == path;
 
-	ImGuiTreeNodeFlags flags
-		= ImGuiTreeNodeFlags_OpenOnDoubleClick
-		| ImGuiTreeNodeFlags_OpenOnArrow
-		| ImGuiTreeNodeFlags_FramePadding
-		| ImGuiTreeNodeFlags_SpanAllColumns
-		| ImGuiTreeNodeFlags_DrawLinesToNodes;
+	SxGui::Icon icon = isDirectory ? SxGui::Icon::Folder : SxGui::Icon::Files;
+	std::string label = std::format("{} {}", icon, ConvertStr(path.filename()));
 
-	if (isSelected) {
-		flags |= ImGuiTreeNodeFlags_Selected;
-	}
+	bool isOpen = SxGui::Hierarchy::TreeNode(label.c_str(), isSelect, !isDirectory);
 
-	if (!isDirectory) {
-		flags |= ImGuiTreeNodeFlags_Leaf;
-		ImGui::Unindent();
-	}
-
-	bool isOpen = ImGui::TreeNodeEx(ConvertStr(path.filename()).c_str(), flags);
-
-	if (!isDirectory) {
-		ImGui::Indent();
-	}
-
-	if (ImGui::IsItemClicked() && isDirectory) {
+	if (SxGui::Hierarchy::IsClicked() && isDirectory) {
 		selectedDirectory_ = path;
 	}
 
@@ -201,7 +188,7 @@ void AssetEditor::ShowAssetDirectoryTable(const std::filesystem::path& path) {
 			);
 		}
 
-		ImGui::TreePop();
+		SxGui::Hierarchy::TreePop();
 	}
 }
 
@@ -322,8 +309,8 @@ void AssetEditor::ShowAssetLayout() {
 					if (extensions_.contains(part.extension())) {
 						const auto& [type, function] = extensions_.at(part.extension());
 
-						std::shared_ptr<BaseContent> content = function(part);
-						sContentStorage->TryEmplace(type, content);
+						std::shared_ptr<BaseContent> content = function();
+						sContentStorage->TryEmplace(type, content, part);
 					}
 				}
 

@@ -3,18 +3,18 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* light
+#include "../LightCommon.h"
+
 //* component
 #include "../../BaseComponent.h"
 #include "../../Transform/TransformComponent.h"
-
-//* light
-#include "../LightCommon.h"
 
 //* engine
 #include <Engine/Foundation.h>
 
 //* lib
-#include <Lib/Geometry/Color3.h>
+#include <Lib/Math/Color3.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -64,7 +64,7 @@ public:
 
 	//* component option *//
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddress() const;
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
 
 	const Parameter& GetParameter() const;
 	Parameter& GetParameter();

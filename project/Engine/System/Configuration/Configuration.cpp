@@ -38,6 +38,9 @@ Configuration::Config::Config() {
 
 	//* shader optimization
 	enableShaderOptimization = true;
+
+	//* pix
+	enablePix = false;
 }
 
 void Configuration::Config::Load(const std::filesystem::path& filepath) {
@@ -97,6 +100,10 @@ void Configuration::Config::Load(const std::filesystem::path& filepath) {
 		enableShaderOptimization = JsonSerializeFormatter<bool>::Deserialize(data["enableShaderOptimization"]);
 	}
 
+	if (data.contains("enablePix")) {
+		enablePix = JsonSerializeFormatter<bool>::Deserialize(data["enablePix"]);
+	}
+
 }
 
 void Configuration::Config::OutputLog() const {
@@ -124,6 +131,9 @@ void Configuration::Config::OutputLog() const {
 	//* shader optimization
 	StreamLogger::EngineLog(std::format("[Config] shader optimization: {}", enableShaderOptimization));
 
+	//* pix
+	StreamLogger::EngineLog(std::format("[Config] pix: {}", enablePix));
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,8 +143,7 @@ void Configuration::Config::OutputLog() const {
 void Configuration::Support::OutputLog() const {
 
 	StreamLogger::EngineLog(std::format("[Support] isSupportTearing: {}",          isSupportTearing));
-	StreamLogger::EngineLog(std::format("[Support] isSupportInlineRaytracing: {}", isSupportInlineRaytracing));
-
+	
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////

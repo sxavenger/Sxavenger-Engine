@@ -9,8 +9,11 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
+#include <Engine/Assets/Asset/AssetAnimationClip.h>
+#include <Engine/Assets/Asset/AssetParameter.h>
 #include <Engine/Module/GameObject/GameObject.h>
 #include <Engine/Module/Actor/ControllableCameraActor.h>
+#include <Engine/Module/Actor/PerspectiveCameraActor.h>
 #include <Engine/Module/Actor/PerformanceActor.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,16 +49,14 @@ private:
 	//* game object *//
 
 	std::unique_ptr<GameObject> atmosphere_;
-	std::unique_ptr<ControllableCameraActor> camera_;
+	std::unique_ptr<PerspectiveCameraActor> camera_;
 
 	std::unique_ptr<PerformanceActor> performance_;
 
-	std::unique_ptr<GameObject> demoText_;
-	std::unique_ptr<GameObject> instructionText_;
+	//* human *//
 
-	//* test *//
-
-	std::array<std::unique_ptr<GameObject>, 4> cubes_;
+	std::unique_ptr<GameObject> human_;
+	AssetParameter<AssetAnimationClip> clip_;
 
 	//=========================================================================================
 	// private methods

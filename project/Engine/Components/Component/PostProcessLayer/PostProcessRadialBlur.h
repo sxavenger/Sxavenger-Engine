@@ -8,7 +8,7 @@
 
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 
 //* c++
 #include <memory>
@@ -44,6 +44,8 @@ public:
 
 		Vector2f center;
 		float intensity;
+		uint32_t quality;
+		uint32_t isStochastic;
 
 	};
 

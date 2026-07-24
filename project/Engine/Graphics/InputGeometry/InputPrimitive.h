@@ -14,9 +14,9 @@
 
 //* lib
 #include <Lib/Traits.h>
-#include <Lib/Geometry/Vector2.h>
-#include <Lib/Geometry/Vector3.h>
-#include <Lib/Geometry/Vector4.h>
+#include <Lib/Math/Vector2.h>
+#include <Lib/Math/Vector3.h>
+#include <Lib/Math/Vector4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace

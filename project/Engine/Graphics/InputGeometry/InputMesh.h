@@ -9,16 +9,15 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
-#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
 #include <Engine/System/DirectX/DxObject/DxBindBuffer.h>
 #include <Engine/System/DirectX/DxrObject/DxrAccelerationStructure.h>
 #include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 //* lib
 #include <Lib/Traits.h>
-#include <Lib/Geometry/Vector2.h>
-#include <Lib/Geometry/Vector3.h>
-#include <Lib/Geometry/Vector4.h>
+#include <Lib/Math/Vector2.h>
+#include <Lib/Math/Vector3.h>
+#include <Lib/Math/Vector4.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace

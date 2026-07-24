@@ -1,5 +1,11 @@
 #pragma once
 
+//-----------------------------------------------------------------------------------------
+// include
+//-----------------------------------------------------------------------------------------
+//* library
+#include "../Library/Mathmatic.hlsli"
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TransformComponent sturcture
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -25,16 +31,19 @@ struct TransformComponent {
 	}
 	
 	float3 GetPosition() {
-		return mat[3].xyz;
+		return Mathmatic::GetPosition(mat);
 	}
 
-	float3 GetDirection() {
-		static const float3 forward = float3(0.0f, 0.0f, 1.0f);
-		return normalize(mul(forward, (float3x3)mat));
+	float3 GetForwardDirection() {
+		return Mathmatic::GetForwardDirection(mat);
 	}
 
 	float GetMaxScale() {
 		return max(length(mat[0].xyz), max(length(mat[1].xyz), length(mat[2].xyz)));
+	}
+
+	float4x4 GetMatInverse() {
+		return transpose(matInverseTransopse);
 	}
 	
 };

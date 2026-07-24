@@ -1,9 +1,13 @@
 #pragma once
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Sxavenger Library common
+// [Sxavenger Library] namespace
 ////////////////////////////////////////////////////////////////////////////////////////////
-#define _SXL_NAMESPACE_BEGIN namespace Sxl {
-#define _SXL_NAMESPACE_END   }
-#define _SXL                 Sxl::
-#define _SXL_USING           using namespace Sxl;
+
+#define SXAVENGER_LIBRARY_NAMESPACE_BEGIN namespace Sxl {
+#define SXAVENGER_LIBRARY_NAMESPACE_END   }
+#define SXAVENGER_LIBRARY_USING           using namespace Sxl;
+#define SXAVENGER_LIBRARY                 Sxl::
+
+//!< [Sxavenger Library] namespace
+namespace Sxl {}

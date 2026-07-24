@@ -4,14 +4,12 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* render
+#include "FRenderConfig.h"
 #include "FBaseRenderPass.h"
 
 //* engine
 #include <Engine/Foundation.h>
-
-//* c++
-#include <list>
-#include <memory>
+#include <Engine/System/DirectX/Context/DirectXQueueContext.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -24,16 +22,20 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 class FRenderPassContext {
 public:
 
+	//=========================================================================================
+	// public methods
+	//=========================================================================================
+
 	//* render option *//
 
-	void Render(const DirectXQueueContext* context, const FBaseRenderPass::Config& config);
+	void Render(const DirectXQueueContext* context, const FRenderConfig& config);
 
-	//* pass option *//
+	//* render pass option *//
 
-	void Emplace(std::unique_ptr<FBaseRenderPass>&& pass);
+	void Insert(std::unique_ptr<FBaseRenderPass>&& pass);
 
 	template <FRenderPass T>
-	void Add() { Emplace(std::make_unique<T>()); }
+	void Insert() { Insert(std::make_unique<T>()); }
 
 private:
 
@@ -44,10 +46,10 @@ private:
 	std::list<std::unique_ptr<FBaseRenderPass>> passes_;
 
 	//=========================================================================================
-	// public methods
+	// private methods
 	//=========================================================================================
 
-	static FBaseRenderPass::Config ApplyConfig(const FBaseRenderPass::Config& config);
+	static FRenderConfig ResolveConfig(const FRenderConfig& _config);
 
 };
 

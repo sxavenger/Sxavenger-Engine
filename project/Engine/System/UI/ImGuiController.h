@@ -3,6 +3,9 @@
 //-----------------------------------------------------------------------------------------
 // include
 //-----------------------------------------------------------------------------------------
+//* ui
+#include "SxGui.h"
+
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
@@ -47,10 +50,7 @@ public:
 	void EndFrame();
 
 	//! @brief ImGuiの描画処理を行う
-	void Render(DirectXQueueContext* context);
-
-	//! brief ImGuiのレイアウトを出力
-	void OutputLayout();
+	void Render(const Vector2ui& size, DirectXQueueContext* context);
 
 	//* convert *//
 
@@ -64,9 +64,6 @@ private:
 
 	std::list<DxObject::Descriptor> descriptorsSRV_;
 
-	static const std::filesystem::path kImGuiLayoutFilepath_;
-	static const std::filesystem::path kImGuiSampleLayoutFilepath_;
-
 	bool isInit_ = false;
 
 	//=========================================================================================
@@ -74,7 +71,6 @@ private:
 	//=========================================================================================
 
 	void SetImGuiStyle();
-	void SettingImGui();
 
 
 };

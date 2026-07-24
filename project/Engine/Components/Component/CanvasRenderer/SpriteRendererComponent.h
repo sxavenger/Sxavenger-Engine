@@ -9,14 +9,14 @@
 
 //* engine
 #include <Engine/Foundation.h>
-#include <Engine/System/DirectX/DxObject/DxConstantBuffer.h>
+#include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
 #include <Engine/Graphics/InputGeometry/InputCanvasVertex.h>
 #include <Engine/Assets/Asset/AssetTexture.h>
 #include <Engine/Assets/Asset/AssetParameter.h>
 
 //* lib
-#include <Lib/Geometry/Color4.h>
-#include <Lib/Transform/Transform.h>
+#include <Lib/Math/Color4.h>
+#include <Lib/Transform/Transform2d.h>
 
 //* external
 #include <magic_enum.hpp>
@@ -68,15 +68,17 @@ public:
 
 	bool IsEnable() const { return isEnable_; }
 
+	void SetTexture(const AssetParameter<AssetTexture>& texture) { texture_ = texture; }
+
 	//* render option *//
 
-	void BindAIBuffer(const DirectXQueueContext* context);
+	void BindInputAssembler(const DirectXQueueContext* context);
 
 	void DrawCall(const DirectXQueueContext* context);
 
 	const AssetParameter<AssetTexture>& GetTextureParameter() const { return texture_; }
 
-	const D3D12_GPU_VIRTUAL_ADDRESS& GetGPUVirtualAddressUV() const { return bufferUV_->GetGPUVirtualAddress(); }
+	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddressUV() const { return bufferUV_->GetGPUVirtualAddress(); }
 
 	//* behaviour option *//
 

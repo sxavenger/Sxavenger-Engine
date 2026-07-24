@@ -6,12 +6,12 @@ DXOBJECT_USING
 // include
 //-----------------------------------------------------------------------------------------
 //* render
-#include "../GBuffer/FDeferredGBuffer.h"
-#include "../GBuffer/FTransparentGBuffer.h"
-#include "../GBuffer/FMainGBuffer.h"
+#include "../Buffer/FGBuffer.h"
+#include "../Buffer/FTransparentBuffer.h"
+#include "../Buffer/FDepthStencilBuffer.h"
 
 //* engine
-#include <Engine/System/Configuration/Configuration.h>
+#include <Engine/System/System.h>
 
 //* external
 #include <magic_enum.hpp>
@@ -25,65 +25,79 @@ void FRenderCoreGeometry::Init() {
 	CreatePipeline();
 }
 
-void FRenderCoreGeometry::SetPipeline(Type type, const DirectXQueueContext* context, const Vector2ui& size) {
-	pipelines_[static_cast<uint32_t>(type)]->SetPipeline(context->GetDxCommand(), size);
+void FRenderCoreGeometry::SetPipeline(Pipeline pipeline, const DirectXQueueContext* context, const Vector2ui& resolution) const {
+	pipelines_[static_cast<uint32_t>(pipeline)].SetPipeline(context->GetDxCommand(), resolution);
 }
 
-void FRenderCoreGeometry::BindGraphicsBuffer(Type type, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) {
-	pipelines_[static_cast<uint32_t>(type)]->BindGraphicsBuffer(context->GetDxCommand(), desc);
+void FRenderCoreGeometry::BindGraphicsBuffer(Pipeline pipeline, const DirectXQueueContext* context, const DxObject::BindBufferDesc& desc) const {
+	pipelines_[static_cast<uint32_t>(pipeline)].BindGraphicsBuffer(context->GetDxCommand(), desc);
 }
 
 void FRenderCoreGeometry::CreateDesc() {
 
-	{
+	{ //!< deferred
 		auto& desc = descs_[static_cast<uint8_t>(Desc::Deferred)] = {};
 
-		desc.CreateDefaultDesc();
+		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT);
+		desc.SetElement("NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT);
 
-		desc.ClearRTVFormat();
-		desc.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Albedo));
-		desc.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Normal));
-		desc.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::MaterialARM));
-		desc.SetRTVFormat(FDeferredGBuffer::GetFormat(FDeferredGBuffer::Layout::Position));
+		desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
+		desc.SetDepthStencil(true);
+
+		desc.SetPrimitive(PrimitiveType::TriangleList);
 
 		D3D12_RENDER_TARGET_BLEND_DESC blend = {};
-		blend.BlendEnable           = true;
+		blend.BlendEnable           = false;
 		blend.LogicOpEnable         = false;
-		blend.SrcBlend              = D3D12_BLEND_ONE;
-		blend.DestBlend             = D3D12_BLEND_ZERO;
-		blend.BlendOp               = D3D12_BLEND_OP_ADD;
-		blend.SrcBlendAlpha         = D3D12_BLEND_ONE;
-		blend.DestBlendAlpha        = D3D12_BLEND_ZERO;
-		blend.BlendOpAlpha          = D3D12_BLEND_OP_ADD;
 		blend.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 
 		desc.SetBlendDesc(0, blend);
 		desc.SetIndependentBlendEnable(false);
 
+		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::Albedo));
+		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::Normal));
+		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::MaterialARM));
+		desc.SetRTVFormat(FGBuffer::GetFormat(FGBuffer::Layout::Address));
+		desc.SetDSVFormat(FDepthStencilBuffer::GetFormat(FDepthStencilBuffer::Layout::Scene));
+
 	}
 
-	{ //* forward opaque
+	{ //* forward prepass
 
 		//!< Forward Opaque Depth Pre-pass.
-		auto& desc = descs_[static_cast<uint8_t>(Desc::ForwardOpaque)] = {};
-
-		desc.CreateDefaultDesc();
+		auto& desc = descs_[static_cast<uint8_t>(Desc::ForwardPrepass)] = {};
 		
-		desc.ClearRTVFormat();
+		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT);
+		desc.SetElement("NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT);
 
+		desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
 		desc.SetDepthStencil(true);
+
+		desc.SetPrimitive(PrimitiveType::TriangleList);
+
+		desc.SetDSVFormat(FDepthStencilBuffer::GetFormat(FDepthStencilBuffer::Layout::Scene));
 	}
 
 	{ //* forward transparent
 
 		auto& desc = descs_[static_cast<uint8_t>(Desc::ForwardTransparent)] = {};
 
-		desc.CreateDefaultDesc();
+		desc.SetElement("POSITION",  0, DXGI_FORMAT_R32G32B32A32_FLOAT);
+		desc.SetElement("TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT);
+		desc.SetElement("NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("TANGENT",   0, DXGI_FORMAT_R32G32B32_FLOAT);
+		desc.SetElement("BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT);
 
-		//!< Transparent Buffer
-		desc.ClearRTVFormat();
-		desc.SetRTVFormat(FTransparentGBuffer::GetFormat(FTransparentGBuffer::Layout::Accumulate));
-		desc.SetRTVFormat(FTransparentGBuffer::GetFormat(FTransparentGBuffer::Layout::Revealage));
+		desc.SetRasterizer(D3D12_CULL_MODE_BACK, D3D12_FILL_MODE_SOLID);
+		desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC_LESS_EQUAL);
+
+		desc.SetPrimitive(PrimitiveType::TriangleList);
 
 		D3D12_RENDER_TARGET_BLEND_DESC accumulation = {};
 		accumulation.BlendEnable           = true;
@@ -111,116 +125,107 @@ void FRenderCoreGeometry::CreateDesc() {
 
 		desc.SetBlendDesc(1, revealage);
 		desc.SetIndependentBlendEnable(true);
+		
+		desc.SetRTVFormat(FTransparentBuffer::GetFormat(FTransparentBuffer::Layout::Accumulate));
+		desc.SetRTVFormat(FTransparentBuffer::GetFormat(FTransparentBuffer::Layout::Revealage));
 
-		desc.SetDepthStencil(true, D3D12_DEPTH_WRITE_MASK_ZERO, D3D12_COMPARISON_FUNC_LESS_EQUAL);
+		desc.SetDSVFormat(FDepthStencilBuffer::GetFormat(FDepthStencilBuffer::Layout::Scene));
 	}
 	
 }
 
 void FRenderCoreGeometry::CreatePipeline() {
 
-	{ //!< forward opaque vs-ps
-		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
+	{ //!< forward prepass [vs-ps]
+		auto& pipeline = pipelines_[static_cast<uint32_t>(Pipeline::ForwardPrepass_MeshVS)];
 
 		//* blob
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Default.vs.hlsl",       GraphicsShaderType::vs);
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "ForwardOpaque.ps.hlsl", GraphicsShaderType::ps);
-		pipeline->RegisterBlob();
+		pipeline.CreateContent(kDirectory / "Mesh" / "Default.vs.hlsl",        GraphicsShaderType::Vertex);
+		pipeline.CreateContent(kDirectory / "Mesh" / "ForwardPrepass.ps.hlsl", GraphicsShaderType::Pixel);
+		pipeline.RegisterBlob();
 
 		//* root signature
-		pipeline->ReflectionRootSignature(System::GetDxDevice());
+		pipeline.ReflectionRootSignature(System::GetDxDevice());
 
 		//* pipeline
-		pipeline->CreatePipeline(System::GetDxDevice(), descs_[static_cast<uint32_t>(Desc::ForwardOpaque)]);
-
-		pipelines_[static_cast<uint32_t>(Type::ForwardOpaque_MeshVS)] = std::move(pipeline);
+		pipeline.CreatePipeline(System::GetDxDevice(), descs_[static_cast<uint32_t>(Desc::ForwardPrepass)]);
 	}
 
-	{
-		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
+	{ //!< forward prepass [ms-ps]
+		auto& pipeline = pipelines_[static_cast<uint32_t>(Pipeline::ForwardPrepass_MeshMS)];
 
 		//* blob
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Default.as.hlsl",       GraphicsShaderType::as);
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Default.ms.hlsl",       GraphicsShaderType::ms);
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "ForwardOpaque.ps.hlsl", GraphicsShaderType::ps);
-		pipeline->RegisterBlob();
+		pipeline.CreateContent(kDirectory / "Mesh" / "Default.as.hlsl",        GraphicsShaderType::Amplification);
+		pipeline.CreateContent(kDirectory / "Mesh" / "Default.ms.hlsl",        GraphicsShaderType::Mesh);
+		pipeline.CreateContent(kDirectory / "Mesh" / "ForwardPrepass.ps.hlsl", GraphicsShaderType::Pixel);
+		pipeline.RegisterBlob();
 
 		//* root signature
-		pipeline->ReflectionRootSignature(System::GetDxDevice());
+		pipeline.ReflectionRootSignature(System::GetDxDevice());
 
 		//* pipeline
-		pipeline->CreatePipeline(System::GetDxDevice(), descs_[static_cast<uint32_t>(Desc::ForwardOpaque)]);
-
-		pipelines_[static_cast<uint32_t>(Type::ForwardOpaque_MeshMS)] = std::move(pipeline);
+		pipeline.CreatePipeline(System::GetDxDevice(), descs_[static_cast<uint32_t>(Desc::ForwardPrepass)]);
 	}
 
-	{ //!< forward opaque vs-ps
-		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
+	{ //!< forward transparent [vs-ps]
+		auto& pipeline = pipelines_[static_cast<uint32_t>(Pipeline::ForwardTransparent_MeshVS)];
 
 		//* blob
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Default.vs.hlsl",            GraphicsShaderType::vs);
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "ForwardTransparent.ps.hlsl", GraphicsShaderType::ps);
-		pipeline->RegisterBlob();
+		pipeline.CreateContent(kDirectory / "Mesh" / "Default.vs.hlsl",            GraphicsShaderType::Vertex);
+		pipeline.CreateContent(kDirectory / "Mesh" / "ForwardTransparent.ps.hlsl", GraphicsShaderType::Pixel);
+		pipeline.RegisterBlob();
 
 		//* root signature
-		pipeline->ReflectionRootSignature(System::GetDxDevice());
+		pipeline.ReflectionRootSignature(System::GetDxDevice());
 
 		//* pipeline
-		pipeline->CreatePipeline(System::GetDxDevice(), descs_[static_cast<uint32_t>(Desc::ForwardTransparent)]);
-
-		pipelines_[static_cast<uint32_t>(Type::ForwardTransparent_MeshVS)] = std::move(pipeline);
+		pipeline.CreatePipeline(System::GetDxDevice(), descs_[static_cast<uint32_t>(Desc::ForwardTransparent)]);
 	}
 
-	{ //!< forward opaque ms-ps
-		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
+	{ //!< forward transparent [ms-ps]
+		auto& pipeline = pipelines_[static_cast<uint32_t>(Pipeline::ForwardTransparent_MeshMS)];
 
 		//* blob
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Default.as.hlsl",            GraphicsShaderType::as);
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Default.ms.hlsl",            GraphicsShaderType::ms);
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "ForwardTransparent.ps.hlsl", GraphicsShaderType::ps);
-		pipeline->RegisterBlob();
+		pipeline.CreateContent(kDirectory / "Mesh" / "Default.as.hlsl",            GraphicsShaderType::Amplification);
+		pipeline.CreateContent(kDirectory / "Mesh" / "Default.ms.hlsl",            GraphicsShaderType::Mesh);
+		pipeline.CreateContent(kDirectory / "Mesh" / "ForwardTransparent.ps.hlsl", GraphicsShaderType::Pixel);
+		pipeline.RegisterBlob();
 
 		//* root signature
-		pipeline->ReflectionRootSignature(System::GetDxDevice());
+		pipeline.ReflectionRootSignature(System::GetDxDevice());
 
 		//* pipeline
-		pipeline->CreatePipeline(System::GetDxDevice(), descs_[static_cast<uint32_t>(Desc::ForwardTransparent)]);
-
-		pipelines_[static_cast<uint32_t>(Type::ForwardTransparent_MeshMS)] = std::move(pipeline);
+		pipeline.CreatePipeline(System::GetDxDevice(), descs_[static_cast<uint32_t>(Desc::ForwardTransparent)]);
 	}
 
-	{ //!< forward opaque vs-ps
-		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
+	{ //!< deferred [vs-ps]
+		auto& pipeline = pipelines_[static_cast<uint32_t>(Pipeline::Deferred_MeshVS)];
 
 		//* blob
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Default.vs.hlsl",  GraphicsShaderType::vs);
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Deferred.ps.hlsl", GraphicsShaderType::ps);
-		pipeline->RegisterBlob();
+		pipeline.CreateContent(kDirectory / "Mesh" / "Default.vs.hlsl",  GraphicsShaderType::Vertex);
+		pipeline.CreateContent(kDirectory / "Mesh" / "Deferred.ps.hlsl", GraphicsShaderType::Pixel);
+		pipeline.RegisterBlob();
 
 		//* root signature
-		pipeline->ReflectionRootSignature(System::GetDxDevice());
+		pipeline.ReflectionRootSignature(System::GetDxDevice());
 
 		//* pipeline
-		pipeline->CreatePipeline(System::GetDxDevice(), descs_[static_cast<uint32_t>(Desc::Deferred)]);
-
-		pipelines_[static_cast<uint32_t>(Type::Deferred_MeshVS)] = std::move(pipeline);
+		pipeline.CreatePipeline(System::GetDxDevice(), descs_[static_cast<uint32_t>(Desc::Deferred)]);
 	}
 
-	{ //!< forward opaque ms-ps
-		auto pipeline = std::make_unique<CustomReflectionGraphicsPipeline>();
+	{ //!< deferred [ms-ps]
+		auto& pipeline = pipelines_[static_cast<uint32_t>(Pipeline::Deferred_MeshMS)];
 
 		//* blob
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Default.as.hlsl",  GraphicsShaderType::as);
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Default.ms.hlsl",  GraphicsShaderType::ms);
-		pipeline->CreateContent(kDirectory / "Geometry" / "Mesh" / "Deferred.ps.hlsl", GraphicsShaderType::ps);
-		pipeline->RegisterBlob();
+		pipeline.CreateContent(kDirectory / "Mesh" / "Default.as.hlsl",  GraphicsShaderType::Amplification);
+		pipeline.CreateContent(kDirectory / "Mesh" / "Default.ms.hlsl",  GraphicsShaderType::Mesh);
+		pipeline.CreateContent(kDirectory / "Mesh" / "Deferred.ps.hlsl", GraphicsShaderType::Pixel);
+		pipeline.RegisterBlob();
 
 		//* root signature
-		pipeline->ReflectionRootSignature(System::GetDxDevice());
+		pipeline.ReflectionRootSignature(System::GetDxDevice());
 
 		//* pipeline
-		pipeline->CreatePipeline(System::GetDxDevice(), descs_[static_cast<uint32_t>(Desc::Deferred)]);
-
-		pipelines_[static_cast<uint32_t>(Type::Deferred_MeshMS)] = std::move(pipeline);
+		pipeline.CreatePipeline(System::GetDxDevice(), descs_[static_cast<uint32_t>(Desc::Deferred)]);
 	}
 }

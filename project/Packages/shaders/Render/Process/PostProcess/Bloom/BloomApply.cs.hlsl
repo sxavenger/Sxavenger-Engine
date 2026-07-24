@@ -2,8 +2,11 @@
 // include
 //-----------------------------------------------------------------------------------------
 #include "Bloom.hlsli"
+
+//* library
 #include "../../../../Library/ACES.hlsli"
-#include "../../../../Library/Math.hlsli"
+#include "../../../../Library/Mathmatic.hlsli"
+#include "../../../../Library/RandomLib.hlsli"
 
 //=========================================================================================
 // buffers
@@ -22,19 +25,19 @@ RWTexture2D<float4> gOutput : register(u0);
 
 float Gaussian2d(float2 x, float sigma) {
 	float twoSigma2 = 2.0 * sigma * sigma;
-	float coeff = 1.0 / (kPi * twoSigma2);
+	float coeff = 1.0 / (Mathmatic::kPi * twoSigma2);
 	return coeff * exp(-(x.x * x.x + x.y * x.y) / twoSigma2);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // main
 ////////////////////////////////////////////////////////////////////////////////////////////
-[numthreads(_NUM_THREADS_X, _NUM_THREADS_Y, 1)]
+[numthreads(NUM_THREADS_X, NUM_THREADS_Y, 1)]
 void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 
 	uint2 index = dispathThreadId.xy;
 	
-	if (CheckOverTexture(index)) {
+	if (CheckOverDimension(index)) {
 		return;
 	}
 
@@ -46,12 +49,18 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 	float weight_sum     = 1.0f;
 	float4 luminance_sum = gInput[index] * gLuminance[index];
 
+	float noise = 0.0f;
+
+	if (gParameter.isStochastic) {
+		noise = PseudoRandom(index) * 2.0f - 1.0f;
+	}
+
 	for (uint i = 1; i < kCount; ++i) {
 
 		float rad = gParameter.radius * i;
 		float cnt = max(kDensity * i, 1.0f);
 
-		float inc = kTau / cnt;
+		float inc = Mathmatic::kTau / cnt;
 
 		float lod = (float(i) / float(kCount)) * 4.0f;
 
@@ -59,7 +68,7 @@ void main(uint3 dispathThreadId : SV_DispatchThreadID) {
 			float theta   = j * inc;
 			float2 offset = rad * float2(cos(theta), sin(theta));
 
-			float2 uv    = (float2(index) + offset) / float2(size);
+			float2 uv    = (float2(index) + offset * noise) / float2(dimension);
 			float weight = Gaussian2d(offset, rad);
 
 			luminance_sum += gLuminance.SampleLevel(gSampler, uv, 0) * weight;

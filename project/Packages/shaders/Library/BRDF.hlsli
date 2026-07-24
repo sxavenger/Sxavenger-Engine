@@ -21,7 +21,7 @@
 // include
 //-----------------------------------------------------------------------------------------
 //* library
-#include "../Library/Math.hlsli"
+#include "../Library/Mathmatic.hlsli"
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BxDFContext structure
@@ -99,7 +99,7 @@ struct BxDFAlbedo {
 ////////////////////////////////////////////////////////////////////////////////////////////
 
 float3 Diffuse_Lambert(BxDFAlbedo albedo) {
-	return albedo.diffuse * (1.0f / kPi);
+	return albedo.diffuse * (1.0f / Mathmatic::kPi);
 }
 
 //! @brief FresnelReflectance(Spherical Gaussian)
@@ -145,7 +145,7 @@ float D_GGX(BxDFContext context, float roughness) {
 
 	float f = (context.NdotH * a2 - context.NdotH) * context.NdotH + 1.0f;
 
-	return a2 / (kPi * f * f);
+	return a2 / (Mathmatic::kPi * f * f);
 }
 
 //! @brief SpecularBRDF
@@ -163,6 +163,19 @@ float3 Specular_BRDF(float3 f, float g, float d, BxDFContext context) {
 //! @param d: DistributionFunction
 float3 Specular_BRDF(float3 f, float v, float d) {
 	return f * v * d;
+}
+
+//! @brief EvaluateSpecular
+//! @param albedo: BxDFAlbedo
+//! @param context: BxDFContext
+//! @param roughness: surface - roughness
+float3 EvaluateSpecular(BxDFAlbedo albedo, BxDFContext context, float roughness) {
+
+	float3 f = F_SphericalGaussian(context, albedo);
+	float v  = V_HeightCorrelated(context, roughness);
+	float d  = D_GGX(context, roughness);
+	
+	return Specular_BRDF(f, v, d);
 }
 
 //! @brief EvaluateBRDF

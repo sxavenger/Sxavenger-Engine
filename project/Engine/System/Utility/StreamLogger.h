@@ -7,7 +7,8 @@
 #include <Engine/Foundation.h>
 
 //* lib
-#include <Lib/CXXAttributeConfig.h>
+#include <Lib/CXXAttribute.h>
+#include <Lib/Adapter/TracePoint/TracePoint.h>
 
 //* c++
 #include <mutex>
@@ -40,8 +41,11 @@ public:
 	static void Log(const std::string& message);
 	static void Log(const std::wstring& message);
 
-	NORETURN static void Exception(const std::string& label, const std::string& detail = "", const std::source_location& location = std::source_location::current());
-	NORETURN static void Exception(const std::wstring& label, const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
+	static void ThreadLog(const std::string& message);
+	static void ThreadLog(const std::wstring& message);
+
+	NORETURN static void Exception(const std::string& label, const std::string& detail = "", const TracePoint& point = TracePoint());
+	NORETURN static void Exception(const std::wstring& label, const std::wstring& detail = L"", const TracePoint& point = TracePoint());
 
 	//* engine log option *//
 
@@ -53,8 +57,8 @@ public:
 
 	//* engine assertion option *//
 
-	static void AssertA(bool expression, const std::string& label = "", const std::string& detail = "", const std::source_location& location = std::source_location::current());
-	static void AssertW(bool expression, const std::wstring& label = L"", const std::wstring& detail = L"", const std::source_location& location = std::source_location::current());
+	static void AssertA(bool expression, const std::string& label = "", const std::string& detail = "", const TracePoint& point = TracePoint());
+	static void AssertW(bool expression, const std::wstring& label = L"", const std::wstring& detail = L"", const TracePoint& point = TracePoint());
 
 private:
 
@@ -86,14 +90,14 @@ private:
 
 	static inline std::mutex mutex_ = {};
 
-	static inline const std::thread::id kMainThreadId_ = std::this_thread::get_id();
+	static inline const std::thread::id kMainThreadId = std::this_thread::get_id();
 
 	//* log file *//
 
-	static inline const std::filesystem::path kDirectory_ = "Logs";
-	static inline const std::ofstream::openmode mode_     = std::ofstream::out | std::ofstream::app;
+	static inline const std::filesystem::path kDirectory = "Logs";
+	static inline const std::ofstream::openmode kMode     = std::ofstream::out | std::ofstream::app;
 
-	static std::filesystem::path filename_;
+	static const std::filesystem::path kFilename;
 
 	static inline bool isInitialized_ = false;
 
@@ -104,6 +108,9 @@ private:
 	//* helper methods *//
 
 	static std::filesystem::path GetStreamLogFilename();
+
+	static std::string GetThreadLabelA(const std::thread::id id);
+	static std::wstring GetThreadLabelW(const std::thread::id id);
 
 	//* output methods *//
 
@@ -135,8 +142,8 @@ private:
 
 	//* output exception helper methods *//
 
-	static ExceptionMessage<std::string> ParseExceptionMessageA(const std::source_location& location, std::thread::id id, const std::string& label, const std::string& detail);
-	static ExceptionMessage<std::wstring> ParseExceptionMessageW(const std::source_location& location, std::thread::id id, const std::wstring& label, const std::wstring& detail);
+	static ExceptionMessage<std::string> ParseExceptionMessageA(const std::string label, const std::string detail, const TracePoint& point);
+	static ExceptionMessage<std::wstring> ParseExceptionMessageW(const std::wstring label, const std::wstring detail, const TracePoint& point);
 
 	static void OpenExceptionWindowA(const ExceptionMessage<std::string>& message);
 	static void OpenExceptionWindowW(const ExceptionMessage<std::wstring>& message);

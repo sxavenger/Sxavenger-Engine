@@ -2,20 +2,22 @@
 SXAVENGER_ENGINE_USING
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// namespace -anonymouse-
+// namespace -anonymous-
 ////////////////////////////////////////////////////////////////////////////////////////////
 namespace {
-	//* system orign
-	static std::unique_ptr<DirectXCommon>         sDirectXCommon         = nullptr; //!< DirectX12 system
-	static std::unique_ptr<DirectXQueueContext>   sDirectQueueContext    = nullptr; //!< direct queue context
-	static std::unique_ptr<Performance>           sPerformance           = nullptr; //!< performance system
-	static std::unique_ptr<LapTimer>              sLapTimer              = nullptr; //!< lap timer system
-	static std::unique_ptr<AsyncThreadCollection> sAsyncThreadCollection = nullptr; //!< async thread system
+	//* system origin
+	static std::unique_ptr<DirectXCommon>           sDirectXCommon          = nullptr; //!< DirectX12 system
+	static std::unique_ptr<DirectXQueueContext>     sDirectQueueContext     = nullptr; //!< direct queue context
+	static std::unique_ptr<Performance>             sPerformance            = nullptr; //!< performance system
+	static std::unique_ptr<TimestampCpu>            sTimestampCpu           = nullptr; //!< cpu timestamp system
+	static std::unique_ptr<TimestampGpu>            sTimestampGpu           = nullptr; //!< gpu timestamp system
+	static std::unique_ptr<Async::ExecutionThreadPool> sExecutionThreadPool = nullptr; //!< async execution thread system
 
 	//* system user
 	static std::unique_ptr<WindowCollection> sWindowCollection  = nullptr; //!< window collection
 	static std::unique_ptr<Input>            sInput             = nullptr; //!< input system
 	static std::unique_ptr<ImGuiController>  sImGuiController   = nullptr; //!< ui system
+	static std::unique_ptr<Mono::Controller> sMonoController    = nullptr; //!< mono system
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -26,6 +28,8 @@ void System::Init() {
 
 	WinApp::Init();
 
+	DirectXPixEvent::Init();
+
 	sDirectXCommon = std::make_unique<DirectXCommon>();
 	sDirectXCommon->Init();
 
@@ -33,15 +37,19 @@ void System::Init() {
 	sDirectQueueContext->Init(2, DirectXQueueContext::RenderQueue::Direct);
 	sDirectQueueContext->SetName(L"main");
 
-	sPerformance = std::make_unique<Performance>();
-	sLapTimer    = std::make_unique<LapTimer>();
+	sPerformance  = std::make_unique<Performance>();
+	sTimestampCpu = std::make_unique<TimestampCpu>();
+	sTimestampGpu = std::make_unique<TimestampGpu>();
+	sTimestampGpu->Init(sDirectXCommon->GetDevice());
 
-	sAsyncThreadCollection = std::make_unique<AsyncThreadCollection>();
-	sAsyncThreadCollection->Init();
+	sExecutionThreadPool = std::make_unique<Async::ExecutionThreadPool>();
+	sExecutionThreadPool->Init();
 
 	sWindowCollection = std::make_unique<WindowCollection>();
 	sInput            = std::make_unique<Input>();
 	sImGuiController  = std::make_unique<ImGuiController>();
+
+	sMonoController = std::make_unique<Mono::Controller>();
 }
 
 void System::Term() {
@@ -50,8 +58,9 @@ void System::Term() {
 
 void System::Shutdown() {
 	sInput->Shutdown();
-	sAsyncThreadCollection->SetTerminate();
-	sAsyncThreadCollection->Shutdown();
+
+	sExecutionThreadPool->NotifyTerminate(false);
+	sExecutionThreadPool->Shutdown();
 }
 
 DXOBJECT Descriptor System::GetDescriptor(DXOBJECT DescriptorType type) {
@@ -78,21 +87,28 @@ DirectXQueueContext* System::GetDirectQueueContext() {
 	return sDirectQueueContext.get();
 }
 
-const std::weak_ptr<DirectXWindowContext> System::CreateMainWindow(
-	const Vector2ui& clientSize, const LPCWSTR& name, const Color4f& clearColor) {
+const std::shared_ptr<DirectXWindowContext> System::CreateMainWindow(
+	const Vector2ui& client, const std::wstring& name,
+	Sxl::Flag<DirectXWindowContext::Style> style,
+	const Color4f& color) {
 
 	// windowの生成
-	auto window = sWindowCollection->CreateMainWindow(clientSize, name, clearColor);
+	auto window = sWindowCollection->CreateMainWindow(client, name, style, color);
 
 	// user system の初期化
-	sInput->Init(window.lock().get());
-	sImGuiController->Init(window.lock().get());
+	sInput->Init(window.get());
+	sImGuiController->Init(window.get());
 
 	return window;
 }
 
-const std::weak_ptr<DirectXWindowContext> System::CreateSubWindow(const Vector2ui& clientSize, const LPCWSTR& name, DirectXWindowContext::ProcessCategory category, const Color4f& clearColor) {
-	return sWindowCollection->CreateSubWindow(clientSize, name, category, clearColor);
+const std::shared_ptr<DirectXWindowContext> System::CreateSubWindow(
+	const Vector2ui& client, const std::wstring& name,
+	DirectXWindowContext::ProcessCategory category,
+	Sxl::Flag<DirectXWindowContext::Style> style,
+	const Color4f& color) {
+
+	return sWindowCollection->CreateSubWindow(client, name, category, style, color);
 }
 
 bool System::ProcessMessage() {
@@ -111,8 +127,8 @@ DirectXWindowContext* System::GetMainWindow() {
 	return sWindowCollection->GetMainWindow();
 }
 
-DirectXWindowContext* System::GetForcusWindow() {
-	return sWindowCollection->GetForcusWindow();
+DirectXWindowContext* System::GetFocusWindow() {
+	return sWindowCollection->GetFocusWindow();
 }
 
 WindowCollection* System::GetWindowCollection() {
@@ -147,14 +163,16 @@ Input* System::GetInput() {
 	return sInput.get();
 }
 
-void System::BeginPerformace() {
+void System::BeginPerformance() {
 	sPerformance->Begin();
-	sLapTimer->Begin();
+	sTimestampCpu->Begin();
+	sTimestampGpu->Begin();
 }
 
-void System::EndPerformace() {
+void System::EndPerformance() {
 	sPerformance->End();
-	sLapTimer->End();
+	sTimestampCpu->End();
+	sTimestampGpu->End(System::GetDirectQueueContext());
 }
 
 TimePointd<TimeUnit::second> System::GetDeltaTimed() {
@@ -165,34 +183,53 @@ TimePointf<TimeUnit::second> System::GetDeltaTimef() {
 	return sPerformance->GetDeltaTimef();
 }
 
-void System::Record(const std::string& name) {
-	sLapTimer->Record(name);
+void System::RecordCpu(const std::string& name) {
+	sTimestampCpu->Record(name);
+}
+
+void System::BeginRecordGpu(const std::string& name) {
+	sTimestampGpu->BeginRecord(System::GetDirectQueueContext(), name);
+}
+
+void System::EndRecordGpu() {
+	sTimestampGpu->EndRecord(System::GetDirectQueueContext());
 }
 
 Performance* System::GetPerformance() {
 	return sPerformance.get();
 }
 
-LapTimer* System::GetLapTimer() {
-	return sLapTimer.get();
+TimestampCpu* System::GetTimestampCpu() {
+	return sTimestampCpu.get();
 }
 
-void System::PushTask(AsyncExecution execution, const std::shared_ptr<AsyncTask>& task) {
-	sAsyncThreadCollection->PushTask(execution, task);
+TimestampGpu* System::GetTimestampGpu() {
+	return sTimestampGpu.get();
 }
 
-std::shared_ptr<AsyncTask> System::PushTask(AsyncExecution execution, const AsyncTask::Function& function) {
-	std::shared_ptr<AsyncTask> task = std::make_shared<AsyncTask>();
-	task->SetFunction(function);
-	task->SetTag("function task");
+void System::PushTask(const std::shared_ptr<Async::ExecutionTask>& task) {
+	sExecutionThreadPool->PushTask(task);
+}
 
-	sAsyncThreadCollection->PushTask(execution, task);
+std::shared_ptr<Async::ExecutionTask> System::PushTask(Async::Execution execution, const std::string& tag, const Async::ExecutionTask::ExecutionFunction& function) {
+	std::shared_ptr<Async::ExecutionTask> task = std::make_shared<Async::ExecutionTask>();
+	task->SetTag(tag);
+	task->SetFunction(execution, function);
 
+	sExecutionThreadPool->PushTask(task);
 	return task;
 }
 
-AsyncThreadCollection* System::GetAsyncThreadCollection() {
-	return sAsyncThreadCollection.get();
+std::shared_ptr<Async::ExecutionTask> System::PushTask(Async::Execution execution, const Async::ExecutionTask::ExecutionFunction& function) {
+	std::shared_ptr<Async::ExecutionTask> task = std::make_shared<Async::ExecutionTask>();
+	task->SetFunction(execution, function);
+
+	sExecutionThreadPool->PushTask(task);
+	return task;
+}
+
+Async::ExecutionThreadPool* System::GetExecutionThreadPool() {
+	return sExecutionThreadPool.get();
 }
 
 void System::BeginImGuiFrame() {
@@ -203,10 +240,14 @@ void System::EndImGuiFrame() {
 	sImGuiController->EndFrame();
 }
 
-void System::RenderImGui(DirectXQueueContext* context) {
-	sImGuiController->Render(context);
+void System::RenderImGui(const Vector2ui& size, DirectXQueueContext* context) {
+	sImGuiController->Render(size, context);
 }
 
 ImGuiController* System::GetImGuiController() {
 	return sImGuiController.get();
+}
+
+Mono::Instance System::CreateMonoInstance(const std::string& _namespace, const std::string& _class) {
+	return sMonoController->CreateInstance(_namespace, _class);
 }

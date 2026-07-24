@@ -11,40 +11,89 @@ DXOBJECT_USING
 //* engine
 #include <Engine/System/Utility/StreamLogger.h>
 
+//* external
+#include <magic_enum.hpp>
+
 ////////////////////////////////////////////////////////////////////////////////////////////
-// Descriptor sturcture methods
+// Handle structure methods
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-void Descriptor::Delete() {
-	if (descriptorPool_ != nullptr) {
-		descriptorPool_->DeleteDescriptor(*this);
+const D3D12_CPU_DESCRIPTOR_HANDLE& Descriptor::Handle::GetCPUHandle() const {
+	return cpu;
+}
+
+const D3D12_GPU_DESCRIPTOR_HANDLE& Descriptor::Handle::GetGPUHandle() const {
+	StreamLogger::AssertA(gpu.has_value(), "handle is not shader visibility.");
+	return gpu.value();
+}
+
+uint32_t Descriptor::Handle::GetIndex() const {
+	return index;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// Descriptor structure methods
+////////////////////////////////////////////////////////////////////////////////////////////
+
+void Descriptor::Reset() {
+	if (handle_.has_value()) {
+		pool_->DeleteDescriptor(*this);
 	}
-
-	Reset();
 }
 
 const D3D12_CPU_DESCRIPTOR_HANDLE& Descriptor::GetCPUHandle() const {
-	StreamLogger::AssertA(type_.has_value(), "descriptor type is nullopt.");
-	return handles_.first;
+	StreamLogger::AssertA(handle_.has_value(), "descriptor is not valid.");
+	return handle_->GetCPUHandle();
 }
 
 const D3D12_GPU_DESCRIPTOR_HANDLE& Descriptor::GetGPUHandle() const {
-	StreamLogger::AssertA(type_.has_value(),           "descriptor type is nullopt.");
-	StreamLogger::AssertA(handles_.second.has_value(), "descriptor type not having a GPUHandle.");
-	return handles_.second.value();
+	StreamLogger::AssertA(handle_.has_value(), "descriptor is not valid.");
+	return handle_->GetGPUHandle();
 }
 
-const uint32_t Descriptor::GetIndex() const {
-	StreamLogger::AssertA(type_.has_value(), "descriptor type is nullopt.");
-	return index_;
+uint32_t Descriptor::GetIndex() const {
+	StreamLogger::AssertA(handle_.has_value(), "descriptor is not valid.");
+	return handle_->GetIndex();
 }
 
-void Descriptor::Reset() {
-	type_  = std::nullopt;
-	index_ = {};
+Descriptor::Descriptor(Descriptor&& other) noexcept {
+	*this = std::move(other);
+}
 
-	handles_.first  = {};
-	handles_.second = std::nullopt;
+Descriptor& Descriptor::operator=(Descriptor&& other) noexcept {
+	pool_   = std::move(other.pool_);
+	handle_ = std::move(other.handle_);
 
-	descriptorPool_ = nullptr;
+	other.pool_   = nullptr;
+	other.handle_ = std::nullopt;
+
+	return *this;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////
+// ReferenceDescriptor structure
+////////////////////////////////////////////////////////////////////////////////////////////
+
+const D3D12_CPU_DESCRIPTOR_HANDLE& ReferenceDescriptor::GetCPUHandle() const {
+	StreamLogger::AssertA(handle_.has_value(), "reference descriptor is not valid.");
+	return handle_->GetCPUHandle();
+}
+
+const D3D12_GPU_DESCRIPTOR_HANDLE& ReferenceDescriptor::GetGPUHandle() const {
+	StreamLogger::AssertA(handle_.has_value(), "reference descriptor is not valid.");
+	return handle_->GetGPUHandle();
+}
+
+uint32_t ReferenceDescriptor::GetIndex() const {
+	StreamLogger::AssertA(handle_.has_value(), "reference descriptor is not valid.");
+	return handle_->GetIndex();
+}
+
+ReferenceDescriptor::ReferenceDescriptor(const Descriptor& descriptor) {
+	handle_ = descriptor.handle_;
+}
+
+ReferenceDescriptor& ReferenceDescriptor::operator=(const Descriptor& descriptor) {
+	handle_ = descriptor.handle_;
+	return *this;
 }
