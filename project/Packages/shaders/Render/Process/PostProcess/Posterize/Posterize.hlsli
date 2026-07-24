@@ -32,5 +32,6 @@ struct Posterize {
 
 	float colorLevel;
 	uint colorMode;
+	float colorBrightnessMin;
 	
 };

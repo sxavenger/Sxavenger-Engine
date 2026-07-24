@@ -9,6 +9,8 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/DxObject/DxDimensionBuffer.h>
+#include <Engine/Assets/Asset/AssetTexture.h>
+#include <Engine/Assets/Asset/AssetParameter.h>
 
 //* c++
 #include <memory>
@@ -19,44 +21,44 @@
 SXAVENGER_ENGINE_NAMESPACE_BEGIN
 
 ////////////////////////////////////////////////////////////////////////////////////////////
-// PostProcessPosterize class
+// PostProcessSketch class
 ////////////////////////////////////////////////////////////////////////////////////////////
-class PostProcessPosterize
+class PostProcessSketch
 	: public BasePostProcess {
 public:
-
-	////////////////////////////////////////////////////////////////////////////////////////////
-	// Mode enum class
-	////////////////////////////////////////////////////////////////////////////////////////////
-	enum class Mode : uint32_t {
-		Ceil,  //!< 切り上げ [std::ceil](https://cpprefjp.github.io/reference/cmath/ceil.html)
-		Floor, //!< 切り捨て [std::floor](https://cpprefjp.github.io/reference/cmath/floor.html)
-		Round, //!< 四捨五入 [std::round](https://cpprefjp.github.io/reference/cmath/round.html)
-	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
 	struct Parameter {
-	public:
 
 		//=========================================================================================
 		// public methods
 		//=========================================================================================
 
-		static Parameter Default();
+		void Init();
+
+		void SetImGuiCommand();
 
 		//=========================================================================================
 		// public variables
 		//=========================================================================================
 
-		float coordinateLevel;
-		Mode coordinateMode;
+		Vector2f noise_scale;
 
-		float colorLevel;
-		Mode colorMode;
-		float colorBrightnessMin;
+		float luminance_threshold_x;
+		float luminance_x_lit; //!< [0 ~ 1]の範囲で指定する.
 
+		float luminance_threshold_y;
+		float luminance_y_lit; //!< [0 ~ 1]の範囲で指定する.
+
+		float hatch_rotation_min;
+		float hatch_rotation_max;
+
+		float hatch_noise_threshold;
+		float hatch_noise_power;
+
+		float hatch_luminance_threshold;
 	};
 
 public:
@@ -77,7 +79,9 @@ private:
 	// private variables
 	//=========================================================================================
 
-	DxObject::ConstantBuffer<Parameter> parameter_;
+	std::unique_ptr<DxObject::ConstantBuffer<Parameter>> parameter_;
+
+	AssetParameter<AssetTexture> noiseTexture_;
 
 };
 

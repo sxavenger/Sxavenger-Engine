@@ -21,6 +21,7 @@
 #include "PostProcessChromaticAberration.h"
 #include "PostProcessPostFx.h"
 #include "PostProcessPosterize.h"
+#include "PostProcessSketch.h"
 
 //* engine
 #include <Engine/Foundation.h>

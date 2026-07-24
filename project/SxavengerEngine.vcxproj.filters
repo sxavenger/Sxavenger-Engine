@@ -1003,6 +1003,7 @@
       <Filter>Lib\Transform</Filter>
     </ClInclude>
     <ClInclude Include="Engine\System\Utility\CrashHandler.h" />
+    <ClInclude Include="Engine\Components\Component\PostProcessLayer\PostProcessSketch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Assets\Asset\AssetAnimationClip.cpp">
@@ -1658,5 +1659,6 @@
     </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Engine\System\Utility\CrashHandler.cpp" />
+    <ClCompile Include="Engine\Components\Component\PostProcessLayer\PostProcessSketch.cpp" />
   </ItemGroup>
 </Project>
