@@ -77,6 +77,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief ウィンドウ生成パラメータ(クライアントサイズ/名前/カテゴリ/クリア色)
 	struct Parameter {
 	public:
 
@@ -84,8 +85,10 @@ public:
 		// public methods
 		//=========================================================================================
 
+		//! @brief ウィンドウクラス名を取得する
 		std::wstring GetWindowClassName() const;
 
+		//! @brief クライアントサイズからウィンドウ矩形を算出する
 		RECT GetWindowRect() const;
 
 		//=========================================================================================
@@ -104,6 +107,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Window structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief Win32ウィンドウのハンドルと生成/表示/アイコン設定等の操作をまとめた構造体
 	struct Window {
 	public:
 
@@ -111,20 +115,29 @@ public:
 		// public variables
 		//=========================================================================================
 
+		//! @brief パラメータとスタイルからウィンドウを生成する
 		void Create(const Parameter& parameter, Sxl::Flag<Style> flag);
 
+		//! @brief ウィンドウを表示する
+		//! @param[in] flag ShowWindowに渡す表示フラグ
 		void Show(DWORD flag) const;
 
+		//! @brief ウィンドウを閉じる
 		void Close();
 
+		//! @brief ウィンドウ(タイトルバー)アイコンを設定する
 		void SetWindowIcon(const std::filesystem::path& filepath, const Vector2ui& iconSize) const;
 
+		//! @brief タスクバーアイコンを設定する
 		void SetTaskbarIcon(const std::filesystem::path& filepath, const Vector2ui& iconSize) const;
 
+		//! @brief ウィンドウ表示モード(ウィンドウ/フルスクリーン等)を設定する
 		void SetMode(Mode _mode);
 
+		//! @brief ウィンドウが開いているかを返す
 		bool IsOpen() const { return hwnd != nullptr && IsWindow(hwnd); }
 
+		//! @brief 指定ウィンドウの現在の矩形を取得する
 		static RECT GetCurrentRect(HWND hwnd);
 
 		static LRESULT CALLBACK WindowProcApplication(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);

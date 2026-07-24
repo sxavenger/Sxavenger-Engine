@@ -89,6 +89,7 @@ protected:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ReflectionComputePipelineState class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief シェーダーリフレクションからルートシグネチャを自動生成するコンピュートパイプライン
 class ReflectionComputePipelineState
 	: public ComputePipelineState {
 public:
@@ -102,10 +103,18 @@ public:
 
 	//* reflection methods *//
 
+	//! @brief シェーダーリフレクションからパイプライン(ルートシグネチャ)を構築する
+	//! @param[in] device DirectXデバイス
 	void ReflectionPipeline(Device* device);
 
+	//! @brief サンプラー記述を加えてパイプラインを構築する
+	//! @param[in] device DirectXデバイス
+	//! @param[in] desc   サンプラーバインド記述
 	void ReflectionPipeline(Device* device, const SamplerBindDesc& desc);
 
+	//! @brief 名前解決に基づきコンピュート用バッファをバインドする
+	//! @param[in] context コマンドコンテキスト
+	//! @param[in] desc    バインドするバッファ記述
 	void BindComputeBuffer(const CommandContext* context, const BindBufferDesc& desc) const;
 
 private:

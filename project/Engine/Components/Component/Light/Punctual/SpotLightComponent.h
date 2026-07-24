@@ -24,6 +24,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // SpotLightComponent class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 円錐状に照らすスポットライトのcomponent
 class SpotLightComponent
 	: public BaseComponent {
 public:
@@ -31,6 +32,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Parameter structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief GPUへ転送するスポットライトパラメータ(色/強度/減衰半径/コーン角/影設定)
 	struct Parameter {
 	public:
 
@@ -38,6 +40,7 @@ public:
 		// public methods
 		//=========================================================================================
 
+		//! @brief 各パラメータを既定値で初期化する
 		void Init();
 
 		//=========================================================================================
@@ -63,15 +66,23 @@ public:
 	SpotLightComponent(EntityBehaviour* behaviour);
 	~SpotLightComponent() override = default;
 
+	//! @brief インスペクタにこのcomponentの編集UIを表示する (BaseComponentのoverride)
 	void ShowComponentInspector() override;
 
 	//* component option *//
 
+	//! @brief ライトパラメータ定数バッファのGPU仮想アドレスを取得する
 	const D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const;
 
+	//! @brief 光の強度の単位系を設定する
+	//! @param[in] unit 設定する単位
 	void SetUnit(LightCommon::Units unit);
 
+	//! @brief ライトパラメータを取得する (非const版)
+	//! @return Parameterへの参照
 	Parameter& GetParameter();
+	//! @brief ライトパラメータを取得する
+	//! @return Parameterへの参照
 	const Parameter& GetParameter() const;
 
 	//* behaviour component option *//

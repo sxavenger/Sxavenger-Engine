@@ -24,12 +24,14 @@ DXOBJECT_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseDimensionBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 定数/構造化バッファ等の基底クラス. リソースと要素数/strideを共通管理する
 class BaseDimensionBuffer {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Category enum class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief バッファのヒープ種別(用途)
 	enum class Category {
 		Default  = D3D12_HEAP_TYPE_DEFAULT,  //!< GPU専用.
 		Upload   = D3D12_HEAP_TYPE_UPLOAD,   //!< CPU書き込み用.
@@ -47,22 +49,30 @@ public:
 
 	//* option *//
 
+	//! @brief バッファを解放する
 	void Reset();
 
+	//! @brief デバッグ用のリソース名を設定する
 	void SetName(const std::wstring& name) const { resource_.SetName(name); }
 
 	//* getter *//
 
+	//! @brief 内部のResourceラッパーを取得する
 	DxObject::Resource& Get() { return resource_; }
 
+	//! @brief 内部のID3D12Resourceを取得する
 	ID3D12Resource* GetResource() const { return resource_.Get(); }
 
+	//! @brief バッファのGPU仮想アドレスを取得する
 	D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() const { return resource_.GetGPUVirtualAddress(); }
 
+	//! @brief 要素数を取得する
 	const uint32_t GetSize() const { return size_; }
 
+	//! @brief 1要素のバイトサイズ(stride)を取得する
 	const size_t GetStride() const { return stride_; }
 
+	//! @brief バッファ全体のバイトサイズを取得する
 	const size_t GetByteSize() const { return size_ * stride_; }
 
 protected:

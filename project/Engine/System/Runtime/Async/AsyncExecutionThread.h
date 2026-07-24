@@ -26,6 +26,7 @@ namespace Async {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Thread class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief 特定のExecution種別を担当する1本のワーカースレッド. タスク取得ループを実行する
 	class ExecutionThread {
 	public:
 
@@ -38,6 +39,7 @@ namespace Async {
 		////////////////////////////////////////////////////////////////////////////////////////////
 		// State enum class
 		////////////////////////////////////////////////////////////////////////////////////////////
+		//! @brief スレッドの状態(待機/実行中/終了)
 		enum class State : uint8_t {
 			Wait,
 			Run,
@@ -53,22 +55,32 @@ namespace Async {
 		ExecutionThread() = default;
 		~ExecutionThread() { Shutdown(); }
 
+		//! @brief スレッドを生成し, タスク取得関数を渡してループを開始する
+		//! @param[in] execution 担当するExecution種別
+		//! @param[in] main      タスクを取得する関数
 		void Create(Execution execution, const GetTaskFunction& main);
 
 		//* thread option *//
 
+		//! @brief スレッドにデバッグ用の名前を設定する
 		void SetName(const std::string& name);
 
+		//! @brief 終了フラグを設定する
 		void SetTerminate(bool isTerminate = true) { isTerminate_ = isTerminate; }
 
+		//! @brief スレッドを終了・join する
 		void Shutdown();
 
+		//! @brief スレッドIDを取得する
 		const std::thread::id GetId() const;
 
+		//! @brief 現在のスレッド状態を取得する
 		State GetState() const { return state_; }
 
+		//! @brief 担当するExecution種別を取得する
 		Execution GetExecution() const { return execution_; }
 
+		//! @brief 終了が要求されているかを返す
 		const bool IsTerminate() const { return isTerminate_; }
 
 		//* operator [copy] (delete) *//

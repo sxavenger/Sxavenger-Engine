@@ -31,6 +31,9 @@ public:
 
 	//* render option *//
 
+	//! @brief 深度/法線からアンビエントオクルージョンを計算する (FBaseRenderPassのoverride)
+	//! @param[in] context DirectXのキューコンテキスト
+	//! @param[in] config  描画設定
 	void Render(const DirectXQueueContext* context, const FRenderConfig& config) override;
 
 private:
@@ -41,10 +44,13 @@ private:
 
 	//* XeGTAO Pass *//
 
+	//! @brief AOパスの開始処理(バリア遷移等)を行う
 	void BeginAntiAliasingPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
+	//! @brief AOパスの終了処理を行う
 	void EndAntiAliasingPass(const DirectXQueueContext* context, FRenderTargetBuffer* buffer);
 
+	//! @brief XeGTAOによるアンビエントオクルージョンを計算する
 	void PassAntiAliasing_XeGTAO(const DirectXQueueContext* context, const FRenderConfig& config);
 
 };

@@ -60,6 +60,11 @@ void StateObjectContext::CreateStateObject(DxObject::Device* device, const State
 	stateObjectDesc.SetStateObjectType(D3D12_STATE_OBJECT_TYPE_RAYTRACING_PIPELINE);
 
 	// subobjectの設定
+	// レイトレ用のStateObjectは複数のサブオブジェクトの集合で構成される. 以下は生成に最低限必要な構成要素:
+	//   - DXILライブラリ  : コンパイル済みシェーダー(raygen/miss/hitgroup)本体をStateObjectへ登録する.
+	//   - グローバルRootSignature: 全シェーダーで共有するリソースバインドを定義する.
+	//   - ローカルRootSignature   : エクスポート単位(シェーダーレコード)ごとの個別バインドを関連付ける.
+	//   - Configs         : ペイロード/アトリビュートのサイズと最大再帰深度(PipelineConfig)を設定する.
 	BindDXGILibrarySubobject(stateObjectDesc);
 	BindGlobalRootSignatureSubobject(stateObjectDesc);
 	BindExportLocalRootSignatureSubobject(stateObjectDesc);
@@ -85,6 +90,11 @@ void StateObjectContext::CreateStateObject(DxObject::Device* device, StateObject
 	stateObjectDesc.SetStateObjectType(D3D12_STATE_OBJECT_TYPE_RAYTRACING_PIPELINE);
 
 	// subobjectの設定
+	// レイトレ用のStateObjectは複数のサブオブジェクトの集合で構成される. 以下は生成に最低限必要な構成要素:
+	//   - DXILライブラリ  : コンパイル済みシェーダー(raygen/miss/hitgroup)本体をStateObjectへ登録する.
+	//   - グローバルRootSignature: 全シェーダーで共有するリソースバインドを定義する.
+	//   - ローカルRootSignature   : エクスポート単位(シェーダーレコード)ごとの個別バインドを関連付ける.
+	//   - Configs         : ペイロード/アトリビュートのサイズと最大再帰深度(PipelineConfig)を設定する.
 	BindDXGILibrarySubobject(stateObjectDesc);
 	BindGlobalRootSignatureSubobject(stateObjectDesc);
 	BindExportLocalRootSignatureSubobject(stateObjectDesc);
@@ -106,6 +116,8 @@ void StateObjectContext::UpdateShaderTable(
 	const DxrObject::WriteBindBufferDesc* raygeneration, const DxrObject::WriteBindBufferDesc* miss) {
 
 	// shader単体のsizeの設定
+	// シェーダーレコードは「シェーダー識別子(kShaderRecordSize) + ローカルルート引数(stride)」で構成される.
+	// DXRの仕様上, 各レコードはkShaderRecordAlignment境界に揃える必要があるためAlignmentで切り上げる.
 	UINT raygenerationRecordSize = kShaderRecordSize;
 	raygenerationRecordSize     += static_cast<UINT>(desc_.GetStride(ExportType::Raygeneration));
 	raygenerationRecordSize      = Alignment(raygenerationRecordSize, kShaderRecordAlignment);
@@ -126,6 +138,8 @@ void StateObjectContext::UpdateShaderTable(
 	UINT hitgroupSize      = static_cast<UINT>(toplevelAS->GetInstanceDescCount()) * hitgroupRecordSize;
 
 	// 各テーブル開始位置にアライメント調整
+	// シェーダーテーブルは [raygeneration | miss | hitgroup] の3領域を連結した1つのバッファ.
+	// DispatchRaysに渡す各領域の先頭アドレスはkShaderTableAlignment境界である必要があるため, 領域単位でも切り上げる.
 	UINT raygenerationRegion = Alignment(raygenerationSize, kShaderTableAlignment);
 	UINT missRegion          = Alignment(missSize,          kShaderTableAlignment);
 	UINT hitgroupRegion      = Alignment(hitgroupSize,      kShaderTableAlignment);
@@ -133,6 +147,7 @@ void StateObjectContext::UpdateShaderTable(
 	// 合計したtableのサイズ
 	UINT tableSize = raygenerationRegion + missRegion + hitgroupRegion;
 
+	// 既存バッファに収まらない場合のみ再確保する (毎フレームの再確保を避け, 収まる限り使い回す).
 	if (tableSize > shaderTableStride_ || shaderTable_ == nullptr) { //!< tableのサイズが大きい場合
 		shaderTableStride_ = tableSize;
 		shaderTable_.Reset();

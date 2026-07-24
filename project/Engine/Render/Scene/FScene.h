@@ -24,12 +24,14 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // FScene class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 描画対象シーンのTLAS(加速構造)とライト情報をGPU向けに構築・保持するクラス
 class FScene {
 public:
 
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// LightAddress structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief シェーダーへ渡すライト情報(個数と変換/パラメータのGPUアドレス)
 	struct LightAddress {
 	public:
 
@@ -46,6 +48,8 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// LightContainer structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief 同種ライトの変換行列とパラメータをまとめてGPUバッファ化するコンテナ
+	//! @tparam T ライト固有のパラメータ型
 	template <typename T>
 	struct LightContainer {
 	public:
@@ -54,10 +58,17 @@ public:
 		// public methods
 		//=========================================================================================
 
+		//! @brief バッファを初期化する
+		//! @param[in] device DirectXデバイス
 		void Init(DxObject::Device* device);
 
+		//! @brief ライト数に合わせてバッファサイズを確保する
+		//! @param[in] device DirectXデバイス
+		//! @param[in] _count 収容するライト数
 		void Resize(DxObject::Device* device, uint32_t _count);
 
+		//! @brief シェーダー向けのアドレス情報を取得する
+		//! @return ライトのアドレス情報
 		LightAddress GetAddress() const;
 
 		//=========================================================================================
@@ -76,28 +87,41 @@ public:
 	// public methods
 	//=========================================================================================
 
+	//! @brief シーンを初期化する
 	void Init();
 
 	//* TLAS option *//
 
+	//! @brief シーン内のメッシュからトップレベル加速構造(TLAS)を構築する
+	//! @param[in] context DirectXのキューコンテキスト
 	void SetupTopLevelAS(const DirectXQueueContext* context);
 
+	//! @brief 構築済みのTLASを取得する
+	//! @return TLASへの参照
 	const DxrObject::TopLevelAS& GetTopLevelAS() const { return topLevelAS_; }
 
 	//* state object option *//
 
+	//! @brief レイトレ用のステートオブジェクト(シェーダーテーブル等)を構築する
 	void SetupStateObject();
 
 	//* light container option * //
 
+	//! @brief シーン内の全ライトを収集し, 種別ごとのGPUバッファへ格納する
 	void SetupLightContainer();
 
 	//* getter *//
 
+	//! @brief 平行光源のアドレス情報を取得する
+	//! @return 平行光源のライトアドレス
 	LightAddress GetDirectionalLightAddress() const { return directionalLightContainer_.GetAddress(); }
 
+	//! @brief 点光源のアドレス情報を取得する
+	//! @return 点光源のライトアドレス
 	LightAddress GetPointLightAddress() const { return pointLightContainer_.GetAddress(); }
 
+	//! @brief スポットライトのアドレス情報を取得する
+	//! @return スポットライトのライトアドレス
 	LightAddress GetSpotLightAddress() const { return spotLightContainer_.GetAddress(); }
 
 private:

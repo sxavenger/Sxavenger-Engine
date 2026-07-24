@@ -35,28 +35,37 @@ public:
 	Device() = default;
 	~Device() { Term(); }
 
+	//! @brief デバイス/ファクトリ/アダプタを生成し, 機能サポートを確認する
 	void Init();
 
+	//! @brief 保持しているDirectXオブジェクトを破棄する
 	void Term();
 
 	//* option *//
 
+	//! @brief デバイスの除去(TDR等)状態を確認し, 問題があればログ出力する
 	void CheckDeviceStatus() const;
 
+	//! @brief InfoQueueに溜まったデバッグメッセージを取り出して出力する
 	void CheckInfoQueueMessage() const;
 
 	//* getter *//
 
+	//! @brief ID3D12Device8を取得する
 	ID3D12Device8* GetDevice() const { return device_.Get(); }
 
+	//! @brief IDXGIFactory7を取得する
 	IDXGIFactory7* GetFactory() const { return dxgiFactory_.Get(); }
 
+	//! @brief 使用中のIDXGIAdapter4を取得する
 	IDXGIAdapter4* GetAdapter() const { return useAdapter_.Get(); }
 
 	//* feature getter *//
 
+	//! @brief 対応シェーダーモデルのTierを取得する
 	D3D_SHADER_MODEL GetShaderModelTier() const { return shaderModelTier_; }
 
+	//! @brief 対応レイトレーシングのTierを取得する
 	D3D12_RAYTRACING_TIER GetRaytracingTier() const { return raytracingTier_; }
 
 public:
@@ -64,6 +73,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// DxLeakChecker class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief デストラクタでライブオブジェクトを報告し, リソースリークを検出するデバッグ用クラス
 	class DxLeakChecker {
 	public:
 

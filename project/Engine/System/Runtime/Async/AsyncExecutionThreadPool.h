@@ -31,12 +31,14 @@ namespace Async {
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// ExecutionThreadPool class
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief Execution種別(優先度)ごとにワーカースレッドとタスクキューを管理する非同期スレッドプール
 	class ExecutionThreadPool {
 	public:
 
 		////////////////////////////////////////////////////////////////////////////////////////////
 		// TaskQueue class
 		////////////////////////////////////////////////////////////////////////////////////////////
+		//! @brief Execution種別ごとにタスクを保持し, 優先度カスケードで取り出すキュー
 		class TaskQueue {
 		public:
 
@@ -80,6 +82,7 @@ namespace Async {
 		////////////////////////////////////////////////////////////////////////////////////////////
 		// ThreadCondition class
 		////////////////////////////////////////////////////////////////////////////////////////////
+		//! @brief Execution種別ごとの条件変数で, ワーカースレッドの待機/起床を制御するクラス
 		class ThreadCondition {
 		public:
 
@@ -110,18 +113,25 @@ namespace Async {
 		// public methods
 		//=========================================================================================
 
+		//! @brief 各Executionのワーカースレッドを生成し, プールを起動する
 		void Init();
 
+		//! @brief 全スレッドへ終了を通知する
+		//! @param[in] isWaitForQueue trueならキューが空になるまで待ってから終了通知する
 		void NotifyTerminate(bool isWaitForQueue = false);
 
+		//! @brief 終了通知を行い, 全スレッドを破棄する
 		void Shutdown();
 
 		//* task option *//
 
+		//! @brief タスクをキューへ投入し, 処理可能なスレッドを起こす
+		//! @param[in] task 投入するタスク
 		void PushTask(const std::shared_ptr<ExecutionTask>& task);
 
 		//* gui option *//
 
+		//! @brief キュー/スレッドの状態をImGuiで表示する (デバッグ用)
 		void DebugGui();
 
 	private:

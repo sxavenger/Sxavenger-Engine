@@ -17,7 +17,12 @@ void Resource::CreateCommitted(
 	const D3D12_HEAP_PROPERTIES& prop, const D3D12_RESOURCE_DESC& desc, D3D12_RESOURCE_STATES state,
 	const std::optional<D3D12_CLEAR_VALUE>& clearValue) {
 
-	//!< resourceの作成
+	// CreateCommittedResourceはリソースと, それを専有する暗黙のヒープを一括で確保する(配置は自前管理しない).
+	//   - prop      : ヒープの種類(DEFAULT=GPU専用 / UPLOAD=CPU書き込み可 等)を指定する.
+	//   - desc      : リソースの次元/サイズ/フォーマット/用途フラグを指定する.
+	//   - state     : 生成直後の初期リソースステート. 以降のバリア遷移はこの状態を起点にする.
+	//   - clearValue: RenderTarget/DepthStencilの高速クリアに使う既定値. 用途がなければnullptrを渡す
+	//                 (指定するとクリア色不一致の警告を避けられ, ドライバのクリア最適化が効く).
 	auto hr = device->GetDevice()->CreateCommittedResource(
 		&prop,
 		D3D12_HEAP_FLAG_NONE,
@@ -29,6 +34,7 @@ void Resource::CreateCommitted(
 	DxObject::Assert(hr, L"resource create failed.");
 
 	//!< stateの保存
+	// 以降のGetTransition()で現在ステートと比較して不要な遷移を省くため, 初期ステートを保持しておく.
 	current_ = state;
 
 }

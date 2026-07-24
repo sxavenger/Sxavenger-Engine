@@ -153,16 +153,27 @@ void FRenderPassDeferredDirectLighting::PassUnlit(const DirectXQueueContext* con
 	DxObject::BindBufferDesc desc = {};
 
 	//!< 共通parameterの設定
+	// Deferredライティングのシェーダーは, GBufferの各ピクセルからワールド座標/法線/材質を復元して陰影を計算する.
+	// そのために以下の共通入力が必要:
+	//   - Dimension: 出力解像度. UV↔ピクセル座標の変換に使用する.
+	//   - gCamera  : ビュー/プロジェクション逆行列等. 深度値からワールド座標を復元し, 視線方向を求めるのに使う.
+	//   - gScene   : シーンのTLAS(加速構造). シャドウ等でレイを飛ばして遮蔽を判定するために参照する.
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
 
 	//!< GBufferの設定
+	// GBufferの各レイアウトをSRVとしてバインドする. これらがライティング計算の入力(G:幾何情報)となる:
+	//   - gDepth      : 深度. カメラ逆行列と組み合わせてピクセルのワールド座標を復元する.
+	//   - gAlbedo     : 基本色(ディフューズ反射率).
+	//   - gNormal     : ワールド法線. ライト方向との内積(ランバート項)等に使う.
+	//   - gMaterialARM: AO/Roughness/Metallicのパック. PBRの反射計算に使う.
 	desc.SetHandle("gDepth",       depthStencil->GetBuffer(FDepthStencilBuffer::Layout::Scene).GetGPUHandleSRV());
 	desc.SetHandle("gAlbedo",      gbuffer->GetBuffer(FGBuffer::Layout::Albedo).GetGPUHandleSRV());
 	desc.SetHandle("gNormal",      gbuffer->GetBuffer(FGBuffer::Layout::Normal).GetGPUHandleSRV());
 	desc.SetHandle("gMaterialARM", gbuffer->GetBuffer(FGBuffer::Layout::MaterialARM).GetGPUHandleSRV());
 
+	// Unlitはライトを持たないため, ライト単位のループ無しで1回だけ描画する.
 	core->BindGraphicsBuffer(FRenderCoreDirectLight::Type::Unlit, context, desc);
 	core->DrawCall(context, 1);
 }
@@ -178,7 +189,7 @@ void FRenderPassDeferredDirectLighting::PassDirectionalLight(const DirectXQueueC
 	//!< parameterの設定
 	DxObject::BindBufferDesc desc = {};
 
-	//!< 共通parameterの設定
+	//!< 共通parameterの設定 (各入力の意味はPassUnlitのコメントを参照)
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
@@ -194,6 +205,9 @@ void FRenderPassDeferredDirectLighting::PassDirectionalLight(const DirectXQueueC
 	sComponentStorage->ForEachActive<DirectionalLightComponent>([&](DirectionalLightComponent* component) {
 
 		//!< componentのparameterの設定
+		// ライト固有の入力を差し替える. これらはライトごとに異なるため, ループ内で毎回バインドし直す:
+		//   - gTransforms: ライトのワールド変換. 平行光源では向き(方向ベクトル)の算出に使う.
+		//   - gParameters: ライトの色/強度など. シェーダー側の陰影計算に乗算される.
 		desc.SetAddress("gTransforms", component->RequireTransform()->GetGPUVirtualAddress());
 		desc.SetAddress("gParameters", component->GetGPUVirtualAddress());
 
@@ -214,7 +228,7 @@ void FRenderPassDeferredDirectLighting::PassPointLight(const DirectXQueueContext
 	//!< parameterの設定
 	DxObject::BindBufferDesc desc = {};
 
-	//!< 共通parameterの設定
+	//!< 共通parameterの設定 (各入力の意味はPassUnlitのコメントを参照)
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
@@ -229,6 +243,8 @@ void FRenderPassDeferredDirectLighting::PassPointLight(const DirectXQueueContext
 	sComponentStorage->ForEachActive<PointLightComponent>([&](PointLightComponent* component) {
 
 		//!< componentのparameterの設定
+		// 点光源固有の入力. gTransformsの位置からライトへの距離を求め, gParameters(色/強度/減衰半径)で
+		// 距離減衰を掛けて陰影を計算する.
 		desc.SetAddress("gTransforms", component->RequireTransform()->GetGPUVirtualAddress());
 		desc.SetAddress("gParameters", component->GetGPUVirtualAddress());
 
@@ -249,7 +265,7 @@ void FRenderPassDeferredDirectLighting::PassSpotLight(const DirectXQueueContext*
 	//!< parameterの設定
 	DxObject::BindBufferDesc desc = {};
 
-	//!< 共通parameterの設定
+	//!< 共通parameterの設定 (各入力の意味はPassUnlitのコメントを参照)
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
@@ -264,6 +280,8 @@ void FRenderPassDeferredDirectLighting::PassSpotLight(const DirectXQueueContext*
 	sComponentStorage->ForEachActive<SpotLightComponent>([&](SpotLightComponent* component) {
 
 		//!< componentのparameterの設定
+		// スポットライト固有の入力. gTransformsで位置と照射方向を, gParameters(色/強度/減衰/コーン角)で
+		// 距離減衰とコーン内外の角度減衰を掛けて陰影を計算する.
 		desc.SetAddress("gTransforms", component->RequireTransform()->GetGPUVirtualAddress());
 		desc.SetAddress("gParameters", component->GetGPUVirtualAddress());
 
@@ -284,7 +302,7 @@ void FRenderPassDeferredDirectLighting::PassRectLight(const DirectXQueueContext*
 	//!< parameterの設定
 	DxObject::BindBufferDesc desc = {};
 
-	//!< 共通parameterの設定
+	//!< 共通parameterの設定 (各入力の意味はPassUnlitのコメントを参照)
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
@@ -317,7 +335,7 @@ void FRenderPassDeferredDirectLighting::PassSkyLight(const DirectXQueueContext* 
 	//!< parameterの設定
 	DxObject::BindBufferDesc desc = {};
 
-	//!< 共通parameterの設定
+	//!< 共通parameterの設定 (各入力の意味はPassUnlitのコメントを参照)
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());
@@ -384,7 +402,7 @@ void FRenderPassDeferredDirectLighting::PassSkyAtmosphere(const DirectXQueueCont
 	//!< parameterの設定
 	DxObject::BindBufferDesc desc = {};
 
-	//!< 共通parameterの設定
+	//!< 共通parameterの設定 (各入力の意味はPassUnlitのコメントを参照)
 	desc.Set32bitConstants("Dimension", 2, &config.buffer->GetResolution());
 	desc.SetAddress("gCamera", config.camera->GetGPUVirtualAddress());
 	desc.SetAddress("gScene",  config.scene->GetTopLevelAS().GetGPUVirtualAddress());

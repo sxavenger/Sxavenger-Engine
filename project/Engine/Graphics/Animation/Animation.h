@@ -45,6 +45,7 @@ public:
 template <class T>
 using AnimationCurve = std::vector<Keyframe<T>>;
 
+//! @brief 1ノードのSRTそれぞれのアニメーションカーブを保持する構造体
 struct TransformAnimation {
 public:
 
@@ -66,6 +67,7 @@ public:
 
 };
 
+//! @brief 1つのアニメーションクリップ(全体時間とノード名→カーブのマップ)
 struct Animation {
 
 	//=========================================================================================

@@ -18,6 +18,7 @@ DXOBJECT_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ShaderBlob class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief コンパイル済みシェーダーバイトコードとリフレクション情報を保持するBlob
 class ShaderBlob {
 public:
 
@@ -27,6 +28,10 @@ public:
 
 	ShaderBlob() = default;
 
+	//! @brief シェーダーファイルを指定プロファイルでコンパイルする
+	//! @param[in] filepath シェーダーファイルのパス
+	//! @param[in] profile  コンパイルプロファイル(vs/ps/cs等)
+	//! @param[in] entry    エントリポイント名
 	void Create(const std::filesystem::path& filepath, CompileProfile profile, const std::wstring& entry = L"main");
 
 	//* operator [assign] *//
@@ -44,10 +49,15 @@ public:
 
 	//* getter *//
 
+	//! @brief 内部のIDxcBlobを取得する
 	IDxcBlob* GetBlob() const { return blob_.Get(); }
 
+	//! @brief シェーダーバイトコードを取得する
+	//! @return D3D12_SHADER_BYTECODE
 	D3D12_SHADER_BYTECODE GetBytecode() const;
 
+	//! @brief シェーダーリフレクション情報を取得する
+	//! @return シェーダーリフレクション
 	ComPtr<ID3D12ShaderReflection> GetReflection() const;
 
 private:

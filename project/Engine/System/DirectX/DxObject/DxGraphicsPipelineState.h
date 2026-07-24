@@ -41,6 +41,7 @@ enum class PrimitiveType {
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsPipelineDesc structure
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief グラフィックスPSO生成に必要な各種ステート(入力レイアウト/ラスタライザ/ブレンド/フォーマット等)を組み立てる記述子
 struct GraphicsPipelineDesc {
 public:
 
@@ -53,27 +54,42 @@ public:
 
 	//* desc setting option *//
 
+	//! @brief 入力レイアウトの頂点要素を1つ追加する
 	void SetElement(const LPCSTR& semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot = 0);
+	//! @brief 入力レイアウトの要素をすべてクリアする
 	void ClearElement();
 
+	//! @brief ラスタライザ(カリング/塗りつぶし)を設定する
 	void SetRasterizer(D3D12_CULL_MODE cullMode, D3D12_FILL_MODE fillMode);
+	//! @brief 深度ステンシルテスト(有効/書き込みマスク/比較関数)を設定する
 	void SetDepthStencil(bool depthEnable, D3D12_DEPTH_WRITE_MASK writeMask = D3D12_DEPTH_WRITE_MASK_ALL, D3D12_COMPARISON_FUNC func = D3D12_COMPARISON_FUNC_LESS_EQUAL);
 
+	//! @brief 指定RTのブレンドをプリセットモードで設定する
 	void SetBlendMode(uint8_t renderTargetIndex, BlendMode mode);
+	//! @brief 指定RTのブレンドを詳細記述で設定する
 	void SetBlendDesc(uint8_t renderTargetIndex, const D3D12_RENDER_TARGET_BLEND_DESC& desc);
+	//! @brief RTごとに独立したブレンドを有効化するか設定する
 	void SetIndependentBlendEnable(bool isIndependentEnable);
 
+	//! @brief プリミティブトポロジ種別を設定する
 	void SetPrimitive(PrimitiveType type);
 
+	//! @brief RTVフォーマットをすべてクリアする
 	void ClearRTVFormat();
+	//! @brief RTVフォーマットを1つ追加する
 	void SetRTVFormat(DXGI_FORMAT format);
+	//! @brief 指定indexのRTVフォーマットを設定する
 	void SetRTVFormat(uint8_t index, DXGI_FORMAT format);
+	//! @brief 複数のRTVフォーマットをまとめて設定する
 	void SetRTVFormats(uint8_t size, const DXGI_FORMAT formats[]);
 
+	//! @brief DSV(深度)フォーマットを設定する
 	void SetDSVFormat(DXGI_FORMAT format);
 
 	//* getter *//
 
+	//! @brief 設定済みの入力レイアウト記述を取得する
+	//! @return D3D12_INPUT_LAYOUT_DESC
 	D3D12_INPUT_LAYOUT_DESC GetInputLayout() const;
 
 	//=========================================================================================
@@ -180,6 +196,7 @@ protected:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ReflectionGraphicsPipelineState class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief シェーダーリフレクションからルートシグネチャを自動生成するグラフィックスパイプライン
 class ReflectionGraphicsPipelineState
 	: public GraphicsPipelineState {
 public:
@@ -193,10 +210,21 @@ public:
 
 	//* reflection methods *//
 
+	//! @brief シェーダーリフレクションからルートシグネチャを構築する
+	//! @param[in] device DirectXデバイス
 	void ReflectionRootSignature(Device* device);
+	//! @brief サンプラー記述を加えてルートシグネチャを構築する
+	//! @param[in] device DirectXデバイス
+	//! @param[in] desc   サンプラーバインド記述
 	void ReflectionRootSignature(Device* device, const SamplerBindDesc& desc);
+	//! @brief ルートシグネチャフラグを指定して構築する
+	//! @param[in] device DirectXデバイス
+	//! @param[in] flag   ルートシグネチャフラグ
 	void ReflectionRootSignature(Device* device, D3D12_ROOT_SIGNATURE_FLAGS flag);
 
+	//! @brief 名前解決に基づき描画用バッファをバインドする
+	//! @param[in] context コマンドコンテキスト
+	//! @param[in] desc    バインドするバッファ記述
 	void BindGraphicsBuffer(const CommandContext* context, const BindBufferDesc& desc) const;
 
 private:

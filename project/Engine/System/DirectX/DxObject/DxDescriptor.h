@@ -37,6 +37,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////
 	// Handle structure
 	////////////////////////////////////////////////////////////////////////////////////////////
+	//! @brief 1つのディスクリプタのindexとCPU/GPUハンドルを保持する構造体
 	struct Handle {
 	public:
 
@@ -50,10 +51,13 @@ public:
 
 		//* getter *//
 
+		//! @brief CPUディスクリプタハンドルを取得する
 		const D3D12_CPU_DESCRIPTOR_HANDLE& GetCPUHandle() const;
 
+		//! @brief GPUディスクリプタハンドルを取得する
 		const D3D12_GPU_DESCRIPTOR_HANDLE& GetGPUHandle() const;
 
+		//! @brief ディスクリプタのindexを取得する
 		uint32_t GetIndex() const;
 
 		//=========================================================================================

@@ -18,6 +18,7 @@ DXOBJECT_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // BaseRootSignatureDesc base structure
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief ルートパラメータとスタティックサンプラーを組み立て, ルートシグネチャを生成する記述子の基底
 struct BaseRootSignatureDesc {
 public:
 
@@ -30,25 +31,40 @@ public:
 
 	//* container option *//
 
+	//! @brief パラメータ/サンプラーのコンテナ容量を予約する
 	void Reserve(uint32_t paramsCapacity = kDefaultParamCapacity_, uint32_t samplersCapacity = kDefaultSamplerCapacity_);
 
+	//! @brief 登録済みのパラメータ/サンプラーをクリアする
 	void Clear();
 
+	//! @brief 記述子を初期状態へリセットする
 	void Reset();
 
 	//* container setter *//
 
+	//! @brief 指定indexにルート記述子(仮想アドレス)を設定する
 	void SetVirtual(uint32_t index, ShaderVisibility stage, D3D12_ROOT_PARAMETER_TYPE type, UINT shaderRegister, UINT registerSpace = 0);
+	//! @brief 指定indexにディスクリプタテーブル(ハンドル)を設定する
 	void SetHandle(uint32_t index, ShaderVisibility stage, D3D12_DESCRIPTOR_RANGE_TYPE type, UINT shaderRegister, UINT registerSpace = 0);
+	//! @brief 指定indexにルート定数(32bit定数)を設定する
 	void Set32bitConstants(uint32_t index, ShaderVisibility stage, UINT num32bit, UINT shaderRegister, UINT registerSpace = 0);
 
+	//! @brief スタティックサンプラーを詳細記述で追加する
 	void SetSamplerDesc(const D3D12_STATIC_SAMPLER_DESC& desc);
+	//! @brief フィルタ/アドレッシングを指定してスタティックサンプラーを追加する
 	void SetSamplerFilter(SamplerFilter filter, SamplerMode mode, ShaderVisibility stage, uint32_t anisotropic, UINT shaderRegister, UINT registerSpace = 0);
 
+	//! @brief リニア補間サンプラーを追加する
 	void SetSamplerLinear(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace = 0);
+	//! @brief ポイント(最近傍)サンプラーを追加する
 	void SetSamplerPoint(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, UINT registerSpace = 0);
+	//! @brief 異方性フィルタサンプラーを追加する
 	void SetSamplerAnisotropic(SamplerMode mode, ShaderVisibility stage, UINT shaderRegister, uint32_t anisotropic, UINT registerSpace = 0);
 
+	//! @brief この記述からルートシグネチャを生成する
+	//! @param[in] device DirectXデバイス
+	//! @param[in] flags  ルートシグネチャフラグ
+	//! @return 生成したルートシグネチャ
 	virtual ComPtr<ID3D12RootSignature> CreateRootSignature(ID3D12Device* device, D3D12_ROOT_SIGNATURE_FLAGS flags) const;
 
 	//* operator *//
@@ -91,6 +107,7 @@ protected:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // GraphicsRootSignatureDesc structure
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief グラフィックスパイプライン用のルートシグネチャ記述子 (ステージ可視性を指定可能)
 struct GraphicsRootSignatureDesc
 	: public BaseRootSignatureDesc {
 public:
@@ -120,6 +137,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ComputeRootSignatureDesc structure
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief コンピュートパイプライン用のルートシグネチャ記述子
 struct ComputeRootSignatureDesc
 	: public BaseRootSignatureDesc {
 public:

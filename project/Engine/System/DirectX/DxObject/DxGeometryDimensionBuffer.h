@@ -53,6 +53,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // PointIndexDimensionBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 点(1頂点)プリミティブ用のインデックスバッファ
 class PointIndexDimensionBuffer
 	: public DimensionBuffer<UINT> {
 public:
@@ -63,8 +64,10 @@ public:
 
 	//* option *//
 
+	//! @brief インデックス総数を取得する
 	UINT GetIndexCount() const;
 
+	//! @brief インデックスバッファビューを取得する
 	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 
 private:
@@ -73,6 +76,7 @@ private:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // LineIndexDimensionBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 線(2頂点)プリミティブ用のインデックスバッファ
 class LineIndexDimensionBuffer
 	: public DimensionBuffer<std::array<UINT, 2>> {
 public:
@@ -83,10 +87,13 @@ public:
 
 	//* option *//
 
+	//! @brief インデックス総数を取得する
 	UINT GetIndexCount() const;
 
+	//! @brief インデックスデータの先頭ポインタを取得する
 	const UINT* GetIndexData() const;
 
+	//! @brief インデックスバッファビューを取得する
 	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 
 };
@@ -94,6 +101,7 @@ public:
 ////////////////////////////////////////////////////////////////////////////////////////////
 // TriangleIndexDimensionBuffer class
 ////////////////////////////////////////////////////////////////////////////////////////////
+//! @brief 三角形(3頂点)プリミティブ用のインデックスバッファ
 class TriangleIndexDimensionBuffer
 	: public DimensionBuffer<std::array<UINT, 3>> {
 public:
@@ -104,10 +112,13 @@ public:
 
 	//* option *//
 
+	//! @brief インデックス総数を取得する
 	UINT GetIndexCount() const;
 
+	//! @brief インデックスデータの先頭ポインタを取得する
 	const UINT* GetIndexData() const;
 
+	//! @brief インデックスバッファビューを取得する
 	D3D12_INDEX_BUFFER_VIEW GetIndexBufferView() const;
 
 };
