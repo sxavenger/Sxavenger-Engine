@@ -7,29 +7,15 @@ SXAVENGER_ENGINE_USING
 //* engine
 #include <Engine/System/Configuration/Configuration.h>
 #include <Engine/System/System.h>
-#include <Engine/System/Runtime/Performance/DeltaTimePoint.h>
-#include <Engine/Assets/Content/ContentStorage.h>
-#include <Engine/Components/Component/Transform/TransformComponent.h>
-#include <Engine/Components/Component/Light/Environment/SkyAtmosphereComponent.h>
-#include <Engine/Components/Component/Light/Environment/SkyLightComponent.h>
-#include <Engine/Components/Component/Light/Rect/RectLightComponent.h>
-#include <Engine/Components/Component/Transform/RectTransformComponent.h>
-#include <Engine/Components/Component/CanvasRenderer/TextRendererComponent.h>
-#include <Engine/Components/Component/PostProcessLayer/PostProcessLayerComponent.h>
-#include <Engine/Components/Component/Collider/ColliderComponent.h>
-#include <Engine/Components/Component/Collider/CollisionManager.h>
+#include <Engine/Module/Scene/SceneFactory.h>
 #include <Engine/Components/Component/ComponentHelper.h>
-#include <Engine/Components/Entity/BehaviourHelper.h>
-#include <Engine/Components/Entity/EntityBehaviourStorage.h>
 #include <Engine/Render/FMainRender.h>
 #include <Engine/Editors/EditorEngine.h>
 #include <Engine/Editors/Editor/DevelopEditor.h>
 
-#include <Engine/System/UI/SxGui.h>
-#include <Engine/Graphics/Graphics.h>
-
-//* lib
-#include <Lib/Adapter/Random/Random.h>
+//* demo scene
+#include <Demo/Scene/TitleScene.h>
+#include <Demo/Scene/GameScene.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ExampleGameLoop class methods
@@ -64,66 +50,20 @@ void ExampleGameLoop::InitSystem() {
 	);
 	main_->SetIcon(kPackagesDirectory / "icon" / "SxavengerEngineIcon.ico", { 32, 32 });
 
-	{
-		atmosphere_ = std::make_unique<GameObject>("atmosphere");
-		(*atmosphere_)->AddComponent<TransformComponent>();
-		(*atmosphere_)->AddComponent<SkyAtmosphereComponent>();
-		(*atmosphere_)->AddComponent<DirectionalLightComponent>();
-
-		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate = Quaternion::AxisAngle(Vector3f{ 12.0f, -1.0f, 0.0f }.Normalize(), kPi / 4.0f);
-	}
-	
-
-	{
-		camera_ = std::make_unique<PerspectiveCameraActor>();
-
-		auto layer = (*camera_)->AddComponent<PostProcessLayerComponent>();
-		layer->SetTag(PostProcessLayerComponent::Tag::Local);
-
-		auto exposure = layer->AddPostProcess<PostProcessAutoExposure>(false);
-		exposure->GetParameter().minLogLuminance = -8.0f;
-		exposure->GetParameter().maxLogLuminance = 10.0f;
-		exposure->GetParameter().compensation    = -5.0f;
-
-		layer->AddPostProcess<PostProcessRadialBlur>(false);
-		layer->AddPostProcess<PostProcessPostFx>(false);
-		layer->AddPostProcess<PostProcessPosterize>(false);
-		layer->AddPostProcess<PostProcessSketch>();
-
-		auto collider = (*camera_)->AddComponent<ColliderComponent>();
-		collider->SetTag("camera");
-	}
-	
-
+	// シーンをまたいで常駐するパフォーマンス表示(HUD).
 	performance_ = std::make_unique<PerformanceActor>();
 	performance_->SetPosition({ 1190.0f, 0.0f });
 
+	// SceneControllerの初期化.
+	// SceneFactoryへ各シーン(state)を名前で登録し, 初期stateとしてTitleSceneを積む.
+	// 以降のシーン遷移は各シーンがSetTransition()で要求し, TransitionScene()で処理される.
+	auto factory = std::make_unique<SceneFactory>();
+	factory->Register<Demo::TitleScene>(Demo::TitleScene::kSceneName);
+	factory->Register<Demo::GameScene>(Demo::GameScene::kSceneName);
 
-#ifndef _DEBUG //!< デバッグビルドでは、シーンのロードに時間がかかるため、ロードしない.
-	{
-		json data;
-		if (JsonHandler::LoadFromJson("assets/scene/sponza_lit.scene", data)) {
-			sEntityBehaviourStorage->InputJson(data);
-		}
-	}
-#endif
-
-	sCollisionManager->SetOnCollisionFunctionEnter("camera", "cube",
-		[](MAYBE_UNUSED ColliderComponent* const camera, MAYBE_UNUSED ColliderComponent* const cube, const CollisionDetection::Penetration& penetration) {
-
-		camera->GetBehaviour()->GetComponent<TransformComponent>()->GetTransform().translate += penetration.direction * penetration.distance;
-		camera->SetCollisionState(cube, ColliderComponent::History::Current, std::nullopt);
-	});
-
-
-	{
-		human_ = std::make_unique<GameObject>();
-		(*human_)->SetName("human");
-
-		BehaviourHelper::CreateSkinnedMeshBehaviour(human_->GetAddress(), sContentStorage->Import<ContentModel>("assets/models/human/walking.gltf"));
-
-		clip_ = sContentStorage->Import<ContentAnimation>("assets/models/human/walking.gltf")->GetAnimation(0);
-	}
+	sceneController_ = std::make_unique<SceneController>();
+	sceneController_->Init(std::move(factory));
+	sceneController_->BeginState({ Demo::TitleScene::kSceneName });
 }
 
 void ExampleGameLoop::TermSystem() {
@@ -132,24 +72,14 @@ void ExampleGameLoop::TermSystem() {
 void ExampleGameLoop::UpdateSystem() {
 
 	//-----------------------------------------------------------------------------------------
-	// Update
+	// Scene Update
 	//-----------------------------------------------------------------------------------------
 
-	camera_->Update();
+	// 現在シーンが要求したシーン遷移を処理する (Update前に行い, 遷移直後のシーンから更新する).
+	sceneController_->TransitionScene();
 
-	auto keyboard = System::GetKeyboardInput();
-
-	if (keyboard->IsPress(KeyId::KEY_LEFT)) {
-		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate *= Quaternion::AxisAngle(Vector3f{ 1.0f, 1.0f, 0.0f }.Normalize(), 0.01f);
-	}
-
-	if (keyboard->IsPress(KeyId::KEY_RIGHT)) {
-		(*(*atmosphere_)->GetComponent<TransformComponent>())->rotate *= Quaternion::AxisAngle(Vector3f{ 1.0f, 1.0f, 0.0f }.Normalize(), -0.01f);
-	}
-
-	static DeltaTimePointd<TimeUnit::second> time = 0.0f;
-	time.AddDeltaTime();
-	BehaviourHelper::ApplyAnimation(human_->GetAddress(), clip_.WaitGet()->GetAnimation(), time, true);
+	// 現在シーンのゲームロジックを更新する.
+	sceneController_->UpdateScene();
 
 	performance_->Update();
 
@@ -158,24 +88,20 @@ void ExampleGameLoop::UpdateSystem() {
 	//-----------------------------------------------------------------------------------------
 
 	ComponentHelper::UpdateTransform();
-	// todo: engine側のgameloopに移動.
-
 	ComponentHelper::UpdateCollider();
 
 	//-----------------------------------------------------------------------------------------
 	// LateUpdate
 	//-----------------------------------------------------------------------------------------
 
-	(*atmosphere_)->GetComponent<SkyAtmosphereComponent>()->Update(System::GetDirectQueueContext());
-	//!< TODO: ComponentHelperに移動予定
+	// 現在シーンの遅延更新(大気のGPU更新など). Transform確定後・描画前に行う.
+	sceneController_->LateUpdateScene();
 
 	//-----------------------------------------------------------------------------------------
 	// final Update...?
 	//-----------------------------------------------------------------------------------------
 
 	ComponentHelper::UpdateSkinning();
-	// todo: engine側のgameloopに移動.
-
 	ComponentHelper::UpdateAudio3d();
 }
 

@@ -9,12 +9,11 @@
 //* engine
 #include <Engine/Foundation.h>
 #include <Engine/System/DirectX/Context/DirectXWindowContext.h>
-#include <Engine/Assets/Asset/AssetAnimationClip.h>
-#include <Engine/Assets/Asset/AssetParameter.h>
-#include <Engine/Module/GameObject/GameObject.h>
-#include <Engine/Module/Actor/ControllableCameraActor.h>
-#include <Engine/Module/Actor/PerspectiveCameraActor.h>
+#include <Engine/Module/Scene/SceneController.h>
 #include <Engine/Module/Actor/PerformanceActor.h>
+
+//* c++
+#include <memory>
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Sxavenger Engine namespace
@@ -24,7 +23,7 @@ SXAVENGER_ENGINE_NAMESPACE_BEGIN
 ////////////////////////////////////////////////////////////////////////////////////////////
 // ExampleGameLoop class
 ////////////////////////////////////////////////////////////////////////////////////////////
-//! @brief ゲームループの実装例を示すサンプルのExecution Interface
+//! @brief SceneController(Stateパターン)でdemoシーンを駆動するゲームループの実装例
 class ExampleGameLoop
 	: public Execution::Interface {
 public:
@@ -47,17 +46,13 @@ private:
 
 	std::shared_ptr<DirectXWindowContext> main_;
 
-	//* game object *//
+	//* scene *//
 
-	std::unique_ptr<GameObject> atmosphere_;
-	std::unique_ptr<PerspectiveCameraActor> camera_;
+	std::unique_ptr<SceneController> sceneController_; //!< シーン(state)の保持と遷移を制御する
 
-	std::unique_ptr<PerformanceActor> performance_;
+	//* persistent object *//
 
-	//* human *//
-
-	std::unique_ptr<GameObject> human_;
-	AssetParameter<AssetAnimationClip> clip_;
+	std::unique_ptr<PerformanceActor> performance_; //!< シーンをまたいで常駐するパフォーマンス表示
 
 	//=========================================================================================
 	// private methods

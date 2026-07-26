@@ -73,6 +73,12 @@
     <Filter Include="Engine\Execution">
       <UniqueIdentifier>{1EC44D6C-0ABD-6CBE-33EF-51431F474CCA}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Demo">
+      <UniqueIdentifier>{3C1A9E42-7B58-4D0A-9F2C-1A2B3C4D5E6F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Demo\Scene">
+      <UniqueIdentifier>{7D2B0F53-8C69-4E1B-A03D-2B3C4D5E6F70}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\Graphics">
       <UniqueIdentifier>{7B960115-E721-6FD9-F032-F2CD5C3DCBD9}</UniqueIdentifier>
     </Filter>
@@ -458,6 +464,12 @@
     </ClInclude>
     <ClInclude Include="Engine\Execution\FeatureLevelExecution.h">
       <Filter>Engine\Execution</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo\Scene\TitleScene.h">
+      <Filter>Demo\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Demo\Scene\GameScene.h">
+      <Filter>Demo\Scene</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Foundation.h">
       <Filter>Engine</Filter>
@@ -1227,6 +1239,12 @@
     </ClCompile>
     <ClCompile Include="Engine\Execution\FeatureLevelExecution.cpp">
       <Filter>Engine\Execution</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo\Scene\TitleScene.cpp">
+      <Filter>Demo\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Demo\Scene\GameScene.cpp">
+      <Filter>Demo\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Graphics\Animation\Animation.cpp">
       <Filter>Engine\Graphics\Animation</Filter>

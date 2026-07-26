@@ -251,6 +251,8 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClInclude Include="Engine\Execution\EngineExecution.h" />
     <ClInclude Include="Engine\Execution\ExampleGameLoop.h" />
     <ClInclude Include="Engine\Execution\FeatureLevelExecution.h" />
+    <ClInclude Include="Demo\Scene\TitleScene.h" />
+    <ClInclude Include="Demo\Scene\GameScene.h" />
     <ClInclude Include="Engine\Foundation.h" />
     <ClInclude Include="Engine\Graphics\Animation\Animation.h" />
     <ClInclude Include="Engine\Graphics\Animation\BornNode.h" />
@@ -510,6 +512,8 @@ copy "Externals\mono\bin\mono-2.0-sgen.dll" "$(TargetDir)mono-2.0-sgen.dll"</Com
     <ClCompile Include="Engine\Execution\EngineExecution.cpp" />
     <ClCompile Include="Engine\Execution\ExampleGameLoop.cpp" />
     <ClCompile Include="Engine\Execution\FeatureLevelExecution.cpp" />
+    <ClCompile Include="Demo\Scene\TitleScene.cpp" />
+    <ClCompile Include="Demo\Scene\GameScene.cpp" />
     <ClCompile Include="Engine\Graphics\Animation\Animation.cpp" />
     <ClCompile Include="Engine\Graphics\Animation\Skeleton.cpp" />
     <ClCompile Include="Engine\Graphics\Animation\SkinCluster.cpp" />
